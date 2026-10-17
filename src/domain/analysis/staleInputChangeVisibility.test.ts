@@ -194,6 +194,9 @@ describe("stale input change visibility (presentation-only)", () => {
     expect(src).toContain("visibleStaleChangedCellKeys")
     // No persistence of the viewing preference.
     expect(src).not.toMatch(/showStaleInputChanges[\s\S]{0,80}localStorage/)
-    expect(src).not.toContain("showStaleInputChanges:")
+    // A type annotation in the extracted hook signature is fine; a value assignment is not.
+    expect(src.replace("showStaleInputChanges: boolean", "")).not.toContain(
+      "showStaleInputChanges:",
+    )
   })
 })

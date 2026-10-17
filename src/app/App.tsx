@@ -54,7 +54,6 @@ import {
   getLiveResultValidity,
   type LiveSimulationState,
 } from "@/domain/simulation/liveSimulationState"
-import type { ArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import type { GuidedInputKind } from "@/domain/guided/guidedInput"
 import type { GuidedResumeAfter, GuidedResumeState } from "@/domain/guided/guidedWorkflow"
 import type { GuidedFocusChromeMeta } from "@/domain/guided/guidedFocusChrome"
@@ -131,9 +130,6 @@ import { cn } from "@/shared/utils"
 import { ProjectColorSwatch } from "@/shared/ProjectColorSwatch"
 import { Archive, Plus, X } from "lucide-react"
 import {
-  isMeaningfullyFilledRow,
-  invalidCostRowCellKeys,
-  invalidDriverRowCellKeys,
   parseCostForSimulation,
   parseDriverForSimulation,
 } from "@/domain/results/tableRows"
@@ -151,18 +147,12 @@ import {
   LAST_SIMULATION_SNAPSHOT_VERSION,
   persistLastSimulationSnapshot,
 } from "@/persistence/lastSimulationSnapshot"
-import {
-  changedCostTableCellKeySet,
-  changedDriverImpactCellKeySet,
-  changedScenarioCellKeySet,
-} from "@/domain/analysis/simInputSnapshotDiff"
 import { navigateTo } from "@/shared/auth/auth"
 import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,
   readAnalysisIdFromLocation,
 } from "@/persistence/analysisLibraryRoutes"
-import { loadSidebarPinned } from "@/persistence/sidebarUiPreferences"
 import { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
 import { canCreateNextCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import { canStartOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
@@ -210,15 +200,18 @@ import {
 import { PrimaryFocusModeEntry } from "@/app/workspace/PrimaryFocusModeEntry"
 import {
   noticeWithColorWord,
-  EMPTY_STALE_CELL_KEYS,
   VALIDATION_ERROR_KEYS,
   patchProjectCostRows,
   patchProjectDriverRows,
   baseCostSumForProject,
-  projectHasMeaningfulTableInput,
   runValidationErrorKey,
   type RunErrorKey,
 } from "@/app/workspace/workspaceHelpers"
+
+import { useSidebarState } from "@/app/workspace/useSidebarState"
+import { useActionNotices } from "@/app/workspace/useActionNotices"
+import { useAnalysisDialogs } from "@/app/workspace/useAnalysisDialogs"
+import { useStaleInputDiffs } from "@/app/workspace/useStaleInputDiffs"
 
 export default function App() {
   const { language, t } = useI18n()
@@ -306,45 +299,46 @@ export default function App() {
   const [deleteProjectConfirmOpen, setDeleteProjectConfirmOpen] = useState(false)
   const deleteProjectConfirmTargetRef = useRef<string | null>(null)
   const [addAlternativeOpen, setAddAlternativeOpen] = useState(false)
-  const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false)
-  const [finishOngoingConfirmOpen, setFinishOngoingConfirmOpen] =
-    useState(false)
-  const [deleteCheckpointConfirmOpen, setDeleteCheckpointConfirmOpen] =
-    useState(false)
-  const [nextCheckpointOpen, setNextCheckpointOpen] = useState(false)
-  const [archiveBlockedNotice, setArchiveBlockedNotice] = useState<
-    | "no_results"
-    | "stale_results"
-    | "result_settings_need_rerun"
-    | "failed"
-    | null
-  >(null)
-  const archiveBlockedNoticeTimerRef = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null)
-  const [finishOngoingNotice, setFinishOngoingNotice] = useState<
-    "need_archive_checkpoint" | "failed" | null
-  >(null)
-  const finishOngoingNoticeTimerRef = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null)
-  const [trashConfirmOpen, setTrashConfirmOpen] = useState(false)
-  const [renameOpen, setRenameOpen] = useState(false)
-  const [startOngoingDialogOpen, setStartOngoingDialogOpen] = useState(false)
-  const [startOngoingAlternatives, setStartOngoingAlternatives] = useState<
-    { id: string; name: string }[]
-  >([])
-  const [startOngoingError, setStartOngoingError] = useState<string | null>(
-    null,
-  )
-  const [renameValue, setRenameValue] = useState("")
-  const [renameError, setRenameError] = useState<string | null>(null)
-  const [sidebarOpenRequest, setSidebarOpenRequest] = useState(0)
-  const [sidebarPinned, setSidebarPinned] = useState(() => loadSidebarPinned())
-  const [saveContinueOpen, setSaveContinueOpen] = useState(false)
-  const [saveContinueError, setSaveContinueError] = useState<string | null>(
-    null,
-  )
+  const {
+    archiveBlockedNotice,
+    showArchiveBlockedNotice,
+    finishOngoingNotice,
+    showFinishOngoingNotice,
+  } = useActionNotices()
+  const {
+    archiveConfirmOpen,
+    setArchiveConfirmOpen,
+    finishOngoingConfirmOpen,
+    setFinishOngoingConfirmOpen,
+    deleteCheckpointConfirmOpen,
+    setDeleteCheckpointConfirmOpen,
+    nextCheckpointOpen,
+    setNextCheckpointOpen,
+    trashConfirmOpen,
+    setTrashConfirmOpen,
+    renameOpen,
+    setRenameOpen,
+    startOngoingDialogOpen,
+    setStartOngoingDialogOpen,
+    startOngoingAlternatives,
+    setStartOngoingAlternatives,
+    startOngoingError,
+    setStartOngoingError,
+    renameValue,
+    setRenameValue,
+    renameError,
+    setRenameError,
+    saveContinueOpen,
+    setSaveContinueOpen,
+    saveContinueError,
+    setSaveContinueError,
+  } = useAnalysisDialogs()
+  const {
+    sidebarOpenRequest,
+    setSidebarOpenRequest,
+    sidebarPinned,
+    setSidebarPinned,
+  } = useSidebarState()
   const {
     preferences: resultPreferences,
     replacePreferences,
@@ -587,34 +581,6 @@ export default function App() {
     lastSimulatedInputSignature,
   ])
 
-  const showArchiveBlockedNotice = useCallback(
-    (reason: ArchiveBlockReason) => {
-      // Only true absence of results → "run simulation". Never use that copy for
-      // ownership, lifecycle, or persistence failures.
-      if (reason === "no_results") {
-        setArchiveBlockedNotice("no_results")
-      } else if (reason === "result_settings_need_rerun") {
-        setArchiveBlockedNotice("result_settings_need_rerun")
-      } else if (
-        reason === "persistence_failed" ||
-        reason === "not_draft" ||
-        reason === "not_ongoing"
-      ) {
-        setArchiveBlockedNotice("failed")
-      } else {
-        setArchiveBlockedNotice("stale_results")
-      }
-      if (archiveBlockedNoticeTimerRef.current) {
-        clearTimeout(archiveBlockedNoticeTimerRef.current)
-      }
-      archiveBlockedNoticeTimerRef.current = setTimeout(() => {
-        setArchiveBlockedNotice(null)
-        archiveBlockedNoticeTimerRef.current = null
-      }, 4500)
-    },
-    [],
-  )
-
   /**
    * Shared Ongoing/Single archive entry (menu + Results shortcut).
    * Same eligibility/block notices as the three-dot Archive action.
@@ -626,21 +592,7 @@ export default function App() {
       return
     }
     setArchiveConfirmOpen(true)
-  }, [librarySession, showArchiveBlockedNotice])
-
-  const showFinishOngoingNotice = useCallback(
-    (kind: "need_archive_checkpoint" | "failed") => {
-      setFinishOngoingNotice(kind)
-      if (finishOngoingNoticeTimerRef.current) {
-        clearTimeout(finishOngoingNoticeTimerRef.current)
-      }
-      finishOngoingNoticeTimerRef.current = setTimeout(() => {
-        setFinishOngoingNotice(null)
-        finishOngoingNoticeTimerRef.current = null
-      }, 4500)
-    },
-    [],
-  )
+  }, [librarySession, showArchiveBlockedNotice, setArchiveConfirmOpen])
 
   const requestFinishOngoingAnalysis = useCallback(() => {
     if (!librarySession.canCompleteOngoingAnalysis) return
@@ -657,7 +609,7 @@ export default function App() {
       return
     }
     setFinishOngoingConfirmOpen(true)
-  }, [librarySession, showFinishOngoingNotice])
+  }, [librarySession, showFinishOngoingNotice, setFinishOngoingConfirmOpen])
 
   const [impactModeActive, setImpactModeActive] = useState(false)
   const [impactSelectedDriverId, setImpactSelectedDriverId] = useState<
@@ -2162,109 +2114,17 @@ export default function App() {
     hasViewableResults,
   ])
 
-  const staleProjectNameTabIds = useMemo(() => {
-    const out = new Set<string>()
-    if (lastSimulatedProjects.length === 0) {
-      return out
-    }
-    const nameById = new Map(lastSimulatedProjects.map((p) => [p.id, p.name]))
-    for (const p of projects) {
-      const baseName = nameById.get(p.id)
-      if (baseName !== undefined && p.name !== baseName) {
-        out.add(p.id)
-      }
-    }
-    return out
-  }, [projects, lastSimulatedProjects])
-
-  const staleInputChangedCellKeys = useMemo(() => {
-    // Green-cell / Undo baseline is lastSimulatedProjects (including after
-    // compact draft reload). Do not require live projectResults arrays.
-    if (
-      lastSimulatedProjects.length === 0 ||
-      liveResultValidity.kind !== "stale"
-    ) {
-      return {
-        cost: EMPTY_STALE_CELL_KEYS,
-        drivers: EMPTY_STALE_CELL_KEYS,
-        driverImpacts: EMPTY_STALE_CELL_KEYS,
-      }
-    }
-    const baseline = lastSimulatedProjects
-    const proj = projects.find((p) => p.id === activeProjectId)
-    if (!proj || !projectHasMeaningfulTableInput(proj)) {
-      return {
-        cost: EMPTY_STALE_CELL_KEYS,
-        drivers: EMPTY_STALE_CELL_KEYS,
-        driverImpacts: EMPTY_STALE_CELL_KEYS,
-      }
-    }
-    const baseProj = baseline.find((p) => p.id === activeProjectId)
-    return {
-      cost: changedCostTableCellKeySet(
-        { costRows: proj.costRows, incurredCosts: proj.incurredCosts },
-        baseProj
-          ? { costRows: baseProj.costRows, incurredCosts: baseProj.incurredCosts }
-          : undefined,
-      ),
-      drivers: changedScenarioCellKeySet(proj.driverRows, baseProj?.driverRows),
-      driverImpacts: changedDriverImpactCellKeySet(
-        {
-          driverImpacts: proj.driverImpacts,
-          costRows: proj.costRows,
-          driverRows: proj.driverRows,
-        },
-        baseProj
-          ? {
-              driverImpacts: baseProj.driverImpacts,
-              costRows: baseProj.costRows,
-              driverRows: baseProj.driverRows,
-            }
-          : undefined,
-      ),
-    }
-  }, [
+  const {
+    staleProjectNameTabIds,
+    visibleStaleChangedCellKeys,
+    validationInvalidCellKeys,
+  } = useStaleInputDiffs({
     projects,
     activeProjectId,
     lastSimulatedProjects,
-    liveResultValidity.kind,
-  ])
-
-  /** Presentation gate over existing changed-cell sets (same comparison, opt-in green). */
-  const visibleStaleChangedCellKeys = useMemo(() => {
-    if (!showStaleInputChanges) {
-      return {
-        cost: EMPTY_STALE_CELL_KEYS,
-        drivers: EMPTY_STALE_CELL_KEYS,
-        driverImpacts: EMPTY_STALE_CELL_KEYS,
-      }
-    }
-    return staleInputChangedCellKeys
-  }, [showStaleInputChanges, staleInputChangedCellKeys])
-
-  const validationInvalidCellKeys = useMemo(() => {
-    const proj = projects.find((p) => p.id === activeProjectId)
-    if (!proj) {
-      return {
-        cost: EMPTY_STALE_CELL_KEYS,
-        drivers: EMPTY_STALE_CELL_KEYS,
-        driverImpacts: EMPTY_STALE_CELL_KEYS,
-      }
-    }
-    const cost = new Set<string>()
-    const drivers = new Set<string>()
-    for (const row of proj.costRows) {
-      if (isMeaningfullyFilledRow(row) && parseCostForSimulation(row) === null) {
-        for (const key of invalidCostRowCellKeys(row)) cost.add(key)
-      }
-    }
-    for (const row of proj.driverRows) {
-      if (isMeaningfullyFilledRow(row) && parseDriverForSimulation(row) === null) {
-        for (const key of invalidDriverRowCellKeys(row)) drivers.add(key)
-      }
-    }
-    return { cost, drivers }
-  }, [projects, activeProjectId])
+    liveResultValidity,
+    showStaleInputChanges,
+  })
 
   const handleRevertInputsToLastSimulation = () => {
     if (analysisReadOnly) return
