@@ -1,8 +1,8 @@
 import { Waypoints } from "lucide-react"
 
 import { useI18n } from "@/i18n/useI18n"
-import type { AnalysisMode } from "@/lib/analysisDocument"
-import { normalizeAnalysisMode } from "@/lib/analysisDocument"
+import type { AnalysisMode } from "@/domain/analysis/analysisDocument"
+import { normalizeAnalysisMode } from "@/domain/analysis/analysisDocument"
 import { cn } from "@/lib/utils"
 
 export type AnalysisModeIndicatorProps = {

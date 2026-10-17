@@ -9,13 +9,13 @@ import {
 import {
   isAnalysisNameConflictError,
   type AnalysisNameOccupant,
-} from "@/lib/analysisNameUniqueness"
+} from "@/domain/analysis/analysisNameUniqueness"
 import {
   applyAlternativeSelection,
   applyManualNameEdit,
   initStartOngoingNameState,
   validateStartOngoingSubmit,
-} from "@/lib/startOngoingFromArchiveName"
+} from "@/domain/analysis/startOngoingFromArchiveName"
 import { cn } from "@/lib/utils"
 
 export type OngoingFromArchiveAlternativeOption = {

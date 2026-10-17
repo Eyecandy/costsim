@@ -1,28 +1,28 @@
-import type { AnalysisCheckpoint } from "@/lib/analysisCheckpoint"
+import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import {
   compareStructuralInputs,
   extractKeyFigureValue,
   resultSourceFromArchivedSnapshot,
   type CheckpointResultSource,
   type CheckpointStructuralChangeCounts,
-} from "@/lib/checkpointComparison"
-import { getPrecedingCheckpointPair } from "@/lib/checkpointDiff"
-import type { CompactProjectResultV1 } from "@/lib/compactAnalysisResult"
+} from "@/domain/analysis/checkpointComparison"
+import { getPrecedingCheckpointPair } from "@/domain/analysis/checkpointDiff"
+import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisResult"
 import {
   parseCorrelationCoefficient,
 } from "@/domain/simulation/costCorrelation"
 import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
-import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
+import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   buildOngoingDevelopmentSeries,
-} from "@/lib/ongoingDevelopmentSeries"
+} from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   computeUncertainDeltaWithPct,
   normalizeIncurredCosts,
   type CostCorrelationsByRowId,
   type DriverImpactsByRowId,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import type { ResolvedResultView } from "@/domain/results/resultPreferences"
 import {
   formatPercentileLabel,

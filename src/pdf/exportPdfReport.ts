@@ -5,7 +5,7 @@
  * Shared transport (fonts, blob download) stays common at the call site.
  */
 
-import type { AnalysisMode } from "@/lib/analysisDocument"
+import type { AnalysisMode } from "@/domain/analysis/analysisDocument"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
 import type { BuildOngoingPdfReportModelInput } from "@/pdf/ongoing/buildOngoingPdfReportModel"
 import type { BuildOngoingPdfReportModelResult } from "@/pdf/ongoing/ongoingPdfTypes"

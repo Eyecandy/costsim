@@ -7,8 +7,8 @@
 import type {
   AnalysisCheckpoint,
   OngoingAnalysisLifecycle,
-} from "@/lib/analysisCheckpoint"
-import { resultSourceFromArchivedSnapshot } from "@/lib/checkpointComparison"
+} from "@/domain/analysis/analysisCheckpoint"
+import { resultSourceFromArchivedSnapshot } from "@/domain/analysis/checkpointComparison"
 import {
   buildPdfAssumptionTexts,
   mapShapleyToPdfContribution,
@@ -17,20 +17,20 @@ import type { AppLanguage } from "@/domain/results/formatNumber"
 import { mean } from "@/domain/simulation/stats"
 import { computeSCurveDisplaySeries } from "@/domain/results/sCurveDisplay"
 import { getProjectColorHex } from "@/domain/results/projectColors"
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import {
   collectProjectProfileSummaryOptionIds,
   formatProjectProfileSummaryText,
-} from "@/lib/projectProfile"
+} from "@/domain/analysis/projectProfile"
 import {
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   buildOngoingDevelopmentSeries,
   extractDevelopmentMetrics,
   type OngoingDevelopmentSeries,
-} from "@/lib/ongoingDevelopmentSeries"
+} from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   formatPdfAbsoluteAmount,
   resolvePdfAmountScale,

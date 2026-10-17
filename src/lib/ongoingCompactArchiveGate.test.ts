@@ -8,18 +8,18 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   getActiveCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   canArchiveCurrentResults,
   getArchiveBlockReason,
   getOngoingCompactArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   assertNoHeavyValuesInOngoingSnapshot,
   buildOngoingCheckpointResultSnapshot,
   freezeOngoingCompactForArchive,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -29,8 +29,8 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import {
   buildSingleArchivedResultSnapshot,
   isSingleArchivedResultSnapshot,
-} from "@/lib/singleArchivedResultSnapshot"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+} from "@/domain/analysis/singleArchivedResultSnapshot"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 
 beforeEach(() => clearLocalAnalysisLibraryStorageForTests())

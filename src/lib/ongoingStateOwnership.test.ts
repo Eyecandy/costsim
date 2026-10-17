@@ -13,12 +13,12 @@ import {
   createNextCheckpoint,
   getActiveCheckpoint,
   syncActiveCheckpointWorkspace,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
   getArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import {
   emptyLiveSimulationState,
@@ -27,8 +27,8 @@ import {
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 
 function resultsFor(projectId: string): ProjectResult[] {

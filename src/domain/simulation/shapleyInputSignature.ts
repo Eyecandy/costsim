@@ -1,4 +1,4 @@
-import { normalizeIncurredCosts, type Project } from "@/lib/project"
+import { normalizeIncurredCosts, type Project } from "@/domain/analysis/project"
 
 /** Stable JSON signature of every Shapley-relevant project input. */
 export function shapleyInputSignature(project: Project): string {

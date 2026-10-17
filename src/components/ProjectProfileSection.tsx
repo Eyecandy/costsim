@@ -20,7 +20,7 @@ import {
   type ProjectProfile,
   type ProjectProfileCategoryId,
   type ProjectQuantityDefinition,
-} from "@/lib/projectProfile"
+} from "@/domain/analysis/projectProfile"
 import { cn } from "@/lib/utils"
 
 /**

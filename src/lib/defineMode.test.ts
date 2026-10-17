@@ -10,7 +10,7 @@ import { messages } from "@/i18n/messages"
 import {
   createProject,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import {
   costRowHasDefinition,
   driverRowHasDefinition,

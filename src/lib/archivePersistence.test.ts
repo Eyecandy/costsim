@@ -8,9 +8,9 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 

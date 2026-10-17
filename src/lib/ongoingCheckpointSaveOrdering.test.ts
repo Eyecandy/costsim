@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { beforeEach, describe, expect, it } from "vitest"
 
@@ -11,21 +10,22 @@ import {
   ensureSingleProjectWorkspace,
   getActiveCheckpoint,
   selectCheckpoint as selectCheckpointInState,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
+import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { OngoingAnalysisState } from "@/lib/analysisCheckpoint"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { OngoingAnalysisState } from "@/domain/analysis/analysisCheckpoint"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
 const sessionSource = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "useLibraryAnalysisSession.ts"),
+  join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
   "utf8",
 )
 

@@ -43,7 +43,7 @@ import {
   type PdfContributionBlock,
 } from "@/pdf/buildPdfReportModel"
 import { PdfWaterfallChart } from "@/pdf/pdfWaterfallChart"
-import type { OngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
+import type { OngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import type {
   OngoingPdfSCurve,
   OngoingPdfTornadoRow,

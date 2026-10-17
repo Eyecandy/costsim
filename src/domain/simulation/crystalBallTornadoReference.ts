@@ -10,7 +10,7 @@ import {
 import {
   buildSimulationCostCorrelationMatrix,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import { parseCostForSimulation } from "@/domain/results/tableRows"
 
 export {

@@ -6,20 +6,20 @@ import {
   archiveCheckpoint,
   createInitialOngoingState,
   createNextCheckpoint,
-} from "@/lib/analysisCheckpoint"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/analysisCheckpoint"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   compareCheckpoints,
   resultSourceFromArchivedSnapshot,
-} from "@/lib/checkpointComparison"
-import { buildOngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
+} from "@/domain/analysis/checkpointComparison"
+import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   assertNoHeavyValuesInOngoingSnapshot,
   buildOngoingCheckpointResultSnapshot,
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,
   legacyHeavyToOngoingCompact,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -29,7 +29,7 @@ import {
   resolveResultView,
 } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot } from "@/test-utils/repoRoot"
 

@@ -3,7 +3,7 @@ import {
   hasStructuralChanges,
   type CheckpointComparison,
   type CheckpointResultSource,
-} from "@/lib/checkpointComparison"
+} from "@/domain/analysis/checkpointComparison"
 import {
   comparisonAbsoluteCellParts,
   comparisonDeltaCellParts,
@@ -14,9 +14,9 @@ import {
   getCostDeltaClass,
   getPercentageDeltaClass,
   selectComparisonKeyFigures,
-} from "@/lib/checkpointComparisonPresentation"
+} from "@/domain/analysis/checkpointComparisonPresentation"
 import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
-import type { AnalysisCheckpoint } from "@/lib/analysisCheckpoint"
+import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import type { ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import { useI18n } from "@/i18n/useI18n"
 import { KeyFigureMetricColumnHeader, KeyFigureMetricValue } from "@/components/KeyFigureMetricValue"

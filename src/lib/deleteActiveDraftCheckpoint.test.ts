@@ -2,8 +2,7 @@
  * Delete active tip draft checkpoint — NOT AnalysisDocument / Trash delete.
  */
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { beforeEach, describe, expect, it } from "vitest"
 
@@ -19,32 +18,30 @@ import {
   getActiveCheckpoint,
   getDeleteActiveDraftCheckpointBlockReason,
   selectCheckpoint as selectCheckpointInState,
-} from "@/lib/analysisCheckpoint"
-import { isAnalysisTrashed } from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisCheckpoint"
+import { isAnalysisTrashed } from "@/domain/analysis/analysisDocument"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
+import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
 const sessionSource = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "useLibraryAnalysisSession.ts"),
+  join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
   "utf8",
 )
 const appSource = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "../App.tsx"),
+  join(repoRoot, "src/App.tsx"),
   "utf8",
 )
 const menuSource = readFileSync(
-  join(
-    dirname(fileURLToPath(import.meta.url)),
-    "../components/AnalysisActionsMenu.tsx",
-  ),
+  join(repoRoot, "src/components/AnalysisActionsMenu.tsx"),
   "utf8",
 )
 

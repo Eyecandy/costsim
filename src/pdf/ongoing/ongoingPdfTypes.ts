@@ -9,9 +9,9 @@
 import type {
   CheckpointStatus,
   OngoingAnalysisLifecycle,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import type { AppLanguage } from "@/domain/results/formatNumber"
-import type { OngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
+import type { OngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import type { PdfContributionBlock } from "@/pdf/buildPdfReportModel"
 
 export const ONGOING_PDF_REPORT_KIND = "ongoing_pdf_report_v1" as const

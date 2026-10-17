@@ -1,7 +1,7 @@
 /**
  * Pure helpers for PDF report content (easy to unit-test without rendering).
  */
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import { collectNonZeroCostCorrelations } from "@/domain/results/aiBrief"
 import { formatNumber, type AppLanguage } from "@/domain/results/formatNumber"
 import {

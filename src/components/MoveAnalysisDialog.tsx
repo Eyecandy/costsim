@@ -7,8 +7,8 @@ import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import {
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
-} from "@/lib/analysisNameUniqueness"
-import type { AnalysisFolder } from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisNameUniqueness"
+import type { AnalysisFolder } from "@/domain/analysis/analysisDocument"
 import { cn } from "@/lib/utils"
 
 type MoveAnalysisDialogProps = {

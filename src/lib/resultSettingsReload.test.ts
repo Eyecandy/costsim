@@ -15,11 +15,11 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { buildSingleDraftResultSnapshot } from "@/lib/singleDraftResultSnapshot"
-import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { createInitialOngoingState } from "@/lib/analysisCheckpoint"
-import type { Project } from "@/lib/project"
+import { buildSingleDraftResultSnapshot } from "@/domain/analysis/singleDraftResultSnapshot"
+import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 import { beforeEach } from "vitest"
 

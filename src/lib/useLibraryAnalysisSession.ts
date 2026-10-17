@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react"
 
-import type { AnalysisMode, AnalysisStatus } from "@/lib/analysisDocument"
+import type { AnalysisMode, AnalysisStatus } from "@/domain/analysis/analysisDocument"
 import {
   DEFAULT_ANALYSIS_MODE,
   isAnalysisTrashed,
   nowIso,
-} from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisDocument"
 import {
   archiveCheckpoint,
   canCreateNextCheckpoint,
@@ -26,7 +26,7 @@ import {
   type CreateNextCheckpointBlockReason,
   type DeleteActiveDraftCheckpointBlockReason,
   type OngoingAnalysisState,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import {
   librarySaveStatusFromError,
@@ -41,9 +41,9 @@ import {
   canArchiveCurrentResults,
   getArchiveBlockReason,
   type ArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
-import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
-import type { Project } from "@/lib/project"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
+import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
+import type { Project } from "@/domain/analysis/project"
 import {
   cloneResultPreferences,
   normalizeResultPreferences,
@@ -52,15 +52,15 @@ import {
 import {
   omitDraftResultFields,
   replaceDraftResultField,
-} from "@/lib/draftResultPersist"
-import type { AnalysisDocument } from "@/lib/analysisDocument"
+} from "@/domain/analysis/draftResultPersist"
+import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   canStartOngoingFromArchivedSingle,
   planCreateOngoingFromArchivedSingle,
   resolveArchivedSingleAlternatives,
   type StartOngoingFromArchivedSingleBlockReason,
-} from "@/lib/createOngoingFromArchivedSingle"
+} from "@/domain/analysis/createOngoingFromArchivedSingle"
 import {
   buildShapleyWorkerRequest,
   runShapleyAttributionForPayload,
@@ -72,16 +72,16 @@ import {
   freezeOngoingCompactForArchive,
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   ongoingDraftResultIdentityMatches,
   pickAuthoritativeOngoingDraftResult,
-} from "@/lib/ongoingDraftResultCommit"
+} from "@/domain/analysis/ongoingDraftResultCommit"
 import { getSimulationRunIdForProject } from "@/domain/simulation/simulationRunId"
 import {
   buildSingleArchivedResultSnapshot,
   type SingleAnalysisArchivedSnapshot,
-} from "@/lib/singleArchivedResultSnapshot"
+} from "@/domain/analysis/singleArchivedResultSnapshot"
 import {
   buildSingleDraftFromCompactSeed,
   buildSingleDraftResultSnapshot,
@@ -89,7 +89,7 @@ import {
   pickAuthoritativeSingleDraftResult,
   singleDraftResultIdentityMatches,
   type SingleDraftResultSnapshotV1,
-} from "@/lib/singleDraftResultSnapshot"
+} from "@/domain/analysis/singleDraftResultSnapshot"
 
 export type CommitOngoingDraftResultInput = {
   analysisId: string
@@ -1494,7 +1494,7 @@ export function useLibraryAnalysisSession(args: {
             ? created.inheritedResult.projectsAtRun
             : (structuredClone(
                 created.newCheckpoint.workspace.projects,
-              ) as import("@/lib/project").Project[]),
+              ) as import("@/domain/analysis/project").Project[]),
       }
 
       const nextWorkspace = ensureSingleProjectWorkspace(

@@ -13,7 +13,7 @@ import {
   normalizeIncurredCosts,
   patchProjectIncurredCosts,
   createProject,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 

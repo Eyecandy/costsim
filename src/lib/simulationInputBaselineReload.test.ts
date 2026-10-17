@@ -4,7 +4,7 @@ import {
   archiveCheckpoint,
   createInitialOngoingState,
   createNextCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -12,19 +12,19 @@ import {
 import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import {
   buildOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   changedCostTableCellKeySet,
-} from "@/lib/simInputSnapshotDiff"
+} from "@/domain/analysis/simInputSnapshotDiff"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleDraftResultSnapshot,
   freezeSingleDraftForArchive,
-} from "@/lib/singleDraftResultSnapshot"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+} from "@/domain/analysis/singleDraftResultSnapshot"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 
 function valuesAround(center: number): number[] {
@@ -399,7 +399,7 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
 
   it("G: result/baseline stay paired on authoritative session pick", async () => {
     const { pickAuthoritativeSingleDraftResult } = await import(
-      "@/lib/singleDraftResultSnapshot"
+      "@/domain/analysis/singleDraftResultSnapshot"
     )
     const blank = createBlankWorkspaceRuntimeState()
     const project = blank.projects[0]!

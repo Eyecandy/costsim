@@ -56,7 +56,7 @@ import {
   getLiveResultValidity,
   type LiveSimulationState,
 } from "@/domain/simulation/liveSimulationState"
-import type { ArchiveBlockReason } from "@/lib/buildArchivedAnalysisSnapshot"
+import type { ArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import type { GuidedInputKind } from "@/lib/guidedInput"
 import type { GuidedResumeAfter, GuidedResumeState } from "@/lib/guidedWorkflow"
 import type { GuidedFocusChromeMeta } from "@/lib/guidedFocusChrome"
@@ -107,11 +107,11 @@ import {
   PROJECT_NAME_MAX_LENGTH,
   PROJECT_SLOT_NAMES,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import {
   duplicateProject,
   nextCopiedProjectName,
-} from "@/lib/cloneAnalysisWorkspace"
+} from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   decodeShareV1FromHash,
   decodeShareV2FromSearch,
@@ -163,7 +163,7 @@ import {
   changedCostTableCellKeySet,
   changedDriverImpactCellKeySet,
   changedScenarioCellKeySet,
-} from "@/lib/simInputSnapshotDiff"
+} from "@/domain/analysis/simInputSnapshotDiff"
 import { navigateTo } from "@/lib/auth"
 import {
   buildAnalysisWorkspacePath,
@@ -172,26 +172,26 @@ import {
 } from "@/lib/analysisLibraryRoutes"
 import { loadSidebarPinned } from "@/lib/sidebarUiPreferences"
 import { useLibraryAnalysisSession } from "@/lib/useLibraryAnalysisSession"
-import { canCreateNextCheckpoint } from "@/lib/analysisCheckpoint"
-import { canStartOngoingFromArchivedSingle } from "@/lib/createOngoingFromArchivedSingle"
+import { canCreateNextCheckpoint } from "@/domain/analysis/analysisCheckpoint"
+import { canStartOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
 import { useResultPreferences } from "@/lib/useResultPreferences"
 import {
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
-} from "@/lib/ongoingCheckpointResultSnapshot"
-import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
 import {
   isSingleArchivedResultSnapshot,
   SINGLE_ARCHIVED_RESULT_KIND,
   SINGLE_ARCHIVED_RESULT_SCHEMA_VERSION,
   type SingleAnalysisArchivedSnapshot,
   type SingleArchivedResultSnapshotV1,
-} from "@/lib/singleArchivedResultSnapshot"
-import type { SingleDraftResultSnapshotV1 } from "@/lib/singleDraftResultSnapshot"
+} from "@/domain/analysis/singleArchivedResultSnapshot"
+import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
 import {
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
-} from "@/lib/analysisNameUniqueness"
+} from "@/domain/analysis/analysisNameUniqueness"
 
 /** App branding + nav — sticks at viewport top (py-3 + logo line-height ≈ 3.1875rem). */
 const APP_HEADER_CLASSNAME = cn(

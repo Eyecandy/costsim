@@ -11,7 +11,7 @@ import {
   listGuidedInputRows,
 } from "@/lib/guidedInput"
 import { computeDeterministicTornado } from "@/domain/simulation/deterministicTornado"
-import { createProject, type Project } from "@/lib/project"
+import { createProject, type Project } from "@/domain/analysis/project"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { emptyScenarioRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"

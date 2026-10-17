@@ -1,6 +1,6 @@
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 
 export type ShapleyWorkerRequest = {

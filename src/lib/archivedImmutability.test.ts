@@ -8,11 +8,11 @@ import { shouldAutosaveLibraryDraft } from "@/lib/analysisLibraryRoutes"
 import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 
 function fakeShapleyStub(): ShapleyAttributionResult {

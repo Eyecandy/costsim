@@ -26,7 +26,7 @@ import {
   patchScenarioRow,
   sanitizeScenarioNumericInput,
 } from "@/domain/results/excelLikeTable"
-import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/lib/project"
+import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/domain/analysis/project"
 import {
   snapCorrelationCoefficient,
   type CostCorrelationPrepStatus,
@@ -34,7 +34,7 @@ import {
 import {
   driverImpactCellKey,
   INCURRED_COSTS_CELL_KEY,
-} from "@/lib/simInputSnapshotDiff"
+} from "@/domain/analysis/simInputSnapshotDiff"
 import {
   formatSavedCorrelationSummaryLabel,
   type SavedCorrelationSummary,

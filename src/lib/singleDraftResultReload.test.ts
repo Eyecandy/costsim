@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 
 import {
   getArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -18,11 +18,11 @@ import {
   isSingleDraftResultSnapshot,
   pickAuthoritativeSingleDraftResult,
   singleDraftResultIdentityMatches,
-} from "@/lib/singleDraftResultSnapshot"
-import { isSingleArchivedResultSnapshot } from "@/lib/singleArchivedResultSnapshot"
+} from "@/domain/analysis/singleDraftResultSnapshot"
+import { isSingleArchivedResultSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
 import { runBeforeLeaveWithoutBlocking } from "@/components/AnalysisLibraryNav"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 import { vi } from "vitest"
 
@@ -433,10 +433,10 @@ describe("Single draft result reload continuity", () => {
 
   it("J: Ongoing durability control still prefers session over disk", async () => {
     const { pickAuthoritativeOngoingDraftResult } = await import(
-      "@/lib/ongoingDraftResultCommit"
+      "@/domain/analysis/ongoingDraftResultCommit"
     )
     const { buildOngoingCheckpointResultSnapshot } = await import(
-      "@/lib/ongoingCheckpointResultSnapshot"
+      "@/domain/analysis/ongoingCheckpointResultSnapshot"
     )
     const blank = createBlankWorkspaceRuntimeState()
     const project = blank.projects[0]!

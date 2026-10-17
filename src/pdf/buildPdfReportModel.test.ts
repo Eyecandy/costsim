@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { createProject, type Project } from "@/lib/project"
+import { createProject, type Project } from "@/domain/analysis/project"
 import { PRODUCT_NAME } from "@/lib/brand"
 import { messages } from "@/i18n/messages"
 import {

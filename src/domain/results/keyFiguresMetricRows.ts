@@ -11,7 +11,7 @@ import {
   formatKeyFigureStat,
   formatProbabilityBelowRowLabel,
 } from "@/domain/results/keyFiguresDisplay"
-import { computeUncertainDeltaWithPct } from "@/lib/project"
+import { computeUncertainDeltaWithPct } from "@/domain/analysis/project"
 import {
   formatPercentileLabel,
   shouldShowProbabilityBelowCostLevel,
@@ -25,7 +25,7 @@ import {
   relativeStandardDeviationPercent,
   standardDeviation,
 } from "@/domain/simulation/stats"
-import type { OngoingFrozenKeyFiguresV1 } from "@/lib/ongoingCheckpointResultSnapshot"
+import type { OngoingFrozenKeyFiguresV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 
 export type KeyFigureMetricTableRow = {
   id: string

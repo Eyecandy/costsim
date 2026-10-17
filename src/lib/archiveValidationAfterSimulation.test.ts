@@ -7,18 +7,19 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   getActiveCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
   getArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
 function resultsFor(projectId: string): ProjectResult[] {
   return [
@@ -276,7 +277,7 @@ describe("archive validation after simulation", () => {
 
   it("session archive path heals save chain and reads live eligibility refs", () => {
     const session = readFileSync(
-      join(import.meta.dirname, "../..", "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(session).toContain("enqueueSave")
@@ -288,7 +289,7 @@ describe("archive validation after simulation", () => {
 
   it("App gates archive menu/button on librarySession.canArchive", () => {
     const app = readFileSync(
-      join(import.meta.dirname, "../..", "src/App.tsx"),
+      join(repoRoot, "src/App.tsx"),
       "utf8",
     )
     expect(app).toContain("canArchive={librarySession.canArchive}")

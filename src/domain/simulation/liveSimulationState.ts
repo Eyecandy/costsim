@@ -7,16 +7,16 @@
 
 import type { ProjectResult } from "@/simulation.worker"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import { parseProjectsPayload } from "@/lib/storage"
 import {
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   isSingleDraftResultSnapshot,
   type SingleDraftResultSnapshotV1,
-} from "@/lib/singleDraftResultSnapshot"
+} from "@/domain/analysis/singleDraftResultSnapshot"
 
 export type LiveSimulationState = {
   analysisId: string | null

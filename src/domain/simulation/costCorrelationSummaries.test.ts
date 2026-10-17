@@ -10,7 +10,7 @@ import {
   applyCostCorrelationGroupPatch,
   applyCostCorrelationPairPatch,
   getSelectedGroupCorrelationState,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import { messages } from "@/i18n/messages"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"

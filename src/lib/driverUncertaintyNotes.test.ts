@@ -9,8 +9,8 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   getLatestCheckpoint,
-} from "@/lib/analysisCheckpoint"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/analysisCheckpoint"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   DRIVER_UNCERTAINTY_NOTE_MAX_LENGTH,
   DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE,
@@ -23,7 +23,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import { parseProjectsPayload } from "@/lib/storage"
 import type { DriverRow } from "@/domain/results/tableRows"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

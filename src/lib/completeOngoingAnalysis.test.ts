@@ -12,13 +12,13 @@ import {
   getCreateNextCheckpointBlockReason,
   getLatestCheckpoint,
   selectCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"

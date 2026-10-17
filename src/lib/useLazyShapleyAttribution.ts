@@ -19,7 +19,7 @@ import {
   simulationRunKeyForProjects,
   type SimulationRunIdByProjectId,
 } from "@/domain/simulation/simulationRunId"
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import { percentile } from "@/domain/simulation/stats"
 import type { ProjectResult } from "@/simulation.worker"
 import ShapleyWorker from "@/shapley.worker.ts?worker"

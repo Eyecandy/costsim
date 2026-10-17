@@ -16,7 +16,7 @@ import {
   formatKeyFigureStat,
   formatProbabilityBelowRowLabel,
 } from "@/domain/results/keyFiguresDisplay"
-import { computeUncertainDeltaWithPct, type Project } from "@/lib/project"
+import { computeUncertainDeltaWithPct, type Project } from "@/domain/analysis/project"
 import {
   formatPercentileLabel,
   shouldShowProbabilityBelowCostLevel,
@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { OngoingFrozenKeyFiguresV1 } from "@/lib/ongoingCheckpointResultSnapshot"
+import type { OngoingFrozenKeyFiguresV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 
 export type ResultsKeyFiguresTableProps = {
   projects: readonly Project[]

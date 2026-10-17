@@ -28,11 +28,11 @@ import {
   hasAnalysisNameConflict,
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
-} from "@/lib/analysisNameUniqueness"
+} from "@/domain/analysis/analysisNameUniqueness"
 import type {
   AnalysisFolder,
   AnalysisSummary,
-} from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisDocument"
 import {
   buildAnalysisWorkspacePath,
   getLocationPathKey,

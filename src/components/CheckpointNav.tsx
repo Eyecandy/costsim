@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import {
   checkpointPrimaryStageId,
   type AnalysisCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import { useI18n } from "@/i18n/useI18n"
 
 export type CheckpointNavProps = {

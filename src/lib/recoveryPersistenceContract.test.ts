@@ -6,15 +6,15 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
 describe("checkpoint recovery persistence contract", () => {
   it("has no production API for persisting live draft Monte Carlo totals", () => {
     const productionFiles = [
-      "src/lib/analysisDocument.ts",
-      "src/lib/draftResultSeed.ts",
+      "src/domain/analysis/analysisDocument.ts",
+      "src/domain/analysis/draftResultSeed.ts",
       "src/lib/localAnalysisLibraryRepository.ts",
       "src/lib/useLibraryAnalysisSession.ts",
       "src/App.tsx",

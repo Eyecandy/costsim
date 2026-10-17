@@ -8,12 +8,12 @@
  * viewed/selected id used for export semantics.
  */
 
-import type { AnalysisCheckpoint } from "@/lib/analysisCheckpoint"
-import { ongoingDevelopmentAxisLabel } from "@/lib/ongoingDevelopmentSeries"
+import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
+import { ongoingDevelopmentAxisLabel } from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 
 /**
  * Short checkpoint label for Ongoing PDF export dialogs (CP1, CP2, …).

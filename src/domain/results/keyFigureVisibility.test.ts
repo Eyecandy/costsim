@@ -10,7 +10,7 @@ import {
   listVisibleComparableKeyFigureRowIds,
   listVisibleKeyFigureRowIds,
 } from "@/domain/results/keyFigureVisibility"
-import { selectComparisonKeyFigures } from "@/lib/checkpointComparisonPresentation"
+import { selectComparisonKeyFigures } from "@/domain/analysis/checkpointComparisonPresentation"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -123,7 +123,7 @@ describe("shared Key Figure visibility", () => {
 
   it("does not introduce separate comparison preference state", () => {
     const section = read("src/components/CheckpointComparisonSection.tsx")
-    const presentation = read("src/lib/checkpointComparisonPresentation.ts")
+    const presentation = read("src/domain/analysis/checkpointComparisonPresentation.ts")
     const visibility = read("src/domain/results/keyFigureVisibility.ts")
     expect(section).toContain("listVisibleComparableKeyFigureRowIds")
     expect(section).toContain("resultPreferences.keyFigures")

@@ -15,7 +15,7 @@ import {
 import {
   buildSimulationCostCorrelationMatrix,
   isCostCorrelationPatchValid,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 
 describe("costCorrelation linear algebra", () => {
   it("identity matrix Cholesky is identity", () => {

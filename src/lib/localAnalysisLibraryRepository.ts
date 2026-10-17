@@ -12,19 +12,19 @@ import {
   type AnalysisSummary,
   type CreateAnalysisInput,
   type LibraryIndexV1,
-} from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisDocument"
 import type {
   ArchiveAnalysisArgs,
   AnalysisLibraryRepository,
   CreateDraftFromArchivedArgs,
   CreateOngoingFromArchivedSingleArgs,
 } from "@/lib/analysisLibraryRepository"
-import { cloneProjectsWithMaps } from "@/lib/cloneAnalysisWorkspace"
+import { cloneProjectsWithMaps } from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   buildDraftCompactSeedFromSingleArchive,
   buildDraftResultSeedFromArchive,
-} from "@/lib/draftResultSeed"
-import { buildSingleDraftFromCompactSeed } from "@/lib/singleDraftResultSnapshot"
+} from "@/domain/analysis/draftResultSeed"
+import { buildSingleDraftFromCompactSeed } from "@/domain/analysis/singleDraftResultSnapshot"
 import {
   completeOngoingAnalysis as completeOngoingLifecycle,
   createInitialOngoingState,
@@ -32,17 +32,17 @@ import {
   getCompleteOngoingAnalysisBlockReason,
   getLatestCheckpoint,
   normalizeOngoingState,
-} from "@/lib/analysisCheckpoint"
-import { isLegacyHeavyArchivedSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
-import { isSingleArchivedResultSnapshot } from "@/lib/singleArchivedResultSnapshot"
+} from "@/domain/analysis/analysisCheckpoint"
+import { isLegacyHeavyArchivedSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import { isSingleArchivedResultSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
 import {
   ANALYSIS_NAME_CONFLICT_ERROR,
   ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR,
   hasAnalysisNameConflict,
   throwAnalysisNameConflict,
   type AnalysisNameOccupant,
-} from "@/lib/analysisNameUniqueness"
-import { planCreateOngoingFromArchivedSingle } from "@/lib/createOngoingFromArchivedSingle"
+} from "@/domain/analysis/analysisNameUniqueness"
+import { planCreateOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
 
 export const LIBRARY_STORAGE_KEYS = {
   index: "cost-simulator:library:v1:index",

@@ -7,7 +7,7 @@ import {
   type GuidedInputModeProps,
 } from "@/components/ScenarioPercentTable"
 import { useI18n } from "@/i18n/useI18n"
-import type { ProjectAssumption } from "@/lib/assumptions"
+import type { ProjectAssumption } from "@/domain/analysis/assumptions"
 import { type CostElementRow } from "@/domain/results/tableRows"
 
 type CostTableProps = {

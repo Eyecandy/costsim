@@ -1,5 +1,5 @@
 import { parseCorrelationCoefficient } from "@/domain/simulation/costCorrelation"
-import type { CostCorrelationsByRowId } from "@/lib/project"
+import type { CostCorrelationsByRowId } from "@/domain/analysis/project"
 
 export type SavedCorrelationSummary = {
   /** Stable key from sorted row ids + rho. */

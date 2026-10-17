@@ -19,21 +19,21 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   getLatestCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   assertNoHeavyValuesInOngoingSnapshot,
   buildOngoingCheckpointResultSnapshot,
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
-} from "@/lib/ongoingCheckpointResultSnapshot"
-import type { Project } from "@/lib/project"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import type { Project } from "@/domain/analysis/project"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 import {
   DEFAULT_RESULT_PREFERENCES,
   resolveResultView,
 } from "@/domain/results/resultPreferences"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const defaultResultView = resolveResultView(DEFAULT_RESULT_PREFERENCES)

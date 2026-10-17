@@ -18,7 +18,7 @@ import {
   buildSimulationCostCorrelationMatrix,
   buildSimulationDriverImpactMatrix,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

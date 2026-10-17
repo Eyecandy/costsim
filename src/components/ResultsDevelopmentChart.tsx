@@ -9,7 +9,7 @@ import {
   ongoingDevelopmentAxisLabel,
   type OngoingDevelopmentPoint,
   type OngoingDevelopmentSeries,
-} from "@/lib/ongoingDevelopmentSeries"
+} from "@/domain/analysis/ongoingDevelopmentSeries"
 import { cn } from "@/lib/utils"
 
 type ResultsDevelopmentChartProps = {

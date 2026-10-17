@@ -28,19 +28,19 @@ import {
   hasAnalysisNameConflict,
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
-} from "@/lib/analysisNameUniqueness"
+} from "@/domain/analysis/analysisNameUniqueness"
 import type {
   AnalysisFolder,
   AnalysisMode,
   AnalysisSummary,
-} from "@/lib/analysisDocument"
-import { DEFAULT_ANALYSIS_MODE } from "@/lib/analysisDocument"
+} from "@/domain/analysis/analysisDocument"
+import { DEFAULT_ANALYSIS_MODE } from "@/domain/analysis/analysisDocument"
 import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,
 } from "@/lib/analysisLibraryRoutes"
 import { navigateTo } from "@/lib/auth"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { cn } from "@/lib/utils"
 
 export type LibraryNavFilter =

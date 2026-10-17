@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { runBeforeLeaveWithoutBlocking } from "@/components/AnalysisLibraryNav"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
-import { assertNoHeavyValuesInCompact } from "@/lib/compactAnalysisResult"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
+import { assertNoHeavyValuesInCompact } from "@/domain/analysis/compactAnalysisResult"
 import {
   createNextCheckpoint,
   getActiveCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -17,14 +17,14 @@ import {
   buildOngoingCheckpointResultSnapshot,
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import {
   buildSingleArchivedResultSnapshot,
   isSingleArchivedResultSnapshot,
-} from "@/lib/singleArchivedResultSnapshot"
+} from "@/domain/analysis/singleArchivedResultSnapshot"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 
 function installStorage() {

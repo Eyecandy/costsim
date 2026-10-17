@@ -1,20 +1,19 @@
 import { beforeEach, describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
-import { createInitialOngoingState } from "@/lib/analysisCheckpoint"
+import { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
 import {
   omitDraftResultFields,
   replaceDraftResultField,
-} from "@/lib/draftResultPersist"
+} from "@/domain/analysis/draftResultPersist"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
 import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
-import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
-import { pickAuthoritativeOngoingDraftResult } from "@/lib/ongoingDraftResultCommit"
+import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import { pickAuthoritativeOngoingDraftResult } from "@/domain/analysis/ongoingDraftResultCommit"
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,
@@ -24,11 +23,12 @@ import {
   buildSingleDraftResultSnapshot,
   isSingleDraftResultSnapshot,
   pickAuthoritativeSingleDraftResult,
-} from "@/lib/singleDraftResultSnapshot"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { AnalysisDocument } from "@/lib/analysisDocument"
-import type { Project } from "@/lib/project"
+} from "@/domain/analysis/singleDraftResultSnapshot"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
 function valuesAround(center: number): number[] {
   return Array.from({ length: 200 }, (_, i) => center + (i - 100) * 0.01)
@@ -323,7 +323,7 @@ describe("draft result preserve / Results visibility", () => {
 
   it("H: Ongoing session compact mounts Results when App holder empty", () => {
     const app = readFileSync(
-      join(dirname(fileURLToPath(import.meta.url)), "../App.tsx"),
+      join(repoRoot, "src/App.tsx"),
       "utf8",
     )
     const gate = app.slice(

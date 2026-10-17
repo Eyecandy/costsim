@@ -12,7 +12,7 @@ import {
   type GuidedDefinitionDraftState,
 } from "@/lib/guidedDefinitionDraft"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import type { Project } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
 import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,

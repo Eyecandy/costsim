@@ -29,7 +29,7 @@ import {
   ASSUMPTION_MAX_LENGTH,
   parseAssumptionText,
   type ProjectAssumption,
-} from "@/lib/assumptions"
+} from "@/domain/analysis/assumptions"
 import {
   deriveSavedCorrelationSummaries,
   formatSavedCorrelationSummaryLabel,
@@ -80,9 +80,9 @@ import {
   type GuidedResumeAfter,
   type GuidedWorkflowStep,
 } from "@/lib/guidedWorkflow"
-import type { Project } from "@/lib/project"
-import { normalizeIncurredCosts } from "@/lib/project"
-import type { ProjectProfile } from "@/lib/projectProfile"
+import type { Project } from "@/domain/analysis/project"
+import { normalizeIncurredCosts } from "@/domain/analysis/project"
+import type { ProjectProfile } from "@/domain/analysis/projectProfile"
 import { sanitizeScenarioNumericInput } from "@/domain/results/excelLikeTable"
 import { clampCostLikelyAbs } from "@/domain/results/scenarioNumericClamps"
 import {

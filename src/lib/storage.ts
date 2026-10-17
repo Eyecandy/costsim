@@ -2,9 +2,9 @@ import {
   initialProjects,
   normalizeIncurredCosts,
   type Project,
-} from "@/lib/project"
-import { normalizeAssumptions } from "@/lib/assumptions"
-import { normalizeProjectProfile } from "@/lib/projectProfile"
+} from "@/domain/analysis/project"
+import { normalizeAssumptions } from "@/domain/analysis/assumptions"
+import { normalizeProjectProfile } from "@/domain/analysis/projectProfile"
 import {
   normalizeCostRowDefinitions,
   normalizeDriverRowDefinitions,

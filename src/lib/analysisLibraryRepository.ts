@@ -3,8 +3,8 @@ import type {
   AnalysisFolder,
   AnalysisSummary,
   CreateAnalysisInput,
-} from "@/lib/analysisDocument"
-import type { SingleAnalysisArchivedSnapshot } from "@/lib/singleArchivedResultSnapshot"
+} from "@/domain/analysis/analysisDocument"
+import type { SingleAnalysisArchivedSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
 import { getLocalAnalysisLibraryRepository } from "@/lib/localAnalysisLibraryRepository"
 
 export type ArchiveAnalysisArgs = {

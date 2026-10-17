@@ -5,7 +5,7 @@ import {
   ASSUMPTION_MAX_LENGTH,
   type ProjectAssumption,
   parseAssumptionText,
-} from "@/lib/assumptions"
+} from "@/domain/analysis/assumptions"
 import { useI18n } from "@/i18n/useI18n"
 import { cn } from "@/lib/utils"
 

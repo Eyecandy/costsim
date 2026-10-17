@@ -4,11 +4,11 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
 } from "@/lib/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
-import type { AnalysisDocument } from "@/lib/analysisDocument"
+import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
 
 async function createDraft(name: string, folderId: string | null = null) {
   const repo = getAnalysisLibraryRepository()

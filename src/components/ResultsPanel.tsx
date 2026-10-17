@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
-import { type Project } from "@/lib/project"
+import { type Project } from "@/domain/analysis/project"
 import { appFeatures } from "@/config/appVariant"
 import { buildShareUrl } from "@/lib/shareLink"
 import { parseProjectsPayload } from "@/lib/storage"
@@ -16,15 +16,15 @@ import {
 import { ResultsDevelopmentChart } from "@/components/ResultsDevelopmentChart"
 import { ResultsSCurve } from "@/components/ResultsSCurve"
 import { CheckpointComparisonSection } from "@/components/CheckpointComparisonSection"
-import type { AnalysisCheckpoint } from "@/lib/analysisCheckpoint"
-import type { AnalysisMode } from "@/lib/analysisDocument"
+import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
+import type { AnalysisMode } from "@/domain/analysis/analysisDocument"
 import {
   compareCheckpoints,
   type CheckpointResultSource,
-} from "@/lib/checkpointComparison"
+} from "@/domain/analysis/checkpointComparison"
 import {
   formatCheckpointLegendLabel,
-} from "@/lib/checkpointComparisonPresentation"
+} from "@/domain/analysis/checkpointComparisonPresentation"
 import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
 import {
@@ -68,16 +68,16 @@ import {
   shouldShowResultSettingsEditor,
   shouldUseCompactResultAnalytics,
 } from "@/domain/results/resultSettingsPresentation"
-import type { ArchivedAnalysisSnapshotV1 } from "@/lib/archivedAnalysisSnapshot"
-import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
+import type { ArchivedAnalysisSnapshotV1 } from "@/domain/analysis/archivedAnalysisSnapshot"
+import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import { buildOngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
+import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import { buildKeyFigureMetricTableRows } from "@/domain/results/keyFiguresMetricRows"
 import { buildKeyFigureMetricTableRowsFromFrozen } from "@/domain/results/keyFiguresMetricRows"
-import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
-import type { CompactProjectResultV1 } from "@/lib/compactAnalysisResult"
-import type { SingleArchivedResultSnapshotV1 } from "@/lib/singleArchivedResultSnapshot"
-import type { SingleDraftResultSnapshotV1 } from "@/lib/singleDraftResultSnapshot"
+import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisResult"
+import type { SingleArchivedResultSnapshotV1 } from "@/domain/analysis/singleArchivedResultSnapshot"
+import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
 import { Check, Play } from "lucide-react"
 import { pdf } from "@react-pdf/renderer"
 import { ProjectReportDocument } from "@/pdf/ProjectReportDocument"

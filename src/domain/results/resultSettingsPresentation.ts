@@ -3,7 +3,7 @@
  * Keeps ResultsPanel gates testable without mounting React.
  */
 
-import type { CompactFrozenKeyFiguresV1 } from "@/lib/compactAnalysisResult"
+import type { CompactFrozenKeyFiguresV1 } from "@/domain/analysis/compactAnalysisResult"
 import {
   resolveResultView,
   type ResultPreferencesV1,

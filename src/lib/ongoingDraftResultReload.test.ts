@@ -4,21 +4,21 @@ import {
   archiveCheckpoint,
   createInitialOngoingState,
   createNextCheckpoint,
-} from "@/lib/analysisCheckpoint"
-import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/analysisCheckpoint"
+import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   getArchiveBlockReason,
   getOngoingCompactArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   buildOngoingCheckpointResultSnapshot,
   freezeOngoingCompactForArchive,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   ongoingDraftResultIdentityMatches,
   pickAuthoritativeOngoingDraftResult,
-} from "@/lib/ongoingDraftResultCommit"
+} from "@/domain/analysis/ongoingDraftResultCommit"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -27,9 +27,9 @@ import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import type { OngoingAnalysisState } from "@/lib/analysisCheckpoint"
-import type { Project } from "@/lib/project"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import type { OngoingAnalysisState } from "@/domain/analysis/analysisCheckpoint"
+import type { Project } from "@/domain/analysis/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 
 function valuesAround(center: number): number[] {

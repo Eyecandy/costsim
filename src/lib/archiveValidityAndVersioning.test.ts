@@ -10,16 +10,16 @@ import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
   getArchiveBlockReason,
-} from "@/lib/buildArchivedAnalysisSnapshot"
-import { buildDraftResultSeedFromArchive } from "@/lib/draftResultSeed"
-import { cloneProjectsWithMaps } from "@/lib/cloneAnalysisWorkspace"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
+import { buildDraftResultSeedFromArchive } from "@/domain/analysis/draftResultSeed"
+import { cloneProjectsWithMaps } from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   DEFAULT_RESULT_PREFERENCES,
   normalizeResultPreferences,
   resolveResultView,
 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { messages } from "@/i18n/messages"
 import type { ProjectResult } from "@/simulation.worker"
@@ -421,7 +421,7 @@ describe("create new version inherits archived results", () => {
       /inputsStale:[\s\S]*?useSeededShapley/,
     )
     const seed = readFileSync(
-      join(repoRoot, "src/lib/draftResultSeed.ts"),
+      join(repoRoot, "src/domain/analysis/draftResultSeed.ts"),
       "utf8",
     )
     expect(seed).toContain("buildDraftResultSeedFromArchive")

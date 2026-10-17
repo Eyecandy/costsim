@@ -4,7 +4,7 @@ import {
   buildSimulationDriverImpactMatrix,
   normalizeIncurredCosts,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import type { CostElementRow, DriverRow, ScenarioRow } from "@/domain/results/tableRows"
 import {
   driverCalibratedSupportInvalid,

@@ -8,8 +8,8 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   ensureSingleProjectWorkspace,
-} from "@/lib/analysisCheckpoint"
-import { getArchiveBlockReason } from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/analysisCheckpoint"
+import { getArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   AnalysisPersistenceError,
   clearLocalAnalysisLibraryStorageForTests,
@@ -22,7 +22,7 @@ import {
 import {
   buildOngoingCheckpointResultSnapshot,
   freezeOngoingCompactForArchive,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import {
   DEFAULT_RESULT_PREFERENCES,
   addKeyFigurePercentile,
@@ -33,8 +33,8 @@ import {
   compactSnapshotSupportsResultPreferences,
 } from "@/domain/results/resultSettingsPresentation"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { Project } from "@/lib/project"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/simulation.worker"
 
 function valuesAround(center: number, n = 200): number[] {

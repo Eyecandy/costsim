@@ -3,7 +3,7 @@ import {
   buildSimulationDriverImpactMatrix,
   normalizeIncurredCosts,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import {
   parseCostForSimulation,
   parseDriverForSimulation,

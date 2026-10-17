@@ -12,12 +12,12 @@ import {
   DEFAULT_ANALYSIS_MODE,
   normalizeAnalysisMode,
   nowIso,
-} from "@/lib/analysisDocument"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+} from "@/domain/analysis/analysisDocument"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
-} from "@/lib/buildArchivedAnalysisSnapshot"
+} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot } from "@/test-utils/repoRoot"
@@ -222,7 +222,7 @@ describe("Analysis Library repository", () => {
     }
     // Session/domain must sync before save — repository no longer does this.
     const { syncActiveCheckpointWorkspace } = await import(
-      "@/lib/analysisCheckpoint"
+      "@/domain/analysis/analysisCheckpoint"
     )
     const synced = {
       ...withPhase,

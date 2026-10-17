@@ -4,16 +4,16 @@ import {
   type CostCorrelationsByRowId,
   type DriverImpactsByRowId,
   type Project,
-} from "@/lib/project"
+} from "@/domain/analysis/project"
 import {
   assumptionsFromShareTexts,
   assumptionsToShareTexts,
-} from "@/lib/assumptions"
+} from "@/domain/analysis/assumptions"
 import {
   projectProfileFromShare,
   projectProfileToShare,
   type ProjectProfileShare,
-} from "@/lib/projectProfile"
+} from "@/domain/analysis/projectProfile"
 import { appFeatures } from "@/config/appVariant"
 import {
   clampCorrelationCoefficient,

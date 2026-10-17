@@ -8,8 +8,8 @@
  * draft/inherited result validity, and shared stale gates.
  */
 
-import type { Project } from "@/lib/project"
-import { normalizeIncurredCosts } from "@/lib/project"
+import type { Project } from "@/domain/analysis/project"
+import { normalizeIncurredCosts } from "@/domain/analysis/project"
 import { stripRowDefinitions } from "@/domain/results/rowDefinitions"
 import { isMeaningfullyFilledRow } from "@/domain/results/tableRows"
 

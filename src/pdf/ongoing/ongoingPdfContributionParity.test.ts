@@ -10,16 +10,16 @@ import {
   createInitialOngoingState,
   createNextCheckpoint,
   getLatestCheckpoint,
-} from "@/lib/analysisCheckpoint"
+} from "@/domain/analysis/analysisCheckpoint"
 import {
   assertNoHeavyValuesInOngoingSnapshot,
   buildOngoingCheckpointResultSnapshot,
   isOngoingCheckpointResultSnapshot,
-} from "@/lib/ongoingCheckpointResultSnapshot"
+} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { PRODUCT_NAME } from "@/lib/brand"
-import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   formatAdaptiveMonetarySignedDelta,

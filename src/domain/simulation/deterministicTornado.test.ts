@@ -4,7 +4,7 @@ import {
   computeDeterministicTornado,
   computeDeterministicTornadoRows,
 } from "@/domain/simulation/deterministicTornado"
-import { computeBaseCostSum, type Project } from "@/lib/project"
+import { computeBaseCostSum, type Project } from "@/domain/analysis/project"
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import { createSeededRng } from "@/domain/simulation/shapleyAttribution"
 import {
