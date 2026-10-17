@@ -18,7 +18,7 @@ import type {
   AnalysisLibraryRepository,
   CreateDraftFromArchivedArgs,
   CreateOngoingFromArchivedSingleArgs,
-} from "@/persistence/analysisLibraryRepository"
+} from "@/persistence/analysisLibraryRepositoryTypes"
 import { cloneProjectsWithMaps } from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   buildDraftCompactSeedFromSingleArchive,

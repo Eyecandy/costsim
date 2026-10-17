@@ -14,7 +14,7 @@
 
 import { newId } from "@/domain/results/tableRows"
 import type { ArchivedAnalysisSnapshotV1 } from "@/domain/analysis/archivedAnalysisSnapshot"
-import type { AnalysisWorkspacePayload } from "@/domain/analysis/analysisDocument"
+import type { AnalysisWorkspacePayload } from "@/domain/analysis/analysisWorkspacePayload"
 import type { Project } from "@/domain/analysis/project"
 import { PROJECT_NAME_MAX_LENGTH } from "@/domain/analysis/project"
 import { cloneProjectProfile } from "@/domain/analysis/projectProfile"

@@ -1,4 +1,4 @@
-import type { Project } from "@/domain/analysis/project"
+import type { AnalysisWorkspacePayload } from "@/domain/analysis/analysisWorkspacePayload"
 import type { SingleAnalysisArchivedSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
 import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
 import type { OngoingAnalysisState } from "@/domain/analysis/analysisCheckpoint"
@@ -36,10 +36,7 @@ export type AnalysisFolder = {
   updatedAt: string
 }
 
-export type AnalysisWorkspacePayload = {
-  projects: Project[]
-  activeProjectId: string
-}
+export type { AnalysisWorkspacePayload }
 
 /**
  * Persisted library aggregate: one analysis workspace (1–N alternatives as Project[]).

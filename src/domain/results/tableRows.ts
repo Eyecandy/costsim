@@ -1,5 +1,9 @@
 import { costAbsoluteLikelyToTriangular, type TriangularParams } from "@/domain/simulation/simulation"
+import { parseNumberField } from "@/domain/results/numberField"
 import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
+
+// Re-exported so existing imports keep working; the function lives in a leaf module to avoid an import cycle.
+export { parseNumberField }
 
 /**
  * Driver: alle tre felt er % (prosentpoeng).
@@ -57,14 +61,6 @@ export function defaultCostRows(): CostElementRow[] {
 
 export function defaultDriverRows(): DriverRow[] {
   return Array.from({ length: 5 }, () => emptyScenarioRow())
-}
-
-/** Tom eller ugyldig tall → null (brukes kun ved parsing til simulering) */
-export function parseNumberField(raw: string): number | null {
-  const t = raw.trim().replace(",", ".")
-  if (t === "") return null
-  const n = Number(t)
-  return Number.isFinite(n) ? n : null
 }
 
 /**
