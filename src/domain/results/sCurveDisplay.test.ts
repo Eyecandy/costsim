@@ -18,10 +18,11 @@ import {
   downsampleCdfPointsForDisplay,
 } from "@/domain/results/sCurveDisplay"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 function sCurveSource() {

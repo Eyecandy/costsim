@@ -22,6 +22,7 @@ import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function snapshotFor(projects: Project[], activeProjectId: string, tag = "a") {
@@ -326,7 +327,7 @@ describe("completeOngoingAnalysis", () => {
       "Finish and archive",
     )
 
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("finishOngoingConfirmOpen")
     expect(app).toContain("completeOngoingAnalysis")
     expect(app).toContain("canCompleteOngoingAnalysis")

@@ -31,15 +31,13 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 const sessionSource = readFileSync(
   join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
   "utf8",
 )
-const appSource = readFileSync(
-  join(repoRoot, "src/app/App.tsx"),
-  "utf8",
-)
+const appSource = readAppSource()
 const menuSource = readFileSync(
   join(repoRoot, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
   "utf8",

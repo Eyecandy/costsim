@@ -16,6 +16,7 @@ import {
   type AnalysisDocument,
 } from "@/domain/analysis/analysisDocument"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function renderWithI18n(node: ReactElement) {
@@ -128,7 +129,7 @@ describe("analysis mode presentation", () => {
   })
 
   it("Single Analysis App branch still uses project tablist chrome", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("projects.selectProjectTablist")
     expect(app).toContain("border-b-[1.5px] border-[#1d868c]")
     expect(app).toContain("rounded-t-lg")
@@ -142,7 +143,7 @@ describe("analysis mode presentation", () => {
   })
 
   it("Ongoing Analysis uses shared desktop grid rows instead of padding hacks", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("ONGOING_WORKSPACE_LAYOUT_CLASS")
     expect(app).toContain("md:grid-rows-[auto_auto_auto]")
     expect(app).toContain("md:gap-y-7")

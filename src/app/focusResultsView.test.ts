@@ -10,6 +10,7 @@ import {
 import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -129,7 +130,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("H: successful Guided run uses existing handler and opens first result", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("pendingFocusResultsAfterGuidedRunRef")
     expect(app).toContain("handleRun()")
     expect(app).toContain("setFocusResultStepIndex(0)")
@@ -138,7 +139,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("I: failed run clears pending Focus Results", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const errorBlock = app.slice(
       app.indexOf("worker.onerror"),
       app.indexOf("return () => {", app.indexOf("worker.onerror")),
@@ -169,7 +170,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("K: Next/Previous wiring across Simulation and Results", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("continueFromSimulationToResults")
     expect(app).toContain("data-focus-results-previous")
     expect(app).toContain("data-focus-results-next")
@@ -199,13 +200,13 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("O: stale status remains on Focus Results shell across steps", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("data-focus-stale-notice")
     expect(app).toContain("showStaleInputNotice")
   })
 
   it("P: Show changes exits Focus to normal Input with green highlighting", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(app).toContain("onShowStaleChanges={handleFocusShowChanges}")
     expect(app).toMatch(
@@ -216,7 +217,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("Q: Undo uses existing revert handler", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("handleRevertInputsToLastSimulation")
     expect(app).toMatch(
       /data-focus-stale-notice[\s\S]*?onClick=\{handleRevertInputsToLastSimulation\}/,
@@ -224,7 +225,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("R: normal Results Play opens Focus Results directly", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("openFocusResults")
     expect(app).toMatch(
       /const openFocusResults = useCallback\(\(\) => \{\s*if \(!hasViewableResults\) return\s*setFocusResultStepIndex\(0\)\s*setFocusView\("results"\)/,
@@ -232,7 +233,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("S: Result Settings shared in Focus header", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(app).toContain("ResultPreferencesPanel")
     expect(app).toContain("shouldShowResultSettingsEditor")
@@ -244,7 +245,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("T/U: Single/Ongoing ownership unchanged", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("getLiveResultValidity")
     expect(app).toContain("commitOngoingDraftResult")
     expect(app).toContain("commitSingleDraftResult")
@@ -258,7 +259,7 @@ describe("Focus Results stepwise workflow", () => {
     expect(shell).toContain("<X ")
     expect(guided).toContain('data-guided-input-close=""')
     expect(guided).toContain("<X ")
-    const exitMatch = readSrc("src/app/App.tsx").match(
+    const exitMatch = readAppSource().match(
       /const exitFocusMode = useCallback\(\(\) => \{([\s\S]*?)\}, \[[^\]]*\]\)/,
     )
     expect(exitMatch?.[1] ?? "").toContain("setFocusView(null)")
@@ -271,7 +272,7 @@ describe("Focus Results stepwise workflow", () => {
   it("Focus Results fullscreen reuses Guided fullscreen helpers", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(shell).toContain("requestElementFullscreen")
     expect(shell).toContain("exitFullscreenIfNeeded")
     expect(shell).toContain("subscribeFullscreenChange")
@@ -292,7 +293,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("Fullscreen Input → Results keeps shared host mounted", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(app).toContain("suspend={focusView === \"results\"}")
     expect(guided).toContain(
@@ -323,7 +324,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("Next Steps Previous returns to last analytical result via step index", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("data-focus-results-previous")
     expect(app).toContain("navigateFocusPrevious")
     expect(app).toContain("resolveFocusPrevious")
@@ -331,7 +332,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("Next Steps archive uses existing eligibility gate", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(app).toContain("librarySession.canArchive")
     expect(app).toContain("requestArchiveCheckpoint")
@@ -341,7 +342,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("G: Next Steps removes redundant Back to results", () => {
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(panel).not.toContain("onFocusBackToResults")
     expect(panel).not.toContain("data-focus-next-steps-back-to-results")
     expect(app).not.toContain("handleFocusBackToResults")
@@ -369,7 +370,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("I: Review input uses existing Focus exit without green highlighting", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const review = app.match(
       /const handleFocusReviewInput = useCallback\(\(\) => \{([\s\S]*?)\}, \[[^\]]*\]\)/,
     )
@@ -401,7 +402,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("A–F: Focus session arrow keys reuse Previous/Next with safeguards", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const ignore = readSrc(
       "src/features/focus-mode/shouldIgnoreFocusArrowNavigation.ts",
     )
@@ -468,7 +469,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("Focus view / step index are ephemeral", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).not.toMatch(/focusView[\s\S]{0,80}localStorage/)
     expect(app).not.toMatch(/focusResultStepIndex[\s\S]{0,80}localStorage/)
   })

@@ -7,6 +7,7 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/persistence/localAnalysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
+import { readAppSource } from "@/test-utils/appSource"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -20,7 +21,11 @@ describe("checkpoint recovery persistence contract", () => {
       "src/app/App.tsx",
     ]
     const source = productionFiles
-      .map((path) => readFileSync(join(repoRoot, path), "utf8"))
+      .map((path) =>
+        path === "src/app/App.tsx"
+          ? readAppSource()
+          : readFileSync(join(repoRoot, path), "utf8"),
+      )
       .join("\n")
 
     // Forbid the old heavy draft snapshot API; compact SingleDraft* is allowed.

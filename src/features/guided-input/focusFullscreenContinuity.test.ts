@@ -7,6 +7,7 @@ import {
   brandPrimaryTextClass,
 } from "@/shared/brand"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -16,7 +17,7 @@ function readSrc(rel: string) {
 describe("Focus presentation / fullscreen continuity", () => {
   it("A: Focus Simulation run uses shared brand primary button token", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const brand = readSrc("src/shared/brand.ts")
     expect(brand).toContain("brandPrimaryButtonClass")
     expect(brandPrimaryButtonClass).toContain("bg-[#1d868c]")
@@ -59,7 +60,7 @@ describe("Focus presentation / fullscreen continuity", () => {
   })
 
   it("G/H: Focus portal target stays for whole session (no Results→Input remount flash)", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain(
       "Keep the Focus content portal target for the whole Focus session",
     )

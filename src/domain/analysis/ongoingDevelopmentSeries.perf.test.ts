@@ -23,6 +23,7 @@ import { percentile, sortedFiniteValues } from "@/domain/simulation/stats"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function results(projectId: string, values: number[]): ProjectResult[] {
@@ -200,7 +201,7 @@ describe("buildOngoingDevelopmentSeries performance invariants", () => {
 
 describe("Development wiring stability (source / memo / hover)", () => {
   it("App memoizes checkpointComparisonResultSource", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain(
       "const checkpointComparisonResultSource = useMemo",
     )

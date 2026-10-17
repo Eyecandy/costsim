@@ -12,6 +12,7 @@ import { createProject, type Project } from "@/domain/analysis/project"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function dialogSource() {
@@ -22,7 +23,7 @@ function dialogSource() {
 }
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 function cost(

@@ -4,6 +4,7 @@ import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -27,7 +28,7 @@ describe("Focus presentation refinements", () => {
 
   it("C/D: Focus Simulation reuses SpotlightLoadingText / normal run presentation", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(guided).toContain("SpotlightLoadingText")
     expect(guided).toContain('data-simulation-loading=""')
     expect(guided).toContain('data-guided-simulation-loading=""')
@@ -88,7 +89,7 @@ describe("Focus presentation refinements", () => {
   })
 
   it("H/I/J: Next Steps footer uses Avslutt/Close via exitFocusMode; Previous remains", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("data-focus-session-exit")
     expect(app).toContain("data-focus-results-exit")
     expect(app).toContain("onClick={exitFocusMode}")

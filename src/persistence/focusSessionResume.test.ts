@@ -17,6 +17,7 @@ import { buildFocusResultSteps } from "@/domain/guided/focusResultSteps"
 import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -252,7 +253,7 @@ describe("focusSessionResume helpers", () => {
 
 describe("Focus session resume wiring", () => {
   it("App restores after library ready; clears on explicit Focus exit", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("didAttemptFocusSessionResumeRef")
     expect(app).toContain("readFocusSessionResume")
     expect(app).toContain("writeFocusSessionResume")
@@ -289,14 +290,14 @@ describe("Focus session resume wiring", () => {
     expect(resume).not.toContain("expandedChart")
     expect(resume).toContain("sessionStorage")
     expect(resume).not.toContain("localStorage")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).not.toMatch(
       /writeFocusSessionResume[\s\S]{0,200}browserFullscreen/,
     )
   })
 
   it("G: furthestReachedPhase is written and restored", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("furthestReachedPhase: furthestReachedFocusPhase")
     expect(app).toContain("setFurthestReachedFocusPhase(stored.furthestReachedPhase)")
   })

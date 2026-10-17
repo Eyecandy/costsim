@@ -13,6 +13,7 @@ import {
   simulationConfig,
 } from "@/domain/simulation/simulationConfig"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(relativePath: string): string {
@@ -25,7 +26,7 @@ describe("simulationConfig product architecture", () => {
   })
 
   it("B: App wires main simulation request from simulationConfig.mainRuns", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("import { simulationConfig } from \"@/domain/simulation/simulationConfig\"")
     expect(app).toContain("const runs = simulationConfig.mainRuns")
     expect(app).toContain("w.postMessage({ runs, projects: payloads })")

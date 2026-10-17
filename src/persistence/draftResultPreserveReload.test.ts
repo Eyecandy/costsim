@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
 import {
@@ -28,7 +26,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
 import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 function valuesAround(center: number): number[] {
   return Array.from({ length: 200 }, (_, i) => center + (i - 100) * 0.01)
@@ -322,10 +320,7 @@ describe("draft result preserve / Results visibility", () => {
   })
 
   it("H: Ongoing session compact mounts Results when App holder empty", () => {
-    const app = readFileSync(
-      join(repoRoot, "src/app/App.tsx"),
-      "utf8",
-    )
+    const app = readAppSource()
     const gate = app.slice(
       app.indexOf("projectResults.length > 0 ||"),
       app.indexOf("<ResultsPanel"),

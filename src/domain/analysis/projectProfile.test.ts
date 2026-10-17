@@ -42,6 +42,7 @@ import {
   compactPayloadToProjects,
 } from "@/persistence/shareLink"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("ProjectProfile taxonomy v1", () => {
@@ -809,7 +810,7 @@ describe("ProjectProfile UI disclosure wiring", () => {
   })
 
   it("sits between tabs and Cost Items with matching md+ Results offset", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     // Single Analysis: profile+Focus row remains between project tabs and Cost Items.
     const tablistIdx = app.indexOf('role="tablist"')
     const singleProfileIdx = app.indexOf(

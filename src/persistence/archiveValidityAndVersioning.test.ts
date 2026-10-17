@@ -24,6 +24,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import { messages } from "@/i18n/messages"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function fakeShapley(id: string): ShapleyAttributionResult {
@@ -168,7 +169,7 @@ describe("archive validity", () => {
     expect(messages.en.library.archiveNeedsRerun).toBe(
       "Inputs have changed. Run the simulation again before archiving the analysis.",
     )
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("getArchiveBlockReason")
     expect(app).toContain("archiveNeedsSimulation")
     expect(app).toContain("archiveNeedsRerun")
@@ -245,7 +246,7 @@ describe("archived Result View capture", () => {
   })
 
   it("App archives from the same live Result Preferences hook as ResultsPanel", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     const panel = readFileSync(
       join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
@@ -426,7 +427,7 @@ describe("create new version inherits archived results", () => {
     )
     expect(seed).toContain("buildDraftResultSeedFromArchive")
     expect(seed).not.toContain("DraftResultSnapshotV1")
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("clearDraftResultSeedRef")
     expect(app).toContain("applyDraftResultSeed")
   })

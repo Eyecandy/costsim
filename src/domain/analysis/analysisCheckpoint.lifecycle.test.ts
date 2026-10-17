@@ -31,6 +31,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import type { Project } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function snapshotFor(projects: Project[], activeProjectId: string) {
@@ -390,7 +391,7 @@ describe("checkpoint lifecycle", () => {
   })
 
   it("Single Analysis UI paths remain gated away from checkpoint lifecycle", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("archiveActiveCheckpoint")
     expect(app).toContain("CreateNextCheckpointDialog")
     expect(app).toContain('isOngoingAnalysis')

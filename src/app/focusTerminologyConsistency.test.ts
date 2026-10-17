@@ -4,6 +4,7 @@ import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -36,7 +37,7 @@ describe("Focus mode user-facing terminology", () => {
     expect(messages.en.inputs.focusIntroTitle).toBe("Focus mode")
     expect(messages.no.inputs.guidedPhaseFocusIntro).toBe("Fokusmodus")
     expect(messages.en.inputs.guidedPhaseFocusIntro).toBe("Focus mode")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain('t("inputs.guidedFocusMode")')
     expect(app).toContain("data-focus-mode-primary-entry")
   })

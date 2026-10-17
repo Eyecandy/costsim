@@ -8,6 +8,7 @@ import {
   runBeforeLeaveWithoutBlocking,
 } from "@/features/analysis-library/AnalysisLibraryNav"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("Library direct destinations (URL-authoritative)", () => {
@@ -65,7 +66,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
       join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(nav).toContain("beforeLeaveWorkspace")
     expect(app).toContain("flushPendingSave()")
     expect(app).toContain("if (librarySession.readOnly) return")

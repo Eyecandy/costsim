@@ -11,6 +11,7 @@ import {
 } from "@/domain/guided/focusSessionFrame"
 import { focusResultHelpCopyKeys } from "@/domain/guided/focusResultSteps"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -20,7 +21,7 @@ function readSrc(rel: string) {
 describe("Focus chrome visual polish", () => {
   it("A: Focus Simulation uses App primary Button + brandPrimaryButtonClass", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(guided).toContain("brandPrimaryButtonClass")
     expect(guided).toContain("<Button")
     expect(guided).toContain('data-guided-simulation-run=""')
@@ -32,7 +33,7 @@ describe("Focus chrome visual polish", () => {
   })
 
   it("B/C: Results Focus header shows alternative and Results context (no Results help)", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(app).toContain("data-focus-results-project-context")
     expect(app).toContain("data-focus-results-context")
@@ -65,7 +66,7 @@ describe("Focus chrome visual polish", () => {
 
   it("E/F: Input and Results share lightweight footer nav positioning/style", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(FOCUS_SESSION_FOOTER_CLASS).toContain("px-5 py-3 sm:px-8")
     expect(FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS).toContain(
@@ -85,7 +86,7 @@ describe("Focus chrome visual polish", () => {
   })
 
   it("G: Next Steps footer is Previous + Close with shared nav weight", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("data-focus-results-exit")
     expect(app).toContain("data-focus-session-exit")
     expect(app).toContain('t("inputs.focusSessionExit")')

@@ -16,6 +16,7 @@ import {
 } from "@/domain/analysis/project"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function cost(
@@ -103,7 +104,7 @@ describe("guided incurred costs step", () => {
   })
 
   it("F: App wires incurred through patchProjectIncurredCosts (stale path)", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("onIncurredCostsChange=")
     expect(app).toContain("patchProjectIncurredCosts(prev, activeProject.id, value)")
   })

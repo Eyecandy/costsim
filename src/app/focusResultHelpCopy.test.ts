@@ -4,6 +4,7 @@ import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -12,7 +13,7 @@ function readSrc(rel: string) {
 
 describe("Focus / Results concise guidance copy", () => {
   it("Results Focus does not render question-mark help; Input Focus still does", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const phaseInfo = readSrc("src/features/guided-input/GuidedPhaseInfo.tsx")
     expect(app).not.toContain("focusResultHelpCopyKeys")
@@ -79,7 +80,7 @@ describe("Focus / Results concise guidance copy", () => {
   })
 
   it("Results header context remains without help control", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("data-focus-results-project-context")
     expect(app).toContain("data-focus-results-context")
     expect(app).toContain('t("inputs.focusResultsContext")')

@@ -8,6 +8,7 @@ import {
   resolveFocusPrevious,
 } from "@/domain/guided/focusSessionNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -79,7 +80,7 @@ describe("focusSessionNavigation", () => {
 
 describe("unified Focus session ownership", () => {
   it("A–C: App owns continuous Previous/Next across Input and Results", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("navigateFocusPrevious")
     expect(app).toContain("navigateFocusNext")
     expect(app).toContain("guidedDialogRef")
@@ -110,7 +111,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("D–F: X / exitFocusMode closes the whole Focus session including Guided", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const exit = app.match(
       /const exitFocusMode = useCallback\(\(\) => \{([\s\S]*?)\}, \[[^\]]*\]\)/,
     )
@@ -128,7 +129,7 @@ describe("unified Focus session ownership", () => {
         focusResultStepIndex: 0,
       }),
     ).toEqual({ kind: "enterInputFromResults" })
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const back = app.match(
       /const backToFocusInput = useCallback\(\(\) => \{([\s\S]*?)\}, \[/,
     )
@@ -194,7 +195,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("I: Simulation → Results still requires viewable results", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const cont = app.match(
       /const continueFromSimulationToResults = useCallback\(\(\) => \{([\s\S]*?)\}, \[hasViewableResults\]\)/,
     )

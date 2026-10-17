@@ -18,6 +18,7 @@ import {
   DRIVER_DESCRIPTION_MAX_LENGTH,
 } from "@/domain/results/rowDefinitions"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function dialogSource() {
@@ -28,7 +29,7 @@ function dialogSource() {
 }
 
 function appSource() {
-  return readFileSync(join(root, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 function guidedDefinitionTextareaSource(): string {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -33,7 +34,7 @@ describe("Focus session shared toolbar", () => {
 
   it("Result Settings is parked beside common controls without flex-pushing them", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(shell).toContain("headerActions")
     expect(shell).toContain('data-focus-session-toolbar-extra=""')
     // Extra is absolutely positioned to the left of the common pair.

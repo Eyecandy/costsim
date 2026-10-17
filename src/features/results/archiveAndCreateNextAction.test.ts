@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function read(pathFromRepo: string) {
@@ -33,7 +34,7 @@ describe("archive and create next Results shortcut", () => {
   })
 
   it("App wires the same requestArchiveCheckpoint handler for menu and Results", () => {
-    const app = read("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("const requestArchiveCheckpoint = useCallback")
     expect(app).toContain("onArchive={requestArchiveCheckpoint}")
     expect(app).toContain("canArchive={librarySession.canArchive}")
@@ -52,7 +53,7 @@ describe("archive and create next Results shortcut", () => {
     expect(panel).toContain(
       "{!analysisArchivedView && onRequestArchiveAndCreateNext ? (",
     )
-    const app = read("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain(
       "isOngoingAnalysis && librarySession.canArchive",
     )
@@ -60,7 +61,7 @@ describe("archive and create next Results shortcut", () => {
 
   it("Reset / Nullstill is removed from Results Options", () => {
     const panel = read("src/features/results/ResultsPanel.tsx")
-    const app = read("src/app/App.tsx")
+    const app = readAppSource()
     const messages = read("src/i18n/messages.ts")
     expect(panel).not.toContain("onRequestReset")
     expect(panel).not.toContain("results.startOverButton")

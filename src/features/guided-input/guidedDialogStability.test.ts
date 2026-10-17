@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { FOCUS_SESSION_FOOTER_CLASS } from "@/domain/guided/focusSessionFrame"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function dialogSource() {
@@ -22,7 +23,7 @@ function infoSource() {
 }
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 describe("Guided Input dialog stability and exit", () => {

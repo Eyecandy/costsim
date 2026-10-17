@@ -10,6 +10,7 @@ import {
   FOCUS_SESSION_HEADER_TITLE_CLASS,
 } from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -19,7 +20,7 @@ function readSrc(rel: string) {
 describe("Focus shared session chrome ownership", () => {
   it("A/B: shell header and footer always exist for Input and Results", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(shell).toContain('data-focus-mode-header=""')
     expect(shell).toContain('data-focus-mode-footer=""')
     expect(shell).toContain("FOCUS_SESSION_HEADER_CLASS")
@@ -67,7 +68,7 @@ describe("Focus shared session chrome ownership", () => {
 
   it("keeps Guided mounted (soft-suspend) across Input → Results → Input", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(guided).toContain('data-guided-soft-suspend={suspend ? "true" : undefined}')
     expect(guided).toContain("inert: true")
     expect(guided).toContain("aria-hidden={suspend ? true : undefined}")
@@ -105,7 +106,7 @@ describe("Focus shared session chrome ownership", () => {
 
   it("Guided publishes chrome metadata; App does not redefine Guided steps", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const meta = readSrc("src/domain/guided/guidedFocusChrome.ts")
     expect(meta).toContain("GuidedFocusChromeMeta")
     expect(guided).toContain("onFocusChromeMetaChange")

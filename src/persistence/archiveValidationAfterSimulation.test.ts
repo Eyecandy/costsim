@@ -20,6 +20,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 function resultsFor(projectId: string): ProjectResult[] {
   return [
@@ -288,10 +289,7 @@ describe("archive validation after simulation", () => {
   })
 
   it("App gates archive menu/button on librarySession.canArchive", () => {
-    const app = readFileSync(
-      join(repoRoot, "src/app/App.tsx"),
-      "utf8",
-    )
+    const app = readAppSource()
     expect(app).toContain("canArchive={librarySession.canArchive}")
     expect(app).toContain(
       "isOngoingAnalysis && librarySession.canArchive",

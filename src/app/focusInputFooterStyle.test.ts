@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/domain/guided/focusSessionFrame"
 import { brandPrimaryButtonClass } from "@/shared/brand"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -13,7 +14,7 @@ function readSrc(rel: string) {
 
 describe("Focus Input footer style from first open", () => {
   it("openGuidedInput enters Focus Input immediately (no standalone heavy footer first)", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const openStart = app.indexOf("const openGuidedInput = useCallback")
     const openEnd = app.indexOf("}, [analysisReadOnly, clearCorrelationEditingState", openStart)
     const openBody = app.slice(openStart, openEnd)
@@ -26,7 +27,7 @@ describe("Focus Input footer style from first open", () => {
   })
 
   it("initial embedded Input Focus footer uses the same lightweight nav class as Results", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const inputNav = app.slice(
       app.indexOf('data-focus-input-nav=""'),
       app.indexOf("data-guided-next=\"\"", app.indexOf('data-focus-input-nav=""')) + 40,
@@ -46,7 +47,7 @@ describe("Focus Input footer style from first open", () => {
 
   it("Guided does not render its own footer when embedded (shell owns style for whole session)", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const footer = guided.slice(
       guided.indexOf("const renderFooter = () => {"),
       guided.indexOf("Embedded Focus path"),
@@ -64,7 +65,7 @@ describe("Focus Input footer style from first open", () => {
     expect(guided).toContain('data-guided-simulation-run=""')
     expect(brandPrimaryButtonClass).toContain("bg-[#1d868c]")
     // Footer Next must not reuse the simulation primary fill when in Focus shell.
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const inputNav = app.slice(
       app.indexOf('data-focus-input-nav=""'),
       app.indexOf("{focusView === \"results\" &&", app.indexOf('data-focus-input-nav=""')),

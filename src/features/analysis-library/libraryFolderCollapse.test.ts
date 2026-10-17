@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("library user-folder collapse vs nav sections", () => {
@@ -34,7 +35,7 @@ describe("library user-folder collapse vs nav sections", () => {
       join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(page).toContain('className="flex min-h-screen flex-col bg-background"')
     expect(page).toContain('role="contentinfo"')
     expect(page).toContain("© 2026 {PRODUCT_NAME}")

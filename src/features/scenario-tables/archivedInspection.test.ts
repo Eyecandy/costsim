@@ -12,6 +12,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -22,7 +23,7 @@ describe("archived analysis inspection (read-only)", () => {
   it("A: cost/driver Define inspection opens while Save is omitted", () => {
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
     const editor = readSrc("src/features/scenario-tables/DefineRowEditor.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
 
     // Selection for Define is allowed even when archived/read-only.
     expect(table).toContain("defineMode.onSelectRow(dataRow.id)")
@@ -62,7 +63,7 @@ describe("archived analysis inspection (read-only)", () => {
 
   it("C: Impact selection works when archived; mutation paths stay gated", () => {
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("if (!impactModeActive) return")
     expect(app).not.toContain(
       "if (!impactModeActive || analysisReadOnly) return",

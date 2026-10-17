@@ -21,6 +21,7 @@ import {
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("Analysis Library repository", () => {
@@ -418,7 +419,7 @@ describe("Analysis Library repository", () => {
   })
 
   it("ongoing mode uses CheckpointNav timeline and hides multi-alternative controls", () => {
-    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("CheckpointNav")
     expect(app).toContain("CreateNextCheckpointDialog")
     expect(app).toContain("archiveActiveCheckpoint")

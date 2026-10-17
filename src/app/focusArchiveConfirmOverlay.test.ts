@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -34,7 +35,7 @@ describe("Focus archive confirmation overlay portal", () => {
   })
 
   it("D: Archive from Next Steps still uses requestArchiveCheckpoint", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(app).toContain("const requestArchiveCheckpoint = useCallback")
     expect(app).toContain("setArchiveConfirmOpen(true)")
@@ -54,7 +55,7 @@ describe("Focus archive confirmation overlay portal", () => {
   })
 
   it("C/E: Cancel only closes confirm; outside Focus still uses ConfirmDialog", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const dialog = readSrc("src/shared/ConfirmDialog.tsx")
     expect(app).toContain("open={archiveConfirmOpen}")
     expect(app).toContain("onCancel={() => setArchiveConfirmOpen(false)}")

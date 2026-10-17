@@ -10,6 +10,7 @@ import {
   projectColorIndex,
 } from "@/domain/results/projectColors"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("projectColors", () => {
@@ -35,7 +36,7 @@ describe("projectColors", () => {
       join(root, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     const swatch = readFileSync(
       join(root, "src/shared/ProjectColorSwatch.tsx"),
       "utf8",

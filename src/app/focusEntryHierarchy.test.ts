@@ -14,6 +14,7 @@ import {
 import { messages } from "@/i18n/messages"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -49,7 +50,7 @@ const costSteps = () =>
 
 describe("Focus mode entry hierarchy", () => {
   it("A: primary Focus entry shares the Project Profile row (not INPUT header / sticky utility)", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const nav = readSrc("src/features/checkpoints/CheckpointNav.tsx")
     expect(app).toContain('data-focus-mode-primary-entry=""')
     expect(app).toContain("PrimaryFocusModeEntry")
@@ -77,7 +78,7 @@ describe("Focus mode entry hierarchy", () => {
     expect(PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS).toContain("md:justify-start")
     expect(layout).not.toMatch(/absolute|left:\s*\d|translateX/)
     // Single and Ongoing both use the shared row.
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const rowUses = app.match(/PROJECT_PROFILE_FOCUS_ROW_CLASS/g) ?? []
     expect(rowUses.length).toBeGreaterThanOrEqual(3)
     expect(app).toContain("ONGOING_PROJECT_PROFILE_CELL_CLASS")
@@ -90,7 +91,7 @@ describe("Focus mode entry hierarchy", () => {
   })
 
   it("B: openFocusModePrimary opens the cost sequence at the focusIntro phase", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("const openFocusModePrimary = useCallback(")
     expect(app).toContain(
       'openGuidedInput("cost", 0, { startPhase: "focusIntro" })',
@@ -136,7 +137,7 @@ describe("Focus mode entry hierarchy", () => {
   })
 
   it("E: local Input shortcuts clear startPhase instead of setting focusIntro", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("setGuidedStartPhase(options?.startPhase ?? null)")
     expect(app).toContain('onOpen: () => openGuidedInput("cost")')
     expect(app).toContain('onOpen: () => openGuidedInput("driver")')
@@ -144,7 +145,7 @@ describe("Focus mode entry hierarchy", () => {
   })
 
   it("F: INPUT and OUTPUT headers share one bottom-gap token", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     const nav = readSrc("src/features/checkpoints/CheckpointNav.tsx")
     expect(COLUMN_HEADER_BOTTOM_GAP_CLASS).toBe("mb-4")
     expect(app).toContain('from "@/domain/results/columnHeaderLayout"')
@@ -205,7 +206,7 @@ describe("Focus mode entry hierarchy", () => {
   it("H: guided profile phase embeds ProjectProfileSection through App's patch path", () => {
     const profile = readSrc("src/features/workspace/ProjectProfileSection.tsx")
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(profile).toContain("embedded?: boolean")
     expect(profile).toContain('"data-project-profile-embedded": ""')
     expect(profile).toContain("const open = embedded || openState")

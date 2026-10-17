@@ -20,10 +20,11 @@ import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { messages } from "@/i18n/messages"
 import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 function costTableSource() {

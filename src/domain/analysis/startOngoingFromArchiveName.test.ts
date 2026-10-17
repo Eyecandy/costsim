@@ -25,6 +25,7 @@ import {
 } from "@/domain/analysis/startOngoingFromArchiveName"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 function makeSnapshot(
   projects: AnalysisDocument["workspace"]["projects"],
@@ -361,7 +362,7 @@ describe("start ongoing name UX wiring", () => {
       join(root, "src/features/analysis-library/StartOngoingFromArchiveDialog.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
     const session = readFileSync(
       join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),

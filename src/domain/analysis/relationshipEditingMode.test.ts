@@ -18,6 +18,7 @@ import {
   isCostCorrelationGroupPatchValid,
 } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function scenarioTableSource() {
@@ -28,7 +29,7 @@ function scenarioTableSource() {
 }
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 describe("relationship editing mode UX", () => {

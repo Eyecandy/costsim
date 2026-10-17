@@ -4,10 +4,11 @@ import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 describe("simulation run spotlight loading", () => {

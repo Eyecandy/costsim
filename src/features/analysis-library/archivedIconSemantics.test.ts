@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 describe("archived state uses Archive icon (not Lock)", () => {
@@ -18,7 +19,7 @@ describe("archived state uses Archive icon (not Lock)", () => {
       join(root, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
 
     for (const src of [nav, page, menu, app]) {
       expect(src).toContain("Archive")

@@ -10,6 +10,7 @@ import {
 } from "@/domain/simulation/lazyShapleyAttribution"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function hookSource() {
@@ -27,7 +28,7 @@ function panelSource() {
 }
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
+  return readAppSource()
 }
 
 const emptyResult = {

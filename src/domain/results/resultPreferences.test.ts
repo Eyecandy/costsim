@@ -31,6 +31,7 @@ import {
   formatKeyFigurePctDecimal,
 } from "@/domain/results/keyFiguresDisplay"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 describe("Result Preferences model", () => {
   it("defaults preserve current Key Figures / S-curve experience", () => {
@@ -344,7 +345,7 @@ describe("Result Preferences UI wiring", () => {
     )
     expect(panel).toContain("ResultPreferencesPanel")
     expect(panel).toContain("liveResultPreferences")
-    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     expect(app).toContain("useResultPreferences")
     expect(app).toContain("liveResultPreferences={resultPreferences}")
     expect(panel).toContain("headerTrailing=")

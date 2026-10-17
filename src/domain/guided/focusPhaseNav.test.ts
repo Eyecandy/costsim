@@ -18,6 +18,7 @@ import {
 } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string) {
@@ -272,7 +273,7 @@ describe("Focus phase navigation helpers", () => {
 
 describe("Focus phase navigation wiring", () => {
   it("App owns ephemeral furthestReached + phase nav in header aux", () => {
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("furthestReachedFocusPhase")
     expect(app).toContain("advanceFurthestFocusPhase")
     expect(app).toContain("FocusPhaseNav")
@@ -303,7 +304,7 @@ describe("Focus phase navigation wiring", () => {
     // True center: equal side columns so trailing progress cannot shift the nav.
     expect(nav).toContain("grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]")
     expect(nav).toContain("justify-self-center")
-    const app = readSrc("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("itemProgressLabel=")
     expect(app).toContain("guidedFocusChromeMeta?.progressLabel")
   })

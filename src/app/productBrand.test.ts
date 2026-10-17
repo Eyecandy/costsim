@@ -11,6 +11,7 @@ import {
   PRODUCT_NAME_SEPARATOR,
 } from "@/shared/brand"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function readSrc(rel: string): string {
@@ -60,7 +61,7 @@ describe("product brand U·SKOP", () => {
     expect(nameClass).not.toMatch(/\bitalic\b/)
 
     for (const rel of ["src/app/App.tsx", "src/features/analysis-library/AnalysisLibraryPage.tsx"] as const) {
-      const src = readSrc(rel)
+      const src = rel === "src/app/App.tsx" ? readAppSource() : readSrc(rel)
       expect(src).toContain("PRODUCT_NAME")
       expect(src).toContain("BrandWordmark")
       expect(src).toMatch(/© 2026 \{PRODUCT_NAME\}/)
@@ -96,7 +97,7 @@ describe("product brand U·SKOP", () => {
     expect(messages.en.auth.helper).not.toContain(PRODUCT_NAME)
 
     // Authenticated app surfaces still branded.
-    expect(readSrc("src/app/App.tsx")).toContain("BrandWordmark")
+    expect(readAppSource()).toContain("BrandWordmark")
     expect(readSrc("src/features/analysis-library/AnalysisLibraryPage.tsx")).toContain("BrandWordmark")
     expect(messages.no.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(messages.en.results.pdfBrandName).toBe(PRODUCT_NAME)

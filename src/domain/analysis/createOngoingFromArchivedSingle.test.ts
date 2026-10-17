@@ -27,6 +27,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { resolveResultView } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 function heavyCheckpointSnapshot(
   snapshot: AnalysisCheckpoint["archivedSnapshot"],
@@ -426,7 +427,7 @@ describe("start ongoing UI wiring", () => {
       join(root, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
+    const app = readAppSource()
     const dialog = readFileSync(
       join(root, "src/features/analysis-library/StartOngoingFromArchiveDialog.tsx"),
       "utf8",

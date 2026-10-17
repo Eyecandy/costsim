@@ -36,6 +36,7 @@ import { newId } from "@/domain/results/tableRows"
 import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readAppSource } from "@/test-utils/appSource"
 
 
 function read(pathFromRepo: string) {
@@ -698,7 +699,7 @@ describe("checkpoint comparison UI wiring", () => {
     expect(comparisonChange).toBeGreaterThan(keyFigures)
     expect(comparisonChange).toBeLessThan(sCurve)
 
-    const app = read("src/app/App.tsx")
+    const app = readAppSource()
     expect(app).toContain("ongoingCheckpoints={")
     expect(app).toMatch(
       /isOngoingAnalysis\s*\?\s*librarySession\.ongoing\?\.checkpoints/,
