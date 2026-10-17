@@ -6,7 +6,6 @@ import { messages } from "@/i18n/messages"
 import { METHOD_GUIDE_SECTION_IDS } from "@/domain/guided/methodGuide"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
 }
@@ -33,20 +32,14 @@ describe("Method Guide chronological content", () => {
   it("places analysis modes after intro and before Project profile", () => {
     const order = [...METHOD_GUIDE_SECTION_IDS]
     expect(order.indexOf("analysisModes")).toBe(0)
-    expect(order.indexOf("analysisModes")).toBeLessThan(
-      order.indexOf("projectProfile"),
-    )
+    expect(order.indexOf("analysisModes")).toBeLessThan(order.indexOf("projectProfile"))
   })
 
   it("places Project profile before cost modelling; Assumptions before incurred costs", () => {
     const order = [...METHOD_GUIDE_SECTION_IDS]
     expect(order.indexOf("projectProfile")).toBeLessThan(order.indexOf("costBasis"))
-    expect(order.indexOf("projectProfile")).toBeLessThan(
-      order.indexOf("costItems"),
-    )
-    expect(order.indexOf("assumptions")).toBeLessThan(
-      order.indexOf("incurredCosts"),
-    )
+    expect(order.indexOf("projectProfile")).toBeLessThan(order.indexOf("costItems"))
+    expect(order.indexOf("assumptions")).toBeLessThan(order.indexOf("incurredCosts"))
     expect(order.indexOf("assumptions")).toBeLessThan(order.indexOf("costItems"))
     expect(order.indexOf("assumptions")).toBeLessThan(order.indexOf("ranges"))
   })
@@ -118,9 +111,7 @@ describe("Method Guide chronological content", () => {
     )
     expect(messages.no.methodGuide.analysisModesText).toMatch(/Løpende analyse/)
     expect(messages.no.methodGuide.analysisModesText).toMatch(/sjekkpunkt/)
-    expect(messages.en.methodGuide.analysisModesHeading).toBe(
-      "Single or ongoing analysis?",
-    )
+    expect(messages.en.methodGuide.analysisModesHeading).toBe("Single or ongoing analysis?")
     expect(messages.en.methodGuide.analysisModesText).toMatch(/Single analysis/)
     expect(messages.en.methodGuide.analysisModesText).toMatch(
       /compare alternative concepts or solutions/,

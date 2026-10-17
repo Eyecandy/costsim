@@ -36,9 +36,7 @@ export function projectColorIndex(projectIndex: number): number {
 }
 
 /** CSS custom-property name for charts/legends/tabs (`var(--scurve-line-N)`). */
-export function getProjectColorCssVar(
-  projectIndex: number,
-): ProjectColorCssVar {
+export function getProjectColorCssVar(projectIndex: number): ProjectColorCssVar {
   return PROJECT_COLOR_CSS_VARS[projectColorIndex(projectIndex)]!
 }
 

@@ -2,19 +2,12 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import {
-  buildWaterfallChartLayout,
-  valueToX,
-} from "@/domain/results/waterfallLayout"
+import { buildWaterfallChartLayout, valueToX } from "@/domain/results/waterfallLayout"
 import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function attributionSource() {
-  return readFileSync(
-    join(root, "src/features/results/AttributionWaterfall.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(root, "src/features/results/AttributionWaterfall.tsx"), "utf8")
 }
 
 describe("Contribution waterfall expanded bracket alignment", () => {
@@ -28,15 +21,9 @@ describe("Contribution waterfall expanded bracket alignment", () => {
     expect(src).not.toContain('data-waterfall-plot-grid="reference"')
     expect(src).not.toContain('data-waterfall-plot-grid="bars"')
     // Expanded label widening applies via the shared expanded token only.
-    expect(src).toContain(
-      'expanded ? WATERFALL_PLOT_GRID_EXPANDED : WATERFALL_PLOT_GRID_COMPACT',
-    )
-    expect(src).toContain(
-      "minmax(0,1fr)_minmax(0,1.35fr)_minmax(5.5rem,auto)",
-    )
-    expect(src).toContain(
-      "minmax(0,1.15fr)_minmax(0,1.35fr)_minmax(5.5rem,auto)",
-    )
+    expect(src).toContain("expanded ? WATERFALL_PLOT_GRID_EXPANDED : WATERFALL_PLOT_GRID_COMPACT")
+    expect(src).toContain("minmax(0,1fr)_minmax(0,1.35fr)_minmax(5.5rem,auto)")
+    expect(src).toContain("minmax(0,1.15fr)_minmax(0,1.35fr)_minmax(5.5rem,auto)")
     // No leftover divergent inline bar-only expanded grid.
     expect(src).not.toMatch(
       /contributionRows[\s\S]{0,400}\[grid-template-columns:minmax\(0,1\.15fr\)/,
@@ -128,12 +115,8 @@ describe("Contribution waterfall expanded bracket alignment", () => {
 
   it("D: expanded waterfall still reuses AttributionWaterfall (no separate expanded geometry)", () => {
     const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
-    expect(panel).toMatch(
-      /expandedChart\?\.kind === "expectedAddition"[\s\S]*?expanded/,
-    )
-    expect(panel).toMatch(
-      /expandedChart\?\.kind === "uncertaintyReserve"[\s\S]*?expanded/,
-    )
+    expect(panel).toMatch(/expandedChart\?\.kind === "expectedAddition"[\s\S]*?expanded/)
+    expect(panel).toMatch(/expandedChart\?\.kind === "uncertaintyReserve"[\s\S]*?expanded/)
     const src = attributionSource()
     expect(src).toContain("expanded?: boolean")
     expect(src).toContain("PLOT_LEFT")

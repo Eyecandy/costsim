@@ -14,8 +14,7 @@ import { fillUncertaintyModelCopy } from "@/domain/simulation/uncertaintyModelCo
 import { cn } from "@/shared/utils"
 
 /** Same Play mark as the Guided Analysis control in Cost Items / Drivers toolbars. */
-const GUIDE_ICON_CLASS =
-  "inline size-3.5 shrink-0 fill-[#1d868c] text-[#1d868c] align-[-0.125em]"
+const GUIDE_ICON_CLASS = "inline size-3.5 shrink-0 fill-[#1d868c] text-[#1d868c] align-[-0.125em]"
 
 /**
  * Viewport overlay shell — must portal to body (not render under sticky/backdrop-blur
@@ -158,10 +157,7 @@ export function GlobalHeaderUtilities({
         {items.map((item, idx) => (
           <div key={idx} className="contents">
             {idx > 0 ? (
-              <span
-                className="select-none text-muted-foreground/60"
-                aria-hidden
-              >
+              <span className="select-none text-muted-foreground/60" aria-hidden>
                 ·
               </span>
             ) : null}
@@ -221,17 +217,11 @@ export function GlobalHeaderUtilities({
                       </p>
                     </div>
                     {METHOD_GUIDE_SECTION_IDS.map((id) => (
-                      <section
-                        key={id}
-                        className="space-y-1.5"
-                        data-method-guide-section={id}
-                      >
+                      <section key={id} className="space-y-1.5" data-method-guide-section={id}>
                         <h3 className="section-heading normal-case tracking-normal text-foreground/90">
                           {t(`methodGuide.${id}Heading`)}
                         </h3>
-                        <p className="section-body">
-                          {t(`methodGuide.${id}Text`)}
-                        </p>
+                        <p className="section-body">{t(`methodGuide.${id}Text`)}</p>
                         {id === "assumptions" ? (
                           <p
                             className="section-body flex flex-wrap items-center gap-x-1 gap-y-0.5 text-muted-foreground"
@@ -257,9 +247,7 @@ export function GlobalHeaderUtilities({
                       <h3 className="section-heading normal-case tracking-normal text-foreground/90">
                         {t("methodGuide.perspectivesTipHeading")}
                       </h3>
-                      <p className="section-body">
-                        {t("methodGuide.perspectivesTipText")}
-                      </p>
+                      <p className="section-body">{t("methodGuide.perspectivesTipText")}</p>
                     </section>
                   </div>
                 </div>
@@ -309,11 +297,7 @@ export function GlobalHeaderUtilities({
                     <p className="section-body">
                       {fillUncertaintyModelCopy(t("aboutModel.paragraph1"), {
                         language,
-                        count: formatNumber(
-                          simulationConfig.mainRuns,
-                          0,
-                          language,
-                        ),
+                        count: formatNumber(simulationConfig.mainRuns, 0, language),
                       })}
                     </p>
                     <p className="section-body">{t("aboutModel.paragraph2")}</p>

@@ -7,34 +7,19 @@
  */
 
 export type ProjectAreaId =
-  | "buildings"
-  | "transport"
-  | "energy"
-  | "water_wastewater"
-  | "industry"
-  | "other"
+  "buildings" | "transport" | "energy" | "water_wastewater" | "industry" | "other"
 
 export type ProjectProfileCategoryId =
-  | "projectArea"
-  | "projectType"
-  | "interventionTypes"
-  | "phase"
-  | "deliveryModel"
+  "projectArea" | "projectType" | "interventionTypes" | "phase" | "deliveryModel"
 
 /** Ordered flow steps — includes non-chip steps such as primary quantity. */
-export type ProjectProfileFlowStepId =
-  | ProjectProfileCategoryId
-  | "primaryQuantity"
+export type ProjectProfileFlowStepId = ProjectProfileCategoryId | "primaryQuantity"
 
 export type ProjectProfileSelectionMode = "single" | "multi"
 
 /** Stable quantity characteristic IDs (never localized labels). */
 export type ProjectQuantityType =
-  | "gross_floor_area"
-  | "length"
-  | "tunnel_length"
-  | "bridge_length"
-  | "capacity"
+  "gross_floor_area" | "length" | "tunnel_length" | "bridge_length" | "capacity"
 
 export type ProjectQuantityUnit = "m2" | "km" | "m" | "mw"
 
@@ -79,9 +64,7 @@ export const PROJECT_AREA_OPTION_IDS = [
 ] as const satisfies readonly ProjectAreaId[]
 
 /** Project Type options keyed by Project Area. */
-export const PROJECT_TYPES_BY_AREA: Readonly<
-  Record<ProjectAreaId, readonly string[]>
-> = {
+export const PROJECT_TYPES_BY_AREA: Readonly<Record<ProjectAreaId, readonly string[]>> = {
   buildings: [
     "education",
     "healthcare",
@@ -91,21 +74,8 @@ export const PROJECT_TYPES_BY_AREA: Readonly<
     "residential",
     "other",
   ],
-  transport: [
-    "road",
-    "rail",
-    "tunnel",
-    "bridge",
-    "transport_hub",
-    "other",
-  ],
-  energy: [
-    "generation",
-    "grid_transmission",
-    "substation_transformer",
-    "energy_storage",
-    "other",
-  ],
+  transport: ["road", "rail", "tunnel", "bridge", "transport_hub", "other"],
+  energy: ["generation", "grid_transmission", "substation_transformer", "energy_storage", "other"],
   water_wastewater: [
     "water_supply",
     "wastewater",
@@ -200,13 +170,7 @@ export const PROJECT_PROFILE_CATEGORIES: readonly ProjectProfileCategoryDef[] = 
   {
     id: "interventionTypes",
     selection: "multi",
-    optionIds: [
-      "new_facility",
-      "expansion",
-      "rehabilitation_renewal",
-      "modification",
-      "combined",
-    ],
+    optionIds: ["new_facility", "expansion", "rehabilitation_renewal", "modification", "combined"],
   },
   {
     id: "phase",
@@ -233,19 +197,13 @@ export const PROJECT_PROFILE_CATEGORIES: readonly ProjectProfileCategoryDef[] = 
   },
 ] as const
 
-const OPTION_ID_SET_BY_CATEGORY: Record<
-  ProjectProfileCategoryId,
-  ReadonlySet<string>
-> = {
+const OPTION_ID_SET_BY_CATEGORY: Record<ProjectProfileCategoryId, ReadonlySet<string>> = {
   projectArea: new Set(PROJECT_AREA_OPTION_IDS),
   projectType: ALL_PROJECT_TYPE_IDS,
   interventionTypes: new Set(
-    PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "interventionTypes")!
-      .optionIds,
+    PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "interventionTypes")!.optionIds,
   ),
-  phase: new Set(
-    PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "phase")!.optionIds,
-  ),
+  phase: new Set(PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "phase")!.optionIds),
   deliveryModel: new Set(
     PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "deliveryModel")!.optionIds,
   ),
@@ -283,9 +241,7 @@ export function isProjectAreaId(id: string): id is ProjectAreaId {
   return (PROJECT_AREA_OPTION_IDS as readonly string[]).includes(id)
 }
 
-export function getProjectTypeOptionIds(
-  projectArea: string | undefined,
-): readonly string[] {
+export function getProjectTypeOptionIds(projectArea: string | undefined): readonly string[] {
   if (!projectArea || !isProjectAreaId(projectArea)) return []
   return PROJECT_TYPES_BY_AREA[projectArea]
 }
@@ -302,9 +258,7 @@ export function emptyProjectProfile(): ProjectProfile {
   return {}
 }
 
-export function isProjectProfileEmpty(
-  profile: ProjectProfile | null | undefined,
-): boolean {
+export function isProjectProfileEmpty(profile: ProjectProfile | null | undefined): boolean {
   if (!profile) return true
   if (profile.projectArea) return false
   if (profile.projectType) return false
@@ -326,9 +280,7 @@ function sortIdsByTaxonomy(
       : PROJECT_PROFILE_CATEGORIES.find((c) => c.id === categoryId)?.optionIds
   if (!order || order.length === 0) return [...ids]
   const rank = new Map(order.map((id, i) => [id, i]))
-  return [...ids].sort(
-    (a, b) => (rank.get(a) ?? 999) - (rank.get(b) ?? 999),
-  )
+  return [...ids].sort((a, b) => (rank.get(a) ?? 999) - (rank.get(b) ?? 999))
 }
 
 function sanitizeSingle(
@@ -340,10 +292,7 @@ function sanitizeSingle(
   return OPTION_ID_SET_BY_CATEGORY[categoryId].has(id) ? id : undefined
 }
 
-function sanitizeMulti(
-  categoryId: "interventionTypes",
-  raw: unknown,
-): string[] | undefined {
+function sanitizeMulti(categoryId: "interventionTypes", raw: unknown): string[] | undefined {
   if (!Array.isArray(raw)) return undefined
   const allowed = OPTION_ID_SET_BY_CATEGORY[categoryId]
   const seen = new Set<string>()
@@ -379,33 +328,22 @@ function sanitizePrimaryQuantity(
  * Incompatible projectType for projectArea is cleared.
  * Empty → undefined (omit from Project). Document load never throws.
  */
-export function normalizeProjectProfile(
-  raw: unknown,
-): ProjectProfile | undefined {
+export function normalizeProjectProfile(raw: unknown): ProjectProfile | undefined {
   if (raw == null || typeof raw !== "object") return undefined
   const o = raw as Record<string, unknown>
 
   const projectArea = sanitizeSingle("projectArea", o.projectArea)
   // Accept legacy `projectPhase` alias if present.
-  const phase =
-    sanitizeSingle("phase", o.phase) ??
-    sanitizeSingle("phase", o.projectPhase)
+  const phase = sanitizeSingle("phase", o.phase) ?? sanitizeSingle("phase", o.projectPhase)
   const deliveryModel = sanitizeSingle("deliveryModel", o.deliveryModel)
-  const interventionTypes = sanitizeMulti(
-    "interventionTypes",
-    o.interventionTypes,
-  )
+  const interventionTypes = sanitizeMulti("interventionTypes", o.interventionTypes)
 
   let projectType = sanitizeSingle("projectType", o.projectType)
   if (!isProjectTypeValidForArea(projectType, projectArea)) {
     projectType = undefined
   }
 
-  const primaryQuantity = sanitizePrimaryQuantity(
-    o.primaryQuantity,
-    projectType,
-    projectArea,
-  )
+  const primaryQuantity = sanitizePrimaryQuantity(o.primaryQuantity, projectType, projectArea)
 
   const next: ProjectProfile = {
     ...(projectArea ? { projectArea } : {}),
@@ -428,16 +366,12 @@ export function cloneProjectProfile(
   return {
     ...(normalized.projectArea ? { projectArea: normalized.projectArea } : {}),
     ...(normalized.projectType ? { projectType: normalized.projectType } : {}),
-    ...(normalized.primaryQuantity
-      ? { primaryQuantity: { ...normalized.primaryQuantity } }
-      : {}),
+    ...(normalized.primaryQuantity ? { primaryQuantity: { ...normalized.primaryQuantity } } : {}),
     ...(normalized.interventionTypes
       ? { interventionTypes: [...normalized.interventionTypes] }
       : {}),
     ...(normalized.phase ? { phase: normalized.phase } : {}),
-    ...(normalized.deliveryModel
-      ? { deliveryModel: normalized.deliveryModel }
-      : {}),
+    ...(normalized.deliveryModel ? { deliveryModel: normalized.deliveryModel } : {}),
   }
 }
 
@@ -484,10 +418,7 @@ export const PROJECT_PROFILE_FLOW = {
    * Progressive reveal: step becomes visible when its unlock predicate holds.
    * Primary quantity is optional and never gates later categorical steps.
    */
-  isStepUnlocked(
-    stepId: ProjectProfileFlowStepId,
-    profile: ProjectProfile | undefined,
-  ): boolean {
+  isStepUnlocked(stepId: ProjectProfileFlowStepId, profile: ProjectProfile | undefined): boolean {
     switch (stepId) {
       case "projectArea":
         return true
@@ -496,11 +427,8 @@ export const PROJECT_PROFILE_FLOW = {
       case "primaryQuantity":
         return Boolean(
           profile?.projectArea &&
-            profile?.projectType &&
-            getPrimaryQuantityDefinition(
-              profile.projectType,
-              profile.projectArea,
-            ),
+          profile?.projectType &&
+          getPrimaryQuantityDefinition(profile.projectType, profile.projectArea),
         )
       case "interventionTypes":
         // Quantity is optional — Intervention unlocks with Project Type.
@@ -509,15 +437,15 @@ export const PROJECT_PROFILE_FLOW = {
         // Multi-select Intervention is complete once at least one option is selected.
         return Boolean(
           profile?.projectArea &&
-            profile?.projectType &&
-            (profile.interventionTypes?.length ?? 0) > 0,
+          profile?.projectType &&
+          (profile.interventionTypes?.length ?? 0) > 0,
         )
       case "deliveryModel":
         return Boolean(
           profile?.projectArea &&
-            profile?.projectType &&
-            (profile.interventionTypes?.length ?? 0) > 0 &&
-            profile?.phase,
+          profile?.projectType &&
+          (profile.interventionTypes?.length ?? 0) > 0 &&
+          profile?.phase,
         )
       default:
         return false
@@ -525,10 +453,7 @@ export const PROJECT_PROFILE_FLOW = {
   },
 } as const
 
-function clearFlowStep(
-  profile: ProjectProfile,
-  stepId: ProjectProfileFlowStepId,
-): void {
+function clearFlowStep(profile: ProjectProfile, stepId: ProjectProfileFlowStepId): void {
   if (stepId === "primaryQuantity") {
     delete profile.primaryQuantity
     return
@@ -679,8 +604,7 @@ export function visibleProjectProfileCategories(
   return PROJECT_PROFILE_FLOW.stepOrder
     .filter(
       (id): id is ProjectProfileCategoryId =>
-        id !== "primaryQuantity" &&
-        PROJECT_PROFILE_FLOW.isStepUnlocked(id, normalized),
+        id !== "primaryQuantity" && PROJECT_PROFILE_FLOW.isStepUnlocked(id, normalized),
     )
     .map((id) => {
       const category = PROJECT_PROFILE_CATEGORIES.find((c) => c.id === id)!
@@ -695,9 +619,7 @@ export function visibleProjectProfileCategories(
 }
 
 /** True when the type-specific quantity input should appear. */
-export function isPrimaryQuantityVisible(
-  profile: ProjectProfile | undefined,
-): boolean {
+export function isPrimaryQuantityVisible(profile: ProjectProfile | undefined): boolean {
   return PROJECT_PROFILE_FLOW.isStepUnlocked("primaryQuantity", profile)
 }
 
@@ -721,10 +643,7 @@ export function setPrimaryQuantityValue(
   profile: ProjectProfile | undefined,
   value: number | null,
 ): ProjectProfile | undefined {
-  const def = getPrimaryQuantityDefinition(
-    profile?.projectType,
-    profile?.projectArea,
-  )
+  const def = getPrimaryQuantityDefinition(profile?.projectType, profile?.projectArea)
   const draft: ProjectProfile = { ...(profile ?? {}) }
   if (!def || value === null || !Number.isFinite(value) || !(value > 0)) {
     delete draft.primaryQuantity
@@ -817,17 +736,12 @@ export function projectProfileToShare(
   return cloneProjectProfile(profile)
 }
 
-export function projectProfileFromShare(
-  raw: unknown,
-): ProjectProfile | undefined {
+export function projectProfileFromShare(raw: unknown): ProjectProfile | undefined {
   return normalizeProjectProfile(raw)
 }
 
 /** Format a stored quantity for display / input (locale-aware). */
-export function formatProjectQuantityValue(
-  value: number,
-  language: "no" | "en",
-): string {
+export function formatProjectQuantityValue(value: number, language: "no" | "en"): string {
   if (!Number.isFinite(value) || !(value > 0)) return ""
   const locale = language === "en" ? "en-GB" : "nb-NO"
   return value
@@ -840,10 +754,7 @@ export function formatProjectQuantityValue(
 }
 
 /** Parse locale-formatted quantity text → positive number or null. */
-export function parseProjectQuantityInput(
-  raw: string,
-  language: "no" | "en",
-): number | null {
+export function parseProjectQuantityInput(raw: string, language: "no" | "en"): number | null {
   let s = raw
     .trim()
     .replace(/\u00a0/g, " ")

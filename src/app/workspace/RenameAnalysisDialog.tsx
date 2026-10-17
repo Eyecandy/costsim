@@ -39,10 +39,7 @@ export function RenameAnalysisDialog({
             className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2
-              id="rename-analysis-title"
-              className="m-0 mb-3 font-sans text-[15px] font-medium"
-            >
+            <h2 id="rename-analysis-title" className="m-0 mb-3 font-sans text-[15px] font-medium">
               {t("library.renameTitle")}
             </h2>
             <input
@@ -72,10 +69,7 @@ export function RenameAnalysisDialog({
               }}
             />
             {renameError ? (
-              <p
-                className="m-0 mb-3 font-sans text-[12px] text-destructive"
-                role="alert"
-              >
+              <p className="m-0 mb-3 font-sans text-[12px] text-destructive" role="alert">
                 {renameError}
               </p>
             ) : (

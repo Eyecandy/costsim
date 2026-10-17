@@ -3,7 +3,6 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 describe("Library analysis row actions presentation", () => {
   it("main list uses one shared row surface with right-aligned ⋯ menu", () => {
     const page = readFileSync(
@@ -60,9 +59,7 @@ describe("Library analysis row actions presentation", () => {
     )
     expect(foldersHeader).toContain("[@media(hover:none)]:opacity-100")
     expect(foldersHeader).not.toContain("opacity-40")
-    const plusBtnStart = foldersHeader.indexOf(
-      'aria-label={t("library.newFolder")}',
-    )
+    const plusBtnStart = foldersHeader.indexOf('aria-label={t("library.newFolder")}')
     const plusBtn = foldersHeader.slice(plusBtnStart, plusBtnStart + 700)
     expect(plusBtn).not.toContain("hover:bg-muted")
   })

@@ -28,13 +28,13 @@ function buildSyntheticProject(nCosts: number, nDrivers: number): ShapleyAttribu
   const costTriangles = Array.from({ length: nCosts }, (_, i) => makeCost(i))
   const drivers = Array.from({ length: nDrivers }, (_, i) => makeDriver(i))
   const driverImpacts = costTriangles.map((_, c) =>
-    drivers.map((_, d) => (c + d) % 3 === 0 ? 50 : 100),
+    drivers.map((_, d) => ((c + d) % 3 === 0 ? 50 : 100)),
   )
   const n = nCosts
   const corr = Array.from({ length: n }, (_, i) =>
     Array.from({ length: n }, (_, j) => {
       if (i === j) return 1
-      return 0.15 + (0.03 * Math.abs(i - j)) % 0.5
+      return 0.15 + ((0.03 * Math.abs(i - j)) % 0.5)
     }),
   )
   return {
@@ -86,13 +86,9 @@ function runBench(nCosts: number, nDrivers: number): BenchRow {
 
 describe("Shapley performance benchmark", () => {
   it("benchmarks 10 / 20 / 32 player synthetic projects", () => {
-    const rows = [
-      runBench(6, 4),
-      runBench(12, 8),
-      runBench(20, 12),
-    ]
+    const rows = [runBench(6, 4), runBench(12, 8), runBench(20, 12)]
 
-    // eslint-disable-next-line no-console
+     
     console.table(rows)
 
     for (const row of rows) {

@@ -6,9 +6,7 @@ import { Archive } from "lucide-react"
 import { useI18n } from "@/i18n/useI18n"
 import { navigateTo } from "@/shared/auth/auth"
 import { buildAnalysisWorkspacePath, LIBRARY_PATH } from "@/persistence/analysisLibraryRoutes"
-import {
-  canStartOngoingFromArchivedSingle,
-} from "@/domain/analysis/createOngoingFromArchivedSingle"
+import { canStartOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
 import { APP_HEADER_CLASSNAME } from "@/app/workspace/layoutClasses"
 import type { Dispatch, SetStateAction } from "react"
 import type { useAnalysisDialogs } from "@/app/workspace/useAnalysisDialogs"
@@ -28,8 +26,9 @@ export function AnalysisHeader({
 }: {
   dialogs: ReturnType<typeof useAnalysisDialogs>
   analysisReadOnly: boolean
-  archiveBlockedNotice: 'no_results' | 'stale_results' | 'result_settings_need_rerun' | 'failed' | null
-  finishOngoingNotice: 'failed' | 'need_archive_checkpoint' | null
+  archiveBlockedNotice:
+    "no_results" | "stale_results" | "result_settings_need_rerun" | "failed" | null
+  finishOngoingNotice: "failed" | "need_archive_checkpoint" | null
   handleBeforeSignOut: () => void
   isOngoingAnalysis: boolean
   librarySession: ReturnType<typeof useLibraryAnalysisSession>
@@ -65,10 +64,7 @@ export function AnalysisHeader({
               title={t("library.goToHome")}
               onClick={() => {
                 void (async () => {
-                  if (
-                    !librarySession.readOnly &&
-                    librarySession.docMeta?.status === "draft"
-                  ) {
+                  if (!librarySession.readOnly && librarySession.docMeta?.status === "draft") {
                     await librarySession.flushPendingSave().catch(() => undefined)
                   }
                   navigateTo(LIBRARY_PATH)
@@ -102,9 +98,7 @@ export function AnalysisHeader({
                   canSaveAndContinueLater={Boolean(librarySession.docMeta)}
                   canArchive={librarySession.canArchive}
                   archiveLabel={
-                    isOngoingAnalysis
-                      ? t("checkpoints.archiveCheckpointAction")
-                      : undefined
+                    isOngoingAnalysis ? t("checkpoints.archiveCheckpointAction") : undefined
                   }
                   finishOngoingLabel={
                     librarySession.canCompleteOngoingAnalysis
@@ -135,9 +129,7 @@ export function AnalysisHeader({
                     }
                     if (librarySession.docMeta?.folderId) {
                       void (async () => {
-                        await librarySession.flushPendingSave().catch(
-                          () => undefined,
-                        )
+                        await librarySession.flushPendingSave().catch(() => undefined)
                         navigateTo(LIBRARY_PATH)
                       })()
                       return
@@ -163,9 +155,7 @@ export function AnalysisHeader({
                             .createNewVersion(t("library.versionSuffix"))
                             .then((draft) => {
                               if (draft) {
-                                navigateTo(
-                                  buildAnalysisWorkspacePath(draft.id),
-                                )
+                                navigateTo(buildAnalysisWorkspacePath(draft.id))
                               }
                             })
                         }
@@ -195,15 +185,10 @@ export function AnalysisHeader({
                             .then((result) => {
                               if (result.ok) {
                                 // Defensive: create path always requires dialog confirmation.
-                                navigateTo(
-                                  buildAnalysisWorkspacePath(result.doc.id),
-                                )
+                                navigateTo(buildAnalysisWorkspacePath(result.doc.id))
                                 return
                               }
-                              if (
-                                result.reason === "need_selection" &&
-                                result.projects?.length
-                              ) {
+                              if (result.reason === "need_selection" && result.projects?.length) {
                                 setStartOngoingAlternatives(result.projects)
                                 setStartOngoingDialogOpen(true)
                                 return
@@ -268,10 +253,7 @@ export function AnalysisHeader({
               </div>
             </div>
           ) : null}
-          <GlobalHeaderUtilities
-            className="z-10"
-            onBeforeSignOut={handleBeforeSignOut}
-          />
+          <GlobalHeaderUtilities className="z-10" onBeforeSignOut={handleBeforeSignOut} />
         </div>
       </div>
     </>

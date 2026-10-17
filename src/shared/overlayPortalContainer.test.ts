@@ -3,26 +3,17 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 describe("overlayPortalContainer", () => {
   it("GuidedPhaseInfo uses the fullscreen-aware portal container", () => {
-    const info = readFileSync(
-      join(root, "src/features/guided-input/GuidedPhaseInfo.tsx"),
-      "utf8",
-    )
+    const info = readFileSync(join(root, "src/features/guided-input/GuidedPhaseInfo.tsx"), "utf8")
     expect(info).toContain("useOverlayPortalContainer")
     expect(info).toContain("createPortal")
     expect(info).toContain("portalContainer")
-    expect(info).not.toMatch(
-      /createPortal\([\s\S]*?,\s*document\.body\s*\)/,
-    )
+    expect(info).not.toMatch(/createPortal\([\s\S]*?,\s*document\.body\s*\)/)
   })
 
   it("Method Guide / About Model use the fullscreen-aware portal container", () => {
-    const header = readFileSync(
-      join(root, "src/shared/GlobalHeaderUtilities.tsx"),
-      "utf8",
-    )
+    const header = readFileSync(join(root, "src/shared/GlobalHeaderUtilities.tsx"), "utf8")
     expect(header).toContain("useOverlayPortalContainer")
     expect(header).toContain("createPortal")
     expect(header).toContain("portalContainer")
@@ -31,10 +22,7 @@ describe("overlayPortalContainer", () => {
   })
 
   it("helper prefers getFullscreenElement, then Focus host, then document.body", () => {
-    const src = readFileSync(
-      join(root, "src/shared/overlayPortalContainer.ts"),
-      "utf8",
-    )
+    const src = readFileSync(join(root, "src/shared/overlayPortalContainer.ts"), "utf8")
     expect(src).toContain("getFullscreenElement")
     expect(src).toContain("subscribeFullscreenChange")
     expect(src).toContain("document.body")
@@ -49,9 +37,7 @@ describe("overlayPortalContainer", () => {
       expect(true).toBe(true)
       return
     }
-    const { resolveOverlayPortalContainer } = await import(
-      "@/shared/overlayPortalContainer"
-    )
+    const { resolveOverlayPortalContainer } = await import("@/shared/overlayPortalContainer")
     expect(resolveOverlayPortalContainer()).toBe(document.body)
   })
 })

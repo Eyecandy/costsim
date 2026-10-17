@@ -26,9 +26,7 @@ function snapshotFor(projects: Project[], activeProjectId: string) {
     projects,
     activeProjectId,
     projectResults: fakeResults,
-    simulatedBaseCostByProjectId: Object.fromEntries(
-      projects.map((p) => [p.id, 100]),
-    ),
+    simulatedBaseCostByProjectId: Object.fromEntries(projects.map((p) => [p.id, 100])),
     inputSignature: buildSimulationInputSignature(projects),
     simulationCount: 20_000,
     resultPreferences: DEFAULT_RESULT_PREFERENCES,
@@ -40,14 +38,8 @@ function archiveTip(
   projects: Project[],
   activeProjectId: string,
 ) {
-  const tip = [...ongoing.checkpoints]
-    .sort((a, b) => a.sequence - b.sequence)
-    .at(-1)!
-  return archiveCheckpoint(
-    ongoing,
-    tip.id,
-    snapshotFor(projects, activeProjectId),
-  )
+  const tip = [...ongoing.checkpoints].sort((a, b) => a.sequence - b.sequence).at(-1)!
+  return archiveCheckpoint(ongoing, tip.id, snapshotFor(projects, activeProjectId))
 }
 
 describe("ongoing checkpoint Project.name from analysis name", () => {
@@ -79,18 +71,13 @@ describe("ongoing checkpoint Project.name from analysis name", () => {
     if (!cp2.ok) return
 
     expect(cp2.newCheckpoint.workspace.projects[0]!.name).toBe(analysisName)
-    expect(cp2.sourceCheckpoint.workspace.projects[0]!.name).toBe(
+    expect(cp2.sourceCheckpoint.workspace.projects[0]!.name).toBe("Alternativ A")
+    expect(cp2.ongoing.checkpoints.find((c) => c.sequence === 1)!.workspace.projects[0]!.name).toBe(
       "Alternativ A",
     )
-    expect(
-      cp2.ongoing.checkpoints.find((c) => c.sequence === 1)!.workspace
-        .projects[0]!.name,
-    ).toBe("Alternativ A")
     // Source checkpoint object in the returned ongoing is not rewritten.
     expect(
-      JSON.stringify(
-        cp2.ongoing.checkpoints.find((c) => c.id === cp1Before.id)!.workspace,
-      ),
+      JSON.stringify(cp2.ongoing.checkpoints.find((c) => c.id === cp1Before.id)!.workspace),
     ).toBe(JSON.stringify(cp1Before.workspace))
 
     const cp2Project = cp2.newCheckpoint.workspace.projects[0]!
@@ -130,14 +117,12 @@ describe("ongoing checkpoint Project.name from analysis name", () => {
     if (!cp3.ok) return
     expect(cp3.newCheckpoint.workspace.projects[0]!.name).toBe(analysisName)
     expect(cp3.newCheckpoint.workspace.projects[0]!.id).toBe(projectId)
-    expect(
-      cp3.ongoing.checkpoints.find((c) => c.sequence === 1)!.workspace
-        .projects[0]!.name,
-    ).toBe("Alternativ A")
-    expect(
-      cp3.ongoing.checkpoints.find((c) => c.sequence === 2)!.workspace
-        .projects[0]!.name,
-    ).toBe(analysisName)
+    expect(cp3.ongoing.checkpoints.find((c) => c.sequence === 1)!.workspace.projects[0]!.name).toBe(
+      "Alternativ A",
+    )
+    expect(cp3.ongoing.checkpoints.find((c) => c.sequence === 2)!.workspace.projects[0]!.name).toBe(
+      analysisName,
+    )
   })
 
   it("without analysisName, cloned Project.name is preserved (no silent rename)", () => {
@@ -154,9 +139,7 @@ describe("ongoing checkpoint Project.name from analysis name", () => {
     const created = createNextCheckpoint(ongoing)
     expect(created.ok).toBe(true)
     if (!created.ok) return
-    expect(created.newCheckpoint.workspace.projects[0]!.name).toBe(
-      "Alternativ A",
-    )
+    expect(created.newCheckpoint.workspace.projects[0]!.name).toBe("Alternativ A")
   })
 
   it("Single Analysis multi-alternative naming is unaffected by this Ongoing-only path", () => {

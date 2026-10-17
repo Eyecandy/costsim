@@ -98,8 +98,7 @@ export const messages = {
         m: "m",
         mw: "MW",
       },
-      changeWillClearLater:
-        "Denne endringen vil fjerne alle senere valg i prosjektprofilen.",
+      changeWillClearLater: "Denne endringen vil fjerne alle senere valg i prosjektprofilen.",
       changeWillClearLaterHint: "Du kan velge dem på nytt etterpå.",
       confirmChange: "Endre",
     },
@@ -211,10 +210,8 @@ export const messages = {
       pdfImpactColCost: "Kostnadspost",
       pdfImpactColPct: "Påvirkning",
       pdfCorrelationTitle: "Korrelasjon",
-      pdfCorrelationNone:
-        "Det er ikke lagt inn korrelasjon mellom kostnadspostene.",
-      pdfCorrelationUnlistedNote:
-        "Ikke oppførte sammenhenger behandles som ukorrelerte.",
+      pdfCorrelationNone: "Det er ikke lagt inn korrelasjon mellom kostnadspostene.",
+      pdfCorrelationUnlistedNote: "Ikke oppførte sammenhenger behandles som ukorrelerte.",
       pdfCorrelationColA: "Kostnadspost A",
       pdfCorrelationColB: "Kostnadspost B",
       pdfCorrelationColRho: "ρ",
@@ -229,8 +226,7 @@ export const messages = {
       pdfOpenAnalysisHelper:
         "Åpner analysegrunnlaget i nettleseren med samme kostnadsposter, drivere, forutsetninger, påvirkning og korrelasjoner. Kjør simuleringen på nytt for å generere resultater.",
       pdfShareLinkAnchorText: `Åpne analysen i ${PRODUCT_NAME}`,
-      pdfShareUnavailableNote:
-        "Analysen er for stor til å deles som lenke i denne rapporten.",
+      pdfShareUnavailableNote: "Analysen er for stor til å deles som lenke i denne rapporten.",
       pdfFooter: `Generert av ${PRODUCT_NAME}`,
       pdfExportBlockedStaleInputs:
         "Input er endret. Kjør simulering på nytt før du eksporterer PDF.",
@@ -243,8 +239,7 @@ export const messages = {
       nextStepsHeading: "Eksporter",
       optionsHeading: "Valg",
       actionsHeading: "Del og dokumenter",
-      actionsHelperText:
-        "Del rapport eller lenke for videre arbeid.",
+      actionsHelperText: "Del rapport eller lenke for videre arbeid.",
       copyShareLink: "Kopier lenke",
       shareLinkCopied: "Lenke kopiert",
       aiAnalyzeHeading: "Analyser med KI",
@@ -345,10 +340,8 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       tryAgain: "Prøv igjen",
       waterfallOther: "Øvrige",
       waterfallError: "Kunne ikke beregne bidrag.",
-      waterfallStaleInputs:
-        "Input er endret. Kjør simulering på nytt før du beregner bidrag.",
-      archivedContributionNotStored:
-        "Bidragsanalyse ble ikke lagret med dette arkivet.",
+      waterfallStaleInputs: "Input er endret. Kjør simulering på nytt før du beregner bidrag.",
+      archivedContributionNotStored: "Bidragsanalyse ble ikke lagret med dette arkivet.",
     },
     keyMetrics: {
       name: "Navn",
@@ -374,12 +367,10 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       clearTableConfirm: "Dette vil tømme tabellen.",
       guidanceCostItems:
         "Angi «Mest sannsynlig» som beløpet du mener kostnadsposten mest sannsynlig vil koste. P10 og P90 angis som prosentvise avvik fra dette beløpet og skal beskrive realistiske lave og høye utfall – ikke beste og verste tenkelige utfall. Usikkerheten ligger ofte i mengde, pris eller begge deler. Korrelasjon kan brukes dersom kostnadsposter har en reell tendens til å variere sammen.",
-      guidanceCostItemsGuide:
-        "Fokusmodus for hjelp til å vurdere og fylle inn kostnadsposter.",
+      guidanceCostItemsGuide: "Fokusmodus for hjelp til å vurdere og fylle inn kostnadsposter.",
       guidanceCostDrivers:
         "Drivere beskriver usikre forhold som kan påvirke flere kostnadsposter samtidig, for eksempel marked, prosjektutvikling, stedlige forhold eller interessenter. De virker multiplikativt på kostnadspostene de påvirker, og påvirkningen kan justeres per kostnadspost. Unngå å modellere samme usikkerhet både som driver og i spennene på kostnadspostene.",
-      guidanceCostDriversGuide:
-        "Fokusmodus for hjelp til å identifisere og vurdere drivere.",
+      guidanceCostDriversGuide: "Fokusmodus for hjelp til å identifisere og vurdere drivere.",
       guidanceUseGuide: "Bruk",
       nameHeader: "Navn",
       optimisticHeader: "Optimistisk (%)",
@@ -408,8 +399,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       driverImpactSelectHint: "Velg en driver for å justere påvirkning.",
       costCorrelationTestHint: "Midlertidig testpanel for korrelasjon",
       costCorrelationPair: "{a} — {b}",
-      costCorrelationEmpty:
-        "Legg inn minst to gyldige kostnadsposter for å redigere korrelasjon.",
+      costCorrelationEmpty: "Legg inn minst to gyldige kostnadsposter for å redigere korrelasjon.",
       costCorrelationUnnamed: "Kost {n}",
       costCorrelationWarningRepaired:
         "Siste simulering: korrelasjonsmatrisen var ugyldig og ble justert (PSD-reparasjon).",
@@ -465,19 +455,16 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       focusNextStepsHelpMeaning:
         "Her kan du arbeide videre med analysen eller bruke resultatene i rapportering, deling og videre vurdering.",
       focusReviewInput: "Se gjennom input",
-      focusReviewInputHelper:
-        "Gå tilbake til analysegrunnlaget og gjør eventuelle justeringer.",
+      focusReviewInputHelper: "Gå tilbake til analysegrunnlaget og gjør eventuelle justeringer.",
       focusContinueWorkingHeading: "Fortsett arbeidet",
       focusUseResultsHeading: "Bruk resultatene",
       focusArchiveCheckpoint: "Arkiver sjekkpunkt",
-      focusArchiveCheckpointHelper:
-        "Frys dagens analyse som et historisk sjekkpunkt.",
+      focusArchiveCheckpointHelper: "Frys dagens analyse som et historisk sjekkpunkt.",
       focusDownloadPdfHelper: "Lag en rapport av analysen.",
       focusShareLinkTitle: "Del lenke",
       focusShareLinkHelper: "Del analysegrunnlaget med andre.",
       focusAiBriefTitle: "KI-brief",
-      focusAiBriefHelper:
-        "Bruk analysegrunnlaget og resultatene til videre KI-tolkning.",
+      focusAiBriefHelper: "Bruk analysegrunnlaget og resultatene til videre KI-tolkning.",
       guidedEmpty: "Ingen faktorer å gjennomgå. Legg inn rader i tabellen først.",
       guidedUnnamed: "Uten navn",
       guidedP10: "P10",
@@ -529,14 +516,12 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Estimatusikkerheten beskriver hvor mye den enkelte kostnadsposten realistisk kan avvike fra mest sannsynlig verdi. Usikkerheten ligger ofte i mengde, pris eller begge deler, og beskrives med P10 og P90.",
       guidedEstimateUncertaintyConceptNext:
         "I neste steg går dere gjennom kostnadspostene én for én og vurderer mest sannsynlig verdi og et realistisk spenn.",
-      guidedCostLikelyPrompt:
-        "Hva mener dere er mest sannsynlig kostnad gitt det dere vet i dag?",
+      guidedCostLikelyPrompt: "Hva mener dere er mest sannsynlig kostnad gitt det dere vet i dag?",
       guidedCostRangeSourcePrompt:
         "Hva er usikkert i denne posten – mengden, prisen eller begge deler?",
       guidedCostRangePrompt:
         "Hva kan realistisk trekke kostnaden ned eller opp fra mest sannsynlig?",
-      guidedCostRangeReminder:
-        "Velg et realistisk spenn – ikke beste og verste tenkelige utfall.",
+      guidedCostRangeReminder: "Velg et realistisk spenn – ikke beste og verste tenkelige utfall.",
       guidedEstimateUncertaintyHelpTitle: "Estimatusikkerhet",
       guidedEstimateUncertaintyHelpMeaning:
         "Estimatusikkerhet er usikkerheten i kostnadsestimatet for den enkelte kostnadsposten. Den skyldes ofte usikkerhet i mengde, pris eller begge deler. For hver kostnadspost beskrives dette med P10, mest sannsynlig verdi og P90, gitt forutsetningene analysen bygger på.\n\nEksempel: Mengden kan være usikker fordi omfanget ikke er fullt avklart, mens prisen kan være usikker fordi prisgrunnlaget eller markedet er usikkert.",
@@ -555,11 +540,9 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       guidedDriverUncertaintyNotesHelper:
         "Noter kort hvilke forhold som kan bidra til et lavere eller høyere kostnadsutfall. Dette dokumenterer vurderingen og påvirker ikke tallene.",
       guidedDriverUncertaintyLowerPercentile: "P10",
-      guidedDriverUncertaintyLowerPrompt:
-        "Forhold som kan gi et lavere kostnadsutfall",
+      guidedDriverUncertaintyLowerPrompt: "Forhold som kan gi et lavere kostnadsutfall",
       guidedDriverUncertaintyHigherPercentile: "P90",
-      guidedDriverUncertaintyHigherPrompt:
-        "Forhold som kan gi et høyere kostnadsutfall",
+      guidedDriverUncertaintyHigherPrompt: "Forhold som kan gi et høyere kostnadsutfall",
       guidedDriverUncertaintyNoteAdd: "Legg til",
       guidedDriverUncertaintyNoteConfirm: "Legg til punkt",
       guidedDriverUncertaintyNotePlaceholder: "Skriv et kort punkt…",
@@ -586,8 +569,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Er det kostnadsposter som faktisk har en tendens til å bli høye eller lave samtidig?",
       guidedCorrelationSecondaryGuidance:
         "Bruk korrelasjon bare når det finnes en reell sammenheng mellom postene – ikke bare fordi de tilhører samme fag eller prosjekt.",
-      guidedCorrelationNone:
-        "Det er ikke lagt inn korrelasjon mellom kostnadspostene.",
+      guidedCorrelationNone: "Det er ikke lagt inn korrelasjon mellom kostnadspostene.",
       guidedCorrelationSelectedHeading: "Valgte korrelasjoner",
       guidedCorrelationHelpTitle: "Korrelasjon",
       guidedCorrelationHelpMeaning:
@@ -598,12 +580,10 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Unngå å legge inn korrelasjon bare fordi kostnadspostene ligner på hverandre, ligger i samme fag eller påvirkes av prosjektet generelt.",
       guidedLooksRight: "Ser riktig ut",
       guidedAdjustCorrelation: "Tilpass korrelasjon",
-      guidedImpactGuidance:
-        "Treffer denne driveren alle kostnadspostene like mye?",
+      guidedImpactGuidance: "Treffer denne driveren alle kostnadspostene like mye?",
       guidedImpactSecondaryGuidance:
         "Vurder om enkelte poster påvirkes mindre – eller ikke i det hele tatt.",
-      guidedImpactDefaultAll:
-        "Alle drivere bruker standard påvirkning på 100 %.",
+      guidedImpactDefaultAll: "Alle drivere bruker standard påvirkning på 100 %.",
       guidedImpactAdjustedHeading: "Tilpasset påvirkning",
       guidedImpactHelpTitle: "Påvirkning",
       guidedImpactHelpMeaning:
@@ -654,8 +634,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Endringer og resultater i dette sjekkpunktet går tapt. Tidligere arkiverte sjekkpunkter påvirkes ikke.",
       deleteCheckpointConfirmAction: "Slett sjekkpunkt",
       archiveAndCreateNextAction: "Arkiver og opprett neste checkpoint",
-      archiveAndCreateNextHelper:
-        "Lås dette checkpointet og fortsett med neste i tidslinjen.",
+      archiveAndCreateNextHelper: "Lås dette checkpointet og fortsett med neste i tidslinjen.",
       archiveAndCreateNextHeading: "Neste checkpoint",
       developmentTitle: "UTVIKLING",
       developmentHelper:
@@ -668,19 +647,15 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       finishOngoingConfirm:
         "Analysen blir arkivert og kan fortsatt åpnes og gjennomgås, men det kan ikke opprettes flere sjekkpunkter.",
       finishOngoingConfirmAction: "Avslutt og arkiver",
-      finishOngoingNeedArchiveCheckpoint:
-        "Arkiver gjeldende sjekkpunkt før analysen avsluttes.",
+      finishOngoingNeedArchiveCheckpoint: "Arkiver gjeldende sjekkpunkt før analysen avsluttes.",
       finishOngoingFailed: "Kunne ikke avslutte analysen. Prøv igjen.",
       finishOngoingHeading: "Avslutt analyse",
-      finishOngoingHelper:
-        "Arkiver hele den løpende analysen når siste sjekkpunkt er ferdig.",
+      finishOngoingHelper: "Arkiver hele den løpende analysen når siste sjekkpunkt er ferdig.",
       limitReached: "Maks antall checkpoints er nådd i denne prototypen.",
       comparisonHeading: "Endring siden forrige checkpoint",
       comparisonBaselineTitle: "Første checkpoint",
-      comparisonBaselineBody:
-        "Dette danner utgangspunktet for senere sammenligninger.",
-      comparisonBaselineContext:
-        "Første checkpoint – utgangspunkt for senere sammenligninger.",
+      comparisonBaselineBody: "Dette danner utgangspunktet for senere sammenligninger.",
+      comparisonBaselineContext: "Første checkpoint – utgangspunkt for senere sammenligninger.",
       comparisonComparedWith: "Sammenlignes med {label}",
       comparisonColMetric: "Nøkkeltall",
       comparisonColPrevious: "Forrige",
@@ -709,19 +684,16 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       newAlternative: "Nytt alternativ",
       newAlternativeHint: "Start med et tomt alternativ",
       copyExisting: "Kopier eksisterende",
-      copyExistingHint:
-        "Bruk et eksisterende alternativ som utgangspunkt",
+      copyExistingHint: "Bruk et eksisterende alternativ som utgangspunkt",
       copyFrom: "Kopier fra",
       maxProjectsTooltip: "Maks {max} alternativer i denne versjonen",
-      addProjectTooltip:
-        "Opprett et nytt alternativ for sammenligning.",
+      addProjectTooltip: "Opprett et nytt alternativ for sammenligning.",
       confirmDelete: "Er du sikker på at du vil slette dette alternativet?",
       runningSimulation: "Kjører simulering",
       simulationPhasePreparing: "Forbereder…",
       simulationPhaseRunning: "Kjører simulering…",
       simulationPhaseUpdating: "Oppdaterer resultater…",
-      invalidInputForRun:
-        "Fullfør feltene markert i rødt før du simulerer.",
+      invalidInputForRun: "Fullfør feltene markert i rødt før du simulerer.",
       emptyCostBasisForRun:
         "Legg inn minst én kostnadspost med verdi og gyldig spenn før du simulerer.",
       staleInputsTitle: "Input er endret",
@@ -768,12 +740,10 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Analysen bygges opp steg for steg fra prosjektets rammer og kostnadsgrunnlag til vurdering av usikkerhet, drivere og resultater.",
       introGuideBefore: "Du kan arbeide direkte i analysen eller bruke",
       introGuideName: "Fokusmodus",
-      introGuideAfter:
-        "for å gå gjennom analysen steg for steg.",
+      introGuideAfter: "for å gå gjennom analysen steg for steg.",
       guideTipBefore: "Bruk",
       guideTipName: "Fokusmodus",
-      guideTipAfter:
-        "hvis du ønsker stegvis støtte til å strukturere vurderingene.",
+      guideTipAfter: "hvis du ønsker stegvis støtte til å strukturere vurderingene.",
       analysisModesHeading: "Enkeltanalyse eller løpende analyse?",
       analysisModesText:
         "Velg Enkeltanalyse når du vil vurdere prosjektets kostnadsusikkerhet på ett bestemt tidspunkt, eller sammenligne alternative konsepter eller løsninger. Velg Løpende analyse når du vil følge hvordan kostnadsbildet og usikkerheten utvikler seg over tid. I en løpende analyse representerer hvert sjekkpunkt analysen på et bestemt tidspunkt. Når et sjekkpunkt arkiveres, fryses resultatene slik at de kan sammenlignes med senere sjekkpunkter.",
@@ -878,11 +848,9 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       noFolder: "Ingen mappe",
       analysisModeLabel: "Analysemodus",
       analysisModeSingle: "Enkeltanalyse",
-      analysisModeSingleHint:
-        "Én analyse av prosjektet på et gitt tidspunkt.",
+      analysisModeSingleHint: "Én analyse av prosjektet på et gitt tidspunkt.",
       analysisModeOngoing: "Løpende analyse",
-      analysisModeOngoingHint:
-        "Følg prosjektet gjennom flere analysepunkter over tid.",
+      analysisModeOngoingHint: "Følg prosjektet gjennom flere analysepunkter over tid.",
       modeOngoingShort: "Løpende",
       modeOngoingTitle: "Løpende analyse",
       create: "Opprett",
@@ -895,8 +863,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       open: "Åpne",
       delete: "Slett",
       deleteConfirmTitle: "Slette analysen?",
-      deleteConfirm:
-        "Analysen kan gjenopprettes fra Slettede analyser i 30 dager.",
+      deleteConfirm: "Analysen kan gjenopprettes fra Slettede analyser i 30 dager.",
       deleteConfirmAction: "Slett",
       trash: "Slettede analyser",
       trashHeading: "Slettede analyser",
@@ -919,26 +886,21 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       archiveConfirm:
         "Analysen blir låst med dagens input og resultater. Den kan ikke redigeres etterpå. Videre arbeid gjøres i en ny versjon.",
       archiveConfirmAction: "Arkiver",
-      archiveNeedsSimulation:
-        "Kjør simuleringen før analysen arkiveres.",
-      archiveNeedsRerun:
-        "Input er endret. Kjør simuleringen på nytt før analysen arkiveres.",
+      archiveNeedsSimulation: "Kjør simuleringen før analysen arkiveres.",
+      archiveNeedsRerun: "Input er endret. Kjør simuleringen på nytt før analysen arkiveres.",
       archiveNeedsResultSettingsRerun:
         "Kjør simuleringen på nytt for å oppdatere de valgte resultatinnstillingene før arkivering.",
       archiveFailed: "Kunne ikke arkivere. Prøv igjen.",
-      duplicateNameInFolder:
-        "Det finnes allerede en analyse med dette navnet i denne mappen.",
+      duplicateNameInFolder: "Det finnes allerede en analyse med dette navnet i denne mappen.",
       duplicateNameOnMove:
         "Det finnes allerede en analyse med dette navnet i denne mappen. Gi analysen et annet navn før du flytter den.",
       createNewVersion: "Opprett ny versjon",
       startOngoingAnalysis: "Start løpende analyse",
       startOngoingChooseTitle: "Velg alternativ",
-      startOngoingChooseHint:
-        "Velg hvilket alternativ du vil følge videre i den løpende analysen.",
+      startOngoingChooseHint: "Velg hvilket alternativ du vil følge videre i den løpende analysen.",
       startOngoingNameLabel: "Navn på analyse",
       startOngoingCreate: "Opprett løpende analyse",
-      startOngoingFailed:
-        "Kunne ikke starte løpende analyse. Prøv igjen.",
+      startOngoingFailed: "Kunne ikke starte løpende analyse. Prøv igjen.",
       saving: "Lagrer…",
       saved: "Lagret",
       readOnlyHint: "Arkivert",
@@ -968,8 +930,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       moveTitle: "Flytt analyse",
       moveConfirm: "Flytt",
       saveError: "Lagring mislyktes",
-      saveErrorQuota:
-        "Lagringsplassen i nettleseren er full. Endringene kunne ikke lagres.",
+      saveErrorQuota: "Lagringsplassen i nettleseren er full. Endringene kunne ikke lagres.",
       saveAndContinueLater: "Lagre og fortsett senere",
       saveAndGoToLibrary: "Lagre og gå til analyser",
       resizeList: "Juster listehøyde",
@@ -1078,8 +1039,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         m: "m",
         mw: "MW",
       },
-      changeWillClearLater:
-        "This change will remove all later selections in the project profile.",
+      changeWillClearLater: "This change will remove all later selections in the project profile.",
       changeWillClearLaterHint: "You can select them again afterwards.",
       confirmChange: "Change",
     },
@@ -1191,10 +1151,8 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       pdfImpactColCost: "Cost item",
       pdfImpactColPct: "Impact",
       pdfCorrelationTitle: "Correlation",
-      pdfCorrelationNone:
-        "No correlation has been specified between cost items.",
-      pdfCorrelationUnlistedNote:
-        "Unlisted relationships are treated as uncorrelated.",
+      pdfCorrelationNone: "No correlation has been specified between cost items.",
+      pdfCorrelationUnlistedNote: "Unlisted relationships are treated as uncorrelated.",
       pdfCorrelationColA: "Cost item A",
       pdfCorrelationColB: "Cost item B",
       pdfCorrelationColRho: "ρ",
@@ -1223,8 +1181,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       nextStepsHeading: "Export",
       optionsHeading: "Options",
       actionsHeading: "Share and document",
-      actionsHelperText:
-        "Share the report or share link for continued work.",
+      actionsHelperText: "Share the report or share link for continued work.",
       copyShareLink: "Copy share link",
       shareLinkCopied: "Link copied",
       aiAnalyzeHeading: "Analyze with AI",
@@ -1327,8 +1284,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
       waterfallError: "Could not calculate contributions.",
       waterfallStaleInputs:
         "Inputs have changed. Re-run the simulation before calculating contributions.",
-      archivedContributionNotStored:
-        "Contribution was not stored with this archive.",
+      archivedContributionNotStored: "Contribution was not stored with this archive.",
     },
     keyMetrics: {
       name: "Name",
@@ -1354,12 +1310,10 @@ Reasoning order for ongoing analysis: current situation first → important unce
       clearTableConfirm: "This will clear the table.",
       guidanceCostItems:
         "Enter “Most likely” as the amount you believe the cost item is most likely to cost. P10 and P90 are entered as percentage deviations from this amount and should describe realistic low and high outcomes — not best-case and worst-case scenarios. The uncertainty often lies in quantity, price, or both. Correlation can be used when cost items have a genuine tendency to vary together.",
-      guidanceCostItemsGuide:
-        "Focus mode for help assessing and entering cost items.",
+      guidanceCostItemsGuide: "Focus mode for help assessing and entering cost items.",
       guidanceCostDrivers:
         "Drivers describe uncertain conditions that may affect several cost items at the same time, such as market conditions, project development, site conditions or stakeholders. They act multiplicatively on the cost items they affect, and impact can be adjusted for each cost item. Avoid modelling the same uncertainty both as a driver and in the ranges of the cost items.",
-      guidanceCostDriversGuide:
-        "Focus mode for help identifying and assessing drivers.",
+      guidanceCostDriversGuide: "Focus mode for help identifying and assessing drivers.",
       guidanceUseGuide: "Use",
       nameHeader: "Name",
       optimisticHeader: "Optimistic (%)",
@@ -1378,18 +1332,15 @@ Reasoning order for ongoing analysis: current situation first → important unce
       driverLikelyOutsideSpan:
         'Error in "{driverName}": Optimistic must be less than or equal to most likely, and pessimistic must be greater than or equal to most likely.',
       driverCalibratedSupportInvalid:
-        'The range for “{driverName}” extends too far on the downside. Move the optimistic value closer to the most likely value.',
-      driverImpactHelp:
-        "Specifies what share of each driver's outcome affects each cost item.",
-      driverImpactEmpty:
-        "Add at least one valid cost item and one valid driver to edit impact.",
+        "The range for “{driverName}” extends too far on the downside. Move the optimistic value closer to the most likely value.",
+      driverImpactHelp: "Specifies what share of each driver's outcome affects each cost item.",
+      driverImpactEmpty: "Add at least one valid cost item and one valid driver to edit impact.",
       driverImpactCorner: "Driver / cost",
       driverImpactCellLabel: "{driver} → {cost}",
       driverImpactSelectHint: "Select a driver to adjust impact.",
       costCorrelationTestHint: "Temporary correlation test panel",
       costCorrelationPair: "{a} — {b}",
-      costCorrelationEmpty:
-        "Add at least two valid cost items to edit correlation.",
+      costCorrelationEmpty: "Add at least two valid cost items to edit correlation.",
       costCorrelationUnnamed: "Cost {n}",
       costCorrelationWarningRepaired:
         "Last simulation: the correlation matrix was invalid and was adjusted (PSD repair).",
@@ -1445,26 +1396,22 @@ Reasoning order for ongoing analysis: current situation first → important unce
       focusNextStepsHelpMeaning:
         "From here you can continue working with the analysis or use the results for reporting, sharing, and further assessment.",
       focusReviewInput: "Review input",
-      focusReviewInputHelper:
-        "Return to the analysis basis and make any necessary adjustments.",
+      focusReviewInputHelper: "Return to the analysis basis and make any necessary adjustments.",
       focusContinueWorkingHeading: "Continue working",
       focusUseResultsHeading: "Use the results",
       focusArchiveCheckpoint: "Archive checkpoint",
-      focusArchiveCheckpointHelper:
-        "Freeze the current analysis as a historical checkpoint.",
+      focusArchiveCheckpointHelper: "Freeze the current analysis as a historical checkpoint.",
       focusDownloadPdfHelper: "Create a report from the analysis.",
       focusShareLinkTitle: "Share link",
       focusShareLinkHelper: "Share the analysis basis with others.",
       focusAiBriefTitle: "AI Brief",
-      focusAiBriefHelper:
-        "Use the analysis basis and results for further AI interpretation.",
+      focusAiBriefHelper: "Use the analysis basis and results for further AI interpretation.",
       guidedEmpty: "No factors to review. Add rows in the table first.",
       guidedUnnamed: "Unnamed",
       guidedP10: "P10",
       guidedMostLikely: "Most likely",
       guidedP90: "P90",
-      guidedDriverEffectHint:
-        "Isolated cost effect of this driver relative to 0% (neutral).",
+      guidedDriverEffectHint: "Isolated cost effect of this driver relative to 0% (neutral).",
       guidedPhaseFocusIntro: "Focus mode",
       guidedPhaseProjectProfile: "Project profile",
       guidedPhaseAssumptions: "Assumptions",
@@ -1479,14 +1426,12 @@ Reasoning order for ongoing analysis: current situation first → important unce
       guidedHelpMeaningLabel: "What does this mean?",
       guidedHelpDiscussLabel: "What should you discuss?",
       guidedHelpAvoidLabel: "Avoid",
-      guidedAssumptionsGuidance:
-        "What assumptions are your assessments based on?",
+      guidedAssumptionsGuidance: "What assumptions are your assessments based on?",
       guidedAssumptionsSecondaryGuidance:
         "Record premises that apply to the analysis. If a condition may actually vary and affect cost, consider whether it belongs instead as estimate uncertainty or a driver.",
       guidedAssumptionsExamples:
         "Examples may include the chosen standard, delivery approach, price level or the scope assumed in the analysis.",
-      guidedAssumptionsEmpty:
-        "No assumptions have been added yet. You can add one, or continue.",
+      guidedAssumptionsEmpty: "No assumptions have been added yet. You can add one, or continue.",
       guidedAssumptionsAdd: "Add assumption",
       guidedAssumptionsHelpTitle: "Assumptions",
       guidedAssumptionsHelpMeaning:
@@ -1512,12 +1457,10 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "In the next step, you will review the Cost Items one by one and assess the Most Likely value and a realistic range.",
       guidedCostLikelyPrompt:
         "What do you consider the most likely cost based on what you know today?",
-      guidedCostRangeSourcePrompt:
-        "What is uncertain in this item — quantity, price, or both?",
+      guidedCostRangeSourcePrompt: "What is uncertain in this item — quantity, price, or both?",
       guidedCostRangePrompt:
         "What could realistically move the cost down or up from the most likely value?",
-      guidedCostRangeReminder:
-        "Choose a realistic range — not best-case and worst-case outcomes.",
+      guidedCostRangeReminder: "Choose a realistic range — not best-case and worst-case outcomes.",
       guidedEstimateUncertaintyHelpTitle: "Estimate uncertainty",
       guidedEstimateUncertaintyHelpMeaning:
         "Estimate uncertainty is the uncertainty in the cost estimate for each individual cost item. It often comes from uncertainty in quantity, price, or both. For each cost item, this is described using P10, the most likely value and P90, given the assumptions on which the analysis is based.\n\nExample: Quantity may be uncertain because the scope is not fully defined, while price may be uncertain because the pricing basis or market is uncertain.",
@@ -1531,17 +1474,14 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "They differ from estimate uncertainty, which concerns uncertainty in an individual Cost Item. A Driver should therefore be used when a condition acts across the cost basis rather than only on one item.",
       guidedDriversIntroAvoidDouble:
         "Avoid modelling the same uncertainty both in the Cost Item ranges and as a Driver. First assess the Driver itself and a realistic range. Later you will review which Cost Items it actually affects.",
-      guidedDriversIntroNext:
-        "In the next step, you will review the Drivers one by one.",
+      guidedDriversIntroNext: "In the next step, you will review the Drivers one by one.",
       guidedDriverUncertaintyNotesHeading: "Uncertainty assessment",
       guidedDriverUncertaintyNotesHelper:
         "Briefly note circumstances that could contribute to a lower or higher cost outcome. This documents the judgement and does not change the numbers.",
       guidedDriverUncertaintyLowerPercentile: "P10",
-      guidedDriverUncertaintyLowerPrompt:
-        "Factors that could lead to a lower cost outcome",
+      guidedDriverUncertaintyLowerPrompt: "Factors that could lead to a lower cost outcome",
       guidedDriverUncertaintyHigherPercentile: "P90",
-      guidedDriverUncertaintyHigherPrompt:
-        "Factors that could lead to a higher cost outcome",
+      guidedDriverUncertaintyHigherPrompt: "Factors that could lead to a higher cost outcome",
       guidedDriverUncertaintyNoteAdd: "Add",
       guidedDriverUncertaintyNoteConfirm: "Add item",
       guidedDriverUncertaintyNotePlaceholder: "Write a short point…",
@@ -1550,8 +1490,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
       guidedDriverUncertaintyNotePlaceholderHigher:
         "Describe a factor that could lead to a higher cost outcome",
       guidedDriverUncertaintyNoteRemove: "Remove item",
-      guidedDriverRangePrompt:
-        "What range realistically describes how this driver may develop?",
+      guidedDriverRangePrompt: "What range realistically describes how this driver may develop?",
       guidedDriverOutsideWorkingRange: "Outside normal range",
       guidedDriverSupportInvalid:
         "The range extends too far on the downside to be simulated. Move P10 closer to the most likely value.",
@@ -1568,8 +1507,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "Are there cost items that genuinely tend to become high or low at the same time?",
       guidedCorrelationSecondaryGuidance:
         "Use correlation only when there is a real relationship between the items — not simply because they belong to the same discipline or project.",
-      guidedCorrelationNone:
-        "No correlation has been specified between cost items.",
+      guidedCorrelationNone: "No correlation has been specified between cost items.",
       guidedCorrelationSelectedHeading: "Selected correlations",
       guidedCorrelationHelpTitle: "Correlation",
       guidedCorrelationHelpMeaning:
@@ -1580,8 +1518,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "Avoid adding correlation simply because cost items are similar, belong to the same discipline or are part of the same project.",
       guidedLooksRight: "Looks right",
       guidedAdjustCorrelation: "Adjust correlation",
-      guidedImpactGuidance:
-        "Does this driver affect all cost items equally?",
+      guidedImpactGuidance: "Does this driver affect all cost items equally?",
       guidedImpactSecondaryGuidance:
         "Consider whether some items are affected less — or not at all.",
       guidedImpactDefaultAll: "All drivers use the default impact of 100%.",
@@ -1639,8 +1576,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "Lock this checkpoint and continue with the next one on the timeline.",
       archiveAndCreateNextHeading: "Next checkpoint",
       developmentTitle: "DEVELOPMENT",
-      developmentHelper:
-        "Shows how cost level and uncertainty have developed between checkpoints.",
+      developmentHelper: "Shows how cost level and uncertainty have developed between checkpoints.",
       developmentEmpty:
         "The development view becomes available once the analysis has results for one or more checkpoints.",
       developmentBandLegend: "P50–P85",
@@ -1658,10 +1594,8 @@ Reasoning order for ongoing analysis: current situation first → important unce
       limitReached: "Maximum number of checkpoints reached in this prototype.",
       comparisonHeading: "Change since previous checkpoint",
       comparisonBaselineTitle: "First checkpoint",
-      comparisonBaselineBody:
-        "This provides the baseline for later comparisons.",
-      comparisonBaselineContext:
-        "First checkpoint – baseline for later comparisons.",
+      comparisonBaselineBody: "This provides the baseline for later comparisons.",
+      comparisonBaselineContext: "First checkpoint – baseline for later comparisons.",
       comparisonComparedWith: "Compared with {label}",
       comparisonColMetric: "Metric",
       comparisonColPrevious: "Previous",
@@ -1690,19 +1624,16 @@ Reasoning order for ongoing analysis: current situation first → important unce
       newAlternative: "New alternative",
       newAlternativeHint: "Start with a blank alternative",
       copyExisting: "Copy existing",
-      copyExistingHint:
-        "Use an existing alternative as a starting point",
+      copyExistingHint: "Use an existing alternative as a starting point",
       copyFrom: "Copy from",
       maxProjectsTooltip: "Maximum {max} alternatives in this version",
-      addProjectTooltip:
-        "Create a new alternative for comparison.",
+      addProjectTooltip: "Create a new alternative for comparison.",
       confirmDelete: "Are you sure you want to delete this alternative?",
       runningSimulation: "Running simulation",
       simulationPhasePreparing: "Preparing…",
       simulationPhaseRunning: "Running simulation…",
       simulationPhaseUpdating: "Updating results…",
-      invalidInputForRun:
-        "Complete the fields marked in red before running the simulation.",
+      invalidInputForRun: "Complete the fields marked in red before running the simulation.",
       emptyCostBasisForRun:
         "Add at least one cost item with a value and a valid range before running the simulation.",
       staleInputsTitle: "Input has changed",
@@ -1749,12 +1680,10 @@ Reasoning order for ongoing analysis: current situation first → important unce
         "The analysis is built step by step — from the project's context and cost basis through uncertainty, drivers and results.",
       introGuideBefore: "You can work directly in the analysis, or use",
       introGuideName: "Focus mode",
-      introGuideAfter:
-        "to work through the analysis step by step.",
+      introGuideAfter: "to work through the analysis step by step.",
       guideTipBefore: "Use",
       guideTipName: "Focus mode",
-      guideTipAfter:
-        "if you want step-by-step support to structure your assessments.",
+      guideTipAfter: "if you want step-by-step support to structure your assessments.",
       analysisModesHeading: "Single or ongoing analysis?",
       analysisModesText:
         "Choose Single analysis when you want to assess the project's cost uncertainty at a specific point in time, or compare alternative concepts or solutions. Choose Ongoing analysis when you want to follow how the cost picture and uncertainty develop over time. In an ongoing analysis, each checkpoint represents the analysis at a specific point in time. When a checkpoint is archived, its results are frozen so they can be compared with later checkpoints.",
@@ -1859,8 +1788,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
       noFolder: "No folder",
       analysisModeLabel: "Analysis mode",
       analysisModeSingle: "Single analysis",
-      analysisModeSingleHint:
-        "One analysis of the project at a specific point in time.",
+      analysisModeSingleHint: "One analysis of the project at a specific point in time.",
       analysisModeOngoing: "Ongoing analysis",
       analysisModeOngoingHint:
         "Follow the project through multiple analysis checkpoints over time.",
@@ -1876,8 +1804,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
       open: "Open",
       delete: "Delete",
       deleteConfirmTitle: "Delete analysis?",
-      deleteConfirm:
-        "The analysis can be restored from Deleted analyses for 30 days.",
+      deleteConfirm: "The analysis can be restored from Deleted analyses for 30 days.",
       deleteConfirmAction: "Delete",
       trash: "Deleted analyses",
       trashHeading: "Deleted analyses",
@@ -1900,15 +1827,13 @@ Reasoning order for ongoing analysis: current situation first → important unce
       archiveConfirm:
         "The analysis will be locked with today’s inputs and results. It cannot be edited afterwards. Continue work in a new version.",
       archiveConfirmAction: "Archive",
-      archiveNeedsSimulation:
-        "Run the simulation before archiving the analysis.",
+      archiveNeedsSimulation: "Run the simulation before archiving the analysis.",
       archiveNeedsRerun:
         "Inputs have changed. Run the simulation again before archiving the analysis.",
       archiveNeedsResultSettingsRerun:
         "Run the simulation again to update the selected result settings before archiving.",
       archiveFailed: "Could not archive. Try again.",
-      duplicateNameInFolder:
-        "An analysis with this name already exists in this folder.",
+      duplicateNameInFolder: "An analysis with this name already exists in this folder.",
       duplicateNameOnMove:
         "An analysis with this name already exists in this folder. Rename the analysis before moving it.",
       createNewVersion: "Create new version",
@@ -1948,8 +1873,7 @@ Reasoning order for ongoing analysis: current situation first → important unce
       moveTitle: "Move analysis",
       moveConfirm: "Move",
       saveError: "Saving failed",
-      saveErrorQuota:
-        "Browser storage is full. Your changes could not be saved.",
+      saveErrorQuota: "Browser storage is full. Your changes could not be saved.",
       saveAndContinueLater: "Save and continue later",
       saveAndGoToLibrary: "Save and go to analyses",
       resizeList: "Resize list height",

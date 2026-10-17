@@ -4,12 +4,7 @@
  * then a final Next Steps card.
  */
 export type FocusResultSectionId =
-  | "keyFigures"
-  | "development"
-  | "scurve"
-  | "tornado"
-  | "contribution"
-  | "nextSteps"
+  "keyFigures" | "development" | "scurve" | "tornado" | "contribution" | "nextSteps"
 
 export function buildFocusResultSteps(args: {
   /** Ongoing Development chart — same gate as ResultsPanel. */
@@ -25,9 +20,7 @@ export function buildFocusResultSteps(args: {
   return steps
 }
 
-export function focusResultSectionTitleKey(
-  id: FocusResultSectionId,
-): string {
+export function focusResultSectionTitleKey(id: FocusResultSectionId): string {
   switch (id) {
     case "keyFigures":
       return "results.keyMetricsTitle"
@@ -88,8 +81,6 @@ export function focusResultHelpCopyKeys(id: FocusResultSectionId): {
 }
 
 /** Analytical result steps (excludes the final Next Steps card). */
-export function isAnalyticalFocusResultSection(
-  id: FocusResultSectionId,
-): boolean {
+export function isAnalyticalFocusResultSection(id: FocusResultSectionId): boolean {
   return id !== "nextSteps"
 }

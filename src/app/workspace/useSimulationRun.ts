@@ -9,9 +9,7 @@ import {
   LAST_SIMULATION_SNAPSHOT_VERSION,
   persistLastSimulationSnapshot,
 } from "@/persistence/lastSimulationSnapshot"
-import type {
-  OngoingCheckpointResultSnapshotV1,
-} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import type { SingleArchivedResultSnapshotV1 } from "@/domain/analysis/singleArchivedResultSnapshot"
 import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
 import {
@@ -58,9 +56,13 @@ export function useSimulationRun({
   activeProjectId: string
   analysisReadOnly: boolean
   clearDraftResultSeedRef: RefObject<() => Promise<void>>
-  commitOngoingDraftResultRef: RefObject<((input: CommitOngoingDraftResultInput) => Promise<{ ok: true; } | { ok: false; }>) | null>
-  commitSingleDraftResultRef: RefObject<((input: CommitSingleDraftResultInput) => Promise<{ ok: true; } | { ok: false; }>) | null>
-  focusViewRef: RefObject<'input' | 'results' | null>
+  commitOngoingDraftResultRef: RefObject<
+    ((input: CommitOngoingDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
+  >
+  commitSingleDraftResultRef: RefObject<
+    ((input: CommitSingleDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
+  >
+  focusViewRef: RefObject<"input" | "results" | null>
   isOngoingAnalysis: boolean
   librarySession: ReturnType<typeof useLibraryAnalysisSession>
   pendingFocusResultsAfterGuidedRunRef: RefObject<boolean>
@@ -68,7 +70,7 @@ export function useSimulationRun({
   resultPreferences: ResultPreferencesV1
   runs: number
   setFocusResultStepIndex: Dispatch<SetStateAction<number>>
-  setFocusView: Dispatch<SetStateAction<'input' | 'results' | null>>
+  setFocusView: Dispatch<SetStateAction<"input" | "results" | null>>
   setIsRunning: Dispatch<SetStateAction<boolean>>
   setLastSimulatedInputSignature: Dispatch<SetStateAction<string>>
   setLastSimulatedProjects: Dispatch<SetStateAction<Project[]>>
@@ -99,7 +101,7 @@ export function useSimulationRun({
   const currentCheckpointIdRef = useRef<string | null>(null)
   currentAnalysisIdRef.current = librarySession.docMeta?.id ?? null
   currentCheckpointIdRef.current = isOngoingAnalysis
-    ? librarySession.activeCheckpoint?.id ?? null
+    ? (librarySession.activeCheckpoint?.id ?? null)
     : null
   const setLiveSimOwnershipRef = useRef({
     setLiveSimAnalysisId,
@@ -115,12 +117,8 @@ export function useSimulationRun({
   const runSeqRef = useRef(0)
   const runStartedAtRef = useRef(0)
   const progressRafRef = useRef<number | null>(null)
-  const completeMinWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-  const completeHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
+  const completeMinWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const completeHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const MIN_RUN_UI_MS = 2000
   const FAKE_PROGRESS_CAP = 92
@@ -162,8 +160,7 @@ export function useSimulationRun({
         const slowSpan = 10000
         const extra = Math.min(
           SLOW_PROGRESS_MAX - FAKE_PROGRESS_CAP,
-          ((elapsed - MIN_RUN_UI_MS) / slowSpan) *
-            (SLOW_PROGRESS_MAX - FAKE_PROGRESS_CAP),
+          ((elapsed - MIN_RUN_UI_MS) / slowSpan) * (SLOW_PROGRESS_MAX - FAKE_PROGRESS_CAP),
         )
         next = FAKE_PROGRESS_CAP + extra
       }
@@ -177,10 +174,7 @@ export function useSimulationRun({
     const worker = new SimulationWorker()
     workerRef.current = worker
 
-    const scheduleRunCompletion = (
-      finishedSeq: number,
-      applyResult: () => void,
-    ) => {
+    const scheduleRunCompletion = (finishedSeq: number, applyResult: () => void) => {
       clearCompletionTimers()
       const elapsed = performance.now() - runStartedAtRef.current
       const waitMin = Math.max(0, MIN_RUN_UI_MS - elapsed)
@@ -228,15 +222,9 @@ export function useSimulationRun({
         setProjectResults(e.data.projectResults)
         setSimulatedBaseCostByProjectId(baseCosts)
         setLastSimulatedInputSignature(inputSig)
-        setLiveSimOwnershipRef.current.setLastSimulatedProjects(
-          pendingRunProjectsRef.current,
-        )
-        setLiveSimOwnershipRef.current.setLiveSimAnalysisId(
-          pendingRunAnalysisIdRef.current,
-        )
-        setLiveSimOwnershipRef.current.setLiveSimCheckpointId(
-          pendingRunCheckpointIdRef.current,
-        )
+        setLiveSimOwnershipRef.current.setLastSimulatedProjects(pendingRunProjectsRef.current)
+        setLiveSimOwnershipRef.current.setLiveSimAnalysisId(pendingRunAnalysisIdRef.current)
+        setLiveSimOwnershipRef.current.setLiveSimCheckpointId(pendingRunCheckpointIdRef.current)
         const runIds = createSimulationRunIdsForProjects(
           e.data.projectResults.map((result) => result.projectId),
           finishedSeq,
@@ -280,10 +268,7 @@ export function useSimulationRun({
           activeProjectIdAtRun: pendingRunActiveProjectIdRef.current,
         })
         // Guided Simulation / Focus Input → first Focus result step on success.
-        if (
-          pendingFocusResultsAfterGuidedRunRef.current ||
-          focusViewRef.current === "input"
-        ) {
+        if (pendingFocusResultsAfterGuidedRunRef.current || focusViewRef.current === "input") {
           pendingFocusResultsAfterGuidedRunRef.current = false
           setFocusResultStepIndex(0)
           setFocusView("results")

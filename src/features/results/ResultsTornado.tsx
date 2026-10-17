@@ -22,7 +22,11 @@ import {
   tornadoModeMetrics,
   tornadoSidePadUnits,
 } from "@/domain/results/tornadoLayout"
-import { type TornadoSharedLayout, buildTornadoSharedLayout, formatTornadoImpactLabel } from "@/features/results/tornadoShared"
+import {
+  type TornadoSharedLayout,
+  buildTornadoSharedLayout,
+  formatTornadoImpactLabel,
+} from "@/features/results/tornadoShared"
 
 type ResultsTornadoProps = {
   rows: readonly DeterministicTornadoRow[]
@@ -58,15 +62,11 @@ export function ResultsTornado({
     return Math.max(m, 1e-12)
   }, [rows])
   const scaleMaxAbs =
-    sharedSymmetricMaxAbs !== undefined
-      ? Math.max(sharedSymmetricMaxAbs, 1e-12)
-      : localMaxAbs
+    sharedSymmetricMaxAbs !== undefined ? Math.max(sharedSymmetricMaxAbs, 1e-12) : localMaxAbs
   const paddedMaxAbs = scaleMaxAbs * 1.1
 
   const resolvedDisplayScale = useMemo(
-    () =>
-      displayScale ??
-      resolveTornadoDisplayScale(collectTornadoDisplayValues(rows)),
+    () => displayScale ?? resolveTornadoDisplayScale(collectTornadoDisplayValues(rows)),
     [displayScale, rows],
   )
 
@@ -101,10 +101,7 @@ export function ResultsTornado({
       data-tornado-expanded={expanded ? "true" : undefined}
     >
       <div
-        className={cn(
-          "grid w-full gap-y-0",
-          TORNADO_COLUMN_GAP_CLASS,
-        )}
+        className={cn("grid w-full gap-y-0", TORNADO_COLUMN_GAP_CLASS)}
         style={{
           gridTemplateColumns: metrics.gridTemplateColumns,
         }}
@@ -186,10 +183,7 @@ export function ResultsTornado({
                         x={
                           row.lowImpact < 0
                             ? Math.max(low.x - LABEL_GAP, LABEL_PAD)
-                            : Math.min(
-                                low.x + low.w + LABEL_GAP,
-                                TORNADO_VIEW_W - LABEL_PAD,
-                              )
+                            : Math.min(low.x + low.w + LABEL_GAP, TORNADO_VIEW_W - LABEL_PAD)
                         }
                         y={TORNADO_VIEW_H / 2}
                         textAnchor={row.lowImpact < 0 ? "end" : "start"}
@@ -197,11 +191,7 @@ export function ResultsTornado({
                         className="fill-muted-foreground/90 tabular-nums"
                         fontSize={metrics.labelFontSize}
                       >
-                        {formatTornadoImpactLabel(
-                          row.lowImpact,
-                          resolvedDisplayScale,
-                          language,
-                        )}
+                        {formatTornadoImpactLabel(row.lowImpact, resolvedDisplayScale, language)}
                       </text>
                     </>
                   ) : null}
@@ -229,10 +219,7 @@ export function ResultsTornado({
                         x={
                           row.highImpact < 0
                             ? Math.max(high.x - LABEL_GAP, LABEL_PAD)
-                            : Math.min(
-                                high.x + high.w + LABEL_GAP,
-                                TORNADO_VIEW_W - LABEL_PAD,
-                              )
+                            : Math.min(high.x + high.w + LABEL_GAP, TORNADO_VIEW_W - LABEL_PAD)
                         }
                         y={TORNADO_VIEW_H / 2}
                         textAnchor={row.highImpact < 0 ? "end" : "start"}
@@ -240,11 +227,7 @@ export function ResultsTornado({
                         className="fill-muted-foreground/90 tabular-nums"
                         fontSize={metrics.labelFontSize}
                       >
-                        {formatTornadoImpactLabel(
-                          row.highImpact,
-                          resolvedDisplayScale,
-                          language,
-                        )}
+                        {formatTornadoImpactLabel(row.highImpact, resolvedDisplayScale, language)}
                       </text>
                     </>
                   ) : null}
@@ -286,10 +269,7 @@ export function ResultsTornado({
       </div>
 
       {expanded ? (
-        <div
-          className={TORNADO_EXPANDED_INNER_MAX_CLASS}
-          data-tornado-expanded-shell=""
-        >
+        <div className={TORNADO_EXPANDED_INNER_MAX_CLASS} data-tornado-expanded-shell="">
           {chartBody}
         </div>
       ) : (

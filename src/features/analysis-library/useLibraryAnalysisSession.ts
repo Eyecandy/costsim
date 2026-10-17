@@ -28,9 +28,7 @@ import {
   type OngoingAnalysisState,
 } from "@/domain/analysis/analysisCheckpoint"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
-import {
-  librarySaveStatusFromError,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { librarySaveStatusFromError } from "@/persistence/localAnalysisLibraryRepository"
 import {
   getLocationPathKey,
   readAnalysisIdFromLocation,
@@ -128,8 +126,7 @@ function computeShapleyByProjectIdForArchive(
   projects: readonly Project[],
   projectResults: readonly ProjectResult[],
 ): Record<string, ShapleyAttributionResult | null> {
-  const shapleyByProjectId: Record<string, ShapleyAttributionResult | null> =
-    {}
+  const shapleyByProjectId: Record<string, ShapleyAttributionResult | null> = {}
   for (const project of projects) {
     const pr = projectResults.find((r) => r.projectId === project.id)
     if (!pr || pr.values.length === 0) {
@@ -155,20 +152,13 @@ function computeShapleyByProjectIdForArchive(
   return shapleyByProjectId
 }
 
-export type LibrarySaveStatus =
-  | "idle"
-  | "saving"
-  | "saved"
-  | "error"
-  | "error_quota"
+export type LibrarySaveStatus = "idle" | "saving" | "saved" | "error" | "error_quota"
 
 export type ArchiveCurrentResult =
-  | { ok: true; doc: AnalysisDocument }
-  | { ok: false; reason: ArchiveBlockReason }
+  { ok: true; doc: AnalysisDocument } | { ok: false; reason: ArchiveBlockReason }
 
 export type ArchiveCheckpointResult =
-  | { ok: true; ongoing: OngoingAnalysisState }
-  | { ok: false; reason: ArchiveBlockReason }
+  { ok: true; ongoing: OngoingAnalysisState } | { ok: false; reason: ArchiveBlockReason }
 
 export type CreateNextCheckpointSessionResult =
   | {
@@ -222,12 +212,8 @@ export function useLibraryAnalysisSession(args: {
   /** Live simulation ownership (analysis + checkpoint at run). */
   liveSimulationAnalysisId?: string | null
   liveSimulationCheckpointId?: string | null
-  applyArchivedResults: (source: {
-    archivedSnapshot?: SingleAnalysisArchivedSnapshot
-  }) => void
-  applyOngoingCompactResult: (
-    snapshot: OngoingCheckpointResultSnapshotV1,
-  ) => void
+  applyArchivedResults: (source: { archivedSnapshot?: SingleAnalysisArchivedSnapshot }) => void
+  applyOngoingCompactResult: (snapshot: OngoingCheckpointResultSnapshotV1) => void
   applySingleDraftResult: (snapshot: SingleDraftResultSnapshotV1) => void
   applyDraftResultSeed: (seed: DraftResultSeedV1) => void
   clearResults: () => void
@@ -257,15 +243,14 @@ export function useLibraryAnalysisSession(args: {
   >(null)
   const [ongoingDraftResult, setOngoingDraftResult] =
     useState<OngoingCheckpointResultSnapshotV1 | null>(null)
-  const ongoingDraftResultRef =
-    useRef<OngoingCheckpointResultSnapshotV1 | null>(null)
+  const ongoingDraftResultRef = useRef<OngoingCheckpointResultSnapshotV1 | null>(null)
   ongoingDraftResultRef.current = ongoingDraftResult
-  const [singleDraftResult, setSingleDraftResult] =
-    useState<SingleDraftResultSnapshotV1 | null>(null)
+  const [singleDraftResult, setSingleDraftResult] = useState<SingleDraftResultSnapshotV1 | null>(
+    null,
+  )
   const singleDraftResultRef = useRef<SingleDraftResultSnapshotV1 | null>(null)
   singleDraftResultRef.current = singleDraftResult
-  const [draftResultSeed, setDraftResultSeed] =
-    useState<DraftResultSeedV1 | null>(null)
+  const [draftResultSeed, setDraftResultSeed] = useState<DraftResultSeedV1 | null>(null)
   const draftResultSeedRef = useRef<DraftResultSeedV1 | null>(null)
   draftResultSeedRef.current = draftResultSeed
   const loadedIdRef = useRef<string | null>(null)
@@ -373,28 +358,18 @@ export function useLibraryAnalysisSession(args: {
         ...existing,
         name: docMeta?.name ?? existing.name,
         workspace:
-          existing.analysisMode === "ongoing"
-            ? ensureSingleProjectWorkspace(workspace)
-            : workspace,
-        ...(nextOngoing && existing.analysisMode === "ongoing"
-          ? { ongoing: nextOngoing }
-          : {}),
+          existing.analysisMode === "ongoing" ? ensureSingleProjectWorkspace(workspace) : workspace,
+        ...(nextOngoing && existing.analysisMode === "ongoing" ? { ongoing: nextOngoing } : {}),
         ...replaceDraftResultField(
           "ongoingDraftResult",
-          existing.analysisMode === "ongoing"
-            ? authoritativeOngoingDraft
-            : undefined,
+          existing.analysisMode === "ongoing" ? authoritativeOngoingDraft : undefined,
         ),
         ...replaceDraftResultField(
           "singleDraftResult",
-          existing.analysisMode === "single"
-            ? authoritativeSingleDraft
-            : undefined,
+          existing.analysisMode === "single" ? authoritativeSingleDraft : undefined,
         ),
         // Presentation-only — do not rewrite frozen snapshot resultView/analytics.
-        draftResultPreferences: cloneResultPreferences(
-          live.resultPreferences,
-        ),
+        draftResultPreferences: cloneResultPreferences(live.resultPreferences),
       }
       if (draftResultSeedRef.current) {
         nextDoc = {
@@ -411,9 +386,7 @@ export function useLibraryAnalysisSession(args: {
   )
 
   const commitOngoingDraftResult = useCallback(
-    async (
-      input: CommitOngoingDraftResultInput,
-    ): Promise<{ ok: true } | { ok: false }> => {
+    async (input: CommitOngoingDraftResultInput): Promise<{ ok: true } | { ok: false }> => {
       if (docMeta?.analysisMode !== "ongoing" || docMeta.status !== "draft") {
         return { ok: false }
       }
@@ -485,9 +458,7 @@ export function useLibraryAnalysisSession(args: {
   )
 
   const commitSingleDraftResult = useCallback(
-    async (
-      input: CommitSingleDraftResultInput,
-    ): Promise<{ ok: true } | { ok: false }> => {
+    async (input: CommitSingleDraftResultInput): Promise<{ ok: true } | { ok: false }> => {
       if (docMeta?.analysisMode !== "single" || docMeta.status !== "draft") {
         return { ok: false }
       }
@@ -582,13 +553,8 @@ export function useLibraryAnalysisSession(args: {
         projectsAtRun: [],
       },
       ongoingCompactResult:
-        docMeta?.analysisMode === "ongoing"
-          ? ongoingDraftResultRef.current
-          : null,
-      singleDraftResult:
-        docMeta?.analysisMode === "single"
-          ? singleDraftResultRef.current
-          : null,
+        docMeta?.analysisMode === "ongoing" ? ongoingDraftResultRef.current : null,
+      singleDraftResult: docMeta?.analysisMode === "single" ? singleDraftResultRef.current : null,
       resultPreferences: live.resultPreferences,
     })
   }, [docMeta?.analysisMode])
@@ -597,10 +563,8 @@ export function useLibraryAnalysisSession(args: {
 
   const activeCheckpoint = getActiveCheckpoint(ongoing ?? undefined) ?? null
   const analysisMode = docMeta?.analysisMode ?? DEFAULT_ANALYSIS_MODE
-  const checkpointReadOnly =
-    analysisMode === "ongoing" && activeCheckpoint?.status === "archived"
-  const readOnly =
-    docMeta?.status === "archived" || checkpointReadOnly
+  const checkpointReadOnly = analysisMode === "ongoing" && activeCheckpoint?.status === "archived"
+  const readOnly = docMeta?.status === "archived" || checkpointReadOnly
 
   const applyCheckpointView = useCallback(
     (checkpoint: AnalysisCheckpoint, docStatus: AnalysisStatus) => {
@@ -704,10 +668,7 @@ export function useLibraryAnalysisSession(args: {
           const workspace = ensureSingleProjectWorkspace(checkpoint.workspace)
           args.setProjects(workspace.projects)
           args.setActiveProjectId(workspace.activeProjectId)
-          if (
-            checkpoint.status === "archived" &&
-            checkpoint.archivedSnapshot
-          ) {
+          if (checkpoint.status === "archived" && checkpoint.archivedSnapshot) {
             setArchivedSnapshot(checkpoint.archivedSnapshot)
             setDraftResultSeed(null)
             setOngoingDraftResult(null)
@@ -790,9 +751,13 @@ export function useLibraryAnalysisSession(args: {
             restoreDraftResultPreferences(doc, args.replacePreferences)
           }
         }
-        await repo.touchMetadata(doc.id, { lastOpenedAt: nowIso() }, {
-          knownDocument: doc,
-        })
+        await repo.touchMetadata(
+          doc.id,
+          { lastOpenedAt: nowIso() },
+          {
+            knownDocument: doc,
+          },
+        )
         if (cancelled || loadGenerationRef.current !== generation) return
         setReady(true)
       } catch {
@@ -886,10 +851,7 @@ export function useLibraryAnalysisSession(args: {
 
     const live = liveArchiveStateRef.current
     let snapshot: SingleAnalysisArchivedSnapshot
-    if (
-      live.projectResults.length > 0 &&
-      live.lastSimulatedInputSignature.trim() !== ""
-    ) {
+    if (live.projectResults.length > 0 && live.lastSimulatedInputSignature.trim() !== "") {
       const shapleyByProjectId = computeShapleyByProjectIdForArchive(
         live.projects,
         live.projectResults,
@@ -958,13 +920,7 @@ export function useLibraryAnalysisSession(args: {
     setDraftResultSeed(null)
     setSingleDraftResult(null)
     return { ok: true, doc: archived }
-  }, [
-    checkpointReadOnly,
-    docMeta,
-    enqueueSave,
-    readLiveArchiveBlockReason,
-    repo,
-  ])
+  }, [checkpointReadOnly, docMeta, enqueueSave, readLiveArchiveBlockReason, repo])
 
   const createNewVersion = useCallback(
     async (versionSuffix: string) => {
@@ -1052,10 +1008,7 @@ export function useLibraryAnalysisSession(args: {
   /** @deprecated Prefer beginStartOngoingFromArchived */
   const startOngoingFromArchived = useCallback(
     async (selectedProjectId: string, name?: string) => {
-      const result = await beginStartOngoingFromArchived(
-        selectedProjectId,
-        name,
-      )
+      const result = await beginStartOngoingFromArchived(selectedProjectId, name)
       return result.ok ? result.doc : null
     },
     [beginStartOngoingFromArchived],
@@ -1068,11 +1021,7 @@ export function useLibraryAnalysisSession(args: {
     try {
       await enqueueSave(async () => {
         const existing = await repo.get(id)
-        if (
-          !existing ||
-          existing.status !== "draft" ||
-          !existing.draftResultSeed
-        ) {
+        if (!existing || existing.status !== "draft" || !existing.draftResultSeed) {
           return
         }
         const { draftResultSeed: _removed, ...rest } = existing
@@ -1091,16 +1040,10 @@ export function useLibraryAnalysisSession(args: {
     try {
       await enqueueSave(async () => {
         const existing = await repo.get(id)
-        if (
-          !existing ||
-          existing.status !== "draft" ||
-          !existing.ongoingDraftResult
-        ) {
+        if (!existing || existing.status !== "draft" || !existing.ongoingDraftResult) {
           return
         }
-        await repo.saveDraft(
-          omitDraftResultFields(existing, "ongoingDraftResult"),
-        )
+        await repo.saveDraft(omitDraftResultFields(existing, "ongoingDraftResult"))
       })
     } catch {
       /* non-fatal — in-memory compact result already cleared */
@@ -1115,16 +1058,10 @@ export function useLibraryAnalysisSession(args: {
     try {
       await enqueueSave(async () => {
         const existing = await repo.get(id)
-        if (
-          !existing ||
-          existing.status !== "draft" ||
-          !existing.singleDraftResult
-        ) {
+        if (!existing || existing.status !== "draft" || !existing.singleDraftResult) {
           return
         }
-        await repo.saveDraft(
-          omitDraftResultFields(existing, "singleDraftResult"),
-        )
+        await repo.saveDraft(omitDraftResultFields(existing, "singleDraftResult"))
       })
     } catch {
       /* non-fatal — in-memory compact result already cleared */
@@ -1200,166 +1137,154 @@ export function useLibraryAnalysisSession(args: {
    * Ongoing mode: freeze the active draft checkpoint. Document stays draft;
    * the ongoing analysis remains active (not completed).
    */
-  const archiveActiveCheckpoint =
-    useCallback(async (): Promise<ArchiveCheckpointResult> => {
-      if (!docMeta || docMeta.status !== "draft") {
-        return { ok: false, reason: "not_draft" }
-      }
-      if (docMeta.analysisMode !== "ongoing") {
-        return { ok: false, reason: "not_ongoing" }
-      }
+  const archiveActiveCheckpoint = useCallback(async (): Promise<ArchiveCheckpointResult> => {
+    if (!docMeta || docMeta.status !== "draft") {
+      return { ok: false, reason: "not_draft" }
+    }
+    if (docMeta.analysisMode !== "ongoing") {
+      return { ok: false, reason: "not_ongoing" }
+    }
 
-      const liveOngoing = ongoingRef.current
-      if (!liveOngoing) {
-        return { ok: false, reason: "not_ongoing" }
-      }
-      const liveActive = getActiveCheckpoint(liveOngoing)
-      if (!liveActive || liveActive.status !== "draft") {
-        return { ok: false, reason: "not_draft" }
-      }
+    const liveOngoing = ongoingRef.current
+    if (!liveOngoing) {
+      return { ok: false, reason: "not_ongoing" }
+    }
+    const liveActive = getActiveCheckpoint(liveOngoing)
+    if (!liveActive || liveActive.status !== "draft") {
+      return { ok: false, reason: "not_draft" }
+    }
 
-      const blockReason = readLiveArchiveBlockReason()
-      if (blockReason) {
-        return { ok: false, reason: blockReason }
-      }
+    const blockReason = readLiveArchiveBlockReason()
+    if (blockReason) {
+      return { ok: false, reason: blockReason }
+    }
 
-      try {
-        await flushPendingSave()
-      } catch {
-        /* continue with current App state */
-      }
+    try {
+      await flushPendingSave()
+    } catch {
+      /* continue with current App state */
+    }
 
-      const live = liveArchiveStateRef.current
-      const compactDraft = ongoingDraftResultRef.current
-      // Re-check after flush — same canonical validity model (live arrays or compact).
-      const blockAfterFlush = getArchiveBlockReason({
-        analysisId: docMeta.id,
-        checkpointId: ongoingRef.current?.activeCheckpointId ?? null,
-        projects: live.projects,
+    const live = liveArchiveStateRef.current
+    const compactDraft = ongoingDraftResultRef.current
+    // Re-check after flush — same canonical validity model (live arrays or compact).
+    const blockAfterFlush = getArchiveBlockReason({
+      analysisId: docMeta.id,
+      checkpointId: ongoingRef.current?.activeCheckpointId ?? null,
+      projects: live.projects,
+      projectResults: live.projectResults,
+      lastSimulatedInputSignature: live.lastSimulatedInputSignature,
+      simulationState: {
+        analysisId: live.liveSimulationAnalysisId,
+        checkpointId: live.liveSimulationCheckpointId,
+        inputSignature: live.lastSimulatedInputSignature,
         projectResults: live.projectResults,
-        lastSimulatedInputSignature: live.lastSimulatedInputSignature,
-        simulationState: {
-          analysisId: live.liveSimulationAnalysisId,
-          checkpointId: live.liveSimulationCheckpointId,
-          inputSignature: live.lastSimulatedInputSignature,
-          projectResults: live.projectResults,
-          simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
-          activeProjectIdAtRun: live.activeProjectId,
-          simulationCount: live.simulationCount,
-          projectsAtRun: [],
-        },
-        ongoingCompactResult: compactDraft,
+        simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
+        activeProjectIdAtRun: live.activeProjectId,
+        simulationCount: live.simulationCount,
+        projectsAtRun: [],
+      },
+      ongoingCompactResult: compactDraft,
+      resultPreferences: live.resultPreferences,
+    })
+    if (blockAfterFlush) {
+      return { ok: false, reason: blockAfterFlush }
+    }
+
+    const authoritativeOngoing = ongoingRef.current
+    if (!authoritativeOngoing) {
+      return { ok: false, reason: "not_ongoing" }
+    }
+    const activeId = authoritativeOngoing.activeCheckpointId
+    const active = getActiveCheckpoint(authoritativeOngoing)
+    if (!active || active.status !== "draft") {
+      return { ok: false, reason: "not_draft" }
+    }
+
+    const archivedAt = nowIso()
+    let snapshot: OngoingCheckpointResultSnapshotV1
+    if (live.projectResults.length > 0) {
+      const shapleyByProjectId = computeShapleyByProjectIdForArchive(
+        live.projects,
+        live.projectResults,
+      )
+      snapshot = buildOngoingCheckpointResultSnapshot({
+        analysisId: docMeta.id,
+        checkpointId: activeId,
+        projects: live.projects,
+        activeProjectId: live.activeProjectId,
+        projectResults: live.projectResults,
+        simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
+        inputSignature: live.lastSimulatedInputSignature,
+        simulationCount: live.simulationCount,
+        resultPreferences: live.resultPreferences,
+        shapleyByProjectId,
+        computedAt: archivedAt,
+        simulationRunIdByProjectId: live.simulationRunIdByProjectId,
+      })
+    } else if (compactDraft && isOngoingCheckpointResultSnapshot(compactDraft)) {
+      snapshot = freezeOngoingCompactForArchive(compactDraft, {
+        computedAt: archivedAt,
         resultPreferences: live.resultPreferences,
       })
-      if (blockAfterFlush) {
-        return { ok: false, reason: blockAfterFlush }
-      }
+    } else {
+      return { ok: false, reason: "no_results" }
+    }
 
-      const authoritativeOngoing = ongoingRef.current
-      if (!authoritativeOngoing) {
-        return { ok: false, reason: "not_ongoing" }
-      }
-      const activeId = authoritativeOngoing.activeCheckpointId
-      const active = getActiveCheckpoint(authoritativeOngoing)
-      if (!active || active.status !== "draft") {
-        return { ok: false, reason: "not_draft" }
-      }
+    // Sync live editor workspace into the active draft, then archive that checkpoint.
+    const synced = syncActiveCheckpointWorkspace(authoritativeOngoing, {
+      projects: live.projects,
+      activeProjectId: live.activeProjectId,
+    })
+    const nextOngoing = archiveCheckpoint(synced, activeId, snapshot, archivedAt)
+    const frozen = nextOngoing.checkpoints.find((c) => c.id === activeId)
 
-      const archivedAt = nowIso()
-      let snapshot: OngoingCheckpointResultSnapshotV1
-      if (live.projectResults.length > 0) {
-        const shapleyByProjectId = computeShapleyByProjectIdForArchive(
-          live.projects,
-          live.projectResults,
+    skipNextSaveRef.current = true
+    try {
+      await enqueueSave(async () => {
+        const existing = await repo.get(docMeta.id)
+        if (!existing || existing.status !== "draft" || existing.deletedAt) {
+          throw new Error("not_draft")
+        }
+        await repo.saveDraft(
+          omitDraftResultFields(
+            {
+              ...existing,
+              ongoing: nextOngoing,
+              workspace: frozen
+                ? ensureSingleProjectWorkspace(frozen.workspace)
+                : ensureSingleProjectWorkspace({
+                    projects: live.projects,
+                    activeProjectId: live.activeProjectId,
+                  }),
+            },
+            "draftResultSeed",
+            "ongoingDraftResult",
+          ),
         )
-        snapshot = buildOngoingCheckpointResultSnapshot({
-          analysisId: docMeta.id,
-          checkpointId: activeId,
-          projects: live.projects,
-          activeProjectId: live.activeProjectId,
-          projectResults: live.projectResults,
-          simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
-          inputSignature: live.lastSimulatedInputSignature,
-          simulationCount: live.simulationCount,
-          resultPreferences: live.resultPreferences,
-          shapleyByProjectId,
-          computedAt: archivedAt,
-          simulationRunIdByProjectId: live.simulationRunIdByProjectId,
-        })
-      } else if (
-        compactDraft &&
-        isOngoingCheckpointResultSnapshot(compactDraft)
-      ) {
-        snapshot = freezeOngoingCompactForArchive(compactDraft, {
-          computedAt: archivedAt,
-          resultPreferences: live.resultPreferences,
-        })
-      } else {
-        return { ok: false, reason: "no_results" }
-      }
+      })
+    } catch {
+      return { ok: false, reason: "persistence_failed" }
+    }
+    setOngoing(nextOngoing)
+    ongoingRef.current = nextOngoing
+    setDraftResultSeed(null)
+    setOngoingDraftResult(null)
+    if (frozen) {
+      applyCheckpointView(frozen, "draft")
+    }
+    return { ok: true, ongoing: nextOngoing }
+  }, [
+    applyCheckpointView,
+    docMeta,
+    enqueueSave,
+    flushPendingSave,
+    readLiveArchiveBlockReason,
+    repo,
+  ])
 
-      // Sync live editor workspace into the active draft, then archive that checkpoint.
-      const synced = syncActiveCheckpointWorkspace(
-        authoritativeOngoing,
-        {
-          projects: live.projects,
-          activeProjectId: live.activeProjectId,
-        },
-      )
-      const nextOngoing = archiveCheckpoint(
-        synced,
-        activeId,
-        snapshot,
-        archivedAt,
-      )
-      const frozen = nextOngoing.checkpoints.find((c) => c.id === activeId)
-
-      skipNextSaveRef.current = true
-      try {
-        await enqueueSave(async () => {
-          const existing = await repo.get(docMeta.id)
-          if (!existing || existing.status !== "draft" || existing.deletedAt) {
-            throw new Error("not_draft")
-          }
-          await repo.saveDraft(
-            omitDraftResultFields(
-              {
-                ...existing,
-                ongoing: nextOngoing,
-                workspace: frozen
-                  ? ensureSingleProjectWorkspace(frozen.workspace)
-                  : ensureSingleProjectWorkspace({
-                      projects: live.projects,
-                      activeProjectId: live.activeProjectId,
-                    }),
-              },
-              "draftResultSeed",
-              "ongoingDraftResult",
-            ),
-          )
-        })
-      } catch {
-        return { ok: false, reason: "persistence_failed" }
-      }
-      setOngoing(nextOngoing)
-      ongoingRef.current = nextOngoing
-      setDraftResultSeed(null)
-      setOngoingDraftResult(null)
-      if (frozen) {
-        applyCheckpointView(frozen, "draft")
-      }
-      return { ok: true, ongoing: nextOngoing }
-    }, [
-      applyCheckpointView,
-      docMeta,
-      enqueueSave,
-      flushPendingSave,
-      readLiveArchiveBlockReason,
-      repo,
-    ])
-
-  const completeOngoingAnalysisSession = useCallback(
-    async (): Promise<CompleteOngoingAnalysisResult> => {
+  const completeOngoingAnalysisSession =
+    useCallback(async (): Promise<CompleteOngoingAnalysisResult> => {
       if (!docMeta) {
         return { ok: false, reason: "not_found" }
       }
@@ -1428,8 +1353,7 @@ export function useLibraryAnalysisSession(args: {
       draftResultSeedRef.current = null
       const tip =
         completed.ongoing != null
-          ? getActiveCheckpoint(completed.ongoing) ??
-            getLatestCheckpoint(completed.ongoing)
+          ? (getActiveCheckpoint(completed.ongoing) ?? getLatestCheckpoint(completed.ongoing))
           : null
       if (tip?.archivedSnapshot) {
         setArchivedSnapshot(tip.archivedSnapshot)
@@ -1438,20 +1362,14 @@ export function useLibraryAnalysisSession(args: {
         } else {
           args.applyArchivedResults({ archivedSnapshot: tip.archivedSnapshot })
         }
-        args.setProjects(
-          ensureSingleProjectWorkspace(tip.workspace).projects,
-        )
-        args.setActiveProjectId(
-          ensureSingleProjectWorkspace(tip.workspace).activeProjectId,
-        )
+        args.setProjects(ensureSingleProjectWorkspace(tip.workspace).projects)
+        args.setActiveProjectId(ensureSingleProjectWorkspace(tip.workspace).activeProjectId)
       } else if (completed.archivedSnapshot) {
         setArchivedSnapshot(completed.archivedSnapshot)
         args.applyArchivedResults(completed)
       }
       return { ok: true, doc: completed }
-    },
-    [args, docMeta, enqueueSave, repo],
-  )
+    }, [args, docMeta, enqueueSave, repo])
 
   const createNextCheckpointSession = useCallback(
     async (name: string): Promise<CreateNextCheckpointSessionResult> => {
@@ -1489,17 +1407,14 @@ export function useLibraryAnalysisSession(args: {
       const inheritedResult = {
         ...created.inheritedResult,
         projectsAtRun:
-          created.inheritedResult.projectsAtRun &&
-          created.inheritedResult.projectsAtRun.length > 0
+          created.inheritedResult.projectsAtRun && created.inheritedResult.projectsAtRun.length > 0
             ? created.inheritedResult.projectsAtRun
             : (structuredClone(
                 created.newCheckpoint.workspace.projects,
               ) as import("@/domain/analysis/project").Project[]),
       }
 
-      const nextWorkspace = ensureSingleProjectWorkspace(
-        created.newCheckpoint.workspace,
-      )
+      const nextWorkspace = ensureSingleProjectWorkspace(created.newCheckpoint.workspace)
       const saveDocId = docMeta.id
       skipNextSaveRef.current = true
       setSaveStatusSafe("saving")
@@ -1518,10 +1433,7 @@ export function useLibraryAnalysisSession(args: {
             ...replaceDraftResultField("ongoingDraftResult", inheritedResult),
           }
           if (createNextDoc.draftResultSeed) {
-            createNextDoc = omitDraftResultFields(
-              createNextDoc,
-              "draftResultSeed",
-            )
+            createNextDoc = omitDraftResultFields(createNextDoc, "draftResultSeed")
           }
           await repo.saveDraft(createNextDoc)
 
@@ -1567,8 +1479,8 @@ export function useLibraryAnalysisSession(args: {
    * Durable-first removal of the tip draft checkpoint only.
    * Uses saveDraft — never moveToTrash / deletedAt / analysis delete.
    */
-  const deleteActiveDraftCheckpointSession = useCallback(
-    async (): Promise<DeleteActiveDraftCheckpointSessionResult> => {
+  const deleteActiveDraftCheckpointSession =
+    useCallback(async (): Promise<DeleteActiveDraftCheckpointSessionResult> => {
       if (!docMeta || docMeta.status !== "draft") {
         return { ok: false, reason: "empty" }
       }
@@ -1661,17 +1573,7 @@ export function useLibraryAnalysisSession(args: {
         restoredCheckpoint: restored,
         deletedCheckpointId: deleted.deletedCheckpointId,
       }
-    },
-    [
-      applyCheckpointView,
-      args,
-      docMeta,
-      enqueueSave,
-      flushPendingSave,
-      repo,
-      setSaveStatusSafe,
-    ],
-  )
+    }, [applyCheckpointView, args, docMeta, enqueueSave, flushPendingSave, repo, setSaveStatusSafe])
 
   const selectCheckpoint = useCallback(
     async (checkpointId: string) => {
@@ -1752,15 +1654,7 @@ export function useLibraryAnalysisSession(args: {
         }
       }
     },
-    [
-      applyCheckpointView,
-      docMeta,
-      enqueueSave,
-      flushPendingSave,
-      ongoing,
-      repo,
-      setSaveStatusSafe,
-    ],
+    [applyCheckpointView, docMeta, enqueueSave, flushPendingSave, ongoing, repo, setSaveStatusSafe],
   )
 
   const moveCurrentToTrash = useCallback(async () => {
@@ -1801,48 +1695,34 @@ export function useLibraryAnalysisSession(args: {
     saveStatus,
     canArchive: Boolean(
       docMeta?.status === "draft" &&
-        !checkpointReadOnly &&
-        canArchiveCurrentResults({
-          analysisId: loadedIdRef.current,
-          checkpointId:
-            docMeta?.analysisMode === "ongoing"
-              ? ongoing?.activeCheckpointId ?? null
-              : null,
-          projects: liveArchiveStateRef.current.projects,
+      !checkpointReadOnly &&
+      canArchiveCurrentResults({
+        analysisId: loadedIdRef.current,
+        checkpointId:
+          docMeta?.analysisMode === "ongoing" ? (ongoing?.activeCheckpointId ?? null) : null,
+        projects: liveArchiveStateRef.current.projects,
+        projectResults: liveArchiveStateRef.current.projectResults,
+        lastSimulatedInputSignature: liveArchiveStateRef.current.lastSimulatedInputSignature,
+        simulationState: {
+          analysisId: liveArchiveStateRef.current.liveSimulationAnalysisId,
+          checkpointId: liveArchiveStateRef.current.liveSimulationCheckpointId,
+          inputSignature: liveArchiveStateRef.current.lastSimulatedInputSignature,
           projectResults: liveArchiveStateRef.current.projectResults,
-          lastSimulatedInputSignature:
-            liveArchiveStateRef.current.lastSimulatedInputSignature,
-          simulationState: {
-            analysisId:
-              liveArchiveStateRef.current.liveSimulationAnalysisId,
-            checkpointId:
-              liveArchiveStateRef.current.liveSimulationCheckpointId,
-            inputSignature:
-              liveArchiveStateRef.current.lastSimulatedInputSignature,
-            projectResults: liveArchiveStateRef.current.projectResults,
-            simulatedBaseCostByProjectId:
-              liveArchiveStateRef.current.simulatedBaseCostByProjectId,
-            activeProjectIdAtRun:
-              liveArchiveStateRef.current.activeProjectId,
-            simulationCount: liveArchiveStateRef.current.simulationCount,
-            projectsAtRun: [],
-          },
-          ongoingCompactResult:
-            docMeta?.analysisMode === "ongoing"
-              ? ongoingDraftResult
-              : null,
-          singleDraftResult:
-            docMeta?.analysisMode === "single" ? singleDraftResult : null,
-        }),
+          simulatedBaseCostByProjectId: liveArchiveStateRef.current.simulatedBaseCostByProjectId,
+          activeProjectIdAtRun: liveArchiveStateRef.current.activeProjectId,
+          simulationCount: liveArchiveStateRef.current.simulationCount,
+          projectsAtRun: [],
+        },
+        ongoingCompactResult: docMeta?.analysisMode === "ongoing" ? ongoingDraftResult : null,
+        singleDraftResult: docMeta?.analysisMode === "single" ? singleDraftResult : null,
+      }),
     ),
     getArchiveBlockReason: readLiveArchiveBlockReason,
     archiveCurrent,
     archiveActiveCheckpoint,
     completeOngoingAnalysis: completeOngoingAnalysisSession,
     canCompleteOngoingAnalysis: Boolean(
-      docMeta?.status === "draft" &&
-        analysisMode === "ongoing" &&
-        ongoing?.lifecycle === "active",
+      docMeta?.status === "draft" && analysisMode === "ongoing" && ongoing?.lifecycle === "active",
     ),
     getCompleteOngoingAnalysisBlockReason: () =>
       getCompleteOngoingAnalysisBlockReason({
@@ -1853,26 +1733,20 @@ export function useLibraryAnalysisSession(args: {
     createNextCheckpoint: createNextCheckpointSession,
     canCreateNextCheckpoint: Boolean(
       docMeta?.status === "draft" &&
-        analysisMode === "ongoing" &&
-        canCreateNextCheckpoint(ongoing ?? undefined),
+      analysisMode === "ongoing" &&
+      canCreateNextCheckpoint(ongoing ?? undefined),
     ),
-    createNextCheckpointBlockReason: getCreateNextCheckpointBlockReason(
-      ongoing ?? undefined,
-    ),
+    createNextCheckpointBlockReason: getCreateNextCheckpointBlockReason(ongoing ?? undefined),
     /** Checkpoint-only delete — never analysis Trash / deletedAt. */
     deleteActiveDraftCheckpoint: deleteActiveDraftCheckpointSession,
     canDeleteActiveDraftCheckpoint: Boolean(
       docMeta?.status === "draft" &&
-        analysisMode === "ongoing" &&
-        getDeleteActiveDraftCheckpointBlockReason(
-          ongoing ?? undefined,
-        ) === null,
+      analysisMode === "ongoing" &&
+      getDeleteActiveDraftCheckpointBlockReason(ongoing ?? undefined) === null,
     ),
     getDeleteActiveDraftCheckpointBlockReason: () =>
       getDeleteActiveDraftCheckpointBlockReason(ongoing ?? undefined),
-    atCheckpointLimit: Boolean(
-      ongoing && ongoing.checkpoints.length >= MAX_CHECKPOINTS,
-    ),
+    atCheckpointLimit: Boolean(ongoing && ongoing.checkpoints.length >= MAX_CHECKPOINTS),
     latestCheckpoint: ongoing ? getLatestCheckpoint(ongoing) : null,
     createNewVersion,
     beginStartOngoingFromArchived,
@@ -1943,15 +1817,10 @@ export function useLibraryAnalysisSession(args: {
     ) => {
       const current = singleDraftResultRef.current
       const live = liveArchiveStateRef.current
-      if (
-        !current ||
-        current.activeProjectIdAtRun !== projectId ||
-        !expectedRunId
-      ) {
+      if (!current || current.activeProjectIdAtRun !== projectId || !expectedRunId) {
         return
       }
-      const currentRunId =
-        current.simulationRunIdByProjectId?.[projectId] ?? ""
+      const currentRunId = current.simulationRunIdByProjectId?.[projectId] ?? ""
       if (!currentRunId || currentRunId !== expectedRunId) {
         return
       }

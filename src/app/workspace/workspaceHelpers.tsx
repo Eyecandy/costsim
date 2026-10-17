@@ -10,11 +10,7 @@ import {
   parseNumberField,
 } from "@/domain/results/tableRows"
 
-export function noticeWithColorWord(
-  text: string,
-  word: string,
-  wordClassName: string,
-): ReactNode {
+export function noticeWithColorWord(text: string, word: string, wordClassName: string): ReactNode {
   const index = text.indexOf(word)
   if (index === -1) return text
   return (
@@ -53,8 +49,7 @@ export function patchProjectDriverRows(
 ): Project[] {
   return projects.map((p) => {
     if (p.id !== projectId) return p
-    const driverRows =
-      typeof updater === "function" ? updater(p.driverRows) : updater
+    const driverRows = typeof updater === "function" ? updater(p.driverRows) : updater
     return { ...p, driverRows }
   })
 }

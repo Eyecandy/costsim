@@ -44,11 +44,7 @@ function AuthedGate({ children }: { children: ReactNode }) {
 
 export function Router() {
   // Include search so `/app?analysis=` changes remount/re-render App correctly.
-  const pathKey = useSyncExternalStore(
-    subscribeLocation,
-    getLocationPathKey,
-    () => "/",
-  )
+  const pathKey = useSyncExternalStore(subscribeLocation, getLocationPathKey, () => "/")
   const pathname = pathKey.split("?")[0] || getPathname()
 
   if (isLibraryPath(pathname)) {

@@ -19,8 +19,7 @@ export function FocusPhaseNav(props: {
   onSelectPhase: (phase: FocusUserPhase) => void
   t: Translate
 }) {
-  const { currentPhase, furthestReached, itemProgressLabel, onSelectPhase, t } =
-    props
+  const { currentPhase, furthestReached, itemProgressLabel, onSelectPhase, t } = props
 
   return (
     <div
@@ -41,10 +40,7 @@ export function FocusPhaseNav(props: {
           return (
             <span key={phase} className="inline-flex min-w-0 items-center gap-1.5">
               {index > 0 ? (
-                <span
-                  className="select-none text-muted-foreground/35"
-                  aria-hidden
-                >
+                <span className="select-none text-muted-foreground/35" aria-hidden>
                   ·
                 </span>
               ) : null}
@@ -61,9 +57,7 @@ export function FocusPhaseNav(props: {
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35 focus-visible:ring-offset-1",
                   current &&
                     "font-medium text-foreground underline decoration-foreground/35 underline-offset-[3px]",
-                  !current &&
-                    reached &&
-                    "text-muted-foreground hover:text-foreground",
+                  !current && reached && "text-muted-foreground hover:text-foreground",
                   !reached &&
                     !current &&
                     "cursor-default text-muted-foreground/40 disabled:opacity-100",

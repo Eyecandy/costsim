@@ -21,10 +21,7 @@ function clampMultiline(raw: string, maxLength: number): string {
 }
 
 /** Empty / whitespace-only → null (do not save). */
-export function parseDefinitionText(
-  raw: string,
-  maxLength: number,
-): string | null {
+export function parseDefinitionText(raw: string, maxLength: number): string | null {
   const clamped = clampMultiline(raw, maxLength)
   return clamped === "" ? null : clamped
 }
@@ -100,9 +97,7 @@ export function driverRowHasDefinition(row: DriverRow): boolean {
 }
 
 /** Normalize optional description fields from storage/share (omit when empty). */
-export function normalizeCostRowDefinitions(
-  row: CostElementRow,
-): CostElementRow {
+export function normalizeCostRowDefinitions(row: CostElementRow): CostElementRow {
   const description = parseCostDescription(row.description ?? "")
   if (description === null) {
     if (row.description === undefined) return row
@@ -127,10 +122,7 @@ export function normalizeDriverRowDefinitions(row: DriverRow): DriverRow {
   return next
 }
 
-export function withCostDescription(
-  row: CostElementRow,
-  raw: string,
-): CostElementRow {
+export function withCostDescription(row: CostElementRow, raw: string): CostElementRow {
   const description = parseCostDescription(raw)
   if (description === null) {
     const { description: _omit, ...rest } = row
@@ -139,10 +131,7 @@ export function withCostDescription(
   return { ...row, description }
 }
 
-export function withDriverDescription(
-  row: DriverRow,
-  descriptionRaw: string,
-): DriverRow {
+export function withDriverDescription(row: DriverRow, descriptionRaw: string): DriverRow {
   const description = parseDriverDescription(descriptionRaw)
   const uncertaintyNotes = normalizeDriverUncertaintyNotes(row.uncertaintyNotes)
   const next: DriverRow = {

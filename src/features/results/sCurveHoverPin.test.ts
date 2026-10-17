@@ -9,7 +9,6 @@ import {
 } from "@/domain/results/sCurveHover"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function sCurveSource() {
   return readFileSync(join(repoRoot, "src/features/results/ResultsSCurve.tsx"), "utf8")
 }
@@ -33,9 +32,7 @@ describe("expanded S-curve hover pin", () => {
     expect(src).toContain('data-scurve-hover-tooltip=""')
     expect(src).toContain("data-scurve-hover-marker")
     expect(src).toContain('data-scurve-pinned={isPinned ? "true" : undefined}')
-    expect(
-      activeSCurveInspectionCost(225_000_000, 100_000_000),
-    ).toBe(225_000_000)
+    expect(activeSCurveInspectionCost(225_000_000, 100_000_000)).toBe(225_000_000)
   })
 
   it("C: pointer movement while pinned does not change the pinned cost", () => {
@@ -91,9 +88,7 @@ describe("expanded S-curve hover pin", () => {
   it("I: reopening the modal starts unpinned", () => {
     const src = sCurveSource()
     expect(src).toContain("useState<number | null>(null)")
-    expect(src).toMatch(
-      /const \[pinnedCost, setPinnedCost\] = useState<number \| null>\(null\)/,
-    )
+    expect(src).toMatch(/const \[pinnedCost, setPinnedCost\] = useState<number \| null>\(null\)/)
   })
 
   it("J: stored pin state is based on cost-domain value rather than raw pointer pixels", () => {
@@ -122,9 +117,7 @@ describe("expanded S-curve hover pin", () => {
     expect(src).toContain("if (!expanded) return []")
     expect(panel).toContain("<ResultsSCurve")
     expect(panel).toContain("series={cdfSeries}")
-    expect(panel).toContain(
-      'onExpand={() => setExpandedChart({ kind: "scurve" })}',
-    )
+    expect(panel).toContain('onExpand={() => setExpandedChart({ kind: "scurve" })}')
     expect(panel).not.toMatch(
       /<ResultsSCurve[\s\S]*expanded[\s\S]*onExpand[\s\S]*series=\{cdfSeries\} expanded \/>/,
     )

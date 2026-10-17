@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
 }
@@ -12,12 +11,8 @@ function read(pathFromRepo: string) {
 describe("archive and create next Results shortcut", () => {
   it("exposes NO/EN labels for Options and archive action", () => {
     const messages = read("src/i18n/messages.ts")
-    expect(messages).toContain(
-      'archiveAndCreateNextAction: "Arkiver og opprett neste checkpoint"',
-    )
-    expect(messages).toContain(
-      'archiveAndCreateNextAction: "Archive and create next checkpoint"',
-    )
+    expect(messages).toContain('archiveAndCreateNextAction: "Arkiver og opprett neste checkpoint"')
+    expect(messages).toContain('archiveAndCreateNextAction: "Archive and create next checkpoint"')
     expect(messages).toContain('optionsHeading: "Valg"')
     expect(messages).toContain('optionsHeading: "Options"')
   })
@@ -38,9 +33,7 @@ describe("archive and create next Results shortcut", () => {
     expect(app).toContain("const requestArchiveCheckpoint = useCallback")
     expect(app).toContain("onArchive={requestArchiveCheckpoint}")
     expect(app).toContain("canArchive={librarySession.canArchive}")
-    expect(app).toContain(
-      "isOngoingAnalysis && librarySession.canArchive",
-    )
+    expect(app).toContain("isOngoingAnalysis && librarySession.canArchive")
     expect(app).toContain("getArchiveBlockReason")
     expect(app).toContain("archiveActiveCheckpoint")
     expect(app).toContain("canCreateNextCheckpoint(result.ongoing)")
@@ -50,13 +43,9 @@ describe("archive and create next Results shortcut", () => {
 
   it("does not show Archive block for archived Results views", () => {
     const panel = read("src/features/results/ResultsPanel.tsx")
-    expect(panel).toContain(
-      "{!analysisArchivedView && onRequestArchiveAndCreateNext ? (",
-    )
+    expect(panel).toContain("{!analysisArchivedView && onRequestArchiveAndCreateNext ? (")
     const app = readAppSource()
-    expect(app).toContain(
-      "isOngoingAnalysis && librarySession.canArchive",
-    )
+    expect(app).toContain("isOngoingAnalysis && librarySession.canArchive")
   })
 
   it("Reset / Nullstill is removed from Results Options", () => {

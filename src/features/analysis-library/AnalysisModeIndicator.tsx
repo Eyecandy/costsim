@@ -15,10 +15,7 @@ export type AnalysisModeIndicatorProps = {
  * Subtle icon-only Ongoing Analysis cue for Library / sidebar rows.
  * Tooltip + aria-label explain the mode; renders nothing for Single Analysis.
  */
-export function AnalysisModeIndicator({
-  mode,
-  className,
-}: AnalysisModeIndicatorProps) {
+export function AnalysisModeIndicator({ mode, className }: AnalysisModeIndicatorProps) {
   const { t } = useI18n()
   if (normalizeAnalysisMode(mode) !== "ongoing") return null
 
@@ -26,10 +23,7 @@ export function AnalysisModeIndicator({
 
   return (
     <span
-      className={cn(
-        "inline-flex shrink-0 items-center text-muted-foreground",
-        className,
-      )}
+      className={cn("inline-flex shrink-0 items-center text-muted-foreground", className)}
       data-analysis-mode="ongoing"
       title={label}
       aria-label={label}

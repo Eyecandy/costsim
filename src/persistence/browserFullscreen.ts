@@ -27,8 +27,7 @@ export function canRequestFullscreen(element: Element | null): boolean {
   if (!element) return false
   const el = element as FullscreenElement
   return (
-    typeof el.requestFullscreen === "function" ||
-    typeof el.webkitRequestFullscreen === "function"
+    typeof el.requestFullscreen === "function" || typeof el.webkitRequestFullscreen === "function"
   )
 }
 
@@ -47,9 +46,7 @@ export async function requestElementFullscreen(element: Element): Promise<void> 
 }
 
 /** Exit fullscreen only if `element` (or any element) currently owns it. */
-export async function exitFullscreenIfNeeded(
-  element?: Element | null,
-): Promise<void> {
+export async function exitFullscreenIfNeeded(element?: Element | null): Promise<void> {
   if (typeof document === "undefined") return
   const active = getFullscreenElement()
   if (!active) return
@@ -64,9 +61,7 @@ export async function exitFullscreenIfNeeded(
   }
 }
 
-export function subscribeFullscreenChange(
-  listener: () => void,
-): () => void {
+export function subscribeFullscreenChange(listener: () => void): () => void {
   if (typeof document === "undefined") return () => {}
   document.addEventListener("fullscreenchange", listener)
   document.addEventListener("webkitfullscreenchange", listener)

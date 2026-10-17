@@ -41,26 +41,17 @@ function driver(
 function seededP50P85(project: Project, seed = 12_345, runs = 8_000) {
   const payload = buildSimulationProjectPayload(project)!
   const rng = createSeededRng(seed)
-  const prep = prepareCostCorrelationCholesky(
-    payload.costCorrelation,
-    payload.costs.length,
-  )
+  const prep = prepareCostCorrelationCholesky(payload.costCorrelation, payload.costs.length)
   const values: number[] = []
   for (let i = 0; i < runs; i++) {
     let costValues: number[]
     if (payload.costs.length <= 1) {
-      costValues = payload.costs.map((c) =>
-        triangularQuantile(c.min, c.mode, c.max, rng()),
-      )
+      costValues = payload.costs.map((c) => triangularQuantile(c.min, c.mode, c.max, rng()))
     } else {
       const u = sampleCorrelatedUniforms(prep.choleskyL, rng)
-      costValues = payload.costs.map((c, idx) =>
-        triangularQuantile(c.min, c.mode, c.max, u[idx]!),
-      )
+      costValues = payload.costs.map((c, idx) => triangularQuantile(c.min, c.mode, c.max, u[idx]!))
     }
-    const drivers = payload.drivers.map((d) =>
-      triangularQuantile(d.min, d.mode, d.max, rng()),
-    )
+    const drivers = payload.drivers.map((d) => triangularQuantile(d.min, d.mode, d.max, rng()))
     values.push(
       computeTotalFromSampledValues({
         costValues,
@@ -117,9 +108,7 @@ describe("production deterministic Tornado", () => {
       costRows: [cost("c1", "Cost", "0", "100", "0")],
       driverRows: [driver("d1", "Market", "-10", "0", "20")],
     }
-    const market = computeDeterministicTornadoRows(project).find(
-      (r) => r.name === "Market",
-    )!
+    const market = computeDeterministicTornadoRows(project).find((r) => r.name === "Market")!
     expect(market.lowImpact).toBeCloseTo(-10, 10)
     expect(market.highImpact).toBeCloseTo(20, 10)
     expect(market.spread).toBeCloseTo(30, 10)
@@ -130,16 +119,11 @@ describe("production deterministic Tornado", () => {
       id: "d",
       name: "D",
       incurredCosts: 0,
-      costRows: [
-        cost("c1", "A", "0", "100", "0"),
-        cost("c2", "B", "0", "100", "0"),
-      ],
+      costRows: [cost("c1", "A", "0", "100", "0"), cost("c2", "B", "0", "100", "0")],
       driverRows: [driver("d1", "Partial", "-10", "0", "20")],
       driverImpacts: { d1: { c1: "100", c2: "30" } },
     }
-    const row = computeDeterministicTornadoRows(project).find(
-      (r) => r.name === "Partial",
-    )!
+    const row = computeDeterministicTornadoRows(project).find((r) => r.name === "Partial")!
     expect(row.lowImpact).toBeCloseTo(-13, 10)
     expect(row.highImpact).toBeCloseTo(26, 10)
     expect(row.spread).toBeCloseTo(39, 10)
@@ -150,10 +134,7 @@ describe("production deterministic Tornado", () => {
       id: "e",
       name: "E",
       incurredCosts: 0,
-      costRows: [
-        cost("c1", "X", "-20", "100", "20"),
-        cost("c2", "Y", "-20", "100", "20"),
-      ],
+      costRows: [cost("c1", "X", "-20", "100", "20"), cost("c2", "Y", "-20", "100", "20")],
       driverRows: [],
     }
     const correlated: Project = {
@@ -195,18 +176,13 @@ describe("production deterministic Tornado", () => {
       id: "g",
       name: "G",
       incurredCosts: 0,
-      costRows: [
-        cost("c1", "Small", "-5", "100", "5"),
-        cost("c2", "Large", "-30", "100", "40"),
-      ],
+      costRows: [cost("c1", "Small", "-5", "100", "5"), cost("c2", "Large", "-30", "100", "40")],
       driverRows: [driver("d1", "Mid", "-10", "0", "10")],
     }
     const rows = computeDeterministicTornadoRows(project)
     expect(rows[0]!.name).toBe("Large")
     expect(rows[0]!.spread).toBeGreaterThan(rows[1]!.spread)
-    expect(rows.map((r) => r.spread)).toEqual(
-      [...rows.map((r) => r.spread)].sort((a, b) => b - a),
-    )
+    expect(rows.map((r) => r.spread)).toEqual([...rows.map((r) => r.spread)].sort((a, b) => b - a))
   })
 
   it("regression: Base Cost / seeded P50–P85 unchanged by Tornado API shape", () => {
@@ -214,10 +190,7 @@ describe("production deterministic Tornado", () => {
       id: "reg",
       name: "Reg",
       incurredCosts: 1_000,
-      costRows: [
-        cost("c1", "A", "-10", "100", "15"),
-        cost("c2", "B", "-5", "50", "10"),
-      ],
+      costRows: [cost("c1", "A", "-10", "100", "15"), cost("c2", "B", "-5", "50", "10")],
       driverRows: [driver("d1", "D", "-8", "0", "12")],
       driverImpacts: { d1: { c1: "50" } },
       costCorrelations: { c1: { c2: "0.4" } },

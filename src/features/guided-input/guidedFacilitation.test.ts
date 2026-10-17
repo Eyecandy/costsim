@@ -5,19 +5,12 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function infoSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedPhaseInfo.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedPhaseInfo.tsx"), "utf8")
 }
 
 describe("Guided Input facilitation layer", () => {
@@ -31,12 +24,8 @@ describe("Guided Input facilitation layer", () => {
     expect(src).not.toContain("data-guided-estimate-uncertainty")
     expect(messages.no.inputs.guidedPhaseCost).toBe("Kostnadsposter")
     expect(messages.en.inputs.guidedPhaseCost).toBe("Cost items")
-    expect(messages.no.inputs.guidedPhaseEstimateUncertainty).toBe(
-      "Estimatusikkerhet",
-    )
-    expect(messages.en.inputs.guidedPhaseEstimateUncertainty).toBe(
-      "Estimate uncertainty",
-    )
+    expect(messages.no.inputs.guidedPhaseEstimateUncertainty).toBe("Estimatusikkerhet")
+    expect(messages.en.inputs.guidedPhaseEstimateUncertainty).toBe("Estimate uncertainty")
     expect(messages.no.inputs.guidedEstimateUncertaintyConceptUncertainty).toContain(
       "Estimatusikkerheten",
     )
@@ -75,33 +64,17 @@ describe("Guided Input facilitation layer", () => {
     expect(costPhase).toContain("defineCostDescriptionPlaceholder")
     expect(costPhase).toContain("guidedDriverUncertaintyNotesHeading")
     expect(costPhase).toContain('data-guided-cost-uncertainty=""')
-    expect(messages.no.inputs.guidedDriverUncertaintyNotesHeading).toBe(
-      "Usikkerhetsvurdering",
-    )
-    expect(messages.en.inputs.guidedDriverUncertaintyNotesHeading).toBe(
-      "Uncertainty assessment",
-    )
-    expect(messages.no.inputs.guidedCostLikelyPrompt).toContain(
-      "mest sannsynlig kostnad",
-    )
+    expect(messages.no.inputs.guidedDriverUncertaintyNotesHeading).toBe("Usikkerhetsvurdering")
+    expect(messages.en.inputs.guidedDriverUncertaintyNotesHeading).toBe("Uncertainty assessment")
+    expect(messages.no.inputs.guidedCostLikelyPrompt).toContain("mest sannsynlig kostnad")
     expect(messages.no.inputs.guidedCostRangeSourcePrompt).toContain(
       "mengden, prisen eller begge deler",
     )
-    expect(messages.en.inputs.guidedCostRangeSourcePrompt).toContain(
-      "quantity, price, or both",
-    )
-    expect(messages.no.inputs.guidedCostRangePrompt).toContain(
-      "ned eller opp fra mest sannsynlig",
-    )
-    expect(messages.no.inputs.guidedCostRangeReminder).toContain(
-      "realistisk spenn",
-    )
-    expect(messages.en.inputs.guidedCostLikelyPrompt).toContain(
-      "most likely cost",
-    )
-    expect(messages.en.inputs.guidedCostRangePrompt).toContain(
-      "down or up from the most likely",
-    )
+    expect(messages.en.inputs.guidedCostRangeSourcePrompt).toContain("quantity, price, or both")
+    expect(messages.no.inputs.guidedCostRangePrompt).toContain("ned eller opp fra mest sannsynlig")
+    expect(messages.no.inputs.guidedCostRangeReminder).toContain("realistisk spenn")
+    expect(messages.en.inputs.guidedCostLikelyPrompt).toContain("most likely cost")
+    expect(messages.en.inputs.guidedCostRangePrompt).toContain("down or up from the most likely")
     expect(dialogSource()).toContain("guidedCostRangeSourcePrompt")
     expect(messages.no.inputs).not.toHaveProperty("guidedCostDefinitionPrompt")
     expect(messages.en.inputs).not.toHaveProperty("guidedCostDefinitionPrompt")
@@ -127,21 +100,11 @@ describe("Guided Input facilitation layer", () => {
     )
     expect(src).toContain("guidedDriversIntroMeaning")
     expect(src).toContain('phase="driversIntro"')
-    expect(messages.no.inputs.guidedDriversIntroDistinction).toContain(
-      "estimatusikkerhet",
-    )
-    expect(messages.en.inputs.guidedDriversIntroDistinction).toContain(
-      "estimate uncertainty",
-    )
-    expect(messages.no.inputs.guidedDriverUncertaintyLowerPrompt).toContain(
-      "lavere kostnadsutfall",
-    )
-    expect(messages.en.inputs.guidedDriverUncertaintyHigherPrompt).toContain(
-      "higher cost outcome",
-    )
-    expect(messages.en.inputs.guidedDriverRangePrompt).toContain(
-      "realistically describes",
-    )
+    expect(messages.no.inputs.guidedDriversIntroDistinction).toContain("estimatusikkerhet")
+    expect(messages.en.inputs.guidedDriversIntroDistinction).toContain("estimate uncertainty")
+    expect(messages.no.inputs.guidedDriverUncertaintyLowerPrompt).toContain("lavere kostnadsutfall")
+    expect(messages.en.inputs.guidedDriverUncertaintyHigherPrompt).toContain("higher cost outcome")
+    expect(messages.en.inputs.guidedDriverRangePrompt).toContain("realistically describes")
     expect(messages.no.inputs).not.toHaveProperty("guidedDriverDefinitionPrompt")
     expect(messages.no.inputs).not.toHaveProperty("guidedDriverContext")
     expect(messages.en.inputs).not.toHaveProperty("guidedDriverDefinitionPrompt")
@@ -152,15 +115,11 @@ describe("Guided Input facilitation layer", () => {
     expect(messages.no.inputs.guidedCorrelationGuidance).toBe(
       "Er det kostnadsposter som faktisk har en tendens til å bli høye eller lave samtidig?",
     )
-    expect(messages.en.inputs.guidedCorrelationGuidance).toContain(
-      "genuinely tend",
-    )
+    expect(messages.en.inputs.guidedCorrelationGuidance).toContain("genuinely tend")
     expect(messages.no.inputs.guidedImpactGuidance).toBe(
       "Treffer denne driveren alle kostnadspostene like mye?",
     )
-    expect(messages.en.inputs.guidedImpactGuidance).toContain(
-      "affect all cost items equally",
-    )
+    expect(messages.en.inputs.guidedImpactGuidance).toContain("affect all cost items equally")
     const src = dialogSource()
     expect(src).toContain("guidedCorrelationSecondaryGuidance")
     expect(src).toContain("guidedImpactSecondaryGuidance")
@@ -169,18 +128,10 @@ describe("Guided Input facilitation layer", () => {
     expect(src).toContain("guidedImpactAdjustedHeading")
     expect(src).toContain('data-guided-correlation-summary-heading=""')
     expect(src).toContain('data-guided-impact-summary-heading=""')
-    expect(messages.no.inputs.guidedCorrelationSelectedHeading).toBe(
-      "Valgte korrelasjoner",
-    )
-    expect(messages.en.inputs.guidedCorrelationSelectedHeading).toBe(
-      "Selected correlations",
-    )
-    expect(messages.no.inputs.guidedImpactAdjustedHeading).toBe(
-      "Tilpasset påvirkning",
-    )
-    expect(messages.en.inputs.guidedImpactAdjustedHeading).toBe(
-      "Adjusted impact",
-    )
+    expect(messages.no.inputs.guidedCorrelationSelectedHeading).toBe("Valgte korrelasjoner")
+    expect(messages.en.inputs.guidedCorrelationSelectedHeading).toBe("Selected correlations")
+    expect(messages.no.inputs.guidedImpactAdjustedHeading).toBe("Tilpasset påvirkning")
+    expect(messages.en.inputs.guidedImpactAdjustedHeading).toBe("Adjusted impact")
   })
 
   it("Assumptions secondary guidance and examples distinguish uncertainty", () => {
@@ -196,12 +147,8 @@ describe("Guided Input facilitation layer", () => {
     expect(messages.en.inputs.guidedAssumptionsSecondaryGuidance).toContain(
       "estimate uncertainty or a driver",
     )
-    expect(messages.no.inputs.guidedAssumptionsExamples).toContain(
-      "valgt standard",
-    )
-    expect(messages.en.inputs.guidedAssumptionsExamples).toContain(
-      "chosen standard",
-    )
+    expect(messages.no.inputs.guidedAssumptionsExamples).toContain("valgt standard")
+    expect(messages.en.inputs.guidedAssumptionsExamples).toContain("chosen standard")
     const src = dialogSource()
     expect(src).toContain("guidedAssumptionsSecondaryGuidance")
     expect(src).toContain("guidedAssumptionsExamples")
@@ -228,45 +175,29 @@ describe("Guided Input facilitation layer", () => {
     expect(messages.no.inputs.guidedAssumptionsHelpMeaning).toContain(
       "premissene analysen bygger på",
     )
-    expect(messages.no.inputs.guidedAssumptionsHelpMeaning).toContain(
-      "Eksempler kan være",
-    )
+    expect(messages.no.inputs.guidedAssumptionsHelpMeaning).toContain("Eksempler kan være")
     expect(messages.en.inputs.guidedAssumptionsHelpMeaning).toContain(
       "premises on which the analysis is based",
     )
-    expect(messages.en.inputs.guidedAssumptionsHelpMeaning).toContain(
-      "Examples may include",
-    )
-    expect(messages.no.inputs.guidedAssumptionsHelpDiscuss).toContain(
-      "må være sant",
-    )
-    expect(messages.en.inputs.guidedAssumptionsHelpDiscuss).toContain(
-      "must be true",
-    )
+    expect(messages.en.inputs.guidedAssumptionsHelpMeaning).toContain("Examples may include")
+    expect(messages.no.inputs.guidedAssumptionsHelpDiscuss).toContain("må være sant")
+    expect(messages.en.inputs.guidedAssumptionsHelpDiscuss).toContain("must be true")
     expect(messages.no.inputs.guidedAssumptionsHelpAvoid).toContain(
       "estimatusikkerhet i en kostnadspost eller som en driver",
     )
     expect(messages.en.inputs.guidedAssumptionsHelpAvoid).toContain(
       "estimate uncertainty in a cost item or as a driver",
     )
-    expect(messages.no.inputs.guidedEstimateUncertaintyHelpTitle).toBe(
-      "Estimatusikkerhet",
-    )
-    expect(messages.en.inputs.guidedEstimateUncertaintyHelpTitle).toBe(
-      "Estimate uncertainty",
-    )
+    expect(messages.no.inputs.guidedEstimateUncertaintyHelpTitle).toBe("Estimatusikkerhet")
+    expect(messages.en.inputs.guidedEstimateUncertaintyHelpTitle).toBe("Estimate uncertainty")
     expect(messages.no.inputs.guidedEstimateUncertaintyHelpMeaning).toContain(
       "mengde, pris eller begge deler",
     )
-    expect(messages.no.inputs.guidedEstimateUncertaintyHelpMeaning).toContain(
-      "Eksempel:",
-    )
+    expect(messages.no.inputs.guidedEstimateUncertaintyHelpMeaning).toContain("Eksempel:")
     expect(messages.en.inputs.guidedEstimateUncertaintyHelpMeaning).toContain(
       "quantity, price, or both",
     )
-    expect(messages.no.inputs.guidedEstimateUncertaintyHelpDiscuss).toContain(
-      "Skillet mot drivere",
-    )
+    expect(messages.no.inputs.guidedEstimateUncertaintyHelpDiscuss).toContain("Skillet mot drivere")
     expect(messages.en.inputs.guidedEstimateUncertaintyHelpDiscuss).toContain(
       "distinction from drivers",
     )
@@ -289,7 +220,7 @@ describe("Guided Input facilitation layer", () => {
   it("Info popover does not close Guided Input; Escape closes panel only", () => {
     const info = infoSource()
     expect(info).toContain("data-guided-phase-info-panel")
-    expect(info).toContain('event.stopPropagation()')
+    expect(info).toContain("event.stopPropagation()")
     expect(info).toContain('event.key === "Escape"')
     expect(info).toContain("setOpen(false)")
     expect(info).not.toContain("onClose")

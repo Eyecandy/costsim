@@ -23,23 +23,18 @@ import {
 } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function driverRow(
-  partial: Partial<DriverRow> &
-    Pick<DriverRow, "optimistic" | "likely" | "pessimistic">,
+  partial: Partial<DriverRow> & Pick<DriverRow, "optimistic" | "likely" | "pessimistic">,
 ): DriverRow {
   return {
     id: "d1",
     name: "Driver",
     description: "",
-        ...partial,
+    ...partial,
   }
 }
 
@@ -92,21 +87,11 @@ describe("Guided Driver slider working ranges", () => {
   })
 
   it("E: values outside slider range are pinned for display only", () => {
-    expect(
-      pinGuidedSliderDisplayValue(-80, GUIDED_DRIVER_P10_SLIDER_RANGE),
-    ).toBe(-60)
-    expect(
-      pinGuidedSliderDisplayValue(80, GUIDED_DRIVER_P90_SLIDER_RANGE),
-    ).toBe(60)
-    expect(isGuidedDriverValueOutsideWorkingRange("optimistic", "-80")).toBe(
-      true,
-    )
-    expect(isGuidedDriverValueOutsideWorkingRange("pessimistic", "80")).toBe(
-      true,
-    )
-    expect(isGuidedDriverValueOutsideWorkingRange("optimistic", "-40")).toBe(
-      false,
-    )
+    expect(pinGuidedSliderDisplayValue(-80, GUIDED_DRIVER_P10_SLIDER_RANGE)).toBe(-60)
+    expect(pinGuidedSliderDisplayValue(80, GUIDED_DRIVER_P90_SLIDER_RANGE)).toBe(60)
+    expect(isGuidedDriverValueOutsideWorkingRange("optimistic", "-80")).toBe(true)
+    expect(isGuidedDriverValueOutsideWorkingRange("pessimistic", "80")).toBe(true)
+    expect(isGuidedDriverValueOutsideWorkingRange("optimistic", "-40")).toBe(false)
   })
 
   it("F: dialog pins slider display without clamping stored row on render", () => {
@@ -146,14 +131,10 @@ describe("Guided Driver early range validation", () => {
 
   it("valid asymmetric -5/0/+60 and -60/0/+5 show no warning", () => {
     expect(
-      getGuidedDriverRangeIssue(
-        driverRow({ optimistic: "-5", likely: "0", pessimistic: "60" }),
-      ),
+      getGuidedDriverRangeIssue(driverRow({ optimistic: "-5", likely: "0", pessimistic: "60" })),
     ).toBeNull()
     expect(
-      getGuidedDriverRangeIssue(
-        driverRow({ optimistic: "-60", likely: "0", pessimistic: "5" }),
-      ),
+      getGuidedDriverRangeIssue(driverRow({ optimistic: "-60", likely: "0", pessimistic: "5" })),
     ).toBeNull()
   })
 
@@ -181,7 +162,7 @@ describe("Guided Driver early range validation", () => {
   it("I: warning is non-blocking in Guided Input", () => {
     const src = dialogSource()
     expect(src).toContain("getGuidedDriverRangeIssue")
-    expect(src).toContain('data-guided-driver-range-warning={rangeIssue}')
+    expect(src).toContain("data-guided-driver-range-warning={rangeIssue}")
     expect(src).not.toContain("guidedRowBlocksAdvance")
     expect(src).not.toContain("disabled={rangeIssue")
   })
@@ -215,12 +196,8 @@ describe("Guided Driver early range validation", () => {
     )
     expect(messages.no.inputs.guidedDriverOrderInvalid).toContain("P10")
     expect(messages.en.inputs.guidedDriverOrderInvalid).toContain("P10")
-    expect(messages.no.inputs.guidedDriverOutsideWorkingRange).toBe(
-      "Utenfor normalområdet",
-    )
-    expect(messages.en.inputs.guidedDriverOutsideWorkingRange).toBe(
-      "Outside normal range",
-    )
+    expect(messages.no.inputs.guidedDriverOutsideWorkingRange).toBe("Utenfor normalområdet")
+    expect(messages.en.inputs.guidedDriverOutsideWorkingRange).toBe("Outside normal range")
     expect(messages.no.inputs.guidedDriverSupportInvalid).not.toMatch(
       /±\s*55|±\s*60|maksimum|model limit/i,
     )
@@ -240,9 +217,7 @@ describe("Guided Driver early range validation", () => {
 
   it("incomplete triplet does not warn", () => {
     expect(
-      getGuidedDriverRangeIssue(
-        driverRow({ optimistic: "-56", likely: "", pessimistic: "56" }),
-      ),
+      getGuidedDriverRangeIssue(driverRow({ optimistic: "-56", likely: "", pessimistic: "56" })),
     ).toBeNull()
   })
 })

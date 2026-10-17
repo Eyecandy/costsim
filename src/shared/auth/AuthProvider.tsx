@@ -1,11 +1,10 @@
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react"
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react"
-import { AuthContext, type AuthContextValue, type SignInCredentials, type SignOutOptions } from "@/shared/auth/authContext"
+  AuthContext,
+  type AuthContextValue,
+  type SignInCredentials,
+  type SignOutOptions,
+} from "@/shared/auth/authContext"
 
 const AUTH_STORAGE_KEY = "cost-simulator:v1:isAuthenticated"
 const AUTH_CHANGED_EVENT = "cost-simulator:auth-changed"
@@ -84,4 +83,3 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
-

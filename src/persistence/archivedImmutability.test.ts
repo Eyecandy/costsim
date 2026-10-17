@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { shouldAutosaveLibraryDraft } from "@/persistence/analysisLibraryRoutes"
 import {
@@ -65,9 +63,9 @@ describe("archived immutability", () => {
       analysisId: doc.id,
       snapshot,
     })
-    await expect(
-      repo.saveDraft({ ...archived, status: "draft", name: "hacked" }),
-    ).rejects.toThrow(/archived/i)
+    await expect(repo.saveDraft({ ...archived, status: "draft", name: "hacked" })).rejects.toThrow(
+      /archived/i,
+    )
   })
 
   it("shouldAutosaveLibraryDraft is false for archived", () => {
@@ -174,9 +172,7 @@ describe("archived immutability", () => {
     const still = await repo.get(archived.id)
     expect(still?.status).toBe("archived")
     expect(still?.name).toBe(originalName)
-    expect(still?.workspace.projects[0]!.name).toBe(
-      archived.workspace.projects[0]!.name,
-    )
+    expect(still?.workspace.projects[0]!.name).toBe(archived.workspace.projects[0]!.name)
   })
 
   it("createDraftFromArchived leaves original archived unchanged", async () => {
@@ -227,14 +223,11 @@ describe("archived immutability", () => {
     expect(draft.draftResultSeed).toBeDefined()
     expect(draft.draftResultSeed!.projectResults).toEqual([])
     expect(
-      draft.draftResultSeed!.compactByProjectId?.[
-        draft.workspace.projects[0]!.id
-      ]?.keyFigures.percentiles["50"],
+      draft.draftResultSeed!.compactByProjectId?.[draft.workspace.projects[0]!.id]?.keyFigures
+        .percentiles["50"],
     ).toBeDefined()
     expect(JSON.stringify(draft.draftResultSeed)).not.toContain('"values"')
-    expect(draft.draftResultSeed!.inputSignature).toBe(
-      JSON.stringify(draft.workspace.projects),
-    )
+    expect(draft.draftResultSeed!.inputSignature).toBe(JSON.stringify(draft.workspace.projects))
 
     draft.workspace.projects[0]!.name = "Edited draft alt"
     await repo.saveDraft(draft)

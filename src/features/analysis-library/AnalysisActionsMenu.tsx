@@ -225,9 +225,7 @@ function MenuItem({
       role="menuitem"
       className={cn(
         "flex w-full px-3 py-1.5 text-left font-sans text-[12px] hover:bg-muted/70",
-        destructive
-          ? "text-muted-foreground hover:text-destructive"
-          : "text-foreground",
+        destructive ? "text-muted-foreground hover:text-destructive" : "text-foreground",
       )}
       onClick={onClick}
     >

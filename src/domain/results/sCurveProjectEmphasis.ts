@@ -10,9 +10,7 @@ export const SCURVE_PROJECT_DIM_OPACITY = 0.45
 export function toSelectedProjectIdSet(
   selectedProjectIds: ReadonlySet<string> | readonly string[],
 ): ReadonlySet<string> {
-  return selectedProjectIds instanceof Set
-    ? selectedProjectIds
-    : new Set(selectedProjectIds)
+  return selectedProjectIds instanceof Set ? selectedProjectIds : new Set(selectedProjectIds)
 }
 
 /**
@@ -39,11 +37,7 @@ export function sCurveProjectLayerOpacity(
   selectedProjectIds: ReadonlySet<string> | readonly string[],
   hoveredProjectId: string | null,
 ): number {
-  return isSCurveProjectEmphasized(
-    projectId,
-    selectedProjectIds,
-    hoveredProjectId,
-  )
+  return isSCurveProjectEmphasized(projectId, selectedProjectIds, hoveredProjectId)
     ? SCURVE_PROJECT_FULL_OPACITY
     : SCURVE_PROJECT_DIM_OPACITY
 }

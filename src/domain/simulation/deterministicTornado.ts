@@ -128,20 +128,14 @@ function parseTornadoFactors(project: Project): {
     driverModes: driverParsed.map((x) => x.pct.mode),
     driverP10: driverParsed.map((x) => x.pct.p10),
     driverP90: driverParsed.map((x) => x.pct.p90),
-    driverImpacts: buildSimulationDriverImpactMatrix(
-      costRows,
-      driverRows,
-      project.driverImpacts,
-    ),
+    driverImpacts: buildSimulationDriverImpactMatrix(costRows, driverRows, project.driverImpacts),
     incurredCosts,
     baseCost,
   }
 }
 
 function tornadoSpread(lowImpact: number, highImpact: number): number {
-  return (
-    Math.max(lowImpact, highImpact) - Math.min(lowImpact, highImpact)
-  )
+  return Math.max(lowImpact, highImpact) - Math.min(lowImpact, highImpact)
 }
 
 /**
@@ -169,10 +163,7 @@ export function computeDeterministicTornado(
     baseCost,
   } = parsed
 
-  const totalAt = (
-    costValues: readonly number[],
-    driverPctValues: readonly number[],
-  ) =>
+  const totalAt = (costValues: readonly number[], driverPctValues: readonly number[]) =>
     computeTotalFromSampledValues({
       costValues,
       driverPctValues,
@@ -201,12 +192,8 @@ export function computeDeterministicTornado(
   for (let d = 0; d < driverRows.length; d++) {
     const driversAtP10 = driverModes.map((v, i) => (i === d ? driverP10[d]! : v))
     const driversAtP90 = driverModes.map((v, i) => (i === d ? driverP90[d]! : v))
-    const lowImpact = nearZeroToZero(
-      totalAt(costModes, driversAtP10) - referenceValue,
-    )
-    const highImpact = nearZeroToZero(
-      totalAt(costModes, driversAtP90) - referenceValue,
-    )
+    const lowImpact = nearZeroToZero(totalAt(costModes, driversAtP10) - referenceValue)
+    const highImpact = nearZeroToZero(totalAt(costModes, driversAtP90) - referenceValue)
     rows.push({
       name: driverRows[d]!.name.trim() || `Driver ${d + 1}`,
       type: "driver",

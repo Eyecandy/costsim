@@ -4,10 +4,7 @@ import {
   formatAdaptiveMonetarySignedDelta,
   formatAdaptiveMonetaryValue,
 } from "@/domain/results/formatWaterfallValue"
-import {
-  buildWaterfallChartLayout,
-  valueToX,
-} from "@/domain/results/waterfallLayout"
+import { buildWaterfallChartLayout, valueToX } from "@/domain/results/waterfallLayout"
 import {
   groupWaterfallContributors,
   type WaterfallDisplayRow,
@@ -82,10 +79,8 @@ export function AttributionWaterfall({
     [displayRows, endValue, startValue],
   )
 
-  const formatValue = (value: number) =>
-    formatAdaptiveMonetaryValue(value, language)
-  const formatDelta = (value: number) =>
-    formatAdaptiveMonetarySignedDelta(value, language)
+  const formatValue = (value: number) => formatAdaptiveMonetaryValue(value, language)
+  const formatDelta = (value: number) => formatAdaptiveMonetarySignedDelta(value, language)
 
   const xStart = valueToX(
     layout.startValue,
@@ -94,13 +89,7 @@ export function AttributionWaterfall({
     PLOT_LEFT,
     PLOT_WIDTH,
   )
-  const xEnd = valueToX(
-    layout.endValue,
-    layout.domainMin,
-    layout.domainMax,
-    PLOT_LEFT,
-    PLOT_WIDTH,
-  )
+  const xEnd = valueToX(layout.endValue, layout.domainMin, layout.domainMax, PLOT_LEFT, PLOT_WIDTH)
 
   const showExpand = shouldShowChartExpand(expanded, onExpand, expandLabel)
 
@@ -178,9 +167,7 @@ export function AttributionWaterfall({
         </div>
 
         <div
-          className={
-            expanded ? WATERFALL_PLOT_GRID_EXPANDED : WATERFALL_PLOT_GRID_COMPACT
-          }
+          className={expanded ? WATERFALL_PLOT_GRID_EXPANDED : WATERFALL_PLOT_GRID_COMPACT}
           data-waterfall-plot-grid=""
         >
           <div className="mb-3" aria-hidden />
@@ -294,9 +281,7 @@ export function AttributionWaterfall({
             })
           ) : (
             <p className="section-body col-span-3 text-[11px] text-muted-foreground/80">
-              {language === "no"
-                ? "Ingen bidrag å vise."
-                : "No contributions to display."}
+              {language === "no" ? "Ingen bidrag å vise." : "No contributions to display."}
             </p>
           )}
         </div>

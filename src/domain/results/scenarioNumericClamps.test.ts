@@ -12,7 +12,6 @@ import { normalizeGuidedNumericField } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function costRow(partial: Partial<CostElementRow> = {}): CostElementRow {
   return {
     id: "c1",
@@ -60,12 +59,8 @@ describe("scenario range endpoint sign fold", () => {
     expect(clampCostLikelyAbs("10")).toBe("10")
     expect(clampCostLikelyAbs("-10")).toBe("0")
     expect(clampCostLikelyAbs("")).toBe("")
-    expect(
-      clampDriverLikelyPercent("5", "-10", "20"),
-    ).toBe("5")
-    expect(
-      clampDriverLikelyPercent("-15", "-10", "20"),
-    ).toBe("-10")
+    expect(clampDriverLikelyPercent("5", "-10", "20")).toBe("5")
+    expect(clampDriverLikelyPercent("-15", "-10", "20")).toBe("-10")
   })
 })
 

@@ -24,24 +24,20 @@ describe("waterfall reference layout", () => {
 
   it("A/B: contribution rows exclude start and end reference totals", () => {
     expect(layout.contributionRows.length).toBe(contributions.length)
-    expect(
-      layout.contributionRows.some((row) => row.key === "base" || row.key === "p50"),
-    ).toBe(false)
+    expect(layout.contributionRows.some((row) => row.key === "base" || row.key === "p50")).toBe(
+      false,
+    )
   })
 
   it("C: span total equals end minus start", () => {
     expect(layout.spanTotal).toBe(estimatedP50 - baseCost)
-    expect(layout.spanTotal).toBe(
-      sumWaterfallDisplayContributions(contributions),
-    )
+    expect(layout.spanTotal).toBe(sumWaterfallDisplayContributions(contributions))
   })
 
   it("D: contribution waterfall terminates exactly at end value", () => {
     const last = layout.contributionRows.at(-1)
     expect(last?.cumulativeAfter).toBeCloseTo(estimatedP50, 9)
-    expect(
-      baseCost + sumWaterfallDisplayContributions(contributions),
-    ).toBeCloseTo(estimatedP50, 9)
+    expect(baseCost + sumWaterfallDisplayContributions(contributions)).toBeCloseTo(estimatedP50, 9)
   })
 
   it("E: negative contributions move the cumulative value downward", () => {
@@ -51,9 +47,6 @@ describe("waterfall reference layout", () => {
   })
 
   it("F: top-N plus Other grouping arithmetic is unchanged", () => {
-    expect(sumWaterfallDisplayContributions(contributions)).toBeCloseTo(
-      2_800_000,
-      9,
-    )
+    expect(sumWaterfallDisplayContributions(contributions)).toBeCloseTo(2_800_000, 9)
   })
 })

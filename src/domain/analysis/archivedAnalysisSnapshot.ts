@@ -1,9 +1,6 @@
 import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
 import type { Project } from "@/domain/analysis/project"
-import type {
-  ResolvedResultView,
-  ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import type { ResolvedResultView, ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 

@@ -10,16 +10,8 @@ import {
 
 const ids = ["A", "B", "C", "D"] as const
 
-function opacityMap(
-  selected: readonly string[],
-  hovered: string | null,
-): Record<string, number> {
-  return Object.fromEntries(
-    ids.map((id) => [
-      id,
-      sCurveProjectLayerOpacity(id, selected, hovered),
-    ]),
-  )
+function opacityMap(selected: readonly string[], hovered: string | null): Record<string, number> {
+  return Object.fromEntries(ids.map((id) => [id, sCurveProjectLayerOpacity(id, selected, hovered)]))
 }
 
 describe("sCurveProjectEmphasis", () => {
@@ -83,8 +75,6 @@ describe("sCurveProjectEmphasis", () => {
     expect(selected).toEqual(["C"])
     selected = toggleSelectedProjectId(selected, "C")
     expect(selected).toEqual([])
-    expect(sCurveProjectLayerOpacity("B", selected, null)).toBe(
-      SCURVE_PROJECT_FULL_OPACITY,
-    )
+    expect(sCurveProjectLayerOpacity("B", selected, null)).toBe(SCURVE_PROJECT_FULL_OPACITY)
   })
 })

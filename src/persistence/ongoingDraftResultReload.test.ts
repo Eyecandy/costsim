@@ -58,10 +58,7 @@ function ensureWs(project: Project): {
   return { projects: [project], activeProjectId: project.id }
 }
 
-function syncWs(
-  ongoing: OngoingAnalysisState,
-  project: Project,
-): OngoingAnalysisState {
+function syncWs(ongoing: OngoingAnalysisState, project: Project): OngoingAnalysisState {
   const activeId = ongoing.activeCheckpointId
   return {
     ...ongoing,
@@ -87,11 +84,7 @@ function buildCompact(args: {
   inputSignature: string
   batchSeq: number
 }) {
-  const results = projectResultsFor(
-    args.project.id,
-    args.project.incurredCosts,
-    args.center,
-  )
+  const results = projectResultsFor(args.project.id, args.project.incurredCosts, args.center)
   return buildOngoingCheckpointResultSnapshot({
     analysisId: args.analysisId,
     checkpointId: args.checkpointId,
@@ -102,10 +95,7 @@ function buildCompact(args: {
     inputSignature: args.inputSignature,
     simulationCount: 20_000,
     resultPreferences: DEFAULT_RESULT_PREFERENCES,
-    simulationRunIdByProjectId: createSimulationRunIdsForProjects(
-      [args.project.id],
-      args.batchSeq,
-    ),
+    simulationRunIdByProjectId: createSimulationRunIdsForProjects([args.project.id], args.batchSeq),
   })
 }
 
@@ -184,9 +174,7 @@ describe("Ongoing draft result reload regression", () => {
     })
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "999" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "999" } : row)),
     }
     expect(buildSimulationInputSignature([edited])).not.toBe(sigA)
     expect(compactA.inputSignature).toBe(sigA)
@@ -247,9 +235,7 @@ describe("Ongoing draft result reload regression", () => {
 
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "2500" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "2500" } : row)),
     }
     const sigB = buildSimulationInputSignature([edited])
     const compactB = buildCompact({
@@ -283,9 +269,7 @@ describe("Ongoing draft result reload regression", () => {
     const sigB = buildSimulationInputSignature([
       {
         ...project,
-        costRows: project.costRows.map((row, i) =>
-          i === 0 ? { ...row, likely: "2500" } : row,
-        ),
+        costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "2500" } : row)),
       },
     ])
     const inherited = buildCompact({
@@ -307,15 +291,12 @@ describe("Ongoing draft result reload regression", () => {
 
     // Explicit commit updates the session ref first — that ref wins on save.
     expect(
-      pickAuthoritativeOngoingDraftResult(latest, inherited)?.keyFigures
-        .percentiles["50"],
+      pickAuthoritativeOngoingDraftResult(latest, inherited)?.keyFigures.percentiles["50"],
     ).toBe(latest.keyFigures.percentiles["50"])
     // Disk-only fallback when session has no compact yet.
-    expect(
-      pickAuthoritativeOngoingDraftResult(null, latest)?.keyFigures.percentiles[
-        "50"
-      ],
-    ).toBe(latest.keyFigures.percentiles["50"])
+    expect(pickAuthoritativeOngoingDraftResult(null, latest)?.keyFigures.percentiles["50"]).toBe(
+      latest.keyFigures.percentiles["50"],
+    )
   })
 
   it("D2: prior-session high batchSeq must not beat new-session lower batchSeq", async () => {
@@ -345,9 +326,7 @@ describe("Ongoing draft result reload regression", () => {
     // New browser session: runSeqRef resets; first sim may be batchSeq=1.
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "2500" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "2500" } : row)),
     }
     const sigB = buildSimulationInputSignature([edited])
     const newSessionB = buildCompact({
@@ -358,22 +337,14 @@ describe("Ongoing draft result reload regression", () => {
       inputSignature: sigB,
       batchSeq: 1,
     })
-    expect(
-      (newSessionB.simulationRunIdByProjectId?.[edited.id] ?? "").startsWith(
-        "1:",
-      ),
-    ).toBe(true)
-    expect(
-      (priorSessionA.simulationRunIdByProjectId?.[project.id] ?? "").startsWith(
-        "50:",
-      ),
-    ).toBe(true)
+    expect((newSessionB.simulationRunIdByProjectId?.[edited.id] ?? "").startsWith("1:")).toBe(true)
+    expect((priorSessionA.simulationRunIdByProjectId?.[project.id] ?? "").startsWith("50:")).toBe(
+      true,
+    )
 
     const diskBefore = (await repo.get(doc.id))!.ongoingDraftResult
     const chosen = pickAuthoritativeOngoingDraftResult(newSessionB, diskBefore)
-    expect(chosen?.keyFigures.percentiles["50"]).toBe(
-      newSessionB.keyFigures.percentiles["50"],
-    )
+    expect(chosen?.keyFigures.percentiles["50"]).toBe(newSessionB.keyFigures.percentiles["50"])
     expect(chosen?.inputSignature).toBe(sigB)
 
     await repo.saveDraft({
@@ -487,9 +458,7 @@ describe("Ongoing draft result reload regression", () => {
     })
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "999" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "999" } : row)),
     }
     expect(
       getOngoingCompactArchiveBlockReason({

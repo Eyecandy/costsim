@@ -63,19 +63,14 @@ export type GuidedDriverSliderRange = {
   readonly step: number
 }
 
-export function guidedDriverSliderWorkingRange(
-  field: GuidedNumericField,
-): GuidedDriverSliderRange {
+export function guidedDriverSliderWorkingRange(field: GuidedNumericField): GuidedDriverSliderRange {
   if (field === "optimistic") return GUIDED_DRIVER_P10_SLIDER_RANGE
   if (field === "likely") return GUIDED_DRIVER_MODE_SLIDER_RANGE
   return GUIDED_DRIVER_P90_SLIDER_RANGE
 }
 
 /** Visual thumb position only — does not mutate stored values. */
-export function pinGuidedSliderDisplayValue(
-  value: number,
-  range: GuidedDriverSliderRange,
-): number {
+export function pinGuidedSliderDisplayValue(value: number, range: GuidedDriverSliderRange): number {
   return Math.min(range.max, Math.max(range.min, value))
 }
 
@@ -96,9 +91,7 @@ export function isGuidedDriverValueOutsideWorkingRange(
  */
 export type GuidedDriverRangeIssue = "support" | "order"
 
-export function getGuidedDriverRangeIssue(
-  row: DriverRow,
-): GuidedDriverRangeIssue | null {
+export function getGuidedDriverRangeIssue(row: DriverRow): GuidedDriverRangeIssue | null {
   const opt = parseNumberField(row.optimistic)
   const like = parseNumberField(row.likely)
   const pes = parseNumberField(row.pessimistic)
@@ -149,11 +142,7 @@ export function normalizeGuidedNumericField(args: {
   }
   if (args.field === "optimistic") return clampCostOptimisticPercent(sanitized)
   if (args.field === "likely") {
-    return clampDriverLikelyPercent(
-      sanitized,
-      args.row.optimistic,
-      args.row.pessimistic,
-    )
+    return clampDriverLikelyPercent(sanitized, args.row.optimistic, args.row.pessimistic)
   }
   return clampCostPessimisticPercent(sanitized)
 }
@@ -162,19 +151,13 @@ export function normalizeGuidedNumericField(args: {
  * Slider thumb position for display only.
  * Blank fields use `fallback` visually — callers must NOT write this until the user edits.
  */
-export function guidedSliderDisplayValue(
-  raw: string,
-  fallback: number,
-): number {
+export function guidedSliderDisplayValue(raw: string, fallback: number): number {
   const n = parseNumberField(raw)
   return n === null ? fallback : n
 }
 
 /** Signed percent label, e.g. `−15 %` / `+30 %`. */
-export function formatGuidedSignedPercent(
-  value: number,
-  language: AppLanguage,
-): string {
+export function formatGuidedSignedPercent(value: number, language: AppLanguage): string {
   if (!Number.isFinite(value)) return "—"
   const abs = formatNumber(Math.abs(value), Number.isInteger(value) ? 0 : 1, language)
   if (value > 0) return `+${abs} %`
@@ -186,10 +169,7 @@ export function formatGuidedSignedPercent(
  * Absolute monetary amount from mostLikely × (1 + pct/100).
  * Returns null when M or pct cannot be parsed (blank / incomplete).
  */
-export function deriveGuidedCostAbsolute(
-  mostLikelyRaw: string,
-  percentRaw: string,
-): number | null {
+export function deriveGuidedCostAbsolute(mostLikelyRaw: string, percentRaw: string): number | null {
   const m = parseNumberField(mostLikelyRaw)
   const pct = parseNumberField(percentRaw)
   if (m === null || pct === null) return null
@@ -200,10 +180,7 @@ export function deriveGuidedCostAbsolute(
  * Signed monetary deviation of a cost percent from mostLikely:
  * `mostLikely * percent / 100`. Display-only — not the endpoint total.
  */
-export function deriveGuidedCostEffect(
-  mostLikelyRaw: string,
-  percentRaw: string,
-): number | null {
+export function deriveGuidedCostEffect(mostLikelyRaw: string, percentRaw: string): number | null {
   const m = parseNumberField(mostLikelyRaw)
   const pct = parseNumberField(percentRaw)
   if (m === null || pct === null) return null
@@ -211,10 +188,7 @@ export function deriveGuidedCostEffect(
 }
 
 /** Compact absolute display for workshop (millions when large). */
-export function formatGuidedCostAbsolute(
-  value: number | null,
-  language: AppLanguage,
-): string {
+export function formatGuidedCostAbsolute(value: number | null, language: AppLanguage): string {
   if (value === null || !Number.isFinite(value)) return "—"
   const abs = Math.abs(value)
   if (abs >= 1_000_000) {
@@ -226,10 +200,7 @@ export function formatGuidedCostAbsolute(
 }
 
 /** Compact signed amount for approx impact labels. */
-export function formatGuidedSignedAbsolute(
-  value: number,
-  language: AppLanguage,
-): string {
+export function formatGuidedSignedAbsolute(value: number, language: AppLanguage): string {
   if (!Number.isFinite(value)) return "—"
   const sign = value > 0 ? "+" : value < 0 ? "−" : ""
   const abs = Math.abs(value)
@@ -256,10 +227,7 @@ export function formatGuidedApproxImpactLabel(
 }
 
 /** Round slider numeric commits to the guided step without inventing blanks. */
-export function snapGuidedSliderValue(
-  value: number,
-  step: number,
-): number {
+export function snapGuidedSliderValue(value: number, step: number): number {
   if (!Number.isFinite(value) || step <= 0) return value
   return Math.round(value / step) * step
 }
@@ -308,10 +276,7 @@ export function computeGuidedDriverEndpointEffects(
 
   const costEntries = project.costRows
     .map((row) => ({ row, mode: parseNumberField(row.likely) }))
-    .filter(
-      (x): x is { row: CostElementRow; mode: number } =>
-        x.mode !== null && x.mode > 0,
-    )
+    .filter((x): x is { row: CostElementRow; mode: number } => x.mode !== null && x.mode > 0)
   if (costEntries.length === 0) return empty
 
   const selected = project.driverRows.find((d) => d.id === driverRowId)
@@ -353,9 +318,7 @@ export function computeGuidedDriverEndpointEffects(
   const totalAtZero = totalAt(otherAtModeSelectedAt(0))
 
   const effectAt = (pct: number | null): number | null =>
-    pct === null
-      ? null
-      : nearZeroToZero(totalAt(otherAtModeSelectedAt(pct)) - totalAtZero)
+    pct === null ? null : nearZeroToZero(totalAt(otherAtModeSelectedAt(pct)) - totalAtZero)
 
   return {
     p10Effect: effectAt(p10),

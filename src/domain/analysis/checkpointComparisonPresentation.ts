@@ -24,17 +24,10 @@ import {
   listVisibleComparableKeyFigureRowIds,
   type KeyFigureRowId,
 } from "@/domain/results/keyFigureVisibility"
-import {
-  formatPercentileLabel,
-  type ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import { formatPercentileLabel, type ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import { defaultCheckpointName } from "@/domain/analysis/analysisCheckpoint"
 
-function pickPlural(
-  n: number,
-  one: string,
-  other: string,
-): string {
+function pickPlural(n: number, one: string, other: string): string {
   return n === 1 ? one.replace("{n}", "1") : other.replace("{n}", String(n))
 }
 
@@ -84,8 +77,7 @@ export function formatStructuralChangeSummary(
       ),
     )
   }
-  const rangesChanged =
-    structural.costRangesChanged + structural.driverRangesChanged
+  const rangesChanged = structural.costRangesChanged + structural.driverRangesChanged
   if (rangesChanged > 0) {
     phrases.push(
       pickPlural(
@@ -98,20 +90,14 @@ export function formatStructuralChangeSummary(
   return phrases
 }
 
-function formatSignedAbsoluteDelta(
-  change: number,
-  language: AppLanguage,
-): string {
+function formatSignedAbsoluteDelta(change: number, language: AppLanguage): string {
   if (change === 0) return formatKeyFigureStat(0, language)
   const abs = formatKeyFigureStat(Math.abs(change), language)
   return change > 0 ? `+${abs}` : `−${abs}`
 }
 
 /** Percentage-point delta: current% − previous% (not relative % of %). */
-function formatSignedPercentagePoints(
-  change: number,
-  language: AppLanguage,
-): string {
+function formatSignedPercentagePoints(change: number, language: AppLanguage): string {
   const abs = formatNumber(Math.abs(change), 1, language)
   if (change === 0) return `${abs} pp`
   return change > 0 ? `+${abs} pp` : `−${abs} pp`
@@ -144,8 +130,7 @@ export function comparisonAbsoluteCellParts(
   }
 
   const absolute = side === "previous" ? row.previous : row.current
-  const percent =
-    side === "previous" ? row.previousPercent : row.currentPercent
+  const percent = side === "previous" ? row.previousPercent : row.currentPercent
 
   if (keyFigureHasInlinePercent(row.metric)) {
     return {
@@ -246,12 +231,7 @@ export function formatComparisonAbsolute(
   if (valueOrRow !== null && typeof valueOrRow === "object") {
     const side = metricIdOrSide === "current" ? "current" : "previous"
     return joinMetricParts(
-      comparisonAbsoluteCellParts(
-        valueOrRow,
-        side,
-        language,
-        lockedLabel ?? "—",
-      ),
+      comparisonAbsoluteCellParts(valueOrRow, side, language, lockedLabel ?? "—"),
     )
   }
 
@@ -286,10 +266,7 @@ export function formatComparisonAbsolute(
  */
 export type CostDeltaTone = "increase" | "decrease" | "neutral"
 
-export function costDeltaTone(
-  delta: number | null,
-  metricId?: KeyFigureRowId,
-): CostDeltaTone {
+export function costDeltaTone(delta: number | null, metricId?: KeyFigureRowId): CostDeltaTone {
   if (metricId && keyFigureSemanticType(metricId) !== "cost") {
     return "neutral"
   }
@@ -318,10 +295,7 @@ export function costDeltaClassName(tone: CostDeltaTone): string {
 }
 
 /** Absolute monetary delta → text color (respects cost vs probability metric). */
-export function getCostDeltaClass(
-  absoluteDelta: number | null,
-  metricId?: KeyFigureRowId,
-): string {
+export function getCostDeltaClass(absoluteDelta: number | null, metricId?: KeyFigureRowId): string {
   return costDeltaClassName(costDeltaTone(absoluteDelta, metricId))
 }
 
@@ -329,9 +303,7 @@ export function getCostDeltaClass(
  * Percentage-point delta → text color, independent of the absolute monetary delta.
  * Same sign rule: negative green, positive red, zero neutral.
  */
-export function getPercentageDeltaClass(
-  percentagePointDelta: number | null,
-): string {
+export function getPercentageDeltaClass(percentagePointDelta: number | null): string {
   return costDeltaClassName(costDeltaTone(percentagePointDelta))
 }
 
@@ -430,11 +402,7 @@ export function formatCheckpointContextLabel(
 ): string {
   const seq = sequenceLabelTemplate.replace("{n}", String(sequence))
   const trimmed = name.trim()
-  if (
-    !trimmed ||
-    trimmed === seq ||
-    trimmed === defaultCheckpointName(sequence)
-  ) {
+  if (!trimmed || trimmed === seq || trimmed === defaultCheckpointName(sequence)) {
     return seq
   }
   return `${seq} · ${trimmed}`

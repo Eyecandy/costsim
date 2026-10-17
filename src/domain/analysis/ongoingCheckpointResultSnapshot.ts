@@ -20,8 +20,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export const ONGOING_CHECKPOINT_RESULT_SCHEMA_VERSION = 1 as const
-export const ONGOING_CHECKPOINT_RESULT_KIND =
-  "ongoing_checkpoint_result_v1" as const
+export const ONGOING_CHECKPOINT_RESULT_KIND = "ongoing_checkpoint_result_v1" as const
 
 export type OngoingFrozenKeyFiguresV1 = CompactFrozenKeyFiguresV1
 
@@ -62,9 +61,7 @@ export type BuildOngoingCheckpointResultSnapshotInput = {
   simulationCount: number
   resultPreferences: ResultPreferencesV1
   resultView?: ResolvedResultView
-  shapleyByProjectId?: Readonly<
-    Record<string, ShapleyAttributionResult | null>
-  >
+  shapleyByProjectId?: Readonly<Record<string, ShapleyAttributionResult | null>>
   contribution?: ShapleyAttributionResult | null
   computedAt?: string
   simulationRunIdByProjectId?: Readonly<Record<string, string>>
@@ -92,9 +89,7 @@ export function isOngoingCheckpointResultSnapshot(
   )
 }
 
-export function isLegacyHeavyArchivedSnapshot(
-  value: unknown,
-): value is ArchivedAnalysisSnapshotV1 {
+export function isLegacyHeavyArchivedSnapshot(value: unknown): value is ArchivedAnalysisSnapshotV1 {
   if (!value || typeof value !== "object") return false
   const o = value as Record<string, unknown>
   return Array.isArray(o.projectResults) && Array.isArray(o.projectsAtArchive)
@@ -103,27 +98,20 @@ export function isLegacyHeavyArchivedSnapshot(
 export function buildOngoingCheckpointResultSnapshot(
   input: BuildOngoingCheckpointResultSnapshotInput,
 ): OngoingCheckpointResultSnapshotV1 {
-  const project =
-    input.projects.find((p) => p.id === input.activeProjectId) ??
-    input.projects[0]
+  const project = input.projects.find((p) => p.id === input.activeProjectId) ?? input.projects[0]
   const projectId = project?.id ?? input.activeProjectId
   const result = input.projectResults.find((r) => r.projectId === projectId)
   const resultPreferences = structuredClone(input.resultPreferences)
-  const resultView =
-    structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
+  const resultView = structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
   if (!project || !result) {
     throw new Error("Cannot compact Ongoing result without active project result")
   }
   const compact = buildCompactProjectResult({
     project,
     result,
-    simulatedBaseCost:
-      input.simulatedBaseCostByProjectId[projectId] ?? null,
+    simulatedBaseCost: input.simulatedBaseCostByProjectId[projectId] ?? null,
     resultView,
-    contribution:
-      input.contribution ??
-      input.shapleyByProjectId?.[projectId] ??
-      null,
+    contribution: input.contribution ?? input.shapleyByProjectId?.[projectId] ?? null,
   })
 
   const snapshot: OngoingCheckpointResultSnapshotV1 = {
@@ -144,9 +132,7 @@ export function buildOngoingCheckpointResultSnapshot(
     contribution: compact.contribution,
     resultPreferences,
     resultView,
-    projectsAtRun: structuredClone(
-      input.projectsAtRun ?? input.projects,
-    ) as Project[],
+    projectsAtRun: structuredClone(input.projectsAtRun ?? input.projects) as Project[],
     ...(input.simulationRunIdByProjectId
       ? {
           simulationRunIdByProjectId: {
@@ -205,9 +191,7 @@ export function legacyHeavyToOngoingCompact(args: {
     activeProjectId: snapshot.activeProjectIdAtRun,
     projectResults: snapshot.projectResults,
     simulatedBaseCostByProjectId: snapshot.simulatedBaseCostByProjectId,
-    inputSignature: buildSimulationInputSignature(
-      args.projects ?? snapshot.projectsAtArchive,
-    ),
+    inputSignature: buildSimulationInputSignature(args.projects ?? snapshot.projectsAtArchive),
     simulationCount: snapshot.simulationCount,
     resultPreferences: snapshot.resultPreferences,
     resultView: snapshot.resultView,

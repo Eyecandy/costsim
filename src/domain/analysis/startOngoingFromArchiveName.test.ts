@@ -40,9 +40,7 @@ function makeSnapshot(
     inputSignature: JSON.stringify(projects),
     projectsAtArchive: projects,
     activeProjectIdAtRun: activeProjectId,
-    simulatedBaseCostByProjectId: Object.fromEntries(
-      projects.map((p) => [p.id, 100]),
-    ),
+    simulatedBaseCostByProjectId: Object.fromEntries(projects.map((p) => [p.id, 100])),
     projectResults: projects.map((p) => ({
       projectId: p.id,
       incurredCosts: 0,
@@ -115,13 +113,15 @@ describe("startOngoingFromArchiveName", () => {
     expect(state.nameManuallyEdited).toBe(false)
     expect(proposeStartOngoingAnalysisName(project.name)).toBe("Alternativ 1")
 
-    const planned = planCreateOngoingFromArchivedSingle(
-      makeArchivedSingle([project], project.id),
-    )
+    const planned = planCreateOngoingFromArchivedSingle(makeArchivedSingle([project], project.id))
     expect(planned.ok).toBe(true)
     if (planned.ok) expect(planned.plan.name).toBe("Alternativ 1")
 
-    const { repo, project: p, archived } = await createArchivedSingleInRepo({
+    const {
+      repo,
+      project: p,
+      archived,
+    } = await createArchivedSingleInRepo({
       projectName: "Alternativ 1",
     })
     const created = await repo.createOngoingFromArchivedSingle({
@@ -307,9 +307,7 @@ describe("startOngoingFromArchiveName", () => {
       id: "b",
       name: "Alt B",
     }
-    const need = planCreateOngoingFromArchivedSingle(
-      makeArchivedSingle([a, b], a.id),
-    )
+    const need = planCreateOngoingFromArchivedSingle(makeArchivedSingle([a, b], a.id))
     expect(need.ok).toBe(false)
     if (!need.ok) expect(need.reason).toBe("need_selection")
 
@@ -322,10 +320,10 @@ describe("startOngoingFromArchiveName", () => {
       }),
     ).toBe("no_selection")
 
-    const planned = planCreateOngoingFromArchivedSingle(
-      makeArchivedSingle([a, b], a.id),
-      { selectedProjectId: "b", name: "My Ongoing" },
-    )
+    const planned = planCreateOngoingFromArchivedSingle(makeArchivedSingle([a, b], a.id), {
+      selectedProjectId: "b",
+      name: "My Ongoing",
+    })
     expect(planned.ok).toBe(true)
     if (planned.ok) {
       expect(planned.plan.sourceProjectId).toBe("b")

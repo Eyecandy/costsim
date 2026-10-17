@@ -15,8 +15,6 @@ export function getAnalysisLibraryRepository(): AnalysisLibraryRepository {
 }
 
 /** Test helper — not for production UI. */
-export function setAnalysisLibraryRepositoryForTests(
-  repo: AnalysisLibraryRepository | null,
-): void {
+export function setAnalysisLibraryRepositoryForTests(repo: AnalysisLibraryRepository | null): void {
   overrideRepo = repo
 }

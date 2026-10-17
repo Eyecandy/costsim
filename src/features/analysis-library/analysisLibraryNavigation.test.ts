@@ -6,9 +6,7 @@ import {
   readAnalysisIdFromLocation,
   shouldAutosaveLibraryDraft,
 } from "@/persistence/analysisLibraryRoutes"
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import {
@@ -71,9 +69,9 @@ describe("analysis library route helpers", () => {
   })
 
   it("getLocationPathKey includes search so analysis switches are detectable", () => {
-    expect(
-      getLocationPathKey({ pathname: "/app", search: "?analysis=a" }),
-    ).not.toBe(getLocationPathKey({ pathname: "/app", search: "?analysis=b" }))
+    expect(getLocationPathKey({ pathname: "/app", search: "?analysis=a" })).not.toBe(
+      getLocationPathKey({ pathname: "/app", search: "?analysis=b" }),
+    )
   })
 
   it("shouldAutosaveLibraryDraft blocks mismatched route/loaded ids", () => {
@@ -186,21 +184,16 @@ describe("analysis library navigation / new analysis", () => {
     expect(b.status).toBe("draft")
     expect(b.archivedSnapshot).toBeUndefined()
     expect(b.previousVersionId).toBeUndefined()
-    expect(b.workspace.projects[0]!.id).not.toBe(
-      archived.workspace.projects[0]!.id,
-    )
+    expect(b.workspace.projects[0]!.id).not.toBe(archived.workspace.projects[0]!.id)
     expect(b.workspace.projects[0]!.assumptions ?? []).toEqual([])
     expect(b.workspace.projects[0]!.name).not.toBe("Archived alternative")
-    expect(archived.workspace.projects[0]!.assumptions?.[0]?.text).toBe(
-      "Do not leak",
-    )
+    expect(archived.workspace.projects[0]!.assumptions?.[0]?.text).toBe("Do not leak")
 
     const stillA = await repo.get(archived.id)
     expect(stillA?.status).toBe("archived")
     expect(stillA?.workspace.projects[0]!.name).toBe("Archived alternative")
     expect(
-      stillA?.archivedSnapshot &&
-        "projectResults" in stillA.archivedSnapshot
+      stillA?.archivedSnapshot && "projectResults" in stillA.archivedSnapshot
         ? stillA.archivedSnapshot.projectResults[0]?.values
         : null,
     ).toEqual([10, 20, 30])
@@ -249,9 +242,7 @@ describe("analysis library navigation / new analysis", () => {
     expect(draft.id).not.toBe(archived.id)
     expect(draft.previousVersionId).toBe(archived.id)
     expect(draft.workspace.projects[0]!.name).toBe("Source alt")
-    expect(draft.workspace.projects[0]!.id).not.toBe(
-      archived.workspace.projects[0]!.id,
-    )
+    expect(draft.workspace.projects[0]!.id).not.toBe(archived.workspace.projects[0]!.id)
     const still = await repo.get(archived.id)
     expect(still?.status).toBe("archived")
   })

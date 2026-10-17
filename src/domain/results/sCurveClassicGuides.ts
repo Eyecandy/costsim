@@ -1,8 +1,5 @@
 import { CHART_SVG_DATA_LABEL_FONT_SIZE } from "@/domain/results/chartPresentation"
-import {
-  plotXFromCost,
-  plotYFromProbability,
-} from "@/domain/results/sCurveHover"
+import { plotXFromCost, plotYFromProbability } from "@/domain/results/sCurveHover"
 import { formatPercentileLabel } from "@/domain/results/resultPreferences"
 import { percentile } from "@/domain/simulation/stats"
 
@@ -130,9 +127,7 @@ export function buildClassicGuides(args: {
  * One Y-axis percentile label per unique percentile.
  * Prefer outer lanes over moving along the data axis; nudge labelY only as last resort.
  */
-export function layoutClassicYAxisLabels(
-  percentiles: readonly number[],
-): ClassicYAxisLabel[] {
+export function layoutClassicYAxisLabels(percentiles: readonly number[]): ClassicYAxisLabel[] {
   const levels = sanitizeMarkerLevels(percentiles)
   const base: ClassicYAxisLabel[] = levels.map((p) => ({
     percentile: p,
@@ -149,10 +144,7 @@ export function layoutClassicYAxisLabels(
     let conflict = false
     for (let j = 0; j < i; j++) {
       const prev = base[j]!
-      if (
-        prev.lane === cur.lane &&
-        Math.abs(cur.labelY - prev.labelY) < CLASSIC_Y_LABEL_MIN_GAP
-      ) {
+      if (prev.lane === cur.lane && Math.abs(cur.labelY - prev.labelY) < CLASSIC_Y_LABEL_MIN_GAP) {
         conflict = true
         break
       }
@@ -168,10 +160,7 @@ export function layoutClassicYAxisLabels(
     const cur = base[i]!
     for (let j = 0; j < i; j++) {
       const prev = base[j]!
-      if (
-        prev.lane === cur.lane &&
-        Math.abs(cur.labelY - prev.labelY) < CLASSIC_Y_LABEL_MIN_GAP
-      ) {
+      if (prev.lane === cur.lane && Math.abs(cur.labelY - prev.labelY) < CLASSIC_Y_LABEL_MIN_GAP) {
         cur.labelY = prev.labelY + CLASSIC_Y_LABEL_MIN_GAP
       }
     }
@@ -184,9 +173,7 @@ export function layoutClassicYAxisLabels(
  * X-axis cost labels in dedicated outer rows beneath normal tick labels.
  * Guide X remains exact; only the text row is staggered.
  */
-export function layoutClassicXAxisLabels(
-  guides: readonly ClassicGuide[],
-): ClassicXAxisLabel[] {
+export function layoutClassicXAxisLabels(guides: readonly ClassicGuide[]): ClassicXAxisLabel[] {
   const sorted = [...guides].sort(
     (a, b) => a.x - b.x || a.percentile - b.percentile || a.projectId.localeCompare(b.projectId),
   )
@@ -197,9 +184,7 @@ export function layoutClassicXAxisLabels(
     // Find the lowest row that does not collide with a nearby prior label.
     let row = 0
     for (;;) {
-      const hits = active.some(
-        (a) => a.row === row && g.x - a.x < CLASSIC_X_LABEL_MIN_GAP,
-      )
+      const hits = active.some((a) => a.row === row && g.x - a.x < CLASSIC_X_LABEL_MIN_GAP)
       if (!hits) break
       row += 1
       if (row > 5) break
@@ -219,10 +204,7 @@ export function layoutClassicXAxisLabels(
 }
 
 export function classicYLabelX(padX: number, lane: number): number {
-  const dx =
-    CLASSIC_Y_CUSTOM_LANE_DX[
-      Math.min(lane, CLASSIC_Y_CUSTOM_LANE_DX.length - 1)
-    ]!
+  const dx = CLASSIC_Y_CUSTOM_LANE_DX[Math.min(lane, CLASSIC_Y_CUSTOM_LANE_DX.length - 1)]!
   return padX - dx
 }
 

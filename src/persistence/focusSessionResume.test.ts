@@ -19,7 +19,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -83,9 +82,7 @@ describe("focusSessionResume helpers", () => {
     const storage = memoryStorage()
     writeFocusSessionResume(validBlob, storage)
     expect(readFocusSessionResume("a1", storage)).toEqual(validBlob)
-    expect(focusSessionResumeStorageKey("a1")).toBe(
-      "cost-simulator:focus-session:v1:a1",
-    )
+    expect(focusSessionResumeStorageKey("a1")).toBe("cost-simulator:focus-session:v1:a1")
   })
 
   it("rejects malformed / wrong version / invalid enums", () => {
@@ -94,18 +91,10 @@ describe("focusSessionResume helpers", () => {
     expect(parseFocusSessionResume({ ...validBlob, v: 2 })).toBeNull()
     expect(parseFocusSessionResume({ ...validBlob, analysisId: "" })).toBeNull()
     expect(parseFocusSessionResume({ ...validBlob, projectId: "" })).toBeNull()
-    expect(
-      parseFocusSessionResume({ ...validBlob, focusView: "nope" }),
-    ).toBeNull()
-    expect(
-      parseFocusSessionResume({ ...validBlob, guidedPhase: "nope" }),
-    ).toBeNull()
-    expect(
-      parseFocusSessionResume({ ...validBlob, resultSectionId: "nope" }),
-    ).toBeNull()
-    expect(
-      parseFocusSessionResume({ ...validBlob, furthestReachedPhase: "nope" }),
-    ).toBeNull()
+    expect(parseFocusSessionResume({ ...validBlob, focusView: "nope" })).toBeNull()
+    expect(parseFocusSessionResume({ ...validBlob, guidedPhase: "nope" })).toBeNull()
+    expect(parseFocusSessionResume({ ...validBlob, resultSectionId: "nope" })).toBeNull()
+    expect(parseFocusSessionResume({ ...validBlob, furthestReachedPhase: "nope" })).toBeNull()
     const storage = memoryStorage()
     storage.setItem(focusSessionResumeStorageKey("a1"), "{not-json")
     expect(readFocusSessionResume("a1", storage)).toBeNull()
@@ -162,21 +151,15 @@ describe("focusSessionResume helpers", () => {
       costRows: [cost("c1")],
       driverRows: [driver("d1")],
     })
-    expect(
-      steps[
-        resolveGuidedStepIndexForResume(steps, "assumptions", undefined)
-      ]?.phase,
-    ).toBe("assumptions")
-    expect(
-      steps[
-        resolveGuidedStepIndexForResume(steps, "simulation", undefined)
-      ]?.phase,
-    ).toBe("simulation")
-    expect(
-      steps[
-        resolveGuidedStepIndexForResume(steps, "focusIntro", undefined)
-      ]?.phase,
-    ).toBe("focusIntro")
+    expect(steps[resolveGuidedStepIndexForResume(steps, "assumptions", undefined)]?.phase).toBe(
+      "assumptions",
+    )
+    expect(steps[resolveGuidedStepIndexForResume(steps, "simulation", undefined)]?.phase).toBe(
+      "simulation",
+    )
+    expect(steps[resolveGuidedStepIndexForResume(steps, "focusIntro", undefined)]?.phase).toBe(
+      "focusIntro",
+    )
   })
 
   it("B/C: restores cost/driver by row id", () => {
@@ -197,17 +180,9 @@ describe("focusSessionResume helpers", () => {
       costRows: [cost("c1")],
       driverRows: [driver("d1")],
     })
-    const costFallback = resolveGuidedStepIndexForResume(
-      steps,
-      "cost",
-      "missing",
-    )
+    const costFallback = resolveGuidedStepIndexForResume(steps, "cost", "missing")
     expect(steps[costFallback]).toMatchObject({ phase: "cost", rowId: "c1" })
-    const driverFallback = resolveGuidedStepIndexForResume(
-      steps,
-      "driver",
-      "missing",
-    )
+    const driverFallback = resolveGuidedStepIndexForResume(steps, "driver", "missing")
     expect(steps[driverFallback]).toMatchObject({
       phase: "driver",
       rowId: "d1",
@@ -217,11 +192,9 @@ describe("focusSessionResume helpers", () => {
       costRows: [],
       driverRows: [],
     })
-    expect(
-      emptyCosts[
-        resolveGuidedStepIndexForResume(emptyCosts, "cost", "x")
-      ]?.phase,
-    ).toBe("costsEmpty")
+    expect(emptyCosts[resolveGuidedStepIndexForResume(emptyCosts, "cost", "x")]?.phase).toBe(
+      "costsEmpty",
+    )
   })
 
   it("E/F: result section resolve + missing section → first", () => {
@@ -229,18 +202,10 @@ describe("focusSessionResume helpers", () => {
       includeDevelopment: false,
       includeContribution: true,
     })
-    expect(
-      steps[resolveFocusResultStepIndexForResume(steps, "tornado")],
-    ).toBe("tornado")
-    expect(
-      steps[resolveFocusResultStepIndexForResume(steps, "contribution")],
-    ).toBe("contribution")
-    expect(
-      steps[resolveFocusResultStepIndexForResume(steps, "nextSteps")],
-    ).toBe("nextSteps")
-    expect(
-      steps[resolveFocusResultStepIndexForResume(steps, "development")],
-    ).toBe("keyFigures")
+    expect(steps[resolveFocusResultStepIndexForResume(steps, "tornado")]).toBe("tornado")
+    expect(steps[resolveFocusResultStepIndexForResume(steps, "contribution")]).toBe("contribution")
+    expect(steps[resolveFocusResultStepIndexForResume(steps, "nextSteps")]).toBe("nextSteps")
+    expect(steps[resolveFocusResultStepIndexForResume(steps, "development")]).toBe("keyFigures")
   })
 
   it("H: clear removes stored resume", () => {
@@ -291,9 +256,7 @@ describe("Focus session resume wiring", () => {
     expect(resume).toContain("sessionStorage")
     expect(resume).not.toContain("localStorage")
     const app = readAppSource()
-    expect(app).not.toMatch(
-      /writeFocusSessionResume[\s\S]{0,200}browserFullscreen/,
-    )
+    expect(app).not.toMatch(/writeFocusSessionResume[\s\S]{0,200}browserFullscreen/)
   })
 
   it("G: furthestReachedPhase is written and restored", () => {

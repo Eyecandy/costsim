@@ -18,7 +18,6 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function renderWithI18n(node: ReactElement) {
   return renderToStaticMarkup(createElement(I18nProvider, null, node))
 }
@@ -53,7 +52,7 @@ describe("analysis mode presentation", () => {
       }),
     )
     expect(html).toContain('data-checkpoint-nav="timeline"')
-    expect(html).toContain("role=\"tablist\"")
+    expect(html).toContain('role="tablist"')
     expect(html).toContain("checkpoint-tab-c1")
     expect(html).toContain("checkpoint-tab-c2")
     expect(html).not.toContain("rounded-t-lg")
@@ -61,23 +60,17 @@ describe("analysis mode presentation", () => {
   })
 
   it("AnalysisModeIndicator is icon-only with tooltip for ongoing mode", () => {
-    const ongoing = renderWithI18n(
-      createElement(AnalysisModeIndicator, { mode: "ongoing" }),
-    )
+    const ongoing = renderWithI18n(createElement(AnalysisModeIndicator, { mode: "ongoing" }))
     expect(ongoing).toContain('data-analysis-mode="ongoing"')
     expect(ongoing).toContain('title="')
     expect(ongoing).toContain('aria-label="')
     expect(ongoing).not.toContain(">Løpende<")
     expect(ongoing).not.toContain(">Ongoing<")
 
-    const single = renderWithI18n(
-      createElement(AnalysisModeIndicator, { mode: "single" }),
-    )
+    const single = renderWithI18n(createElement(AnalysisModeIndicator, { mode: "single" }))
     expect(single).toBe("")
 
-    const legacy = renderWithI18n(
-      createElement(AnalysisModeIndicator, { mode: undefined }),
-    )
+    const legacy = renderWithI18n(createElement(AnalysisModeIndicator, { mode: undefined }))
     expect(legacy).toBe("")
   })
 
@@ -148,7 +141,7 @@ describe("analysis mode presentation", () => {
     expect(app).toContain("md:grid-rows-[auto_auto_auto]")
     expect(app).toContain("md:gap-y-7")
     expect(app).toContain("md:contents")
-    expect(app).toContain('data-analysis-workspace-layout={')
+    expect(app).toContain("data-analysis-workspace-layout={")
     expect(app).toContain("ONGOING_TIMELINE_CELL_CLASS")
     expect(app).toContain("ONGOING_SIMULATION_CELL_CLASS")
     // Equal sticky gutters: stretch both row-1 cells to the taller simulation height.
@@ -174,14 +167,10 @@ describe("analysis mode presentation", () => {
     const timelineCellMatch = app.match(
       /const ONGOING_TIMELINE_CELL_CLASS = cn\(([\s\S]*?)\)\nconst ONGOING_PROJECT_PROFILE/,
     )
-    expect(timelineCellMatch?.[1] ?? "").not.toContain(
-      "STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS",
-    )
+    expect(timelineCellMatch?.[1] ?? "").not.toContain("STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS")
     const simulationCellMatch = app.match(
       /const ONGOING_SIMULATION_CELL_CLASS = cn\(([\s\S]*?)\)\nconst ONGOING_RESULTS/,
     )
-    expect(simulationCellMatch?.[1] ?? "").not.toContain(
-      "STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS",
-    )
+    expect(simulationCellMatch?.[1] ?? "").not.toContain("STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS")
   })
 })

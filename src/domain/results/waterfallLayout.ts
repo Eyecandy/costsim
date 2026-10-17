@@ -48,15 +48,8 @@ export function buildWaterfallChartLayout(
 
   const minRunning = Math.min(...runningValues)
   const maxRunning = Math.max(...runningValues)
-  const maxAbsContribution = Math.max(
-    0,
-    ...displayRows.map((row) => Math.abs(row.contribution)),
-  )
-  const span = Math.max(
-    Math.abs(endValue - startValue),
-    maxAbsContribution,
-    1,
-  )
+  const maxAbsContribution = Math.max(0, ...displayRows.map((row) => Math.abs(row.contribution)))
+  const span = Math.max(Math.abs(endValue - startValue), maxAbsContribution, 1)
   const pad = Math.max(span * 0.2, maxAbsContribution * 0.35, 1)
 
   const domainMin = Math.min(startValue, endValue, minRunning) - pad

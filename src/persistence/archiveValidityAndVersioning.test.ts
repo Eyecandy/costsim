@@ -2,9 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   buildArchivedAnalysisSnapshot,
@@ -26,7 +24,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function fakeShapley(id: string): ShapleyAttributionResult {
   return {
     baseCost: 100,
@@ -34,22 +31,16 @@ function fakeShapley(id: string): ShapleyAttributionResult {
     estimatedP85: 150,
     expectedAddition: 20,
     uncertaintyReserve: 30,
-    contributions: [
-      { type: "cost", id, name: "Cost A", contribution: 20 },
-    ],
+    contributions: [{ type: "cost", id, name: "Cost A", contribution: 20 }],
     expectedAdditionDecomposition: {
       startValue: 100,
       endValue: 120,
-      contributions: [
-        { type: "cost", id, name: "Cost A", contribution: 20 },
-      ],
+      contributions: [{ type: "cost", id, name: "Cost A", contribution: 20 }],
     },
     uncertaintyReserveDecomposition: {
       startValue: 120,
       endValue: 150,
-      contributions: [
-        { type: "cost", id, name: "Cost A", contribution: 30 },
-      ],
+      contributions: [{ type: "cost", id, name: "Cost A", contribution: 30 }],
     },
     diagnostics: {} as ShapleyAttributionResult["diagnostics"],
   }
@@ -108,9 +99,7 @@ describe("archive validity", () => {
     const edited = [
       {
         ...withInput[0]!,
-        costRows: withInput[0]!.costRows.map((r, i) =>
-          i === 0 ? { ...r, likely: "200" } : r,
-        ),
+        costRows: withInput[0]!.costRows.map((r, i) => (i === 0 ? { ...r, likely: "200" } : r)),
       },
     ]
     expect(
@@ -218,9 +207,7 @@ describe("archived Result View capture", () => {
       },
     })
 
-    expect(snapshot.resultPreferences.keyFigures.percentiles).toEqual([
-      40, 50, 85,
-    ])
+    expect(snapshot.resultPreferences.keyFigures.percentiles).toEqual([40, 50, 85])
     expect(snapshot.resultView).toEqual(resolved)
     expect(snapshot.resultView.sCurve.percentiles).toEqual([40, 50, 85])
 
@@ -240,17 +227,12 @@ describe("archived Result View capture", () => {
     expect(archived.archivedSnapshot?.resultView).toEqual(resolved)
 
     // Snapshot is self-contained — non-default percentiles must survive archive.
-    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.percentiles).not.toEqual([
-      40, 50, 85,
-    ])
+    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.percentiles).not.toEqual([40, 50, 85])
   })
 
   it("App archives from the same live Result Preferences hook as ResultsPanel", () => {
     const app = readAppSource()
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(app).toContain("useResultPreferences")
     expect(app).toContain("resultPreferences,")
     expect(app).toContain("liveResultPreferences={resultPreferences}")
@@ -336,15 +318,10 @@ describe("create new version inherits archived results", () => {
     expect(seed.compactByProjectId?.[draft.workspace.projects[0]!.id]).toBeTruthy()
     expect(JSON.stringify(seed)).not.toContain('"values"')
     expect(seed.inputSignature).toBe(JSON.stringify(draft.workspace.projects))
-    expect(seed.resultView.sCurve.percentiles).toEqual(
-      resolveResultView(prefs).sCurve.percentiles,
-    )
-    const remappedShapley =
-      seed.shapleyByProjectId[draft.workspace.projects[0]!.id]
+    expect(seed.resultView.sCurve.percentiles).toEqual(resolveResultView(prefs).sCurve.percentiles)
+    const remappedShapley = seed.shapleyByProjectId[draft.workspace.projects[0]!.id]
     expect(remappedShapley).toBeTruthy()
-    expect(remappedShapley!.contributions[0]!.id).toBe(
-      draft.workspace.projects[0]!.costRows[0]!.id,
-    )
+    expect(remappedShapley!.contributions[0]!.id).toBe(draft.workspace.projects[0]!.costRows[0]!.id)
     expect(remappedShapley!.contributions[0]!.id).not.toBe(costId)
 
     // No Shapley recomputation during version creation.
@@ -358,8 +335,7 @@ describe("create new version inherits archived results", () => {
 
   it("inherited compact seed matches signature until first edit; Single archive needs live results", () => {
     const blank = createBlankWorkspaceRuntimeState()
-    const { projects: cloned, projectIdMap, rowIdMap } =
-      cloneProjectsWithMaps(blank.projects)
+    const { projects: cloned, projectIdMap, rowIdMap } = cloneProjectsWithMaps(blank.projects)
     const snapshot = buildArchivedAnalysisSnapshot({
       projects: blank.projects,
       activeProjectId: blank.activeProjectId,
@@ -411,20 +387,12 @@ describe("create new version inherits archived results", () => {
   })
 
   it("ResultsPanel uses draftResultSeed Shapley and does not auto-run while seeded", () => {
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(panel).toContain("draftResultSeed")
     expect(panel).toContain("useSeededShapley")
     expect(panel).toContain("draftResultSeed.shapleyByProjectId")
-    expect(panel).toMatch(
-      /inputsStale:[\s\S]*?useSeededShapley/,
-    )
-    const seed = readFileSync(
-      join(repoRoot, "src/domain/analysis/draftResultSeed.ts"),
-      "utf8",
-    )
+    expect(panel).toMatch(/inputsStale:[\s\S]*?useSeededShapley/)
+    const seed = readFileSync(join(repoRoot, "src/domain/analysis/draftResultSeed.ts"), "utf8")
     expect(seed).toContain("buildDraftResultSeedFromArchive")
     expect(seed).not.toContain("DraftResultSnapshotV1")
     const app = readAppSource()

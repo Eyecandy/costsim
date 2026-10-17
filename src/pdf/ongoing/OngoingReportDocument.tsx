@@ -9,14 +9,7 @@
  */
 
 import { useMemo } from "react"
-import {
-  Document,
-  Link,
-  Page,
-  StyleSheet,
-  Text,
-  View,
-} from "@react-pdf/renderer"
+import { Document, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 import type { AppLanguage } from "@/domain/results/formatNumber"
 import { formatPdfAbsoluteAmount, resolvePdfAmountScale } from "@/pdf/shared"
 import { PDF_A4_PAGE_SIZE } from "@/pdf/shared"
@@ -393,19 +386,14 @@ export function OngoingReportDocument({
   const pageRefs = useMemo(() => new Map<string, number>(), [])
   const language = model.metadata.language
   const lifecycleLabel =
-    model.analysis.lifecycle === "completed"
-      ? labels.lifecycleCompleted
-      : labels.lifecycleActive
+    model.analysis.lifecycle === "completed" ? labels.lifecycleCompleted : labels.lifecycleActive
   const cover = model.cover
   const detail = model.latestDetail
   const hasAssumptions = detail.assumptions.length > 0
   const historyAmounts = model.history.flatMap((h) =>
-    [
-      h.keyFigures.baseCost,
-      h.keyFigures.p50,
-      h.keyFigures.p85,
-      h.keyFigures.expectedValue,
-    ].filter((v): v is number => v !== null && Number.isFinite(v)),
+    [h.keyFigures.baseCost, h.keyFigures.p50, h.keyFigures.p85, h.keyFigures.expectedValue].filter(
+      (v): v is number => v !== null && Number.isFinite(v),
+    ),
   )
   const historyScale = resolvePdfAmountScale(historyAmounts)
   const developmentSeriesLabels = {
@@ -437,38 +425,22 @@ export function OngoingReportDocument({
             <View style={styles.coverBlock} wrap={false}>
               <Text style={styles.sectionTitle}>{labels.comparisonTitle}</Text>
               <Text style={styles.meta}>
-                CP{cover.comparison.previous.sequence} ·{" "}
-                {cover.comparison.previous.name}
+                CP{cover.comparison.previous.sequence} · {cover.comparison.previous.name}
                 {" → "}
-                CP{cover.comparison.current.sequence} ·{" "}
-                {cover.comparison.current.name}
+                CP{cover.comparison.current.sequence} · {cover.comparison.current.name}
               </Text>
               <View style={styles.tableHeader}>
-                <Text style={[styles.th, { width: "28%" }]}>
-                  {labels.metricLabel}
-                </Text>
-                <Text style={[styles.th, { width: "24%" }]}>
-                  {labels.colPrevious}
-                </Text>
-                <Text style={[styles.th, { width: "24%" }]}>
-                  {labels.colLatest}
-                </Text>
-                <Text style={[styles.th, { width: "24%" }]}>
-                  {labels.colChange}
-                </Text>
+                <Text style={[styles.th, { width: "28%" }]}>{labels.metricLabel}</Text>
+                <Text style={[styles.th, { width: "24%" }]}>{labels.colPrevious}</Text>
+                <Text style={[styles.th, { width: "24%" }]}>{labels.colLatest}</Text>
+                <Text style={[styles.th, { width: "24%" }]}>{labels.colChange}</Text>
               </View>
               {cover.comparison.rows.map((row) => (
                 <View key={row.metricId} style={styles.tableRow} wrap={false}>
                   <Text style={[styles.td, { width: "28%" }]}>{row.label}</Text>
-                  <Text style={[styles.td, { width: "24%" }]}>
-                    {row.previousFormatted}
-                  </Text>
-                  <Text style={[styles.td, { width: "24%" }]}>
-                    {row.currentFormatted}
-                  </Text>
-                  <Text style={[styles.td, { width: "24%" }]}>
-                    {row.changeFormatted}
-                  </Text>
+                  <Text style={[styles.td, { width: "24%" }]}>{row.previousFormatted}</Text>
+                  <Text style={[styles.td, { width: "24%" }]}>{row.currentFormatted}</Text>
+                  <Text style={[styles.td, { width: "24%" }]}>{row.changeFormatted}</Text>
                 </View>
               ))}
             </View>
@@ -494,22 +466,16 @@ export function OngoingReportDocument({
 
           <Text style={styles.contextLine}>
             {labels.checkpointContextLabel}: CP
-            {cover.checkpointContext.latestSequence} ·{" "}
-            {cover.checkpointContext.latestName}
+            {cover.checkpointContext.latestSequence} · {cover.checkpointContext.latestName}
           </Text>
           <Text style={styles.contextLine}>
             {labels.archivedCountLabel}: {cover.checkpointContext.archivedCount}
-            {cover.checkpointContext.periodStartIso ||
-            cover.checkpointContext.periodEndIso
+            {cover.checkpointContext.periodStartIso || cover.checkpointContext.periodEndIso
               ? ` · ${labels.periodLabel}: ${formatDateLabel(cover.checkpointContext.periodStartIso, language)} – ${formatDateLabel(cover.checkpointContext.periodEndIso, language)}`
               : ""}
           </Text>
 
-          <TocBlock
-            title={labels.contentsTitle}
-            entries={cover.tocEntries}
-            pageRefs={pageRefs}
-          />
+          <TocBlock title={labels.contentsTitle} entries={cover.tocEntries} pageRefs={pageRefs} />
         </View>
         <PageFooter text={labels.footerText} />
       </Page>
@@ -531,52 +497,30 @@ export function OngoingReportDocument({
               labels={developmentSeriesLabels}
             />
             <View style={styles.tableHeader}>
-              <Text style={[styles.th, { width: "10%" }]}>
-                {labels.colSequence}
-              </Text>
+              <Text style={[styles.th, { width: "10%" }]}>{labels.colSequence}</Text>
               <Text style={[styles.th, { width: "30%" }]}>{labels.colName}</Text>
-              <Text style={[styles.th, { width: "20%" }]}>
-                {labels.colBaseCost}
-              </Text>
+              <Text style={[styles.th, { width: "20%" }]}>{labels.colBaseCost}</Text>
               <Text style={[styles.th, { width: "20%" }]}>{labels.colP50}</Text>
               <Text style={[styles.th, { width: "20%" }]}>{labels.colP85}</Text>
             </View>
             {model.development.points.map((point) => (
-              <View
-                key={point.checkpointId}
-                style={styles.tableRow}
-                wrap={false}
-              >
-                <Text style={[styles.td, { width: "10%" }]}>
-                  CP{point.sequence}
-                </Text>
+              <View key={point.checkpointId} style={styles.tableRow} wrap={false}>
+                <Text style={[styles.td, { width: "10%" }]}>CP{point.sequence}</Text>
                 <Text style={[styles.td, { width: "30%" }]}>{point.name}</Text>
                 <Text style={[styles.td, { width: "20%" }]}>
                   {point.baseCost === null
                     ? "—"
-                    : formatPdfAbsoluteAmount(
-                        point.baseCost,
-                        language,
-                        historyScale,
-                      )}
+                    : formatPdfAbsoluteAmount(point.baseCost, language, historyScale)}
                 </Text>
                 <Text style={[styles.td, { width: "20%" }]}>
                   {point.p50 === null
                     ? "—"
-                    : formatPdfAbsoluteAmount(
-                        point.p50,
-                        language,
-                        historyScale,
-                      )}
+                    : formatPdfAbsoluteAmount(point.p50, language, historyScale)}
                 </Text>
                 <Text style={[styles.td, { width: "20%" }]}>
                   {point.p85 === null
                     ? "—"
-                    : formatPdfAbsoluteAmount(
-                        point.p85,
-                        language,
-                        historyScale,
-                      )}
+                    : formatPdfAbsoluteAmount(point.p85, language, historyScale)}
                 </Text>
               </View>
             ))}
@@ -617,8 +561,7 @@ export function OngoingReportDocument({
         </Text>
         {detail.archivedAt ? (
           <Text style={styles.meta}>
-            {labels.colArchivedAt}:{" "}
-            {formatDateLabel(detail.archivedAt, language)}
+            {labels.colArchivedAt}: {formatDateLabel(detail.archivedAt, language)}
           </Text>
         ) : null}
 
@@ -698,17 +641,11 @@ export function OngoingReportDocument({
         <View style={styles.tableHeader}>
           <Text style={[styles.th, { width: "8%" }]}>{labels.colSequence}</Text>
           <Text style={[styles.th, { width: "22%" }]}>{labels.colName}</Text>
-          <Text style={[styles.th, { width: "14%" }]}>
-            {labels.colArchivedAt}
-          </Text>
-          <Text style={[styles.th, { width: "14%" }]}>
-            {labels.colBaseCost}
-          </Text>
+          <Text style={[styles.th, { width: "14%" }]}>{labels.colArchivedAt}</Text>
+          <Text style={[styles.th, { width: "14%" }]}>{labels.colBaseCost}</Text>
           <Text style={[styles.th, { width: "14%" }]}>{labels.colP50}</Text>
           <Text style={[styles.th, { width: "14%" }]}>{labels.colP85}</Text>
-          <Text style={[styles.th, { width: "14%" }]}>
-            {labels.colExpectedValue}
-          </Text>
+          <Text style={[styles.th, { width: "14%" }]}>{labels.colExpectedValue}</Text>
         </View>
         {model.history.map((row) => (
           <View key={row.id} style={styles.tableRow} wrap={false}>
@@ -720,38 +657,22 @@ export function OngoingReportDocument({
             <Text style={[styles.td, { width: "14%" }]}>
               {row.keyFigures.baseCost === null
                 ? "—"
-                : formatPdfAbsoluteAmount(
-                    row.keyFigures.baseCost,
-                    language,
-                    historyScale,
-                  )}
+                : formatPdfAbsoluteAmount(row.keyFigures.baseCost, language, historyScale)}
             </Text>
             <Text style={[styles.td, { width: "14%" }]}>
               {row.keyFigures.p50 === null
                 ? "—"
-                : formatPdfAbsoluteAmount(
-                    row.keyFigures.p50,
-                    language,
-                    historyScale,
-                  )}
+                : formatPdfAbsoluteAmount(row.keyFigures.p50, language, historyScale)}
             </Text>
             <Text style={[styles.td, { width: "14%" }]}>
               {row.keyFigures.p85 === null
                 ? "—"
-                : formatPdfAbsoluteAmount(
-                    row.keyFigures.p85,
-                    language,
-                    historyScale,
-                  )}
+                : formatPdfAbsoluteAmount(row.keyFigures.p85, language, historyScale)}
             </Text>
             <Text style={[styles.td, { width: "14%" }]}>
               {row.keyFigures.expectedValue === null
                 ? "—"
-                : formatPdfAbsoluteAmount(
-                    row.keyFigures.expectedValue,
-                    language,
-                    historyScale,
-                  )}
+                : formatPdfAbsoluteAmount(row.keyFigures.expectedValue, language, historyScale)}
             </Text>
           </View>
         ))}

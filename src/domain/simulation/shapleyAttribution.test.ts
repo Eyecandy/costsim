@@ -52,12 +52,10 @@ function contributionSum(result: ReturnType<typeof computeShapleyAttribution>) {
 function expectExactAdditivity(result: ReturnType<typeof computeShapleyAttribution>) {
   expect(result.diagnostics.estimatedP50EmptyModel).toBe(result.baseCost)
   expect(Math.abs(result.diagnostics.additivityResidual)).toBeLessThan(1e-9)
-  expect(
-    Math.abs(result.baseCost + contributionSum(result) - result.estimatedP50),
-  ).toBeLessThan(1e-9)
-  expect(
-    Math.abs(contributionSum(result) - result.expectedAddition),
-  ).toBeLessThan(1e-9)
+  expect(Math.abs(result.baseCost + contributionSum(result) - result.estimatedP50)).toBeLessThan(
+    1e-9,
+  )
+  expect(Math.abs(contributionSum(result) - result.expectedAddition)).toBeLessThan(1e-9)
 }
 
 describe("medianOfNumbers", () => {
@@ -147,9 +145,7 @@ describe("computeShapleyAttribution", () => {
       9,
     )
     expect(result.diagnostics.mainSimulationP50Difference).toBe(0)
-    expect(
-      Math.abs(result.baseCost + contributionSum(result) - 999_999),
-    ).toBeLessThan(1e-9)
+    expect(Math.abs(result.baseCost + contributionSum(result) - 999_999)).toBeLessThan(1e-9)
   })
 
   it("A: single uncertain cost item ≈ P50(full) − M", () => {
@@ -168,9 +164,9 @@ describe("computeShapleyAttribution", () => {
     expect(result.baseCost).toBe(100)
     expect(result.contributions).toHaveLength(1)
     expectExactAdditivity(result)
-    expect(
-      Math.abs(result.contributions[0]!.contribution - result.expectedAddition),
-    ).toBeLessThan(Math.max(5, Math.abs(result.expectedAddition) * 0.05))
+    expect(Math.abs(result.contributions[0]!.contribution - result.expectedAddition)).toBeLessThan(
+      Math.max(5, Math.abs(result.expectedAddition) * 0.05),
+    )
   })
 
   it("B: single driver carries the P50 uplift over fixed cost base", () => {
@@ -190,9 +186,9 @@ describe("computeShapleyAttribution", () => {
     expect(Math.abs(cost.contribution)).toBeLessThan(
       Math.max(1, Math.abs(result.expectedAddition) * 0.05),
     )
-    expect(
-      Math.abs(driver.contribution - result.expectedAddition),
-    ).toBeLessThan(Math.max(8, Math.abs(result.expectedAddition) * 0.08))
+    expect(Math.abs(driver.contribution - result.expectedAddition)).toBeLessThan(
+      Math.max(8, Math.abs(result.expectedAddition) * 0.08),
+    )
   })
 
   it("C: two independent players sum to expected addition", () => {
@@ -337,9 +333,7 @@ describe("computeShapleyAttribution", () => {
       mode: 0,
       max: 5,
     }))
-    const driverImpacts = costTriangles.map(() =>
-      Array.from({ length: 12 }, () => 100),
-    )
+    const driverImpacts = costTriangles.map(() => Array.from({ length: 12 }, () => 100))
     const result = computeShapleyAttribution({
       costTriangles,
       costIds: costTriangles.map((_, i) => `c${i}`),
@@ -372,9 +366,7 @@ describe("computeShapleyAttribution", () => {
     })
     expectExactAdditivity(result)
     expect(result.diagnostics.permutationsUsed).toBe(TEST_CONFIG.permutations)
-    expect(result.diagnostics.simulationRunsPerSubset).toBe(
-      TEST_CONFIG.runsPerSubset,
-    )
+    expect(result.diagnostics.simulationRunsPerSubset).toBe(TEST_CONFIG.runsPerSubset)
     expect(result.diagnostics.convergenceMaxAbsDelta).not.toBeNull()
     expect(result.diagnostics.cacheHits).toBeGreaterThan(0)
   })

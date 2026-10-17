@@ -44,11 +44,7 @@ function resultsFor(project: Project, center: number): ProjectResult[] {
   ]
 }
 
-function makeCompact(
-  analysisId: string,
-  checkpointId: string,
-  project: Project,
-) {
+function makeCompact(analysisId: string, checkpointId: string, project: Project) {
   return buildOngoingCheckpointResultSnapshot({
     analysisId,
     checkpointId,
@@ -173,8 +169,7 @@ describe("Ongoing checkpoint save ordering (createNext / selectCheckpoint)", () 
         ongoingDraftResult: {
           ...created.inheritedResult,
           projectsAtRun:
-            created.inheritedResult.projectsAtRun ??
-            structuredClone(active.workspace.projects),
+            created.inheritedResult.projectsAtRun ?? structuredClone(active.workspace.projects),
         },
       })
       ongoingRef.current = created.ongoing
@@ -189,10 +184,9 @@ describe("Ongoing checkpoint save ordering (createNext / selectCheckpoint)", () 
     expect(cold!.ongoing!.checkpoints).toHaveLength(2)
     const cp1 = cold!.ongoing!.checkpoints.find((c) => c.id === cp1Id)
     expect(cp1?.status).toBe("archived")
-    expect(
-      cold!.ongoing!.checkpoints.find((c) => c.id === created.newCheckpoint.id)
-        ?.status,
-    ).toBe("draft")
+    expect(cold!.ongoing!.checkpoints.find((c) => c.id === created.newCheckpoint.id)?.status).toBe(
+      "draft",
+    )
   })
 
   it("B: selectCheckpoint vs stale queued save — selection not regressed", async () => {
@@ -208,11 +202,7 @@ describe("Ongoing checkpoint save ordering (createNext / selectCheckpoint)", () 
 
     let ongoing = createInitialOngoingState(workspace)
     const cp1Id = ongoing.activeCheckpointId
-    ongoing = archiveCheckpoint(
-      ongoing,
-      cp1Id,
-      makeCompact(doc.id, cp1Id, project),
-    )
+    ongoing = archiveCheckpoint(ongoing, cp1Id, makeCompact(doc.id, cp1Id, project))
     const created = createNextCheckpoint(ongoing, {
       name: "CP2",
       analysisId: doc.id,
@@ -270,9 +260,7 @@ describe("Ongoing checkpoint save ordering (createNext / selectCheckpoint)", () 
 
     const cold = await repo.get(doc.id)
     expect(cold!.ongoing!.activeCheckpointId).toBe(cp1Id)
-    expect(cold!.ongoing!.checkpoints.map((c) => c.id).sort()).toEqual(
-      [cp1Id, cp2Id].sort(),
-    )
+    expect(cold!.ongoing!.checkpoints.map((c) => c.id).sort()).toEqual([cp1Id, cp2Id].sort())
   })
 
   it("C: controls — createNext normal persist + compact reload identity", async () => {
@@ -302,17 +290,13 @@ describe("Ongoing checkpoint save ordering (createNext / selectCheckpoint)", () 
       workspace: ensureSingleProjectWorkspace(created.newCheckpoint.workspace),
       ongoingDraftResult: {
         ...created.inheritedResult,
-        projectsAtRun: structuredClone(
-          created.newCheckpoint.workspace.projects,
-        ) as Project[],
+        projectsAtRun: structuredClone(created.newCheckpoint.workspace.projects) as Project[],
       },
     })
 
     const cold = await repo.get(doc.id)
     expect(cold!.ongoing!.activeCheckpointId).toBe(created.newCheckpoint.id)
-    expect(cold!.ongoingDraftResult?.checkpointId).toBe(
-      created.newCheckpoint.id,
-    )
+    expect(cold!.ongoingDraftResult?.checkpointId).toBe(created.newCheckpoint.id)
     expect(cold!.ongoingDraftResult?.projectsAtRun?.length).toBe(1)
     expect(JSON.stringify(cold!.ongoingDraftResult)).not.toContain('"values":[')
   })

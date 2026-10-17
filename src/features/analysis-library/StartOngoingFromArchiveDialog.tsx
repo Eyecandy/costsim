@@ -3,9 +3,7 @@ import { createPortal } from "react-dom"
 
 import { Button } from "@/shared/ui/button"
 import { useI18n } from "@/i18n/useI18n"
-import {
-  getAnalysisLibraryRepository,
-} from "@/persistence/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   isAnalysisNameConflictError,
   type AnalysisNameOccupant,
@@ -33,10 +31,7 @@ type StartOngoingFromArchiveDialogProps = {
    * Create after client-side validation. Dialog stays open on failure so
    * known name conflicts can be shown inline.
    */
-  onConfirm: (
-    selectedProjectId: string,
-    name: string,
-  ) => Promise<void>
+  onConfirm: (selectedProjectId: string, name: string) => Promise<void>
 }
 
 /**
@@ -51,14 +46,10 @@ export function StartOngoingFromArchiveDialog({
   onConfirm,
 }: StartOngoingFromArchiveDialogProps) {
   const { t } = useI18n()
-  const [state, setState] = useState(() =>
-    initStartOngoingNameState(alternatives),
-  )
+  const [state, setState] = useState(() => initStartOngoingNameState(alternatives))
   const [occupants, setOccupants] = useState<AnalysisNameOccupant[]>([])
   const [submitting, setSubmitting] = useState(false)
-  const [inlineError, setInlineError] = useState<"duplicate" | "generic" | null>(
-    null,
-  )
+  const [inlineError, setInlineError] = useState<"duplicate" | "generic" | null>(null)
   const titleId = useId()
   const hintId = useId()
   const nameId = useId()
@@ -100,8 +91,7 @@ export function StartOngoingFromArchiveDialog({
     analyses: occupants,
   })
   const nameConflict = validation === "duplicate_name"
-  const canCreate =
-    validation === "ok" && !submitting && Boolean(state.selectedProjectId)
+  const canCreate = validation === "ok" && !submitting && Boolean(state.selectedProjectId)
 
   const submit = async () => {
     if (!state.selectedProjectId || submitting) return
@@ -122,9 +112,7 @@ export function StartOngoingFromArchiveDialog({
     try {
       await onConfirm(state.selectedProjectId, state.name.trim())
     } catch (error) {
-      setInlineError(
-        isAnalysisNameConflictError(error) ? "duplicate" : "generic",
-      )
+      setInlineError(isAnalysisNameConflictError(error) ? "duplicate" : "generic")
       setSubmitting(false)
     }
   }
@@ -144,10 +132,7 @@ export function StartOngoingFromArchiveDialog({
         onClick={(e) => e.stopPropagation()}
         data-start-ongoing-from-archive-dialog=""
       >
-        <h2
-          id={titleId}
-          className="m-0 mb-1 font-sans text-[15px] font-medium text-foreground"
-        >
+        <h2 id={titleId} className="m-0 mb-1 font-sans text-[15px] font-medium text-foreground">
           {t("library.startOngoingAnalysis")}
         </h2>
         {showAlternatives ? (
@@ -177,9 +162,7 @@ export function StartOngoingFromArchiveDialog({
                         : "border-border/50 text-foreground/90 hover:bg-muted/40",
                     )}
                     onClick={() => {
-                      setState((prev) =>
-                        applyAlternativeSelection(prev, alt.id, alternatives),
-                      )
+                      setState((prev) => applyAlternativeSelection(prev, alt.id, alternatives))
                       setInlineError(null)
                     }}
                   >
@@ -190,10 +173,7 @@ export function StartOngoingFromArchiveDialog({
             })}
           </ul>
         ) : null}
-        <label
-          htmlFor={nameId}
-          className="mb-1 block font-sans text-[12px] text-muted-foreground"
-        >
+        <label htmlFor={nameId} className="mb-1 block font-sans text-[12px] text-muted-foreground">
           {t("library.startOngoingNameLabel")}
         </label>
         <input

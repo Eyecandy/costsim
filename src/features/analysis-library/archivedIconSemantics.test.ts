@@ -4,7 +4,6 @@ import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 describe("archived state uses Archive icon (not Lock)", () => {
   it("Library / workspace archived indicators use lucide Archive", () => {
     const nav = readFileSync(
@@ -43,10 +42,7 @@ describe("archived state uses Archive icon (not Lock)", () => {
   })
 
   it("does not replace key-figure feature-lock wording (permissions stay Locked)", () => {
-    const visibility = readFileSync(
-      join(root, "src/domain/results/keyFigureVisibility.ts"),
-      "utf8",
-    )
+    const visibility = readFileSync(join(root, "src/domain/results/keyFigureVisibility.ts"), "utf8")
     expect(visibility).toContain("isKeyFigureRowLocked")
     const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
     expect(messages).toMatch(/locked:\s*"Locked"/)

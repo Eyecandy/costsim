@@ -9,10 +9,7 @@ import type {
   OngoingAnalysisLifecycle,
 } from "@/domain/analysis/analysisCheckpoint"
 import { resultSourceFromArchivedSnapshot } from "@/domain/analysis/checkpointComparison"
-import {
-  buildPdfAssumptionTexts,
-  mapShapleyToPdfContribution,
-} from "@/pdf/buildPdfReportModel"
+import { buildPdfAssumptionTexts, mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
 import type { AppLanguage } from "@/domain/results/formatNumber"
 import { mean } from "@/domain/simulation/stats"
 import { computeSCurveDisplaySeries } from "@/domain/results/sCurveDisplay"
@@ -31,11 +28,7 @@ import {
   extractDevelopmentMetrics,
   type OngoingDevelopmentSeries,
 } from "@/domain/analysis/ongoingDevelopmentSeries"
-import {
-  formatPdfAbsoluteAmount,
-  resolvePdfAmountScale,
-  type PdfAmountScale,
-} from "@/pdf/shared"
+import { formatPdfAbsoluteAmount, resolvePdfAmountScale, type PdfAmountScale } from "@/pdf/shared"
 import {
   filterCheckpointsUpToCutoff,
   ongoingPdfCheckpointDisplayLabel,
@@ -115,17 +108,9 @@ export type BuildOngoingPdfReportModelInput = {
   generatedAt?: Date | string
 }
 
-const METRIC_IDS: OngoingPdfKeyFigureMetricId[] = [
-  "baseCost",
-  "p50",
-  "p85",
-  "expectedValue",
-]
+const METRIC_IDS: OngoingPdfKeyFigureMetricId[] = ["baseCost", "p50", "p85", "expectedValue"]
 
-function fillTemplate(
-  template: string,
-  vars: Record<string, string>,
-): string {
+function fillTemplate(template: string, vars: Record<string, string>): string {
   let out = template
   for (const [key, value] of Object.entries(vars)) {
     out = out.replaceAll(`{${key}}`, value)
@@ -133,11 +118,7 @@ function fillTemplate(
   return out
 }
 
-function formatAmount(
-  value: number | null,
-  language: AppLanguage,
-  scale: PdfAmountScale,
-): string {
+function formatAmount(value: number | null, language: AppLanguage, scale: PdfAmountScale): string {
   if (value === null || !Number.isFinite(value)) return "—"
   return formatPdfAbsoluteAmount(value, language, scale)
 }
@@ -161,10 +142,7 @@ function metricValue(
   return figures[id]
 }
 
-function labelFor(
-  labels: OngoingPdfKeyFigureLabels,
-  id: OngoingPdfKeyFigureMetricId,
-): string {
+function labelFor(labels: OngoingPdfKeyFigureLabels, id: OngoingPdfKeyFigureMetricId): string {
   return labels[id]
 }
 
@@ -203,17 +181,13 @@ function frozenProject(checkpoint: AnalysisCheckpoint): Project | null {
   return checkpoint.workspace.projects[0] ?? null
 }
 
-function projectNameFromCheckpoint(
-  checkpoint: AnalysisCheckpoint,
-): string | null {
+function projectNameFromCheckpoint(checkpoint: AnalysisCheckpoint): string | null {
   const project = frozenProject(checkpoint)
   const name = project?.name?.trim()
   return name || null
 }
 
-function frozenSourceOf(
-  checkpoint: AnalysisCheckpoint,
-): OngoingPdfFrozenSource | null {
+function frozenSourceOf(checkpoint: AnalysisCheckpoint): OngoingPdfFrozenSource | null {
   const snap = checkpoint.archivedSnapshot
   if (!snap) return null
   if (isOngoingCheckpointResultSnapshot(snap)) return "compact"
@@ -238,8 +212,7 @@ export function extractFrozenPdfKeyFigures(
   if (isOngoingCheckpointResultSnapshot(snap)) {
     projectId = snap.activeProjectId
   } else if (isLegacyHeavyArchivedSnapshot(snap)) {
-    projectId =
-      snap.activeProjectIdAtRun ?? snap.projectsAtArchive[0]?.id ?? null
+    projectId = snap.activeProjectIdAtRun ?? snap.projectsAtArchive[0]?.id ?? null
   }
   if (!projectId) return null
 
@@ -254,8 +227,7 @@ export function extractFrozenPdfKeyFigures(
 
   const metrics = extractDevelopmentMetrics(source, projectId)
   const pr = source.projectResults.find((r) => r.projectId === projectId)
-  const expectedValue =
-    pr && pr.values.length > 0 ? mean(pr.values) : null
+  const expectedValue = pr && pr.values.length > 0 ? mean(pr.values) : null
   if (
     metrics.baseCost === null &&
     metrics.p50 === null &&
@@ -268,10 +240,7 @@ export function extractFrozenPdfKeyFigures(
     baseCost: metrics.baseCost,
     p50: metrics.p50,
     p85: metrics.p85,
-    expectedValue:
-      expectedValue !== null && Number.isFinite(expectedValue)
-        ? expectedValue
-        : null,
+    expectedValue: expectedValue !== null && Number.isFinite(expectedValue) ? expectedValue : null,
   }
 }
 
@@ -298,10 +267,7 @@ function buildChangeRows(
     const prev = metricValue(previous, id)
     const cur = metricValue(current, id)
     const change =
-      prev !== null &&
-      cur !== null &&
-      Number.isFinite(prev) &&
-      Number.isFinite(cur)
+      prev !== null && cur !== null && Number.isFinite(prev) && Number.isFinite(cur)
         ? cur - prev
         : null
     return {
@@ -410,12 +376,7 @@ function buildLatestDetail(
         (p) => Number.isFinite(p) && p >= 1 && p <= 99,
       )
       const markers = markerPercentiles.flatMap((p) => {
-        const value =
-          p === 50
-            ? figures.p50
-            : p === 85
-              ? figures.p85
-              : null
+        const value = p === 50 ? figures.p50 : p === 85 ? figures.p85 : null
         if (value === null || !Number.isFinite(value)) return []
         return [{ percentile: p, value }]
       })
@@ -539,12 +500,7 @@ function buildCover(
     reportBasisText,
     reportMeaningText,
     currentStatus: latestFigures,
-    currentStatusRows: buildFormattedRows(
-      latestFigures,
-      language,
-      labels,
-      scale,
-    ),
+    currentStatusRows: buildFormattedRows(latestFigures, language, labels, scale),
     comparison,
     checkpointContext: {
       latestSequence: latest.sequence,
@@ -569,10 +525,7 @@ export function buildOngoingPdfDevelopmentSeries(
 export function buildOngoingPdfReportModel(
   input: BuildOngoingPdfReportModelInput,
 ): BuildOngoingPdfReportModelResult {
-  const cutoffScoped = filterCheckpointsUpToCutoff(
-    input.checkpoints,
-    input.cutoffCheckpointId,
-  )
+  const cutoffScoped = filterCheckpointsUpToCutoff(input.checkpoints, input.cutoffCheckpointId)
   if (cutoffScoped.length === 0) {
     return { ok: false, reason: "no_archived_checkpoints" }
   }
@@ -583,9 +536,7 @@ export function buildOngoingPdfReportModel(
     return { ok: false, reason: "no_archived_checkpoints" }
   }
 
-  const withFrozen = archived.filter(
-    (c) => extractFrozenPdfKeyFigures(c) !== null,
-  )
+  const withFrozen = archived.filter((c) => extractFrozenPdfKeyFigures(c) !== null)
   if (withFrozen.length === 0) {
     return { ok: false, reason: "no_frozen_results" }
   }
@@ -600,18 +551,11 @@ export function buildOngoingPdfReportModel(
     return idx > 0 ? withFrozen[idx - 1]! : null
   })()
   const latestFigures = extractFrozenPdfKeyFigures(latestArchived)!
-  const previousFigures = previousArchived
-    ? extractFrozenPdfKeyFigures(previousArchived)
-    : null
+  const previousFigures = previousArchived ? extractFrozenPdfKeyFigures(previousArchived) : null
 
-  const cutoffDisplayLabel = ongoingPdfCheckpointDisplayLabel(
-    latestArchived.sequence,
-  )
+  const cutoffDisplayLabel = ongoingPdfCheckpointDisplayLabel(latestArchived.sequence)
 
-  const excludedDraftCp = findExcludedDraftAfterCutoff(
-    input.checkpoints,
-    latestArchived.sequence,
-  )
+  const excludedDraftCp = findExcludedDraftAfterCutoff(input.checkpoints, latestArchived.sequence)
   const excludedDraft = excludedDraftCp
     ? {
         checkpointId: excludedDraftCp.id,
@@ -661,12 +605,7 @@ export function buildOngoingPdfReportModel(
         sequence: latestArchived.sequence,
         name: latestArchived.name,
       },
-      rows: buildChangeRows(
-        previousFigures,
-        latestFigures,
-        input.language,
-        input.keyFigureLabels,
-      ),
+      rows: buildChangeRows(previousFigures, latestFigures, input.language, input.keyFigureLabels),
     }
   }
 
@@ -723,8 +662,6 @@ export function buildOngoingPdfReportModel(
 }
 
 /** @deprecated transitional — use history / cover instead. */
-export function projectNameFromCheckpointForTests(
-  checkpoint: AnalysisCheckpoint,
-): string | null {
+export function projectNameFromCheckpointForTests(checkpoint: AnalysisCheckpoint): string | null {
   return projectNameFromCheckpoint(checkpoint)
 }

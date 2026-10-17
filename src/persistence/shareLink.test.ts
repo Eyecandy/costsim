@@ -21,15 +21,12 @@ import {
 } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function richShareProject(): Project {
   return {
     id: "proj-orig",
     name: "Alternativ B",
     incurredCosts: 1_500_000,
-    assumptions: [
-      { id: "a1", text: "Campus remains in use during construction" },
-    ],
+    assumptions: [{ id: "a1", text: "Campus remains in use during construction" }],
     costRows: [
       {
         id: "c1",
@@ -110,9 +107,7 @@ function assertNumericallyEquivalent(original: Project, restored: Project) {
     expect(restDrivers[i]!.description).toBe(origDrivers[i]!.description)
   }
 
-  expect(restored.assumptions?.map((a) => a.text)).toEqual(
-    original.assumptions?.map((a) => a.text),
-  )
+  expect(restored.assumptions?.map((a) => a.text)).toEqual(original.assumptions?.map((a) => a.text))
 
   const impactOrig = buildSimulationDriverImpactMatrix(
     origCosts,
@@ -126,14 +121,8 @@ function assertNumericallyEquivalent(original: Project, restored: Project) {
   )
   expect(impactRest).toEqual(impactOrig)
 
-  const corrOrig = buildSimulationCostCorrelationMatrix(
-    origCosts,
-    original.costCorrelations,
-  )
-  const corrRest = buildSimulationCostCorrelationMatrix(
-    restCosts,
-    restored.costCorrelations,
-  )
+  const corrOrig = buildSimulationCostCorrelationMatrix(origCosts, original.costCorrelations)
+  const corrRest = buildSimulationCostCorrelationMatrix(restCosts, restored.costCorrelations)
   expect(corrRest).toEqual(corrOrig)
 
   // IDs differ
@@ -219,12 +208,8 @@ describe("share-state v3", () => {
       id: "p-sparse",
       name: "Minimal",
       incurredCosts: 0,
-      costRows: [
-        { id: "c1", name: "A", optimistic: "-10", likely: "100", pessimistic: "15" },
-      ],
-      driverRows: [
-        { id: "d1", name: "D", optimistic: "-5", likely: "0", pessimistic: "10" },
-      ],
+      costRows: [{ id: "c1", name: "A", optimistic: "-10", likely: "100", pessimistic: "15" }],
+      driverRows: [{ id: "d1", name: "D", optimistic: "-5", likely: "0", pessimistic: "10" }],
     }
     const sparseDecoded = decodeShareCompactPayload(
       buildShareCompactPayload({
@@ -269,10 +254,7 @@ describe("share-state v3", () => {
 
   it("O: share open does not restore local simulation snapshot", () => {
     // Guard lives in lastSimulationSnapshot; assert the share-skip remains wired.
-    const src = readFileSync(
-      join(repoRoot, "src/persistence/lastSimulationSnapshot.ts"),
-      "utf8",
-    )
+    const src = readFileSync(join(repoRoot, "src/persistence/lastSimulationSnapshot.ts"), "utf8")
     expect(src).toContain("isShareV2Search")
     expect(src).toContain("isShareV2Hash")
     expect(src).toContain("decodeShareV1FromHash")
@@ -280,10 +262,7 @@ describe("share-state v3", () => {
   })
 
   it("P: Share and PDF use the same v3 URL builder", () => {
-    const src = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const src = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(src).toContain('from "@/persistence/shareLink"')
     expect(src).toContain("buildShareUrl({ projects, activeProjectId })")
     const copyIdx = src.indexOf("handleCopyShareLink")
@@ -311,30 +290,18 @@ describe("share-state v3", () => {
             [0, 0, 999],
             [0, 1, 30],
           ],
-          cr: [
-            [0, 0, 0.5],
-            [0, 99, 0.5],
-            [1, 2, 0.4],
-            "bad",
-          ],
+          cr: [[0, 0, 0.5], [0, 99, 0.5], [1, 2, 0.4], "bad"],
         },
       ],
     }
     const decoded = decodeShareCompactPayload(broken)
     expect(decoded).not.toBeNull()
     const p = decoded!.projects[0]!
-    const impacts = buildSimulationDriverImpactMatrix(
-      p.costRows,
-      p.driverRows,
-      p.driverImpacts,
-    )
+    const impacts = buildSimulationDriverImpactMatrix(p.costRows, p.driverRows, p.driverImpacts)
     // Only valid [0,1,30] applied among di entries
     expect(impacts[1]![0]).toBe(30)
     expect(impacts[0]![0]).toBe(100)
-    const corr = buildSimulationCostCorrelationMatrix(
-      p.costRows,
-      p.costCorrelations,
-    )
+    const corr = buildSimulationCostCorrelationMatrix(p.costRows, p.costCorrelations)
     expect(corr[1]![2]).toBe(0.4)
     expect(corr[0]![0]).toBe(1)
   })
@@ -449,13 +416,7 @@ describe("share-state v3", () => {
       "20",
       "Site establishment",
     ])
-    expect(compact.p[0]!.d[0]).toEqual([
-      "Marked",
-      "-5",
-      "0",
-      "12",
-      "Market pressure",
-    ])
+    expect(compact.p[0]!.d[0]).toEqual(["Marked", "-5", "0", "12", "Market pressure"])
     // d1→c2 = 40% → driverIndex 0, costIndex 1
     expect(compact.p[0]!.di).toContainEqual([0, 1, 40])
     // c1–c2 ρ=0.5 → [0,1,0.5]

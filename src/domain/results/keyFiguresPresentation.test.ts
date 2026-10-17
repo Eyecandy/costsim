@@ -18,12 +18,8 @@ import {
 import { probabilityAtOrBelowPercent } from "@/domain/simulation/stats"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function tableSource() {
-  return readFileSync(
-    join(root, "src/features/results/ResultsKeyFiguresTable.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(root, "src/features/results/ResultsKeyFiguresTable.tsx"), "utf8")
 }
 
 describe("Key Figures percentage presentation", () => {
@@ -54,15 +50,9 @@ describe("Key Figures percentage presentation", () => {
     expect(src).toMatch(
       /id: "uncertaintyReserve"[\s\S]*?formatKeyFigurePercent\(premium\.percent, language\)/,
     )
-    expect(src).toMatch(
-      /id: "stdDev"[\s\S]*?formatKeyFigurePercent\(relativePct, language\)/,
-    )
-    expect(src).toMatch(
-      /id: "probAtBase"[\s\S]*?formatKeyFigurePercent\(pct, language\)/,
-    )
-    expect(src).toMatch(
-      /id: "probBelowCostLevel"[\s\S]*?formatKeyFigurePercent\(pct, language\)/,
-    )
+    expect(src).toMatch(/id: "stdDev"[\s\S]*?formatKeyFigurePercent\(relativePct, language\)/)
+    expect(src).toMatch(/id: "probAtBase"[\s\S]*?formatKeyFigurePercent\(pct, language\)/)
+    expect(src).toMatch(/id: "probBelowCostLevel"[\s\S]*?formatKeyFigurePercent\(pct, language\)/)
   })
 })
 
@@ -89,9 +79,7 @@ describe("Probability below cost level row presentation", () => {
     expect(formatProbabilityThreshold(200_000_000, "no")).toBe("200 mill.")
     expect(formatProbabilityThreshold(200_000_000, "en")).toBe("200 M")
     expect(formatProbabilityThreshold(1_010_000_000, "no")).toBe("1 010 mill.")
-    expect(formatProbabilityThreshold(8_181_000_000, "no")).toBe(
-      "8 181 mill.",
-    )
+    expect(formatProbabilityThreshold(8_181_000_000, "no")).toBe("8 181 mill.")
     expect(formatProbabilityThreshold(8_181_000_000, "en")).toBe("8,181 M")
 
     // Alias used by Key Figures / PDF
@@ -100,11 +88,7 @@ describe("Probability below cost level row presentation", () => {
 
   it("puts adaptive amount in the shared row label (NO mill. / EN M)", () => {
     expect(
-      formatProbabilityBelowRowLabel(
-        100,
-        messages.no.keyMetrics.probabilityBelowWithAmount,
-        "no",
-      ),
+      formatProbabilityBelowRowLabel(100, messages.no.keyMetrics.probabilityBelowWithAmount, "no"),
     ).toBe("Sannsynlighet under 100")
     expect(
       formatProbabilityBelowRowLabel(
@@ -151,10 +135,7 @@ describe("Probability below cost level row presentation", () => {
   })
 
   it("does not change other Key Figures monetary formatting helpers", () => {
-    const src = readFileSync(
-      join(root, "src/domain/results/keyFiguresDisplay.ts"),
-      "utf8",
-    )
+    const src = readFileSync(join(root, "src/domain/results/keyFiguresDisplay.ts"), "utf8")
     expect(src).toContain("formatProbabilityBelowLabelAmount")
     const statFn = src.slice(
       src.indexOf("export function formatKeyFigureStat"),
@@ -168,9 +149,7 @@ describe("Probability below cost level row presentation", () => {
     expect(messages.no.keyMetrics.probabilityBelowCostLevel).toBe(
       "Sannsynlighet under kostnadsnivå",
     )
-    expect(messages.en.keyMetrics.probabilityBelowCostLevel).toBe(
-      "Probability below cost level",
-    )
+    expect(messages.en.keyMetrics.probabilityBelowCostLevel).toBe("Probability below cost level")
     expect(messages.no.resultPreferences.showProbabilityBelowCostLevel).toBe(
       "Sannsynlighet under kostnadsnivå",
     )
@@ -212,8 +191,7 @@ describe("Probability below cost level row presentation", () => {
         uncertaintyPremium: "Reserve",
         stdDev: "SD",
         probabilityAtBaseCost: "P(base)",
-        probabilityBelowCostLevel:
-          messages.no.keyMetrics.probabilityBelowWithAmount,
+        probabilityBelowCostLevel: messages.no.keyMetrics.probabilityBelowWithAmount,
         locked: "Locked",
       },
     })
@@ -223,16 +201,10 @@ describe("Probability below cost level row presentation", () => {
     expect(row!.label).toBe("Sannsynlighet under 200 mill.")
     expect(row!.values).toHaveLength(2)
     expect(row!.values[0]).toBe(
-      formatKeyFigurePercent(
-        probabilityAtOrBelowPercent(valuesA, 200_000_000),
-        "no",
-      ),
+      formatKeyFigurePercent(probabilityAtOrBelowPercent(valuesA, 200_000_000), "no"),
     )
     expect(row!.values[1]).toBe(
-      formatKeyFigurePercent(
-        probabilityAtOrBelowPercent(valuesB, 200_000_000),
-        "no",
-      ),
+      formatKeyFigurePercent(probabilityAtOrBelowPercent(valuesB, 200_000_000), "no"),
     )
     expect(row!.values[0]).not.toEqual(row!.values[1])
     for (const cell of row!.values) {
@@ -269,13 +241,12 @@ describe("Probability below cost level row presentation", () => {
         uncertaintyPremium: "Reserve",
         stdDev: "SD",
         probabilityAtBaseCost: "P(base)",
-        probabilityBelowCostLevel:
-          messages.no.keyMetrics.probabilityBelowWithAmount,
+        probabilityBelowCostLevel: messages.no.keyMetrics.probabilityBelowWithAmount,
         locked: "Locked",
       },
     })
-    expect(
-      smallRows.find((r) => r.id === "probBelowCostLevel")?.label,
-    ).toBe("Sannsynlighet under 100")
+    expect(smallRows.find((r) => r.id === "probBelowCostLevel")?.label).toBe(
+      "Sannsynlighet under 100",
+    )
   })
 })

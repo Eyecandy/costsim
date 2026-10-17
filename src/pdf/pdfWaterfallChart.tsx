@@ -9,7 +9,12 @@
 import { Line, Rect, Svg, StyleSheet, Text, View } from "@react-pdf/renderer"
 import type { AppLanguage } from "@/domain/results/formatNumber"
 import type { PdfContributionWaterfall } from "@/pdf/buildPdfReportModel"
-import { type PdfWaterfallValueFormat, pdfWaterfallTotalSpanBar, pdfWaterfallValueToX, preparePdfWaterfallPresentation } from "@/pdf/pdfWaterfallLayout"
+import {
+  type PdfWaterfallValueFormat,
+  pdfWaterfallTotalSpanBar,
+  pdfWaterfallValueToX,
+  preparePdfWaterfallPresentation,
+} from "@/pdf/pdfWaterfallLayout"
 
 export const PDF_WATERFALL_VIEW_W = 100
 export const PDF_WATERFALL_ROW_H = 8
@@ -121,22 +126,16 @@ export function PdfWaterfallChart({
       <View style={styles.waterfallHeader}>
         <View style={styles.waterfallHeaderCol}>
           <Text style={styles.waterfallHeaderLabel}>{startLabel}</Text>
-          <Text style={styles.waterfallHeaderValue}>
-            {formatValue(layout.startValue)}
-          </Text>
+          <Text style={styles.waterfallHeaderValue}>{formatValue(layout.startValue)}</Text>
         </View>
         <View style={[styles.waterfallHeaderCol, { alignItems: "center" }]}>
-          <Text style={[styles.waterfallHeaderLabel, { textAlign: "center" }]}>
-            {spanLabel}
-          </Text>
+          <Text style={[styles.waterfallHeaderLabel, { textAlign: "center" }]}>{spanLabel}</Text>
           <Text style={[styles.waterfallHeaderValue, { textAlign: "center" }]}>
             {formatDelta(layout.spanTotal)}
           </Text>
         </View>
         <View style={[styles.waterfallHeaderCol, { alignItems: "flex-end" }]}>
-          <Text style={[styles.waterfallHeaderLabel, { textAlign: "right" }]}>
-            {endLabel}
-          </Text>
+          <Text style={[styles.waterfallHeaderLabel, { textAlign: "right" }]}>{endLabel}</Text>
           <Text style={[styles.waterfallHeaderValue, { textAlign: "right" }]}>
             {formatValue(layout.endValue)}
           </Text>
@@ -179,9 +178,7 @@ export function PdfWaterfallChart({
               />
             </Svg>
           </View>
-          <Text style={styles.totalSpanDelta}>
-            {formatDelta(layout.spanTotal)}
-          </Text>
+          <Text style={styles.totalSpanDelta}>{formatDelta(layout.spanTotal)}</Text>
         </View>
       ) : null}
 
@@ -219,18 +216,12 @@ export function PdfWaterfallChart({
                   y={(PDF_WATERFALL_ROW_H - PDF_WATERFALL_BAR_H) / 2}
                   width={w}
                   height={PDF_WATERFALL_BAR_H}
-                  fill={
-                    row.contribution >= 0
-                      ? PDF_WATERFALL_POS_FILL
-                      : PDF_WATERFALL_NEG_FILL
-                  }
+                  fill={row.contribution >= 0 ? PDF_WATERFALL_POS_FILL : PDF_WATERFALL_NEG_FILL}
                   fillOpacity={0.62}
                 />
               </Svg>
             </View>
-            <Text style={styles.waterfallDelta}>
-              {formatDelta(row.contribution)}
-            </Text>
+            <Text style={styles.waterfallDelta}>{formatDelta(row.contribution)}</Text>
           </View>
         )
       })}

@@ -51,9 +51,7 @@ function makeSnapshot(
     inputSignature: JSON.stringify(projects),
     projectsAtArchive: projects,
     activeProjectIdAtRun: activeProjectId,
-    simulatedBaseCostByProjectId: Object.fromEntries(
-      projects.map((p) => [p.id, 100]),
-    ),
+    simulatedBaseCostByProjectId: Object.fromEntries(projects.map((p) => [p.id, 100])),
     projectResults: projects.map((p) => ({
       projectId: p.id,
       incurredCosts: 0,
@@ -174,12 +172,12 @@ describe("createOngoingFromArchivedSingle", () => {
     expect(planned.plan.workspace.projects).toHaveLength(1)
     expect(planned.plan.workspace.projects[0]!.id).toBe("alt-b")
     expect(planned.plan.workspace.projects[0]!.name).toBe("Beta")
-    expect(heavyCheckpointSnapshot(planned.plan.ongoing.checkpoints[0]!.archivedSnapshot).projectResults).toHaveLength(
-      1,
-    )
     expect(
-      heavyCheckpointSnapshot(planned.plan.ongoing.checkpoints[0]!.archivedSnapshot).projectResults[0]
-        ?.projectId,
+      heavyCheckpointSnapshot(planned.plan.ongoing.checkpoints[0]!.archivedSnapshot).projectResults,
+    ).toHaveLength(1)
+    expect(
+      heavyCheckpointSnapshot(planned.plan.ongoing.checkpoints[0]!.archivedSnapshot)
+        .projectResults[0]?.projectId,
     ).toBe("alt-b")
   })
 
@@ -194,8 +192,8 @@ describe("createOngoingFromArchivedSingle", () => {
     if (!result.ok) return
     expect(buildSpy).not.toHaveBeenCalled()
     expect(
-      heavyCheckpointSnapshot(result.plan.ongoing.checkpoints[0]!.archivedSnapshot).projectResults[0]
-        ?.values.length,
+      heavyCheckpointSnapshot(result.plan.ongoing.checkpoints[0]!.archivedSnapshot)
+        .projectResults[0]?.values.length,
     ).toBe(5)
   })
 
@@ -208,9 +206,7 @@ describe("createOngoingFromArchivedSingle", () => {
     expect(filtered).not.toBeNull()
     expect(filtered!.projectsAtArchive).toHaveLength(1)
     expect(filtered!.projectsAtArchive[0]!.id).toBe("b")
-    expect(filtered!.projectResults.every((r) => r.projectId === "b")).toBe(
-      true,
-    )
+    expect(filtered!.projectResults.every((r) => r.projectId === "b")).toBe(true)
   })
 
   it("repo persists new ongoing and leaves source immutable; CP2 compares to imported CP1", async () => {
@@ -269,9 +265,7 @@ describe("createOngoingFromArchivedSingle", () => {
     expect(next.sourceCheckpoint.id).toBe(cp1.id)
     expect(getLatestCheckpoint(next.ongoing)?.sequence).toBe(2)
     // Preserved row IDs on CP2 for later structural diffs
-    expect(next.newCheckpoint.workspace.projects[0]!.costRows[0]!.id).toBe(
-      costId,
-    )
+    expect(next.newCheckpoint.workspace.projects[0]!.costRows[0]!.id).toBe(costId)
   })
 
   it("one-alternative click flow: create + navigate target + source unchanged", async () => {
@@ -315,9 +309,12 @@ describe("createOngoingFromArchivedSingle", () => {
       hash: "",
       href: `http://localhost/app?analysis=${archived.id}`,
     }
-    vi.stubGlobal("PopStateEvent", class {
-      type = "popstate"
-    })
+    vi.stubGlobal(
+      "PopStateEvent",
+      class {
+        type = "popstate"
+      },
+    )
     vi.stubGlobal("window", {
       location: locationState,
       history: {
@@ -380,10 +377,7 @@ describe("createOngoingFromArchivedSingle", () => {
 
     const sourceAfter = await repo.get(archived.id)
     expect(JSON.stringify(sourceAfter)).toBe(sourceBefore)
-    expect(sourceAfter!.workspace.projects.map((p) => p.id)).toEqual([
-      "alt-a",
-      "alt-b",
-    ])
+    expect(sourceAfter!.workspace.projects.map((p) => p.id)).toEqual(["alt-a", "alt-b"])
   })
 
   it("editing the new Ongoing workspace does not mutate archived source", async () => {
@@ -411,8 +405,7 @@ describe("createOngoingFromArchivedSingle", () => {
     ongoingDoc.workspace.projects[0]!.name = "Mutated name"
     ongoingDoc.workspace.projects[0]!.costRows[0]!.name = "Mutated cost"
     if (ongoingDoc.ongoing?.checkpoints[0]?.workspace.projects[0]) {
-      ongoingDoc.ongoing.checkpoints[0].workspace.projects[0].name =
-        "Mutated cp"
+      ongoingDoc.ongoing.checkpoints[0].workspace.projects[0].name = "Mutated cp"
     }
 
     expect(JSON.stringify(await repo.get(archived.id))).toBe(sourceBefore)

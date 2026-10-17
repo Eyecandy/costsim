@@ -1,11 +1,7 @@
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import LZString from "lz-string"
 
-import {
-  decodeShareV1FromHash,
-  isShareV2Hash,
-  isShareV2Search,
-} from "@/persistence/shareLink"
+import { decodeShareV1FromHash, isShareV2Hash, isShareV2Search } from "@/persistence/shareLink"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { STORAGE_KEYS } from "@/persistence/storage"
 
@@ -23,14 +19,11 @@ export type LastSimulationSnapshotV1 = {
   activeProjectIdAtRun: string
 }
 
-function toStorageSlimProjectResults(
-  projectResults: readonly ProjectResult[],
-): ProjectResult[] {
+function toStorageSlimProjectResults(projectResults: readonly ProjectResult[]): ProjectResult[] {
   // Keep total-result samples (key metrics / s-curve), but drop heavy per-factor samples.
   return projectResults.map((pr) => ({
     ...pr,
-    inputSeries: pr.inputSeries.map((s) => ({ ...s, values: [] }),
-    ),
+    inputSeries: pr.inputSeries.map((s) => ({ ...s, values: [] })),
   }))
 }
 

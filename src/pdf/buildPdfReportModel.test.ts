@@ -22,12 +22,8 @@ import {
 import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function pdfDocSource() {
-  return readFileSync(
-    join(repoRoot, "src/pdf/ProjectReportDocument.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/pdf/ProjectReportDocument.tsx"), "utf8")
 }
 
 function resultsPanelSource() {
@@ -106,9 +102,7 @@ describe("buildPdfReportModel", () => {
       "Campus forblir i bruk under bygging",
       "Entreprenørmarkedet er stramt",
     ])
-    expect(buildPdfAssumptionTexts(createProject({ id: "x", name: "X" }))).toEqual(
-      [],
-    )
+    expect(buildPdfAssumptionTexts(createProject({ id: "x", name: "X" }))).toEqual([])
   })
 
   it("F/I: cost descriptions and P10/M/P90 from user inputs", () => {
@@ -291,9 +285,7 @@ describe("buildPdfReportModel", () => {
       uncertaintyReserveDecomposition: {
         startValue: 122.5,
         endValue: 140,
-        contributions: [
-          { id: "1", name: "Bygning", contribution: 8, type: "cost" },
-        ],
+        contributions: [{ id: "1", name: "Bygning", contribution: 8, type: "cost" }],
       },
     })
     expect(mapped.expectedAddition.contributions).toHaveLength(8)
@@ -344,7 +336,7 @@ describe("PDF document contracts", () => {
   it("TOC is chapter-based with destinations and pageRefs", () => {
     expect(pdfDocSource()).toContain("buildPdfTocChapters")
     expect(pdfDocSource()).toContain("PDF_CHAPTER_IDS")
-    expect(pdfDocSource()).toContain('src={`#${chapter.id}`}')
+    expect(pdfDocSource()).toContain("src={`#${chapter.id}`}")
     expect(pdfDocSource()).toContain("pageRefs")
     expect(messages.no.results.pdfContentsTitle).toBe("Innhold")
     expect(messages.en.results.pdfContentsTitle).toBe("Contents")
@@ -352,9 +344,7 @@ describe("PDF document contracts", () => {
 
   it("Key Figure values use regular weight; percentage not de-emphasized", () => {
     expect(pdfDocSource()).toContain("styles.metricValue")
-    expect(pdfDocSource()).toMatch(
-      /metricValue:\s*\{[\s\S]*?fontWeight:\s*"normal"/,
-    )
+    expect(pdfDocSource()).toMatch(/metricValue:\s*\{[\s\S]*?fontWeight:\s*"normal"/)
     expect(pdfDocSource()).not.toContain("metricValueMain")
     expect(pdfDocSource()).not.toContain("metricValuePct")
     expect(pdfDocSource()).not.toContain("splitMetricValueParts")
@@ -416,7 +406,10 @@ describe("PDF document contracts", () => {
     expect(src).toContain("assumptionsEmptyText")
     expect(src).toContain("assumptions-${pIdx}")
     // Analysis basis only renders cost/driver blocks — no nested assumptions section
-    const basisSlice = src.slice(analysisBasisIdx, src.indexOf("PDF_CHAPTER_IDS.modelRelationships"))
+    const basisSlice = src.slice(
+      analysisBasisIdx,
+      src.indexOf("PDF_CHAPTER_IDS.modelRelationships"),
+    )
     expect(basisSlice).not.toContain("project.assumptions")
     expect(basisSlice).toContain("estimateUncertaintyTitle")
     expect(basisSlice).toContain("driversTitle")
@@ -430,12 +423,8 @@ describe("PDF document contracts", () => {
     expect(messages.no.results.pdfAssumptionsTitle).toContain("Forutsetninger")
     expect(messages.no.results.pdfAssumptionsTitle).toMatch(/^03/)
     expect(messages.en.results.pdfAssumptionsTitle).toMatch(/^03/)
-    expect(messages.no.results.pdfAssumptionsEmpty).toBe(
-      "Ingen forutsetninger er definert.",
-    )
-    expect(messages.en.results.pdfAssumptionsEmpty).toBe(
-      "No assumptions have been defined.",
-    )
+    expect(messages.no.results.pdfAssumptionsEmpty).toBe("Ingen forutsetninger er definert.")
+    expect(messages.en.results.pdfAssumptionsEmpty).toBe("No assumptions have been defined.")
     expect(messages.no.results.pdfAnalysisBasisTitle).toMatch(/^04/)
     expect(messages.no.results.pdfModelRelationshipsTitle).toMatch(/^05/)
     expect(messages.no.results.pdfMethodTitle).toMatch(/^06/)
@@ -447,12 +436,8 @@ describe("PDF document contracts", () => {
     expect(pdfDocSource()).toContain("size={PDF_A4_PAGE_SIZE}")
     expect(pdfDocSource()).not.toMatch(/size="A4"/)
     // Cover uses wrap so MediaBox stays full A4; content is unbreakable
-    expect(pdfDocSource()).toMatch(
-      /Cover[\s\S]*?<Page size=\{PDF_A4_PAGE_SIZE\} wrap/,
-    )
-    expect(pdfDocSource()).toContain(
-      "Inner wrap={false} keeps the cover block together",
-    )
+    expect(pdfDocSource()).toMatch(/Cover[\s\S]*?<Page size=\{PDF_A4_PAGE_SIZE\} wrap/)
+    expect(pdfDocSource()).toContain("Inner wrap={false} keeps the cover block together")
     const pageOpens = pdfDocSource().split("<Page size={PDF_A4_PAGE_SIZE}").length - 1
     expect(pageOpens).toBeGreaterThanOrEqual(4)
   })
@@ -517,24 +502,18 @@ describe("PDF document contracts", () => {
       resultsPanelSource().indexOf("handleCopyAiBriefPackage"),
     )
     expect(pdfHandler).toContain("buildShareUrl")
-    expect(pdfHandler).toContain('pdfShareLinkAnchorText')
+    expect(pdfHandler).toContain("pdfShareLinkAnchorText")
   })
 
   it("share link uses product brand placeholder; raw URL stays hidden", () => {
-    expect(messages.no.results.pdfShareLinkAnchorText).toBe(
-      `Åpne analysen i ${PRODUCT_NAME}`,
-    )
-    expect(messages.en.results.pdfShareLinkAnchorText).toBe(
-      `Open analysis in ${PRODUCT_NAME}`,
-    )
+    expect(messages.no.results.pdfShareLinkAnchorText).toBe(`Åpne analysen i ${PRODUCT_NAME}`)
+    expect(messages.en.results.pdfShareLinkAnchorText).toBe(`Open analysis in ${PRODUCT_NAME}`)
     expect(messages.no.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(pdfDocSource()).toContain("styles.openLink")
     expect(pdfDocSource()).toMatch(/openLink:\s*\{[\s\S]*?fontSize:\s*8/)
     expect(pdfDocSource()).toMatch(/sectionTitle:\s*\{[\s\S]*?fontSize:\s*9\.5/)
     expect(pdfDocSource()).not.toContain("styles.openUrl")
-    expect(pdfDocSource()).not.toMatch(
-      /<Text[^>\n]*>\s*\{shareLinkAppendix\.url\}\s*<\/Text>/,
-    )
+    expect(pdfDocSource()).not.toMatch(/<Text[^>\n]*>\s*\{shareLinkAppendix\.url\}\s*<\/Text>/)
   })
 
   it("R: oversized share does not embed broken URL", () => {
@@ -581,10 +560,7 @@ describe("PDF document contracts", () => {
 
   it("uses Noto Sans for Norwegian glyph support", () => {
     expect(pdfDocSource()).toContain('fontFamily: "NotoSans"')
-    const fontsSrc = readFileSync(
-      join(repoRoot, "src/pdf/pdfFonts.ts"),
-      "utf8",
-    )
+    const fontsSrc = readFileSync(join(repoRoot, "src/pdf/pdfFonts.ts"), "utf8")
     expect(fontsSrc).toContain("ensurePdfFonts")
     expect(fontsSrc).toContain("NotoSans-Regular.ttf")
     expect(resultsPanelSource()).toContain("ensurePdfFonts")
@@ -620,10 +596,7 @@ describe("PDF document contracts", () => {
   })
 
   it("Ongoing PDF S-curve also uses Classic semantics", () => {
-    const src = readFileSync(
-      join(repoRoot, "src/pdf/ongoing/ongoingPdfCharts.tsx"),
-      "utf8",
-    )
+    const src = readFileSync(join(repoRoot, "src/pdf/ongoing/ongoingPdfCharts.tsx"), "utf8")
     expect(src).not.toContain("layoutPdfSCurveMarkers")
     expect(src).toContain("buildPdfClassicGuides")
     expect(src).toContain("resolvePdfSCurveCostScale(minX, maxX)")

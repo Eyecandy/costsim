@@ -7,12 +7,7 @@ import {
 import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
 
 /** Inverse CDF of a triangular distribution from uniform probability u ∈ [0, 1]. */
-export function triangularQuantile(
-  min: number,
-  mode: number,
-  max: number,
-  u: number,
-): number {
+export function triangularQuantile(min: number, mode: number, max: number, u: number): number {
   if (max <= min) return mode
 
   const clampedU = Math.min(1, Math.max(0, u))
@@ -148,18 +143,14 @@ export function computeTotalFromSampledValues(opts: {
   incurredCosts?: number
 }): number {
   const { costValues, driverPctValues, driverImpacts } = opts
-  const incurred = Number.isFinite(opts.incurredCosts)
-    ? Math.max(0, opts.incurredCosts!)
-    : 0
+  const incurred = Number.isFinite(opts.incurredCosts) ? Math.max(0, opts.incurredCosts!) : 0
   let total = 0
   for (let c = 0; c < costValues.length; c++) {
     const impactsForCost: number[] = []
     for (let d = 0; d < driverPctValues.length; d++) {
       impactsForCost.push(resolveImpactPct(driverImpacts, c, d))
     }
-    total +=
-      costValues[c]! *
-      driverFactorForCostItem(driverPctValues, impactsForCost)
+    total += costValues[c]! * driverFactorForCostItem(driverPctValues, impactsForCost)
   }
   return total + incurred
 }
@@ -178,20 +169,12 @@ export function simulateAggregateCostWithDriversValues(opts: {
   incurredCosts?: number
 }): { values: number[]; costCorrelationPrep: CostCorrelationPrepResult } {
   const { runs, costTriangles, drivers, driverImpacts } = opts
-  const incurred = Number.isFinite(opts.incurredCosts)
-    ? Math.max(0, opts.incurredCosts!)
-    : 0
+  const incurred = Number.isFinite(opts.incurredCosts) ? Math.max(0, opts.incurredCosts!) : 0
   const results: number[] = new Array(runs)
-  const costCorrelationPrep = resolveCostCorrelationPrep(
-    costTriangles.length,
-    opts.costCorrelation,
-  )
+  const costCorrelationPrep = resolveCostCorrelationPrep(costTriangles.length, opts.costCorrelation)
 
   for (let i = 0; i < runs; i++) {
-    const costValues = sampleCostValuesFromMarginals(
-      costTriangles,
-      costCorrelationPrep,
-    )
+    const costValues = sampleCostValuesFromMarginals(costTriangles, costCorrelationPrep)
     const driverPctValues: number[] = []
     for (const d of drivers) {
       driverPctValues.push(sampleTriangular(d.min, d.mode, d.max))
@@ -233,22 +216,14 @@ export function simulateAggregateCostWithDriversValuesAndSeries(opts: {
   costCorrelationPrep: CostCorrelationPrepResult
 } {
   const { runs, costTriangles, drivers, driverImpacts } = opts
-  const incurred = Number.isFinite(opts.incurredCosts)
-    ? Math.max(0, opts.incurredCosts!)
-    : 0
+  const incurred = Number.isFinite(opts.incurredCosts) ? Math.max(0, opts.incurredCosts!) : 0
   const values: number[] = new Array(runs)
   const costSamples: number[][] = costTriangles.map(() => new Array(runs))
   const driverSamples: number[][] = drivers.map(() => new Array(runs))
-  const costCorrelationPrep = resolveCostCorrelationPrep(
-    costTriangles.length,
-    opts.costCorrelation,
-  )
+  const costCorrelationPrep = resolveCostCorrelationPrep(costTriangles.length, opts.costCorrelation)
 
   for (let i = 0; i < runs; i++) {
-    const costValues = sampleCostValuesFromMarginals(
-      costTriangles,
-      costCorrelationPrep,
-    )
+    const costValues = sampleCostValuesFromMarginals(costTriangles, costCorrelationPrep)
     for (let c = 0; c < costTriangles.length; c++) {
       costSamples[c]![i] = costValues[c]!
     }
@@ -290,9 +265,7 @@ export function simulateAggregateCostWithDrivers(opts: {
   driverImpacts?: DriverImpactMatrix
   costCorrelation?: number[][]
 }): SimulationTotalSummary {
-  return summarizeSamples(
-    simulateAggregateCostWithDriversValues(opts).values,
-  )
+  return summarizeSamples(simulateAggregateCostWithDriversValues(opts).values)
 }
 
 /** Legacy global-driver formula (reference for regression tests). */
@@ -301,9 +274,7 @@ export function computeTotalGlobalDriverLegacy(opts: {
   driverPctValues: readonly number[]
   incurredCosts?: number
 }): number {
-  const incurred = Number.isFinite(opts.incurredCosts)
-    ? Math.max(0, opts.incurredCosts!)
-    : 0
+  const incurred = Number.isFinite(opts.incurredCosts) ? Math.max(0, opts.incurredCosts!) : 0
   let sumCosts = 0
   for (const v of opts.costValues) sumCosts += v
   let dProd = 1
@@ -319,15 +290,11 @@ function sampleCostValuesFromMarginals(
   rng: () => number = Math.random,
 ): number[] {
   if (costTriangles.length <= 1) {
-    return costTriangles.map((c) =>
-      triangularQuantile(c.min, c.mode, c.max, rng()),
-    )
+    return costTriangles.map((c) => triangularQuantile(c.min, c.mode, c.max, rng()))
   }
 
   const uniforms = sampleCorrelatedUniforms(costCorrelationPrep.choleskyL, rng)
-  return costTriangles.map((c, i) =>
-    triangularQuantile(c.min, c.mode, c.max, uniforms[i]!),
-  )
+  return costTriangles.map((c, i) => triangularQuantile(c.min, c.mode, c.max, uniforms[i]!))
 }
 
 function resolveCostCorrelationPrep(

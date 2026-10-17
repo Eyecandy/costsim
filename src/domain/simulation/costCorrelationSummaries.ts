@@ -22,9 +22,7 @@ function resolvePairRho(
   rowIdB: string,
 ): number {
   if (rowIdA === rowIdB) return 1
-  const direct =
-    costCorrelations?.[rowIdA]?.[rowIdB] ??
-    costCorrelations?.[rowIdB]?.[rowIdA]
+  const direct = costCorrelations?.[rowIdA]?.[rowIdB] ?? costCorrelations?.[rowIdB]?.[rowIdA]
   return parseCorrelationCoefficient(direct)
 }
 
@@ -87,9 +85,7 @@ function summarizeUniformRhoComponent(
     vertexSet.add(e.a)
     vertexSet.add(e.b)
   }
-  const vertices = [...vertexSet].sort(
-    (a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0),
-  )
+  const vertices = [...vertexSet].sort((a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0))
   const n = vertices.length
   const summaries: SavedCorrelationSummary[] = []
 
@@ -104,9 +100,7 @@ function summarizeUniformRhoComponent(
       }
     }
     for (const k of memberEdges) remaining.delete(k)
-    const sortedMembers = [...members].sort(
-      (a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0),
-    )
+    const sortedMembers = [...members].sort((a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0))
     summaries.push({
       id: `${sortedMembers.join("+")}@${rho}`,
       rowIds: sortedMembers,
@@ -137,9 +131,7 @@ function summarizeUniformRhoComponent(
     const k = edgeKey(e.a, e.b)
     if (!remaining.has(k)) continue
     remaining.delete(k)
-    const sortedMembers = [e.a, e.b].sort(
-      (a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0),
-    )
+    const sortedMembers = [e.a, e.b].sort((a, b) => (idOrder.get(a) ?? 0) - (idOrder.get(b) ?? 0))
     summaries.push({
       id: `${sortedMembers.join("+")}@${rho}`,
       rowIds: sortedMembers,
@@ -176,14 +168,7 @@ export function deriveSavedCorrelationSummaries(
   const rhos = [...byRho.keys()].sort((a, b) => Math.abs(b) - Math.abs(a) || b - a)
   const out: SavedCorrelationSummary[] = []
   for (const rho of rhos) {
-    out.push(
-      ...summarizeUniformRhoComponent(
-        orderedIds,
-        costCorrelations,
-        rho,
-        byRho.get(rho)!,
-      ),
-    )
+    out.push(...summarizeUniformRhoComponent(orderedIds, costCorrelations, rho, byRho.get(rho)!))
   }
   return out
 }
@@ -191,10 +176,7 @@ export function deriveSavedCorrelationSummaries(
 /** How many named items to list before collapsing to “N cost items”. */
 export const CORRELATION_SUMMARY_NAME_LIMIT = 3
 
-export function formatCorrelationSummaryRho(
-  rho: number,
-  language: "no" | "en",
-): string {
+export function formatCorrelationSummaryRho(rho: number, language: "no" | "en"): string {
   const abs = Math.abs(rho).toFixed(1)
   const body = language === "no" ? abs.replace(".", ",") : abs
   if (rho > 0) return body

@@ -22,7 +22,6 @@ import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -32,10 +31,7 @@ function costTableSource() {
 }
 
 function assumptionsEditorSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/AssumptionsEditor.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/scenario-tables/AssumptionsEditor.tsx"), "utf8")
 }
 
 describe("project assumptions", () => {
@@ -54,9 +50,7 @@ describe("project assumptions", () => {
     expect(src).toContain("assumptionsAddShort")
     expect(src).toContain("{open ? (")
     // Collapsed must not render assumption texts outside the open panel
-    expect(src).toMatch(
-      /data-assumptions-panel=""[\s\S]*assumptions\.map/,
-    )
+    expect(src).toMatch(/data-assumptions-panel=""[\s\S]*assumptions\.map/)
     expect(messages.no.inputs.assumptionsLabel).toBe("Forutsetninger")
     expect(messages.en.inputs.assumptionsLabel).toBe("Assumptions")
     expect(messages.no.inputs.assumptionsNoneDefined).toBe("Ingen definert")
@@ -170,7 +164,9 @@ describe("project assumptions", () => {
     expect(src).toContain("onClick={commitEdit}")
     expect(src).toContain('e.key === "Enter"')
     expect(src).toContain("<Check")
-    expect(src).toMatch(/onClick=\{commitEdit\}[\s\S]*aria-label=\{t\("inputs\.assumptionsSave"\)\}/)
+    expect(src).toMatch(
+      /onClick=\{commitEdit\}[\s\S]*aria-label=\{t\("inputs\.assumptionsSave"\)\}/,
+    )
   })
 
   it("K/L/M/N: Correlation mode hides Assumptions UI without mutating saved data", () => {
@@ -266,12 +262,8 @@ describe("project assumptions", () => {
         id: "p1",
         name: "A",
         incurredCosts: 0,
-        costRows: [
-          { id: "c1", name: "", optimistic: "", likely: "", pessimistic: "" },
-        ],
-        driverRows: [
-          { id: "d1", name: "", optimistic: "", likely: "", pessimistic: "" },
-        ],
+        costRows: [{ id: "c1", name: "", optimistic: "", likely: "", pessimistic: "" }],
+        driverRows: [{ id: "d1", name: "", optimistic: "", likely: "", pessimistic: "" }],
         assumptions: list,
       },
     ])
@@ -279,12 +271,8 @@ describe("project assumptions", () => {
   })
 
   it("N: NO/EN labels work", () => {
-    expect(messages.no.inputs.assumptionsPlaceholder).toBe(
-      "Skriv en forutsetning...",
-    )
-    expect(messages.en.inputs.assumptionsPlaceholder).toBe(
-      "Add an assumption...",
-    )
+    expect(messages.no.inputs.assumptionsPlaceholder).toBe("Skriv en forutsetning...")
+    expect(messages.en.inputs.assumptionsPlaceholder).toBe("Add an assumption...")
     expect(messages.no.inputs.assumptionsRemove).toBe("Fjern forutsetning")
     expect(messages.en.inputs.assumptionsRemove).toBe("Remove assumption")
     expect(messages.no.inputs.assumptionsSave).toBe("Lagre forutsetning")

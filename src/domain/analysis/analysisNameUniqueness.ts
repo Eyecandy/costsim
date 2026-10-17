@@ -6,12 +6,10 @@
  */
 
 export const ANALYSIS_NAME_CONFLICT_ERROR = "duplicate_analysis_name" as const
-export const ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR =
-  "duplicate_analysis_name_on_move" as const
+export const ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR = "duplicate_analysis_name_on_move" as const
 
 export type AnalysisNameConflictKind =
-  | typeof ANALYSIS_NAME_CONFLICT_ERROR
-  | typeof ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR
+  typeof ANALYSIS_NAME_CONFLICT_ERROR | typeof ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR
 
 /** Trim + lowercase for equality. Empty after trim is never a conflict key. */
 export function normalizeAnalysisName(name: string): string {
@@ -61,10 +59,7 @@ export function isAnalysisNameConflictError(error: unknown): boolean {
 }
 
 export function isAnalysisNameConflictOnMoveError(error: unknown): boolean {
-  return (
-    error instanceof Error &&
-    error.message === ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR
-  )
+  return error instanceof Error && error.message === ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR
 }
 
 export function throwAnalysisNameConflict(

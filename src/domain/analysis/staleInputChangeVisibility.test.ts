@@ -16,7 +16,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -51,9 +50,7 @@ describe("stale input change visibility (presentation-only)", () => {
     const base = createProject({ id: "p1", name: "A" })
     const edited: Project = {
       ...base,
-      costRows: base.costRows.map((r, i) =>
-        i === 0 ? { ...r, likely: "110" } : r,
-      ),
+      costRows: base.costRows.map((r, i) => (i === 0 ? { ...r, likely: "110" } : r)),
     }
     expect(staleComparableProjects([edited]).length).toBeGreaterThan(0)
   })
@@ -67,9 +64,7 @@ describe("stale input change visibility (presentation-only)", () => {
       /if \(!showStaleInputChanges\) \{\s*return \{\s*cost: EMPTY_STALE_CELL_KEYS/,
     )
     expect(src).toContain("changedCellKeys={visibleStaleChangedCellKeys.cost}")
-    expect(src).toContain(
-      "changedCellKeys={visibleStaleChangedCellKeys.drivers}",
-    )
+    expect(src).toContain("changedCellKeys={visibleStaleChangedCellKeys.drivers}")
     expect(messages.no.projects.staleInputsTitle).toBe("Input er endret")
     expect(messages.en.projects.staleInputsTitle).toBe("Input has changed")
     // Hidden-changes body: no green-field mention.
@@ -85,9 +80,7 @@ describe("stale input change visibility (presentation-only)", () => {
 
   it("B2: visible-changes body explains green highlighting; hide restores normal copy", () => {
     const src = appSource()
-    expect(src).toContain(
-      't("projects.staleInputsNoticeWithChanges")',
-    )
+    expect(src).toContain('t("projects.staleInputsNoticeWithChanges")')
     expect(src).toContain('t("projects.staleInputsNotice")')
     expect(src).toContain("NOTICE_WORD_GREEN_CLASS")
     expect(src).toMatch(
@@ -100,9 +93,7 @@ describe("stale input change visibility (presentation-only)", () => {
       "The results are based on previous input. Green fields show what has changed.",
     )
     expect(messages.no.projects.staleInputsNoticeWithChanges).toMatch(/Grønne felt/)
-    expect(messages.en.projects.staleInputsNoticeWithChanges).toMatch(
-      /Green fields/,
-    )
+    expect(messages.en.projects.staleInputsNoticeWithChanges).toMatch(/Green fields/)
   })
 
   it("C/D: Show/Hide toggles presentation only (same changed-cell sets)", () => {
@@ -120,9 +111,7 @@ describe("stale input change visibility (presentation-only)", () => {
   it("E/F: Undo remains available and uses the existing handler", () => {
     const src = appSource()
     expect(src).toContain("handleRevertInputsToLastSimulation")
-    expect(src).toContain(
-      "const restored = structuredClone(lastSimulatedProjects) as Project[]",
-    )
+    expect(src).toContain("const restored = structuredClone(lastSimulatedProjects) as Project[]")
     // Undo is not gated on showStaleInputChanges.
     expect(src).toMatch(
       /onClick=\{handleRevertInputsToLastSimulation\}[\s\S]*?t\("projects\.revertInputChanges"\)/,
@@ -133,20 +122,12 @@ describe("stale input change visibility (presentation-only)", () => {
 
   it("G: showChanges resets when stale notice clears (rerun / undo path)", () => {
     const src = appSource()
-    expect(src).toMatch(
-      /if \(!showStaleInputNotice\) \{\s*setShowStaleInputChanges\(false\)/,
-    )
+    expect(src).toMatch(/if \(!showStaleInputNotice\) \{\s*setShowStaleInputChanges\(false\)/)
   })
 
   it("H: multiple edits still use the same baseline cell-key comparison", () => {
-    const baselineCost = [
-      costRow({ id: "c1", likely: "100" }),
-      costRow({ id: "c2", likely: "50" }),
-    ]
-    const currentCost = [
-      costRow({ id: "c1", likely: "110" }),
-      costRow({ id: "c2", likely: "55" }),
-    ]
+    const baselineCost = [costRow({ id: "c1", likely: "100" }), costRow({ id: "c2", likely: "50" })]
+    const currentCost = [costRow({ id: "c1", likely: "110" }), costRow({ id: "c2", likely: "55" })]
     const keys = changedCostTableCellKeySet(
       { costRows: currentCost, incurredCosts: 0 },
       { costRows: baselineCost, incurredCosts: 0 },
@@ -156,10 +137,7 @@ describe("stale input change visibility (presentation-only)", () => {
 
     const baselineDrivers = [driverRow({ id: "d1", optimistic: "-5" })]
     const currentDrivers = [driverRow({ id: "d1", optimistic: "-8" })]
-    const driverKeys = changedScenarioCellKeySet(
-      currentDrivers,
-      baselineDrivers,
-    )
+    const driverKeys = changedScenarioCellKeySet(currentDrivers, baselineDrivers)
     expect(driverKeys.has("d1:optimistic")).toBe(true)
 
     // App still computes via staleInputChangedCellKeys then gates presentation.
@@ -171,13 +149,9 @@ describe("stale input change visibility (presentation-only)", () => {
     const base = createProject({ id: "p1", name: "A" })
     const edited: Project = {
       ...base,
-      costRows: base.costRows.map((r, i) =>
-        i === 0 ? { ...r, likely: "999" } : r,
-      ),
+      costRows: base.costRows.map((r, i) => (i === 0 ? { ...r, likely: "999" } : r)),
     }
-    expect(buildSimulationInputSignature([base])).not.toBe(
-      buildSimulationInputSignature([edited]),
-    )
+    expect(buildSimulationInputSignature([base])).not.toBe(buildSimulationInputSignature([edited]))
     const signatureSrc = readFileSync(
       join(repoRoot, "src/domain/simulation/simulationInputSignature.ts"),
       "utf8",

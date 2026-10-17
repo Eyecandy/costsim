@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
-import {
-  getArchiveBlockReason,
-} from "@/domain/analysis/buildArchivedAnalysisSnapshot"
+import { getArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -169,9 +167,7 @@ describe("Single draft result reload continuity", () => {
     })
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "999" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "999" } : row)),
     }
     await repo.saveDraft({
       ...doc,
@@ -213,9 +209,7 @@ describe("Single draft result reload continuity", () => {
     })
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "2500" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "2500" } : row)),
     }
     const draftB = buildDraft({
       analysisId: "a1",
@@ -225,8 +219,8 @@ describe("Single draft result reload continuity", () => {
       batchSeq: 1,
     })
     expect(
-      pickAuthoritativeSingleDraftResult(draftB, draftA)?.byProjectId[edited.id]
-        ?.keyFigures.percentiles["50"],
+      pickAuthoritativeSingleDraftResult(draftB, draftA)?.byProjectId[edited.id]?.keyFigures
+        .percentiles["50"],
     ).toBe(draftB.byProjectId[edited.id]!.keyFigures.percentiles["50"])
 
     const repo = getLocalAnalysisLibraryRepository()
@@ -239,11 +233,9 @@ describe("Single draft result reload continuity", () => {
       singleDraftResult: { ...draftB, analysisId: doc.id },
     })
     const cold = await repo.get(doc.id)
-    expect(
-      cold?.singleDraftResult?.byProjectId[edited.id]?.keyFigures.percentiles[
-        "50"
-      ],
-    ).toBe(draftB.byProjectId[edited.id]!.keyFigures.percentiles["50"])
+    expect(cold?.singleDraftResult?.byProjectId[edited.id]?.keyFigures.percentiles["50"]).toBe(
+      draftB.byProjectId[edited.id]!.keyFigures.percentiles["50"],
+    )
     expect(
       getLiveResultValidity({
         analysisId: doc.id,
@@ -318,9 +310,7 @@ describe("Single draft result reload continuity", () => {
     })
     const edited = {
       ...project,
-      costRows: project.costRows.map((row, i) =>
-        i === 0 ? { ...row, likely: "999" } : row,
-      ),
+      costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely: "999" } : row)),
     }
     expect(
       getArchiveBlockReason({
@@ -362,8 +352,7 @@ describe("Single draft result reload continuity", () => {
     expect(isSingleDraftResultSnapshot(next.singleDraftResult)).toBe(true)
     expect(next.singleDraftResult?.analysisId).toBe(next.id)
     expect(JSON.stringify(next.singleDraftResult)).not.toContain('"values"')
-    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {}).length)
-      .toBeGreaterThan(0)
+    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {}).length).toBeGreaterThan(0)
   })
 
   it("G: contribution attach requires matching run identity", () => {
@@ -413,9 +402,7 @@ describe("Single draft result reload continuity", () => {
     const bytes = new TextEncoder().encode(json).length
     console.info("single draft compact bytes", bytes)
     expect(bytes).toBeLessThan(80_000)
-    expect(
-      Object.values(draft.byProjectId)[0]!.sCurve.pointCount,
-    ).toBeLessThanOrEqual(800)
+    expect(Object.values(draft.byProjectId)[0]!.sCurve.pointCount).toBeLessThanOrEqual(800)
   })
 
   it("I: quota failure is fail-closed; leave remains possible", async () => {
@@ -432,12 +419,10 @@ describe("Single draft result reload continuity", () => {
   })
 
   it("J: Ongoing durability control still prefers session over disk", async () => {
-    const { pickAuthoritativeOngoingDraftResult } = await import(
-      "@/domain/analysis/ongoingDraftResultCommit"
-    )
-    const { buildOngoingCheckpointResultSnapshot } = await import(
-      "@/domain/analysis/ongoingCheckpointResultSnapshot"
-    )
+    const { pickAuthoritativeOngoingDraftResult } =
+      await import("@/domain/analysis/ongoingDraftResultCommit")
+    const { buildOngoingCheckpointResultSnapshot } =
+      await import("@/domain/analysis/ongoingCheckpointResultSnapshot")
     const blank = createBlankWorkspaceRuntimeState()
     const project = blank.projects[0]!
     const results = projectResultsFor(project.id, project.incurredCosts, 5000)
@@ -452,10 +437,7 @@ describe("Single draft result reload continuity", () => {
       inputSignature: sig,
       simulationCount: 20_000,
       resultPreferences: DEFAULT_RESULT_PREFERENCES,
-      simulationRunIdByProjectId: createSimulationRunIdsForProjects(
-        [project.id],
-        1,
-      ),
+      simulationRunIdByProjectId: createSimulationRunIdsForProjects([project.id], 1),
     })
     const older = buildOngoingCheckpointResultSnapshot({
       analysisId: "a1",
@@ -467,14 +449,10 @@ describe("Single draft result reload continuity", () => {
       inputSignature: sig,
       simulationCount: 20_000,
       resultPreferences: DEFAULT_RESULT_PREFERENCES,
-      simulationRunIdByProjectId: createSimulationRunIdsForProjects(
-        [project.id],
-        50,
-      ),
+      simulationRunIdByProjectId: createSimulationRunIdsForProjects([project.id], 50),
     })
-    expect(
-      pickAuthoritativeOngoingDraftResult(latest, older)?.keyFigures
-        .percentiles["50"],
-    ).toBe(latest.keyFigures.percentiles["50"])
+    expect(pickAuthoritativeOngoingDraftResult(latest, older)?.keyFigures.percentiles["50"]).toBe(
+      latest.keyFigures.percentiles["50"],
+    )
   })
 })

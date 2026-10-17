@@ -6,7 +6,6 @@ import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -23,9 +22,7 @@ describe("Focus Project Profile presentation", () => {
     expect(section).toContain('data-project-profile-focus-intro=""')
     expect(section).toContain('t("projectProfile.focusIntro")')
     // Intro is gated on embedded Focus presentation only.
-    expect(section).toMatch(
-      /embedded \? \([\s\S]*?data-project-profile-focus-intro/,
-    )
+    expect(section).toMatch(/embedded \? \([\s\S]*?data-project-profile-focus-intro/)
   })
 
   it("embedded Focus presentation uses mid-scale option cards / grid", () => {
@@ -51,12 +48,8 @@ describe("Focus Project Profile presentation", () => {
 
   it("normal and Focus Project Profile share the same group-gap rhythm", () => {
     const section = readSrc("src/features/workspace/ProjectProfileSection.tsx")
-    expect(section).toContain(
-      'const PROJECT_PROFILE_GROUPS_GAP_CLASS = "gap-3.5"',
-    )
-    expect(section).toContain(
-      'className={cn("flex flex-col", PROJECT_PROFILE_GROUPS_GAP_CLASS)}',
-    )
+    expect(section).toContain('const PROJECT_PROFILE_GROUPS_GAP_CLASS = "gap-3.5"')
+    expect(section).toContain('className={cn("flex flex-col", PROJECT_PROFILE_GROUPS_GAP_CLASS)}')
     // No presentation-split gap between normal vs Focus groups.
     expect(section).not.toContain('embedded ? "gap-3" : "gap-2"')
     expect(section).not.toContain('embedded ? "gap-4" : "gap-2"')
@@ -67,9 +60,7 @@ describe("Focus Project Profile presentation", () => {
     expect(messages.no.projectProfile.sizeHeading).toBe("Størrelse")
     expect(messages.en.projectProfile.sizeHeading).toBe("Size")
     expect(section).toContain('t("projectProfile.sizeHeading")')
-    expect(section).toContain(
-      'data-project-profile-group-heading="primaryQuantity"',
-    )
+    expect(section).toContain('data-project-profile-group-heading="primaryQuantity"')
     expect(section).toContain("PROJECT_PROFILE_GROUP_HEADING_CLASS")
     expect(section).toContain("text-foreground/60")
     // Size heading is inside the primaryQuantity step, before the BTA input.
@@ -106,10 +97,7 @@ describe("Focus Project Profile presentation", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const app = readAppSource()
     const renderBodyStart = guided.indexOf("const renderBody = () =>")
-    const phaseSwitchStart = guided.indexOf(
-      "switch (step.phase)",
-      renderBodyStart,
-    )
+    const phaseSwitchStart = guided.indexOf("switch (step.phase)", renderBodyStart)
     const projectProfileCase = guided.slice(
       guided.indexOf('case "projectProfile":', phaseSwitchStart),
       guided.indexOf('case "assumptions":', phaseSwitchStart),

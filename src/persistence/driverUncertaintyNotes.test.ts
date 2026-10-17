@@ -26,7 +26,6 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
 }
@@ -92,16 +91,12 @@ describe("driver uncertainty notes", () => {
         driverRows: [withNotes],
       },
     ])
-    expect(roundTrip![0]!.driverRows[0]!.uncertaintyNotes).toEqual(
-      withNotes.uncertaintyNotes,
-    )
+    expect(roundTrip![0]!.driverRows[0]!.uncertaintyNotes).toEqual(withNotes.uncertaintyNotes)
   })
 
   it("B: Guide uses Assumptions-style card notes with add/confirm/remove", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    const editor = readSrc(
-      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
-    )
+    const editor = readSrc("src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx")
     expect(guided).toContain("DriverUncertaintyNotesEditor")
     expect(guided).toContain("data-guided-driver-uncertainty-notes")
     expect(guided).toContain("pt-3")
@@ -137,9 +132,7 @@ describe("driver uncertainty notes", () => {
       "Factors that could lead to a higher cost outcome",
     )
     expect(messages.no.inputs.guidedDriverUncertaintyLowerPercentile).toBe("P10")
-    expect(messages.no.inputs.guidedDriverUncertaintyHigherPercentile).toBe(
-      "P90",
-    )
+    expect(messages.no.inputs.guidedDriverUncertaintyHigherPercentile).toBe("P90")
   })
 
   it("card UX: empty/whitespace notes are rejected; sides stay independent", () => {
@@ -147,9 +140,7 @@ describe("driver uncertainty notes", () => {
     expect(parseDriverUncertaintyNote("   ")).toBeNull()
     expect(parseDriverUncertaintyNote("  Mild market  ")).toBe("Mild market")
 
-    const editor = readSrc(
-      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
-    )
+    const editor = readSrc("src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx")
     // Confirm is gated on parse success (empty → disabled / no-op path).
     expect(editor).toContain("draftCanCommit")
     expect(editor).toContain("parseDriverUncertaintyNote(draft)")
@@ -168,16 +159,12 @@ describe("driver uncertainty notes", () => {
     const costPhaseIdx = guided.indexOf('data-guided-phase="cost"')
     const driverPhaseIdx = guided.indexOf('data-guided-phase="driver"')
     expect(driverPhaseIdx).toBeGreaterThan(-1)
-    expect(guided.slice(costPhaseIdx, driverPhaseIdx)).not.toContain(
-      "DriverUncertaintyNotesEditor",
-    )
+    expect(guided.slice(costPhaseIdx, driverPhaseIdx)).not.toContain("DriverUncertaintyNotesEditor")
     // Cost Define path has no notes editor; driver Define reuses the shared one.
     expect(define).toContain('kind === "driver"')
     expect(define).toContain("DriverUncertaintyNotesEditor")
-    expect(define).toContain('data-define-kind={props.kind}')
-    expect(define).toMatch(
-      /props\.kind === "driver" \? \([\s\S]*DriverUncertaintyNotesEditor/,
-    )
+    expect(define).toContain("data-define-kind={props.kind}")
+    expect(define).toMatch(/props\.kind === "driver" \? \([\s\S]*DriverUncertaintyNotesEditor/)
   })
 
   it("D: Single round-trip and Ongoing clone/archive freeze notes", () => {
@@ -230,8 +217,7 @@ describe("driver uncertainty notes", () => {
     })
     ongoing = archiveCheckpoint(ongoing, tip.id, snap)
     const archived = ongoing.checkpoints.find((c) => c.status === "archived")!
-    const archivedNotes =
-      archived.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes
+    const archivedNotes = archived.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes
     expect(archivedNotes).toEqual({
       lowerOutcome: ["Mild competition"],
       higherOutcome: ["Tight market"],
@@ -245,9 +231,7 @@ describe("driver uncertainty notes", () => {
     expect(draft.workspace.projects[0]!.driverRows[0]!.id).toBe(
       archived.workspace.projects[0]!.driverRows[0]!.id,
     )
-    expect(draft.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes).toEqual(
-      archivedNotes,
-    )
+    expect(draft.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes).toEqual(archivedNotes)
 
     // Editing the draft must not mutate the archived checkpoint.
     draft.workspace.projects[0]!.driverRows[0] = withDriverUncertaintyNotes(
@@ -257,9 +241,7 @@ describe("driver uncertainty notes", () => {
         higherOutcome: ["Also changed"],
       },
     )
-    expect(
-      archived.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes,
-    ).toEqual({
+    expect(archived.workspace.projects[0]!.driverRows[0]!.uncertaintyNotes).toEqual({
       lowerOutcome: ["Mild competition"],
       higherOutcome: ["Tight market"],
     })
@@ -308,9 +290,7 @@ describe("driver uncertainty notes", () => {
   })
 
   it("F: two-column layout stacks on narrow screens", () => {
-    const editor = readSrc(
-      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
-    )
+    const editor = readSrc("src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx")
     expect(editor).toContain("grid-cols-1")
     expect(editor).toContain("sm:grid-cols-2")
   })
@@ -322,12 +302,8 @@ describe("driver uncertainty notes", () => {
     expect(readSrc("src/features/guided-input/GuidedInputDialog.tsx")).not.toContain(
       "uncertaintyAssessment",
     )
-    expect(readSrc("src/domain/results/tableRows.ts")).not.toContain(
-      "uncertaintyAssessment",
-    )
-    expect(readSrc("src/domain/results/rowDefinitions.ts")).not.toContain(
-      "uncertaintyAssessment",
-    )
+    expect(readSrc("src/domain/results/tableRows.ts")).not.toContain("uncertaintyAssessment")
+    expect(readSrc("src/domain/results/rowDefinitions.ts")).not.toContain("uncertaintyAssessment")
     expect(DRIVER_UNCERTAINTY_NOTE_MAX_LENGTH).toBeGreaterThan(0)
     expect(DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE).toBeGreaterThan(0)
   })

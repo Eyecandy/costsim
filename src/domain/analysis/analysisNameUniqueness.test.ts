@@ -30,15 +30,11 @@ async function createNamed(args: {
     },
   })
   if (args.status === "archived") {
-    const { buildArchivedAnalysisSnapshot } = await import(
-      "@/domain/analysis/buildArchivedAnalysisSnapshot"
-    )
-    const { DEFAULT_RESULT_PREFERENCES } = await import(
-      "@/domain/results/resultPreferences"
-    )
-    const { buildSimulationInputSignature } = await import(
-      "@/domain/simulation/simulationInputSignature"
-    )
+    const { buildArchivedAnalysisSnapshot } =
+      await import("@/domain/analysis/buildArchivedAnalysisSnapshot")
+    const { DEFAULT_RESULT_PREFERENCES } = await import("@/domain/results/resultPreferences")
+    const { buildSimulationInputSignature } =
+      await import("@/domain/simulation/simulationInputSignature")
     await repo.archive({
       analysisId: doc.id,
       snapshot: buildArchivedAnalysisSnapshot({
@@ -74,9 +70,7 @@ describe("analysis name uniqueness", () => {
       hasAnalysisNameConflict({
         name: " project alpha ",
         folderId: null,
-        analyses: [
-          { id: "1", name: "Project Alpha", folderId: null },
-        ],
+        analyses: [{ id: "1", name: "Project Alpha", folderId: null }],
       }),
     ).toBe(true)
   })
@@ -85,9 +79,9 @@ describe("analysis name uniqueness", () => {
     const repo = getAnalysisLibraryRepository()
     const folder = await repo.createFolder("Jobs")
     await createNamed({ name: "Alpha", folderId: folder.id })
-    await expect(
-      createNamed({ name: "alpha", folderId: folder.id }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ERROR)
+    await expect(createNamed({ name: "alpha", folderId: folder.id })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ERROR,
+    )
   })
 
   it("2. create same name in different folder → allowed", async () => {
@@ -102,9 +96,9 @@ describe("analysis name uniqueness", () => {
 
   it("3. create duplicate in root → blocked", async () => {
     await createNamed({ name: "Root Job", folderId: null })
-    await expect(
-      createNamed({ name: " root job ", folderId: null }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ERROR)
+    await expect(createNamed({ name: " root job ", folderId: null })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ERROR,
+    )
   })
 
   it("4. rename to duplicate in same folder → blocked", async () => {
@@ -112,9 +106,9 @@ describe("analysis name uniqueness", () => {
     const folder = await repo.createFolder("F")
     await createNamed({ name: "One", folderId: folder.id })
     const two = await createNamed({ name: "Two", folderId: folder.id })
-    await expect(
-      repo.touchMetadata(two.id, { name: "one" }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ERROR)
+    await expect(repo.touchMetadata(two.id, { name: "one" })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ERROR,
+    )
   })
 
   it("5. rename to own current name → allowed", async () => {
@@ -130,9 +124,9 @@ describe("analysis name uniqueness", () => {
     const folder = await repo.createFolder("Target")
     await createNamed({ name: "Clash", folderId: folder.id })
     const mover = await createNamed({ name: "Clash", folderId: null })
-    await expect(
-      repo.touchMetadata(mover.id, { folderId: folder.id }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR)
+    await expect(repo.touchMetadata(mover.id, { folderId: folder.id })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR,
+    )
   })
 
   it("7. move into folder without conflict → allowed", async () => {
@@ -153,9 +147,9 @@ describe("analysis name uniqueness", () => {
       folderId: folder.id,
       status: "archived",
     })
-    await expect(
-      createNamed({ name: "frozen", folderId: folder.id }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ERROR)
+    await expect(createNamed({ name: "frozen", folderId: folder.id })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ERROR,
+    )
   })
 
   it("9. trashed analysis does not count as conflict", async () => {
@@ -168,8 +162,8 @@ describe("analysis name uniqueness", () => {
 
   it("10. comparison is trimmed + case-insensitive (helper + create)", async () => {
     await createNamed({ name: "Project Alpha", folderId: null })
-    await expect(
-      createNamed({ name: " PROJECT ALPHA ", folderId: null }),
-    ).rejects.toThrow(ANALYSIS_NAME_CONFLICT_ERROR)
+    await expect(createNamed({ name: " PROJECT ALPHA ", folderId: null })).rejects.toThrow(
+      ANALYSIS_NAME_CONFLICT_ERROR,
+    )
   })
 })

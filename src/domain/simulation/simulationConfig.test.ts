@@ -15,7 +15,6 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
 }
@@ -27,7 +26,7 @@ describe("simulationConfig product architecture", () => {
 
   it("B: App wires main simulation request from simulationConfig.mainRuns", () => {
     const app = readAppSource()
-    expect(app).toContain("import { simulationConfig } from \"@/domain/simulation/simulationConfig\"")
+    expect(app).toContain('import { simulationConfig } from "@/domain/simulation/simulationConfig"')
     expect(app).toContain("const runs = simulationConfig.mainRuns")
     expect(app).toContain("w.postMessage({ runs, projects: payloads })")
     expect(app).not.toContain("useState(20_000)")
@@ -40,9 +39,7 @@ describe("simulationConfig product architecture", () => {
 
   it("C: Shapley runsPerSubset stays independent of mainRuns", () => {
     expect(DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG.runsPerSubset).toBe(3000)
-    expect(DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG.runsPerSubset).not.toBe(
-      simulationConfig.mainRuns,
-    )
+    expect(DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG.runsPerSubset).not.toBe(simulationConfig.mainRuns)
     const shapleySrc = readSrc("src/domain/simulation/shapleyAttribution.ts")
     expect(shapleySrc).not.toContain("simulationConfig")
   })
@@ -67,26 +64,17 @@ describe("simulationConfig product architecture", () => {
 
   it("E: persisted simulationCount: 20_000 is reported even vs a different live/product count", () => {
     const reported = resolveReportedSimulationCount(
-      firstPersistedSimulationCount(
-        { simulationCount: 20_000 },
-        { simulationCount: 10_000 },
-      ),
+      firstPersistedSimulationCount({ simulationCount: 20_000 }, { simulationCount: 10_000 }),
     )
     expect(reported).toBe(20_000)
   })
 
   it("F: missing historical simulationCount falls back to simulationConfig.mainRuns", () => {
-    expect(resolveReportedSimulationCount(undefined)).toBe(
-      simulationConfig.mainRuns,
-    )
+    expect(resolveReportedSimulationCount(undefined)).toBe(simulationConfig.mainRuns)
     expect(resolveReportedSimulationCount(null)).toBe(simulationConfig.mainRuns)
     expect(resolveReportedSimulationCount(0)).toBe(simulationConfig.mainRuns)
-    expect(resolveReportedSimulationCount(Number.NaN)).toBe(
-      simulationConfig.mainRuns,
-    )
-    expect(firstPersistedSimulationCount(null, {}, { simulationCount: -1 })).toBe(
-      undefined,
-    )
+    expect(resolveReportedSimulationCount(Number.NaN)).toBe(simulationConfig.mainRuns)
+    expect(firstPersistedSimulationCount(null, {}, { simulationCount: -1 })).toBe(undefined)
     expect(
       resolveReportedSimulationCount(
         firstPersistedSimulationCount(undefined, { simulationCount: undefined }),
@@ -102,9 +90,7 @@ describe("simulationConfig product architecture", () => {
     const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain("simulationConfig.mainRuns")
     expect(header).toContain("fillUncertaintyModelCopy")
-    expect(header).toMatch(
-      /formatNumber\(\s*simulationConfig\.mainRuns,\s*0,\s*language,/m,
-    )
+    expect(header).toMatch(/formatNumber\(\s*simulationConfig\.mainRuns,\s*0,\s*language,?\s*\)/m)
     expect(
       messages.no.aboutModel.paragraph1.replace(
         "{count}",

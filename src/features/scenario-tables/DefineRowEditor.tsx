@@ -49,11 +49,10 @@ export function DefineRowEditor(props: DefineRowEditorProps) {
   const descriptionId = useId()
   const descriptionRef = useRef<HTMLTextAreaElement>(null)
   const [descriptionDraft, setDescriptionDraft] = useState(props.description)
-  const uncertaintyNotesProp =
-    props.kind === "driver" ? props.uncertaintyNotes : undefined
-  const [notesDraft, setNotesDraft] = useState<
-    DriverUncertaintyNotes | undefined
-  >(uncertaintyNotesProp)
+  const uncertaintyNotesProp = props.kind === "driver" ? props.uncertaintyNotes : undefined
+  const [notesDraft, setNotesDraft] = useState<DriverUncertaintyNotes | undefined>(
+    uncertaintyNotesProp,
+  )
 
   useEffect(() => {
     setDescriptionDraft(props.description)
@@ -104,10 +103,7 @@ export function DefineRowEditor(props: DefineRowEditorProps) {
         {props.rowLabel}
       </p>
       <div className="space-y-1">
-        <label
-          htmlFor={descriptionId}
-          className="font-sans text-[11px] text-muted-foreground"
-        >
+        <label htmlFor={descriptionId} className="font-sans text-[11px] text-muted-foreground">
           {t("inputs.defineDescriptionLabel")}
         </label>
         <textarea
@@ -115,9 +111,7 @@ export function DefineRowEditor(props: DefineRowEditorProps) {
           id={descriptionId}
           rows={2}
           maxLength={
-            props.kind === "cost"
-              ? COST_DESCRIPTION_MAX_LENGTH
-              : DRIVER_DESCRIPTION_MAX_LENGTH
+            props.kind === "cost" ? COST_DESCRIPTION_MAX_LENGTH : DRIVER_DESCRIPTION_MAX_LENGTH
           }
           value={descriptionDraft}
           readOnly={readOnly}

@@ -94,11 +94,8 @@ export function sanitizeProbabilityBelowAmount(raw: unknown): number | null {
   return n
 }
 
-export function normalizeProbabilityBelowCostLevel(
-  raw: unknown,
-): ProbabilityBelowCostLevelPref {
-  const defaults =
-    DEFAULT_RESULT_PREFERENCES.keyFigures.probabilityBelowCostLevel
+export function normalizeProbabilityBelowCostLevel(raw: unknown): ProbabilityBelowCostLevelPref {
+  const defaults = DEFAULT_RESULT_PREFERENCES.keyFigures.probabilityBelowCostLevel
   if (typeof raw !== "object" || raw === null) {
     return { ...defaults }
   }
@@ -113,10 +110,7 @@ export function normalizeProbabilityBelowCostLevel(
  * Parse a locale-formatted monetary draft into a finite amount ≥ 0.
  * Blank → null. Malformed / negative → null.
  */
-export function parseResultPreferenceAmount(
-  raw: string,
-  language: AppLanguage,
-): number | null {
+export function parseResultPreferenceAmount(raw: string, language: AppLanguage): number | null {
   let s = raw
     .trim()
     .replace(/\u00a0/g, " ")
@@ -133,10 +127,7 @@ export function parseResultPreferenceAmount(
 }
 
 /** Display formatting for the preferences amount field (whole units preferred). */
-export function formatResultPreferenceAmount(
-  value: number | null,
-  language: AppLanguage,
-): string {
+export function formatResultPreferenceAmount(value: number | null, language: AppLanguage): string {
   if (value === null || !Number.isFinite(value)) return ""
   const digits = Number.isInteger(value) ? 0 : 2
   return formatNumber(value, digits, language)
@@ -145,15 +136,8 @@ export function formatResultPreferenceAmount(
 /**
  * True when the Key Figure row should render (enabled + valid amount).
  */
-export function shouldShowProbabilityBelowCostLevel(
-  pref: ProbabilityBelowCostLevelPref,
-): boolean {
-  return (
-    pref.enabled &&
-    pref.amount !== null &&
-    Number.isFinite(pref.amount) &&
-    pref.amount >= 0
-  )
+export function shouldShowProbabilityBelowCostLevel(pref: ProbabilityBelowCostLevelPref): boolean {
+  return pref.enabled && pref.amount !== null && Number.isFinite(pref.amount) && pref.amount >= 0
 }
 
 /**
@@ -172,9 +156,7 @@ export function normalizeResultPreferences(raw: unknown): ResultPreferencesV1 {
       ? (o.keyFigures as Record<string, unknown>)
       : {}
   const scRaw =
-    typeof o.sCurve === "object" && o.sCurve !== null
-      ? (o.sCurve as Record<string, unknown>)
-      : {}
+    typeof o.sCurve === "object" && o.sCurve !== null ? (o.sCurve as Record<string, unknown>) : {}
 
   let percentiles = sanitizePercentileList(kfRaw.percentiles)
   if (percentiles.length === 0) {
@@ -189,14 +171,8 @@ export function normalizeResultPreferences(raw: unknown): ResultPreferencesV1 {
   return {
     version: RESULT_PREFERENCES_VERSION,
     keyFigures: {
-      showBaseCost: asBoolean(
-        kfRaw.showBaseCost,
-        defaults.keyFigures.showBaseCost,
-      ),
-      showExpectedValue: asBoolean(
-        kfRaw.showExpectedValue,
-        defaults.keyFigures.showExpectedValue,
-      ),
+      showBaseCost: asBoolean(kfRaw.showBaseCost, defaults.keyFigures.showBaseCost),
+      showExpectedValue: asBoolean(kfRaw.showExpectedValue, defaults.keyFigures.showExpectedValue),
       showExpectedAddition: asBoolean(
         kfRaw.showExpectedAddition,
         defaults.keyFigures.showExpectedAddition,
@@ -225,9 +201,7 @@ export function normalizeResultPreferences(raw: unknown): ResultPreferencesV1 {
   }
 }
 
-export function cloneResultPreferences(
-  prefs: ResultPreferencesV1,
-): ResultPreferencesV1 {
+export function cloneResultPreferences(prefs: ResultPreferencesV1): ResultPreferencesV1 {
   return structuredClone(prefs)
 }
 
@@ -236,10 +210,7 @@ export function addKeyFigurePercentile(
   percentile: number,
 ): ResultPreferencesV1 {
   const next = cloneResultPreferences(prefs)
-  next.keyFigures.percentiles = sanitizePercentileList([
-    ...next.keyFigures.percentiles,
-    percentile,
-  ])
+  next.keyFigures.percentiles = sanitizePercentileList([...next.keyFigures.percentiles, percentile])
   return next
 }
 
@@ -248,13 +219,9 @@ export function removeKeyFigurePercentile(
   percentile: number,
 ): ResultPreferencesV1 {
   const next = cloneResultPreferences(prefs)
-  next.keyFigures.percentiles = next.keyFigures.percentiles.filter(
-    (p) => p !== percentile,
-  )
+  next.keyFigures.percentiles = next.keyFigures.percentiles.filter((p) => p !== percentile)
   if (next.keyFigures.percentiles.length === 0) {
-    next.keyFigures.percentiles = [
-      ...DEFAULT_RESULT_PREFERENCES.keyFigures.percentiles,
-    ]
+    next.keyFigures.percentiles = [...DEFAULT_RESULT_PREFERENCES.keyFigures.percentiles]
   }
   return next
 }
@@ -264,10 +231,7 @@ export function addSCurvePercentile(
   percentile: number,
 ): ResultPreferencesV1 {
   const next = cloneResultPreferences(prefs)
-  next.sCurve.percentiles = sanitizePercentileList([
-    ...next.sCurve.percentiles,
-    percentile,
-  ])
+  next.sCurve.percentiles = sanitizePercentileList([...next.sCurve.percentiles, percentile])
   return next
 }
 
@@ -276,9 +240,7 @@ export function removeSCurvePercentile(
   percentile: number,
 ): ResultPreferencesV1 {
   const next = cloneResultPreferences(prefs)
-  next.sCurve.percentiles = next.sCurve.percentiles.filter(
-    (p) => p !== percentile,
-  )
+  next.sCurve.percentiles = next.sCurve.percentiles.filter((p) => p !== percentile)
   if (next.sCurve.percentiles.length === 0) {
     next.sCurve.percentiles = [...DEFAULT_RESULT_PREFERENCES.sCurve.percentiles]
   }
@@ -286,9 +248,7 @@ export function removeSCurvePercentile(
 }
 
 /** Resolved S-curve marker percentiles for display. */
-export function resolveSCurvePercentiles(
-  prefs: ResultPreferencesV1,
-): number[] {
+export function resolveSCurvePercentiles(prefs: ResultPreferencesV1): number[] {
   if (prefs.sCurve.useKeyFigurePercentiles) {
     return [...prefs.keyFigures.percentiles]
   }
@@ -318,9 +278,7 @@ export type ResolvedResultView = {
   }
 }
 
-export function resolveResultView(
-  prefs: ResultPreferencesV1,
-): ResolvedResultView {
+export function resolveResultView(prefs: ResultPreferencesV1): ResolvedResultView {
   const kf = prefs.keyFigures
   return {
     keyFigures: {

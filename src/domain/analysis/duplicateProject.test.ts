@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import {
-  duplicateProject,
-  nextCopiedProjectName,
-} from "@/domain/analysis/cloneAnalysisWorkspace"
+import { duplicateProject, nextCopiedProjectName } from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   addProjectIfAllowed,
   createProject,
@@ -70,9 +67,7 @@ describe("nextCopiedProjectName", () => {
     expect(nextCopiedProjectName("A", ["A"])).toBe("A (2)")
     expect(nextCopiedProjectName("A", ["A", "A (2)"])).toBe("A (3)")
     expect(nextCopiedProjectName("A", ["A", "A (2)", "A (4)"])).toBe("A (3)")
-    expect(nextCopiedProjectName("Alternativ A", ["Alternativ A"])).toBe(
-      "Alternativ A (2)",
-    )
+    expect(nextCopiedProjectName("Alternativ A", ["Alternativ A"])).toBe("Alternativ A (2)")
   })
 })
 

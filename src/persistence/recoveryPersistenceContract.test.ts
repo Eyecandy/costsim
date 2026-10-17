@@ -10,7 +10,6 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import { readAppSource } from "@/test-utils/appSource"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 describe("checkpoint recovery persistence contract", () => {
   it("has no production API for persisting live draft Monte Carlo totals", () => {
     const productionFiles = [
@@ -22,9 +21,7 @@ describe("checkpoint recovery persistence contract", () => {
     ]
     const source = productionFiles
       .map((path) =>
-        path === "src/app/App.tsx"
-          ? readAppSource()
-          : readFileSync(join(repoRoot, path), "utf8"),
+        path === "src/app/App.tsx" ? readAppSource() : readFileSync(join(repoRoot, path), "utf8"),
       )
       .join("\n")
 

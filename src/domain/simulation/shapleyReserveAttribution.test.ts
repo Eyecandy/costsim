@@ -16,9 +16,7 @@ const RESERVE_CONFIG = {
   convergenceBatchSize: 40,
 } as const
 
-function baseInput(
-  overrides: Partial<ShapleyAttributionInput> = {},
-): ShapleyAttributionInput {
+function baseInput(overrides: Partial<ShapleyAttributionInput> = {}): ShapleyAttributionInput {
   return {
     costTriangles: [
       { min: 90, mode: 100, max: 130 },
@@ -40,35 +38,23 @@ function baseInput(
   }
 }
 
-function expectedContributionSum(
-  result: ReturnType<typeof computeShapleyAttribution>,
-) {
+function expectedContributionSum(result: ReturnType<typeof computeShapleyAttribution>) {
   return result.contributions.reduce((acc, row) => acc + row.contribution, 0)
 }
 
-function reserveContributionSum(
-  result: ReturnType<typeof computeShapleyAttribution>,
-) {
+function reserveContributionSum(result: ReturnType<typeof computeShapleyAttribution>) {
   return result.uncertaintyReserveDecomposition.contributions.reduce(
     (acc, row) => acc + row.contribution,
     0,
   )
 }
 
-function expectExactReserveAdditivity(
-  result: ReturnType<typeof computeShapleyAttribution>,
-) {
-  expect(Math.abs(result.diagnostics.reserveAdditivityResidual)).toBeLessThan(
-    1e-9,
-  )
+function expectExactReserveAdditivity(result: ReturnType<typeof computeShapleyAttribution>) {
+  expect(Math.abs(result.diagnostics.reserveAdditivityResidual)).toBeLessThan(1e-9)
   expect(
-    Math.abs(
-      result.estimatedP50 + reserveContributionSum(result) - result.estimatedP85,
-    ),
+    Math.abs(result.estimatedP50 + reserveContributionSum(result) - result.estimatedP85),
   ).toBeLessThan(1e-9)
-  expect(
-    Math.abs(reserveContributionSum(result) - result.uncertaintyReserve),
-  ).toBeLessThan(1e-9)
+  expect(Math.abs(reserveContributionSum(result) - result.uncertaintyReserve)).toBeLessThan(1e-9)
 }
 
 describe("uncertainty reserve Shapley attribution", () => {
@@ -94,9 +80,7 @@ describe("uncertainty reserve Shapley attribution", () => {
     expect(result.estimatedP50).toBe(mainP50)
     expect(result.estimatedP85).toBe(mainP85)
     expect(result.uncertaintyReserve).toBe(mainP85 - mainP50)
-    expect(result.diagnostics.mainSimulationReserveSpread).toBe(
-      mainP85 - mainP50,
-    )
+    expect(result.diagnostics.mainSimulationReserveSpread).toBe(mainP85 - mainP50)
   })
 
   it("C: main P50 + reserve contributions equals main P85 exactly", () => {
@@ -107,9 +91,9 @@ describe("uncertainty reserve Shapley attribution", () => {
     )
 
     expectExactReserveAdditivity(result)
-    expect(
-      Math.abs(result.estimatedP50 + reserveContributionSum(result) - mainP85),
-    ).toBeLessThan(1e-9)
+    expect(Math.abs(result.estimatedP50 + reserveContributionSum(result) - mainP85)).toBeLessThan(
+      1e-9,
+    )
   })
 
   it("D: P50 and P85 are derived from the same subset totals", () => {
@@ -117,14 +101,8 @@ describe("uncertainty reserve Shapley attribution", () => {
     const quantiles = quantilesFromSampleTotals(totals)
     expect(quantiles.p50).toBeCloseTo(percentile(totals, 50)!, 9)
     expect(quantiles.p85).toBeCloseTo(percentile(totals, 85)!, 9)
-    expect(percentileOfNumbers(totals, 50)).toBeCloseTo(
-      percentile(totals, 50)!,
-      9,
-    )
-    expect(percentileOfNumbers(totals, 85)).toBeCloseTo(
-      percentile(totals, 85)!,
-      9,
-    )
+    expect(percentileOfNumbers(totals, 50)).toBeCloseTo(percentile(totals, 50)!, 9)
+    expect(percentileOfNumbers(totals, 85)).toBeCloseTo(percentile(totals, 85)!, 9)
   })
 
   it("E: expected addition and reserve share the same permutation sample", () => {
@@ -235,9 +213,7 @@ describe("uncertainty reserve Shapley attribution", () => {
 
     expectExactReserveAdditivity(result)
     expect(
-      result.uncertaintyReserveDecomposition.contributions.some(
-        (row) => row.contribution < 0,
-      ),
+      result.uncertaintyReserveDecomposition.contributions.some((row) => row.contribution < 0),
     ).toBe(true)
   })
 
@@ -245,15 +221,11 @@ describe("uncertainty reserve Shapley attribution", () => {
     const result = computeShapleyAttribution(baseInput())
     expect(Math.abs(result.diagnostics.additivityResidual)).toBeLessThan(1e-9)
     expect(
-      Math.abs(
-        result.baseCost + expectedContributionSum(result) - result.estimatedP50,
-      ),
+      Math.abs(result.baseCost + expectedContributionSum(result) - result.estimatedP50),
     ).toBeLessThan(1e-9)
     expect(result.expectedAdditionDecomposition.startValue).toBe(result.baseCost)
     expect(result.expectedAdditionDecomposition.endValue).toBe(result.estimatedP50)
-    expect(result.expectedAdditionDecomposition.contributions).toBe(
-      result.contributions,
-    )
+    expect(result.expectedAdditionDecomposition.contributions).toBe(result.contributions)
   })
 
   it("preserves raw and reconciled P50/P85 diagnostics", () => {
@@ -286,14 +258,10 @@ describe("uncertainty reserve Shapley attribution", () => {
       9,
     )
     expect(result.diagnostics.rawShapleyReserveSpread).toBeCloseTo(
-      result.diagnostics.rawShapleyFullP85! -
-        result.diagnostics.rawShapleyFullP50!,
+      result.diagnostics.rawShapleyFullP85! - result.diagnostics.rawShapleyFullP50!,
       9,
     )
-    expect(result.diagnostics.mainSimulationReserveSpread).toBeCloseTo(
-      mainP85 - mainP50,
-      9,
-    )
+    expect(result.diagnostics.mainSimulationReserveSpread).toBeCloseTo(mainP85 - mainP50, 9)
     expect(result.diagnostics.reserveSpreadReconciliationDelta).toBeCloseTo(
       mainP85 - mainP50 - result.diagnostics.rawShapleyReserveSpread!,
       9,

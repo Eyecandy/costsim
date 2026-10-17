@@ -66,10 +66,7 @@ export function SaveAndContinueLaterDialog({
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
-          id="save-continue-title"
-          className="m-0 mb-3 font-sans text-[15px] font-medium"
-        >
+        <h2 id="save-continue-title" className="m-0 mb-3 font-sans text-[15px] font-medium">
           {t("library.saveAndContinueLater")}
         </h2>
         {error ? (
@@ -84,9 +81,7 @@ export function SaveAndContinueLaterDialog({
           <select
             className="h-9 rounded-md border border-border bg-background px-2 font-sans text-[13px]"
             value={folderId ?? ""}
-            onChange={(e) =>
-              setFolderId(e.target.value ? e.target.value : null)
-            }
+            onChange={(e) => setFolderId(e.target.value ? e.target.value : null)}
           >
             <option value="">{t("library.noFolder")}</option>
             {folders.map((f) => (
@@ -150,9 +145,7 @@ export function SaveAndContinueLaterDialog({
             disabled={busy}
             onClick={() => {
               setBusy(true)
-              void Promise.resolve(onConfirm(folderId)).finally(() =>
-                setBusy(false),
-              )
+              void Promise.resolve(onConfirm(folderId)).finally(() => setBusy(false))
             }}
           >
             {t("library.saveAndGoToLibrary")}

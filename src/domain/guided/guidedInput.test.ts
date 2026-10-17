@@ -16,17 +16,11 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { emptyScenarioRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function guidedDialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
-function costRow(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function costRow(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -36,9 +30,7 @@ function costRow(
   }
 }
 
-function driverRow(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driverRow(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -53,9 +45,7 @@ describe("Guided Input O/M/P presentation", () => {
     const src = guidedDialogSource()
     expect(src).toContain('data-guided-cost-range=""')
     expect(src).toContain('data-guided-omp-align="primary"')
-    expect(src).toContain(
-      "grid grid-rows-[auto_2.25rem_1.25rem_auto] items-center",
-    )
+    expect(src).toContain("grid grid-rows-[auto_2.25rem_1.25rem_auto] items-center")
     expect(src).toContain("sm:grid-cols-3")
   })
 
@@ -70,9 +60,7 @@ describe("Guided Input O/M/P presentation", () => {
   it("C: Cost P10 monetary display = signed deviation from M, not endpoint total", () => {
     expect(deriveGuidedCostEffect("1000000000", "-20")).toBe(-200_000_000)
     expect(deriveGuidedCostAbsolute("1000000000", "-20")).toBe(800_000_000)
-    expect(formatGuidedApproxImpactLabel(-200_000_000, "no")).toBe(
-      "≈ −200 mill.",
-    )
+    expect(formatGuidedApproxImpactLabel(-200_000_000, "no")).toBe("≈ −200 mill.")
     const src = guidedDialogSource()
     expect(src).toContain("deriveGuidedCostEffect")
     expect(src).toContain("data-guided-cost-p10-effect")
@@ -82,9 +70,7 @@ describe("Guided Input O/M/P presentation", () => {
   it("D: Cost P90 monetary display = signed deviation from M, not endpoint total", () => {
     expect(deriveGuidedCostEffect("1000000000", "30")).toBe(300_000_000)
     expect(deriveGuidedCostAbsolute("1000000000", "30")).toBe(1_300_000_000)
-    expect(formatGuidedApproxImpactLabel(300_000_000, "no")).toBe(
-      "≈ +300 mill.",
-    )
+    expect(formatGuidedApproxImpactLabel(300_000_000, "no")).toBe("≈ +300 mill.")
     expect(guidedDialogSource()).toContain("data-guided-cost-p90-effect")
     expect(guidedDialogSource()).not.toContain("data-guided-cost-p90-abs")
   })
@@ -94,7 +80,7 @@ describe("Guided Input O/M/P presentation", () => {
     expect(src).toContain("GuidedInlineValue")
     expect(src).toContain('field="optimistic"')
     expect(src).toContain("data-guided-cost-p10-pct")
-    expect(src).toContain('data-guided-inline-display={field}')
+    expect(src).toContain("data-guided-inline-display={field}")
   })
 
   it("F: Cost P percentage click-to-edit", () => {
@@ -161,9 +147,7 @@ describe("Guided Input O/M/P presentation", () => {
     const src = guidedDialogSource()
     expect(src).not.toContain("guidedRowBlocksAdvance")
     expect(
-      listGuidedInputRows([emptyScenarioRow(), costRow({ id: "c1" })]).map(
-        (r) => r.id,
-      ),
+      listGuidedInputRows([emptyScenarioRow(), costRow({ id: "c1" })]).map((r) => r.id),
     ).toEqual(["c1"])
   })
 
@@ -200,9 +184,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
     expect(effects.modeEffect).not.toBe(0)
     expect(effects.p10Effect).toBeCloseTo(-70_000_000)
     expect(effects.p90Effect).toBeCloseTo(140_000_000)
-    expect(formatGuidedApproxImpactLabel(effects.modeEffect, "no")).toMatch(
-      /^≈ \+28/,
-    )
+    expect(formatGuidedApproxImpactLabel(effects.modeEffect, "no")).toMatch(/^≈ \+28/)
   })
 
   it("M = 0 produces zero effect (still displayed)", () => {
@@ -250,9 +232,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
     const full: Project = {
       ...createProject({ id: "p1", name: "P" }),
       costRows: [costRow({ id: "c1", likely: "1000000000" })],
-      driverRows: [
-        driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" }),
-      ],
+      driverRows: [driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" })],
       driverImpacts: { d1: { c1: "100" } },
     }
     const half: Project = {
@@ -270,9 +250,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
     const base: Project = {
       ...createProject({ id: "p1", name: "P" }),
       costRows: [costRow({ id: "c1", likely: "1000000000" })],
-      driverRows: [
-        driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" }),
-      ],
+      driverRows: [driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" })],
       incurredCosts: 0,
     }
     const withIncurred: Project = {
@@ -310,9 +288,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
       ],
     }
     const guided = computeGuidedDriverEndpointEffects(project, "d1")
-    const tornado = computeDeterministicTornado(project)?.rows.find(
-      (r) => r.type === "driver",
-    )
+    const tornado = computeDeterministicTornado(project)?.rows.find((r) => r.type === "driver")
     // Tornado: Δ vs mode (+2%). Guided: Δ vs 0%. They differ when M ≠ 0.
     expect(tornado!.lowImpact).toBeCloseTo(-70_000_000) // −5% vs +2% → −7pp
     expect(tornado!.highImpact).toBeCloseTo(80_000_000) // +10% vs +2% → +8pp
@@ -336,9 +312,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
       ],
     }
     const guided = computeGuidedDriverEndpointEffects(project, "d1")
-    const row = computeDeterministicTornado(project)?.rows.find(
-      (r) => r.type === "driver",
-    )
+    const row = computeDeterministicTornado(project)?.rows.find((r) => r.type === "driver")
     expect(guided.modeEffect).toBe(0)
     expect(guided.p10Effect).toBeCloseTo(row!.lowImpact)
     expect(guided.p90Effect).toBeCloseTo(row!.highImpact)
@@ -348,9 +322,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
     const project: Project = {
       ...createProject({ id: "p1", name: "P" }),
       costRows: [costRow({ id: "c1", likely: "" })],
-      driverRows: [
-        driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" }),
-      ],
+      driverRows: [driverRow({ id: "d1", optimistic: "-5", likely: "2", pessimistic: "10" })],
     }
     expect(computeGuidedDriverEndpointEffects(project, "d1")).toEqual({
       p10Effect: null,

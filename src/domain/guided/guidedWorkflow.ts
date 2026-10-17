@@ -155,17 +155,12 @@ export function initialGuidedWorkflowStepIndex(args: {
       const assumptions = steps.findIndex((s) => s.phase === "assumptions")
       return assumptions >= 0 ? assumptions : 0
     }
-    const costSteps = steps
-      .map((s, i) => ({ s, i }))
-      .filter((x) => x.s.phase === "cost")
+    const costSteps = steps.map((s, i) => ({ s, i })).filter((x) => x.s.phase === "cost")
     if (costSteps.length === 0) {
       const empty = steps.findIndex((s) => s.phase === "costsEmpty")
       return empty >= 0 ? empty : 0
     }
-    const clamped = Math.max(
-      0,
-      Math.min(startRowIndex, costSteps.length - 1),
-    )
+    const clamped = Math.max(0, Math.min(startRowIndex, costSteps.length - 1))
     return costSteps[clamped]!.i
   }
 
@@ -175,24 +170,16 @@ export function initialGuidedWorkflowStepIndex(args: {
     return driversIntro >= 0 ? driversIntro : 0
   }
 
-  const driverSteps = steps
-    .map((s, i) => ({ s, i }))
-    .filter((x) => x.s.phase === "driver")
+  const driverSteps = steps.map((s, i) => ({ s, i })).filter((x) => x.s.phase === "driver")
   if (driverSteps.length === 0) {
     const empty = steps.findIndex((s) => s.phase === "driversEmpty")
     return empty >= 0 ? empty : 0
   }
-  const clamped = Math.max(
-    0,
-    Math.min(startRowIndex, driverSteps.length - 1),
-  )
+  const clamped = Math.max(0, Math.min(startRowIndex, driverSteps.length - 1))
   return driverSteps[clamped]!.i
 }
 
-export function clampGuidedWorkflowStepIndex(
-  index: number,
-  total: number,
-): number {
+export function clampGuidedWorkflowStepIndex(index: number, total: number): number {
   if (total <= 0) return 0
   return Math.max(0, Math.min(index, total - 1))
 }
@@ -215,12 +202,7 @@ export function formatGuidedPhaseProgress(args: {
 }
 
 /** Resume hint after specialized-mode / table handoff (UI-only; not persisted). */
-export type GuidedResumeAfter =
-  | "costItems"
-  | "correlation"
-  | "drivers"
-  | "impact"
-  | "simulation"
+export type GuidedResumeAfter = "costItems" | "correlation" | "drivers" | "impact" | "simulation"
 
 export type GuidedResumeState = {
   after: GuidedResumeAfter

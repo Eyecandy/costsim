@@ -123,9 +123,9 @@ describe("Result Settings compact-reload presentation", () => {
     const cold = await repo.get(doc.id)
     expect(cold!.draftResultPreferences?.keyFigures.showStdDev).toBe(true)
     // Frozen snapshot prefs remain the simulation-time freeze.
-    expect(
-      cold!.singleDraftResult?.resultPreferences.keyFigures.showStdDev,
-    ).toBe(DEFAULT_RESULT_PREFERENCES.keyFigures.showStdDev)
+    expect(cold!.singleDraftResult?.resultPreferences.keyFigures.showStdDev).toBe(
+      DEFAULT_RESULT_PREFERENCES.keyFigures.showStdDev,
+    )
   })
 
   it("E: Preferences do not affect inputSignature / stale validity", () => {
@@ -228,9 +228,7 @@ describe("Result Settings compact-reload presentation", () => {
     const frozen = draft.byProjectId[project.id]!.keyFigures
     expect(Object.keys(frozen.percentiles).length).toBeGreaterThan(0)
     expect(frozen.probabilityBelowAmount).toBe(5000)
-    expect(frozenProbabilityBelowForAmount(frozen, 5000)).toBe(
-      frozen.probBelowCostLevel,
-    )
+    expect(frozenProbabilityBelowForAmount(frozen, 5000)).toBe(frozen.probBelowCostLevel)
     expect(frozenProbabilityBelowForAmount(frozen, 9999)).toBeNull()
     expect(JSON.stringify(draft)).not.toContain('"values":[')
   })
@@ -266,9 +264,7 @@ describe("Result Settings compact-reload presentation", () => {
       draftResultPreferences: edited,
     })
     const cold = await repo.get(doc.id)
-    expect(cold!.draftResultPreferences?.keyFigures.showExpectedValue).toBe(
-      false,
-    )
+    expect(cold!.draftResultPreferences?.keyFigures.showExpectedValue).toBe(false)
     expect(JSON.stringify(cold!.ongoingDraftResult)).not.toContain('"values":[')
   })
 })

@@ -33,7 +33,6 @@ import type { Project } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function snapshotFor(projects: Project[], activeProjectId: string) {
   const fakeResults: ProjectResult[] = projects.map((p) => ({
     projectId: p.id,
@@ -45,9 +44,7 @@ function snapshotFor(projects: Project[], activeProjectId: string) {
     projects,
     activeProjectId,
     projectResults: fakeResults,
-    simulatedBaseCostByProjectId: Object.fromEntries(
-      projects.map((p) => [p.id, 100]),
-    ),
+    simulatedBaseCostByProjectId: Object.fromEntries(projects.map((p) => [p.id, 100])),
     inputSignature: JSON.stringify(projects),
     simulationCount: 20_000,
     resultPreferences: DEFAULT_RESULT_PREFERENCES,
@@ -59,14 +56,8 @@ function archiveTip(
   projects: Project[],
   activeProjectId: string,
 ) {
-  const tip = [...ongoing.checkpoints].sort((a, b) => a.sequence - b.sequence).at(
-    -1,
-  )!
-  return archiveCheckpoint(
-    ongoing,
-    tip.id,
-    snapshotFor(projects, activeProjectId),
-  )
+  const tip = [...ongoing.checkpoints].sort((a, b) => a.sequence - b.sequence).at(-1)!
+  return archiveCheckpoint(ongoing, tip.id, snapshotFor(projects, activeProjectId))
 }
 
 describe("checkpoint lifecycle", () => {
@@ -116,9 +107,7 @@ describe("checkpoint lifecycle", () => {
       }),
     ).toBeNull()
 
-    const editedName = [
-      { ...blank.projects[0]!, name: "Changed" },
-    ]
+    const editedName = [{ ...blank.projects[0]!, name: "Changed" }]
     expect(
       getArchiveBlockReason({
         projects: editedName,
@@ -210,9 +199,7 @@ describe("checkpoint lifecycle", () => {
     expect(created.newCheckpoint.status).toBe("draft")
     expect(created.newCheckpoint.archivedAt).toBeNull()
     expect(created.newCheckpoint.name).toBe("Investment decision")
-    expect(created.ongoing.checkpoints.filter((c) => c.status === "draft")).toHaveLength(
-      1,
-    )
+    expect(created.ongoing.checkpoints.filter((c) => c.status === "draft")).toHaveLength(1)
     expect(created.ongoing.activeCheckpointId).toBe(created.newCheckpoint.id)
 
     const cloned = created.newCheckpoint.workspace.projects[0]!
@@ -258,9 +245,7 @@ describe("checkpoint lifecycle", () => {
           : c,
       ),
     }
-    expect(checkpointPrimaryStageId(edited.checkpoints[0]!)).toBe(
-      "preliminary_design",
-    )
+    expect(checkpointPrimaryStageId(edited.checkpoints[0]!)).toBe("preliminary_design")
     expect(checkpointPrimaryStageId(edited.checkpoints[1]!)).toBe("execution")
   })
 
@@ -285,17 +270,16 @@ describe("checkpoint lifecycle", () => {
     const editedProjects = [
       {
         ...created.newCheckpoint.workspace.projects[0]!,
-        costRows: created.newCheckpoint.workspace.projects[0]!.costRows.map(
-          (r, i) =>
-            i === 0
-              ? {
-                  ...r,
-                  name: "Cost",
-                  optimistic: "90",
-                  likely: "999",
-                  pessimistic: "110",
-                }
-              : r,
+        costRows: created.newCheckpoint.workspace.projects[0]!.costRows.map((r, i) =>
+          i === 0
+            ? {
+                ...r,
+                name: "Cost",
+                optimistic: "90",
+                likely: "999",
+                pessimistic: "110",
+              }
+            : r,
         ),
       },
     ]
@@ -376,10 +360,7 @@ describe("checkpoint lifecycle", () => {
     const created = createNextCheckpoint(ongoing)
     expect(created.ok).toBe(true)
     if (!created.ok) return
-    const pair = getPrecedingCheckpointPair(
-      created.ongoing.checkpoints,
-      created.newCheckpoint.id,
-    )
+    const pair = getPrecedingCheckpointPair(created.ongoing.checkpoints, created.newCheckpoint.id)
     expect(pair).not.toBeNull()
     const earlier = extractCheckpointAnalyticalSlice(pair!.earlier)
     const later = extractCheckpointAnalyticalSlice(pair!.later)
@@ -394,7 +375,7 @@ describe("checkpoint lifecycle", () => {
     const app = readAppSource()
     expect(app).toContain("archiveActiveCheckpoint")
     expect(app).toContain("CreateNextCheckpointDialog")
-    expect(app).toContain('isOngoingAnalysis')
+    expect(app).toContain("isOngoingAnalysis")
     expect(app).toMatch(/isOngoingAnalysis\s*\?\s*[\s\S]*archiveActiveCheckpoint/)
     expect(app).toContain('librarySession.docMeta?.status === "archived"')
     const dup = readFileSync(

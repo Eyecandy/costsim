@@ -296,11 +296,7 @@ describe("Ongoing compact archive gate", () => {
       activeProjectId: project.id,
     })
     ongoing = archiveCheckpoint(ongoing, ongoing.activeCheckpointId, snap)
-    expect(
-      isOngoingCheckpointResultSnapshot(
-        ongoing.checkpoints[0]?.archivedSnapshot,
-      ),
-    ).toBe(true)
+    expect(isOngoingCheckpointResultSnapshot(ongoing.checkpoints[0]?.archivedSnapshot)).toBe(true)
   })
 
   it("G: compact-only archive JSON has no 20k values", () => {

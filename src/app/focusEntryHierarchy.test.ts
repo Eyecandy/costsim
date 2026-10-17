@@ -16,7 +16,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -72,9 +71,7 @@ describe("Focus mode entry hierarchy", () => {
 
   it("A2: Project Profile + Focus row places Focus around 3/4 across on md+", () => {
     const layout = readSrc("src/domain/results/columnHeaderLayout.ts")
-    expect(PROJECT_PROFILE_FOCUS_ROW_CLASS).toContain(
-      "md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]",
-    )
+    expect(PROJECT_PROFILE_FOCUS_ROW_CLASS).toContain("md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]")
     expect(PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS).toContain("md:justify-start")
     expect(layout).not.toMatch(/absolute|left:\s*\d|translateX/)
     // Single and Ongoing both use the shared row.
@@ -82,20 +79,14 @@ describe("Focus mode entry hierarchy", () => {
     const rowUses = app.match(/PROJECT_PROFILE_FOCUS_ROW_CLASS/g) ?? []
     expect(rowUses.length).toBeGreaterThanOrEqual(3)
     expect(app).toContain("ONGOING_PROJECT_PROFILE_CELL_CLASS")
-    expect(app).toMatch(
-      /data-project-profile-focus-row=""[\s\S]{0,400}ProjectProfileSection/,
-    )
-    expect(app).toMatch(
-      /data-project-profile-focus-row=""[\s\S]{0,1200}PrimaryFocusModeEntry/,
-    )
+    expect(app).toMatch(/data-project-profile-focus-row=""[\s\S]{0,400}ProjectProfileSection/)
+    expect(app).toMatch(/data-project-profile-focus-row=""[\s\S]{0,1200}PrimaryFocusModeEntry/)
   })
 
   it("B: openFocusModePrimary opens the cost sequence at the focusIntro phase", () => {
     const app = readAppSource()
     expect(app).toContain("const openFocusModePrimary = useCallback(")
-    expect(app).toContain(
-      'openGuidedInput("cost", 0, { startPhase: "focusIntro" })',
-    )
+    expect(app).toContain('openGuidedInput("cost", 0, { startPhase: "focusIntro" })')
     expect(app).toContain("startPhase={guidedStartPhase}")
     expect(app).toContain('useState<"focusIntro" | null>(')
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
@@ -105,11 +96,11 @@ describe("Focus mode entry hierarchy", () => {
   })
 
   it("C: cost workflow order is focusIntro → projectProfile → assumptions", () => {
-    expect(costSteps().slice(0, 3).map((s) => s.phase)).toEqual([
-      "focusIntro",
-      "projectProfile",
-      "assumptions",
-    ])
+    expect(
+      costSteps()
+        .slice(0, 3)
+        .map((s) => s.phase),
+    ).toEqual(["focusIntro", "projectProfile", "assumptions"])
   })
 
   it("D: cost default lands on assumptions; startPhase focusIntro lands on the intro", () => {
@@ -154,12 +145,8 @@ describe("Focus mode entry hierarchy", () => {
     expect(nav).toContain("COLUMN_HEADER_BOTTOM_GAP_CLASS")
     const headerUses = app.match(/COLUMN_HEADER_BOTTOM_GAP_CLASS/g) ?? []
     expect(headerUses.length).toBeGreaterThanOrEqual(2)
-    expect(app).not.toContain(
-      'className="mb-2 font-sans text-[10px] font-normal italic',
-    )
-    expect(nav).not.toContain(
-      'className="mb-2 font-sans text-[10px] font-normal italic',
-    )
+    expect(app).not.toContain('className="mb-2 font-sans text-[10px] font-normal italic')
+    expect(nav).not.toContain('className="mb-2 font-sans text-[10px] font-normal italic')
   })
 
   it("G: Focus mode terminology is canonical across entry points", () => {
@@ -175,21 +162,11 @@ describe("Focus mode entry hierarchy", () => {
     expect(messages.en.inputs.guidedPhaseProjectProfile).toBe("Project profile")
     expect(messages.no.inputs.focusIntroTitle).toBe("Fokusmodus")
     expect(messages.en.inputs.focusIntroTitle).toBe("Focus mode")
-    expect(messages.no.inputs.focusIntroBody).toContain(
-      "Gå gjennom analysen steg for steg",
-    )
-    expect(messages.en.inputs.focusIntroBody).toContain(
-      "Work through the analysis step by step",
-    )
-    expect(messages.no.inputs.focusOverviewPhase1).toBe(
-      "Prosjekt og forutsetninger",
-    )
-    expect(messages.en.inputs.focusOverviewPhase1).toBe(
-      "Project and assumptions",
-    )
-    expect(messages.no.inputs.focusOverviewPhase2).toBe(
-      "Kostnader og usikkerhet",
-    )
+    expect(messages.no.inputs.focusIntroBody).toContain("Gå gjennom analysen steg for steg")
+    expect(messages.en.inputs.focusIntroBody).toContain("Work through the analysis step by step")
+    expect(messages.no.inputs.focusOverviewPhase1).toBe("Prosjekt og forutsetninger")
+    expect(messages.en.inputs.focusOverviewPhase1).toBe("Project and assumptions")
+    expect(messages.no.inputs.focusOverviewPhase2).toBe("Kostnader og usikkerhet")
     expect(messages.en.inputs.focusOverviewPhase2).toBe("Costs and uncertainty")
     expect(messages.no.inputs.focusOverviewPhase3).toBe("Simulering")
     expect(messages.en.inputs.focusOverviewPhase3).toBe("Simulation")

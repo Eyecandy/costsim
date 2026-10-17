@@ -15,10 +15,7 @@ export function suggestedBinCount(sampleSize: number): number {
  * Equal-width bins from min(values) to max(values).
  * Values land in [low, high) for each bin except the last, which includes max.
  */
-export function computeHistogram(
-  values: readonly number[],
-  binCount: number,
-): HistogramBin[] {
+export function computeHistogram(values: readonly number[], binCount: number): HistogramBin[] {
   const xs = values.filter((x) => Number.isFinite(x))
   if (xs.length === 0) return []
 

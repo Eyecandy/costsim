@@ -3,10 +3,7 @@
  * Comparison tests and older call sites may use these names.
  */
 import { computeDeterministicTornado } from "@/domain/simulation/deterministicTornado"
-import {
-  buildSimulationCostCorrelationMatrix,
-  type Project,
-} from "@/domain/analysis/project"
+import { buildSimulationCostCorrelationMatrix, type Project } from "@/domain/analysis/project"
 import { parseCostForSimulation } from "@/domain/results/tableRows"
 
 export {
@@ -66,10 +63,7 @@ export function computeCrystalBallTornadoReference(
 
 export function projectHasCostCorrelations(project: Project): boolean {
   const costRows = project.costRows.filter((r) => parseCostForSimulation(r))
-  const matrix = buildSimulationCostCorrelationMatrix(
-    costRows,
-    project.costCorrelations,
-  )
+  const matrix = buildSimulationCostCorrelationMatrix(costRows, project.costCorrelations)
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix.length; j++) {
       if (matrix[i]![j] !== 0) return true

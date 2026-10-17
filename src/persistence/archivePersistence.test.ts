@@ -176,9 +176,7 @@ describe("archive persistence", () => {
       join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
-    const archiveFnStart = session.indexOf(
-      "const archiveCurrent = useCallback",
-    )
+    const archiveFnStart = session.indexOf("const archiveCurrent = useCallback")
     expect(archiveFnStart).toBeGreaterThanOrEqual(0)
     const archiveFn = session.slice(archiveFnStart, archiveFnStart + 2800)
     expect(archiveFn).toContain("saveTimerRef.current")

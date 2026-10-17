@@ -47,10 +47,7 @@ export function ProjectTabs({
   return (
     <>
       <div
-        className={cn(
-          STICKY_CONTROL_STRIP_CLASSNAME,
-          STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS,
-        )}
+        className={cn(STICKY_CONTROL_STRIP_CLASSNAME, STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS)}
         role="region"
         aria-label={t("projects.tabsRegion")}
       >
@@ -69,13 +66,9 @@ export function ProjectTabs({
         >
           {projects.map((project, projectIndex) => {
             const isActive = project.id === activeProjectId
-            const isEditing =
-              !analysisReadOnly && editingProjectId === project.id
-            const canDeleteProject =
-              !analysisReadOnly && projects.length > 1
-            const hasStaleName =
-              showStaleInputChanges &&
-              staleProjectNameTabIds.has(project.id)
+            const isEditing = !analysisReadOnly && editingProjectId === project.id
+            const canDeleteProject = !analysisReadOnly && projects.length > 1
+            const hasStaleName = showStaleInputChanges && staleProjectNameTabIds.has(project.id)
             return (
               <div
                 key={project.id}
@@ -103,10 +96,7 @@ export function ProjectTabs({
                     : cn(
                         "border border-transparent border-b-0 text-muted-foreground hover:text-foreground",
                         hasStaleName
-                          ? cn(
-                              STALE_PROJECT_TAB_BG_CLASS,
-                              "hover:bg-[rgba(29,134,140,0.08)]",
-                            )
+                          ? cn(STALE_PROJECT_TAB_BG_CLASS, "hover:bg-[rgba(29,134,140,0.08)]")
                           : "bg-card hover:bg-muted",
                       ),
                 )}
@@ -148,20 +138,14 @@ export function ProjectTabs({
                           skipNameCommitRef.current = false
                           return
                         }
-                        commitProjectName(
-                          project.id,
-                          e.target.value,
-                          project.name,
-                        )
+                        commitProjectName(project.id, e.target.value, project.name)
                       }}
                     />
                   ) : (
                     <span
                       className={cn(
                         "block min-w-0 truncate",
-                        projects.length === 1
-                          ? "max-w-[min(12rem,40vw)]"
-                          : "w-full",
+                        projects.length === 1 ? "max-w-[min(12rem,40vw)]" : "w-full",
                       )}
                       title={`${project.name} ${t("projects.projectNameTitleHintSuffix")}`}
                       onDoubleClick={(e) => {
@@ -193,10 +177,7 @@ export function ProjectTabs({
                     <X className="size-3.5" strokeWidth={2.5} aria-hidden />
                   </button>
                 ) : (
-                  <span
-                    aria-hidden
-                    className="size-7 shrink-0"
-                  />
+                  <span aria-hidden className="size-7 shrink-0" />
                 )}
               </div>
             )

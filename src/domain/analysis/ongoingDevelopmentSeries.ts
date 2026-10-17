@@ -9,18 +9,13 @@ import {
   resultSourceFromArchivedSnapshot,
   type CheckpointResultSource,
 } from "@/domain/analysis/checkpointComparison"
-import {
-  percentileFromSorted,
-  sortedFiniteValues,
-} from "@/domain/simulation/stats"
+import { percentileFromSorted, sortedFiniteValues } from "@/domain/simulation/stats"
 import {
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,
 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 
-export type OngoingDevelopmentPointSource =
-  | "archived"
-  | "live"
+export type OngoingDevelopmentPointSource = "archived" | "live"
 
 export type OngoingDevelopmentPoint = {
   checkpointId: string
@@ -51,10 +46,7 @@ export type DevelopmentMetrics = {
  * Archived snapshots keep stable array identities — navigation must not
  * re-sort the same 20k totals.
  */
-const developmentMetricsByValues = new WeakMap<
-  readonly number[],
-  DevelopmentMetrics
->()
+const developmentMetricsByValues = new WeakMap<readonly number[], DevelopmentMetrics>()
 
 function projectIdForCheckpoint(checkpoint: AnalysisCheckpoint): string | null {
   const compact = checkpoint.archivedSnapshot
@@ -119,10 +111,7 @@ export function extractDevelopmentMetrics(
   return metrics
 }
 
-function delta(
-  current: number | null,
-  previous: number | null,
-): number | null {
+function delta(current: number | null, previous: number | null): number | null {
   if (
     current === null ||
     previous === null ||
@@ -147,10 +136,7 @@ export function buildOngoingDevelopmentSeries(args: {
   viewedResultSource?: CheckpointResultSource | null
 }): OngoingDevelopmentSeries {
   const ordered = [...args.checkpoints].sort((a, b) => a.sequence - b.sequence)
-  const raw: Omit<
-    OngoingDevelopmentPoint,
-    "deltaBaseCost" | "deltaP50" | "deltaP85"
-  >[] = []
+  const raw: Omit<OngoingDevelopmentPoint, "deltaBaseCost" | "deltaP50" | "deltaP85">[] = []
 
   for (const checkpoint of ordered) {
     const projectId = projectIdForCheckpoint(checkpoint)

@@ -14,7 +14,10 @@ import {
 import type { AppLanguage } from "@/domain/results/formatNumber"
 
 export function sortFiniteValues(values: readonly number[]): number[] {
-  return values.filter((v) => Number.isFinite(v)).slice().sort((a, b) => a - b)
+  return values
+    .filter((v) => Number.isFinite(v))
+    .slice()
+    .sort((a, b) => a - b)
 }
 
 /**
@@ -46,15 +49,11 @@ export function wholePercentileLabel(probability: number): string {
   return `P${p}`
 }
 
-export function plotInnerWidth(
-  chartWidth: number = SCURVE_VIEWBOX_WIDTH,
-): number {
+export function plotInnerWidth(chartWidth: number = SCURVE_VIEWBOX_WIDTH): number {
   return chartWidth - SCURVE_PLOT_PAD_X * 2
 }
 
-export function plotInnerHeight(
-  curveTopPad: number = SCURVE_CURVE_TOP_PAD,
-): number {
+export function plotInnerHeight(curveTopPad: number = SCURVE_CURVE_TOP_PAD): number {
   return SCURVE_VIEWBOX_HEIGHT - curveTopPad - SCURVE_CURVE_BOTTOM_PAD
 }
 
@@ -85,11 +84,7 @@ export function plotYFromProbability(
   curveTopPad: number = SCURVE_CURVE_TOP_PAD,
 ): number {
   const p = Math.min(1, Math.max(0, probability))
-  return (
-    SCURVE_VIEWBOX_HEIGHT -
-    SCURVE_CURVE_BOTTOM_PAD -
-    p * plotInnerHeight(curveTopPad)
-  )
+  return SCURVE_VIEWBOX_HEIGHT - SCURVE_CURVE_BOTTOM_PAD - p * plotInnerHeight(curveTopPad)
 }
 
 export function isInsideSCurvePlot(

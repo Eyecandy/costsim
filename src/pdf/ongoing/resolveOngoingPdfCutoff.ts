@@ -48,10 +48,7 @@ export function buildOngoingPdfDraftConfirmCopy(args: {
 }
 
 export type OngoingPdfCutoffFailureReason =
-  | "missing_selection"
-  | "selection_not_found"
-  | "no_archived_checkpoints"
-  | "no_frozen_results"
+  "missing_selection" | "selection_not_found" | "no_archived_checkpoints" | "no_frozen_results"
 
 export type OngoingPdfCutoffResolution =
   | {
@@ -81,9 +78,7 @@ export type OngoingPdfExportPlan =
       cutoffCheckpoint: AnalysisCheckpoint
     }
 
-function orderedCheckpoints(
-  checkpoints: readonly AnalysisCheckpoint[],
-): AnalysisCheckpoint[] {
+function orderedCheckpoints(checkpoints: readonly AnalysisCheckpoint[]): AnalysisCheckpoint[] {
   return [...checkpoints].sort((a, b) => a.sequence - b.sequence)
 }
 
@@ -119,14 +114,8 @@ export function resolveOngoingPdfCutoff(args: {
 
   const eligible =
     selected.status === "draft"
-      ? ordered.filter(
-          (c) =>
-            c.sequence < selected.sequence && isArchivedWithFrozenSnapshot(c),
-        )
-      : ordered.filter(
-          (c) =>
-            c.sequence <= selected.sequence && isArchivedWithFrozenSnapshot(c),
-        )
+      ? ordered.filter((c) => c.sequence < selected.sequence && isArchivedWithFrozenSnapshot(c))
+      : ordered.filter((c) => c.sequence <= selected.sequence && isArchivedWithFrozenSnapshot(c))
 
   if (eligible.length === 0) {
     const anyArchived = ordered.some((c) => c.status === "archived")

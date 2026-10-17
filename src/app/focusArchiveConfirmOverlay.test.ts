@@ -4,7 +4,6 @@ import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -29,9 +28,7 @@ describe("Focus archive confirmation overlay portal", () => {
     expect(dialog).toContain("resolveOverlayPortalContainer")
     expect(dialog).toContain("createPortal")
     expect(dialog).toContain("data-confirm-dialog")
-    expect(dialog).not.toMatch(
-      /createPortal\([\s\S]*?,\s*document\.body\s*\)/,
-    )
+    expect(dialog).not.toMatch(/createPortal\([\s\S]*?,\s*document\.body\s*\)/)
   })
 
   it("D: Archive from Next Steps still uses requestArchiveCheckpoint", () => {
@@ -74,8 +71,6 @@ describe("Focus archive confirmation overlay portal", () => {
     const next = readSrc("src/features/checkpoints/CreateNextCheckpointDialog.tsx")
     expect(next).toContain("resolveOverlayPortalContainer")
     expect(next).toContain("useOverlayPortalContainer")
-    expect(next).not.toMatch(
-      /createPortal\([\s\S]*?,\s*document\.body\s*\)/,
-    )
+    expect(next).not.toMatch(/createPortal\([\s\S]*?,\s*document\.body\s*\)/)
   })
 })

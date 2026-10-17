@@ -59,9 +59,7 @@ export interface AnalysisLibraryRepository {
    * Does not mutate checkpoint history or re-run simulations.
    */
   completeOngoingAnalysis(analysisId: string): Promise<AnalysisDocument>
-  createDraftFromArchived(
-    args: CreateDraftFromArchivedArgs,
-  ): Promise<AnalysisDocument>
+  createDraftFromArchived(args: CreateDraftFromArchivedArgs): Promise<AnalysisDocument>
   /**
    * New Ongoing Analysis from an archived Single (copy/import).
    * Source remains archived and unchanged.

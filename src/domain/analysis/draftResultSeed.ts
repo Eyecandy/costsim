@@ -4,11 +4,11 @@ import {
   buildCompactProjectResult,
   type CompactProjectResultV1,
 } from "@/domain/analysis/compactAnalysisResult"
+import type { ResolvedResultView, ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import type {
-  ResolvedResultView,
-  ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
-import type { ShapleyAttributionResult, ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
+  ShapleyAttributionResult,
+  ShapleyContribution,
+} from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 export const DRAFT_RESULT_SEED_VERSION = 1 as const
@@ -52,17 +52,13 @@ export function remapShapleyResult(
     expectedAdditionDecomposition: result.expectedAdditionDecomposition
       ? {
           ...result.expectedAdditionDecomposition,
-          contributions: remapList(
-            result.expectedAdditionDecomposition.contributions,
-          ),
+          contributions: remapList(result.expectedAdditionDecomposition.contributions),
         }
       : result.expectedAdditionDecomposition,
     uncertaintyReserveDecomposition: result.uncertaintyReserveDecomposition
       ? {
           ...result.uncertaintyReserveDecomposition,
-          contributions: remapList(
-            result.uncertaintyReserveDecomposition.contributions,
-          ),
+          contributions: remapList(result.uncertaintyReserveDecomposition.contributions),
         }
       : result.uncertaintyReserveDecomposition,
   }
@@ -119,13 +115,10 @@ export function buildDraftResultSeedFromArchive(args: {
   const { snapshot, projectIdMap, rowIdMap, inputSignature } = args
   const compactByProjectId: Record<string, CompactProjectResultV1> = {}
   const simulatedBaseCostByProjectId: Record<string, number | null> = {}
-  const shapleyByProjectId: Record<string, ShapleyAttributionResult | null> =
-    {}
+  const shapleyByProjectId: Record<string, ShapleyAttributionResult | null> = {}
 
   for (const project of snapshot.projectsAtArchive) {
-    const result = snapshot.projectResults.find(
-      (item) => item.projectId === project.id,
-    )
+    const result = snapshot.projectResults.find((item) => item.projectId === project.id)
     if (!result) continue
     const projectId = projectIdMap.get(project.id) ?? project.id
     const contribution = remapShapleyResult(
@@ -136,8 +129,7 @@ export function buildDraftResultSeedFromArchive(args: {
     const compact = buildCompactProjectResult({
       project,
       result,
-      simulatedBaseCost:
-        snapshot.simulatedBaseCostByProjectId[project.id] ?? null,
+      simulatedBaseCost: snapshot.simulatedBaseCostByProjectId[project.id] ?? null,
       resultView: snapshot.resultView,
       contribution,
     })
@@ -145,10 +137,7 @@ export function buildDraftResultSeedFromArchive(args: {
       ...compact,
       projectId,
       contribution,
-      tornado:
-        frozenTornado !== undefined
-          ? structuredClone(frozenTornado)
-          : compact.tornado,
+      tornado: frozenTornado !== undefined ? structuredClone(frozenTornado) : compact.tornado,
     }
     simulatedBaseCostByProjectId[projectId] = compact.simulatedBaseCost
     shapleyByProjectId[projectId] = contribution

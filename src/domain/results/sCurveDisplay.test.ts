@@ -20,7 +20,6 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -30,10 +29,7 @@ function sCurveSource() {
 }
 
 function pdfSource() {
-  return readFileSync(
-    join(repoRoot, "src/pdf/ProjectReportDocument.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/pdf/ProjectReportDocument.tsx"), "utf8")
 }
 
 function makeSortedValues(n: number): number[] {
@@ -102,9 +98,9 @@ describe("S-curve display series", () => {
     expect(percentile(values, 85)).toBe(percentile(values, 85))
     const src = sCurveSource()
     expect(src).toContain("buildClassicGuides")
-    expect(readFileSync(join(repoRoot, "src/domain/results/sCurveClassicGuides.ts"), "utf8")).toContain(
-      "percentile(s.values, p)",
-    )
+    expect(
+      readFileSync(join(repoRoot, "src/domain/results/sCurveClassicGuides.ts"), "utf8"),
+    ).toContain("percentile(s.values, p)")
     expect(src).not.toContain("percentile(c.points")
     expect(pdfSource()).toContain("percentile(series.values, p)")
     expect(pdfSource()).toContain("sCurveMarkerPercentiles")
@@ -121,19 +117,13 @@ describe("S-curve display series", () => {
     expect(pdfSource()).toContain("strokeDasharray={g.dash}")
     expect(pdfSource()).toContain("buildPdfClassicGuides")
     expect(pdfSource()).not.toContain("layoutPdfSCurveMarkers")
-    const classic = readFileSync(
-      join(repoRoot, "src/pdf/pdfSCurveClassic.ts"),
-      "utf8",
-    )
+    const classic = readFileSync(join(repoRoot, "src/pdf/pdfSCurveClassic.ts"), "utf8")
     expect(classic).toContain("PDF_SCURVE_GUIDE_STROKE_WIDTH = 0.65")
   })
 
   it("I: S-curve project colors use shared project identity tokens", () => {
     const src = sCurveSource()
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(src).toContain("`var(${c.colorVar})`")
     expect(src).toContain("var(--muted-foreground)")
     expect(src).toContain('emphasis === "reference"')
@@ -174,7 +164,7 @@ describe("S-curve display series", () => {
   it("K: expanded view no longer becomes disproportionately wide/flat", () => {
     expect(SCURVE_EXPANDED_SHELL_CLASS).toContain("max-w-[min(100%,48rem)]")
     expect(SCURVE_EXPANDED_SHELL_CLASS).toContain("mx-auto")
-    expect(sCurveSource()).not.toContain('h-[min(58vh,32rem)] w-full')
+    expect(sCurveSource()).not.toContain("h-[min(58vh,32rem)] w-full")
     expect(sCurveSource()).not.toContain("h-54 w-full")
     expect(SCURVE_INLINE_SHELL_CLASS).toContain("max-w-[min(100%,36rem)]")
   })

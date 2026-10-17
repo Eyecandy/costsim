@@ -35,14 +35,15 @@ import type {
   AnalysisSummary,
 } from "@/domain/analysis/analysisDocument"
 import { DEFAULT_ANALYSIS_MODE } from "@/domain/analysis/analysisDocument"
-import {
-  buildAnalysisWorkspacePath,
-  LIBRARY_PATH,
-} from "@/persistence/analysisLibraryRoutes"
+import { buildAnalysisWorkspacePath, LIBRARY_PATH } from "@/persistence/analysisLibraryRoutes"
 import { navigateTo } from "@/shared/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { cn } from "@/shared/utils"
-import { type LibraryNavFilter, buildLibraryPath, runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
+import {
+  type LibraryNavFilter,
+  buildLibraryPath,
+  runBeforeLeaveWithoutBlocking,
+} from "@/features/analysis-library/libraryNavigation"
 
 /** Disclosure key for the synthetic "no folder" row under Mapper — not a nav section. */
 const UNGROUPED_FOLDER_KEY = "__ungrouped__"
@@ -111,20 +112,15 @@ export function AnalysisLibraryNav({
    * USER-CREATED folder tree under Mapper only (`UserFolderBlock`).
    * Empty ⇒ every real folder starts collapsed; nested analyses are not rendered.
    */
-  const [expandedUserFolderIds, setExpandedUserFolderIds] = useState(
-    () => new Set<string>(),
-  )
+  const [expandedUserFolderIds, setExpandedUserFolderIds] = useState(() => new Set<string>())
   /**
    * Transient visual mark for a clicked folder row. Independent of `filter`
    * (which drives the main library view). Cleared on outside click.
    */
-  const [folderHighlightKey, setFolderHighlightKey] = useState<string | null>(
-    null,
-  )
+  const [folderHighlightKey, setFolderHighlightKey] = useState<string | null>(null)
   const [newOpen, setNewOpen] = useState(false)
   const [newName, setNewName] = useState("")
-  const [newAnalysisMode, setNewAnalysisMode] =
-    useState<AnalysisMode>(DEFAULT_ANALYSIS_MODE)
+  const [newAnalysisMode, setNewAnalysisMode] = useState<AnalysisMode>(DEFAULT_ANALYSIS_MODE)
   const [newFolderId, setNewFolderId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
@@ -148,31 +144,18 @@ export function AnalysisLibraryNav({
     id: string
     name: string
   } | null>(null)
-  const [renameAnalysisTarget, setRenameAnalysisTarget] =
-    useState<AnalysisSummary | null>(null)
+  const [renameAnalysisTarget, setRenameAnalysisTarget] = useState<AnalysisSummary | null>(null)
   const [renameAnalysisValue, setRenameAnalysisValue] = useState("")
   const [renameAnalysisBusy, setRenameAnalysisBusy] = useState(false)
-  const [renameAnalysisError, setRenameAnalysisError] = useState<string | null>(
-    null,
-  )
-  const [moveAnalysisTarget, setMoveAnalysisTarget] =
-    useState<AnalysisSummary | null>(null)
-  const [moveAnalysisError, setMoveAnalysisError] = useState<string | null>(
-    null,
-  )
+  const [renameAnalysisError, setRenameAnalysisError] = useState<string | null>(null)
+  const [moveAnalysisTarget, setMoveAnalysisTarget] = useState<AnalysisSummary | null>(null)
+  const [moveAnalysisError, setMoveAnalysisError] = useState<string | null>(null)
   const [trashAnalysisId, setTrashAnalysisId] = useState<string | null>(null)
-  const [folderNotEmptyNotice, setFolderNotEmptyNotice] = useState<string | null>(
-    null,
-  )
-  const folderNotEmptyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
+  const [folderNotEmptyNotice, setFolderNotEmptyNotice] = useState<string | null>(null)
+  const folderNotEmptyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const refresh = useCallback(async () => {
-    const [s, f] = await Promise.all([
-      repo.listSummaries(),
-      repo.listFolders(),
-    ])
+    const [s, f] = await Promise.all([repo.listSummaries(), repo.listFolders()])
     setSummaries(s)
     setFolders(f)
   }, [repo])
@@ -195,13 +178,11 @@ export function AnalysisLibraryNav({
   /** Display-only alphabetical order; does not mutate stored folder data. */
   const foldersSorted = useMemo(
     () =>
-      folders
-        .slice()
-        .sort((a, b) =>
-          a.name.localeCompare(b.name, language === "en" ? "en" : "nb", {
-            sensitivity: "base",
-          }),
-        ),
+      folders.slice().sort((a, b) =>
+        a.name.localeCompare(b.name, language === "en" ? "en" : "nb", {
+          sensitivity: "base",
+        }),
+      ),
     [folders, language],
   )
 
@@ -228,25 +209,19 @@ export function AnalysisLibraryNav({
       const target = event.target
       if (!(target instanceof Element)) return
       const hit = target.closest("[data-sidebar-folder-highlight]")
-      if (
-        hit instanceof HTMLElement &&
-        hit.dataset.sidebarFolderHighlight === folderHighlightKey
-      ) {
+      if (hit instanceof HTMLElement && hit.dataset.sidebarFolderHighlight === folderHighlightKey) {
         return
       }
       setFolderHighlightKey(null)
     }
     document.addEventListener("pointerdown", onPointerDown, true)
-    return () =>
-      document.removeEventListener("pointerdown", onPointerDown, true)
+    return () => document.removeEventListener("pointerdown", onPointerDown, true)
   }, [folderHighlightKey])
 
   useEffect(() => {
     if (newAnalysisOpenRequest <= 0) return
     openNewAnalysisDialog(
-      newAnalysisFolderOverride !== undefined
-        ? newAnalysisFolderOverride
-        : undefined,
+      newAnalysisFolderOverride !== undefined ? newAnalysisFolderOverride : undefined,
     )
     // Intentionally depend only on the request counter; folder pref is read at open time.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,9 +240,7 @@ export function AnalysisLibraryNav({
   const openNewAnalysisDialog = (folderId?: string | null) => {
     setNewName("")
     setNewAnalysisMode(DEFAULT_ANALYSIS_MODE)
-    setNewFolderId(
-      folderId !== undefined ? folderId : resolveNewAnalysisFolderPrefill(),
-    )
+    setNewFolderId(folderId !== undefined ? folderId : resolveNewAnalysisFolderPrefill())
     setInlineFolderMode(false)
     setInlineFolderName("")
     setFolderCreated(null)
@@ -290,9 +263,7 @@ export function AnalysisLibraryNav({
    */
   const goToLibraryDestination = async (next: LibraryNavFilter) => {
     if (next.kind === "folder") {
-      setFolderHighlightKey(
-        next.folderId === null ? UNGROUPED_FOLDER_KEY : next.folderId,
-      )
+      setFolderHighlightKey(next.folderId === null ? UNGROUPED_FOLDER_KEY : next.folderId)
     } else {
       setFolderHighlightKey(null)
     }
@@ -473,10 +444,7 @@ export function AnalysisLibraryNav({
     setDeleteFolderTarget(null)
     try {
       await repo.deleteFolder(id)
-      if (
-        filter.kind === "folder" &&
-        filter.folderId === id
-      ) {
+      if (filter.kind === "folder" && filter.folderId === id) {
         setFilter({ kind: "all" })
       }
       setExpandedUserFolderIds((prev) => {
@@ -551,8 +519,7 @@ export function AnalysisLibraryNav({
       notifyLibraryChanged()
     } catch (error) {
       setMoveAnalysisError(
-        isAnalysisNameConflictOnMoveError(error) ||
-          isAnalysisNameConflictError(error)
+        isAnalysisNameConflictOnMoveError(error) || isAnalysisNameConflictError(error)
           ? t("library.duplicateNameOnMove")
           : t("library.saveError"),
       )
@@ -604,10 +571,7 @@ export function AnalysisLibraryNav({
       </button>
 
       {/* USER-CREATED folders (Mapper). Not All / Recent / Archived. */}
-      <div
-        className="flex shrink-0 flex-col gap-0.5"
-        data-library-user-folders=""
-      >
+      <div className="flex shrink-0 flex-col gap-0.5" data-library-user-folders="">
         <div
           className={cn(
             "group/folders-header flex items-center gap-1 rounded-md px-2 py-0.5",
@@ -685,9 +649,7 @@ export function AnalysisLibraryNav({
                 setRenameFolderTarget({ id: f.id, name: f.name })
                 setRenameFolderValue(f.name)
               }}
-              onDelete={() =>
-                requestDeleteFolder({ id: f.id, name: f.name })
-              }
+              onDelete={() => requestDeleteFolder({ id: f.id, name: f.name })}
               onRenameAnalysis={(item) => {
                 setRenameAnalysisError(null)
                 setRenameAnalysisTarget(item)
@@ -871,9 +833,7 @@ export function AnalysisLibraryNav({
           {!inlineFolderMode ? (
             <div className="flex flex-col gap-2">
               {createError ? (
-                <p className="m-0 font-sans text-[12px] text-destructive">
-                  {createError}
-                </p>
+                <p className="m-0 font-sans text-[12px] text-destructive">{createError}</p>
               ) : null}
               <div className="flex justify-end gap-2">
                 <button
@@ -904,9 +864,7 @@ export function AnalysisLibraryNav({
             setFolderName("")
           }}
         >
-          <h2 className="m-0 mb-3 font-sans text-[15px] font-medium">
-            {t("library.newFolder")}
-          </h2>
+          <h2 className="m-0 mb-3 font-sans text-[15px] font-medium">{t("library.newFolder")}</h2>
           <input
             autoFocus
             className="mb-4 h-9 w-full rounded-md border border-border bg-background px-2 font-sans text-[13px]"
@@ -942,9 +900,7 @@ export function AnalysisLibraryNav({
 
       {folderCreated ? (
         <DialogShell onClose={() => setFolderCreated(null)}>
-          <h2 className="m-0 mb-1 font-sans text-[15px] font-medium">
-            {folderCreated.name}
-          </h2>
+          <h2 className="m-0 mb-1 font-sans text-[15px] font-medium">{folderCreated.name}</h2>
           <p className="m-0 mb-4 font-sans text-[13px] text-muted-foreground">
             {t("library.folderCreatedBody")}
           </p>
@@ -1041,9 +997,7 @@ export function AnalysisLibraryNav({
             setRenameAnalysisError(null)
           }}
         >
-          <h2 className="m-0 mb-3 font-sans text-[15px] font-medium">
-            {t("library.renameTitle")}
-          </h2>
+          <h2 className="m-0 mb-3 font-sans text-[15px] font-medium">{t("library.renameTitle")}</h2>
           <input
             autoFocus
             className="mb-2 h-9 w-full rounded-md border border-border bg-background px-2 font-sans text-[13px]"
@@ -1190,9 +1144,7 @@ function AnalysisFolderPicker({
               aria-selected={value === f.id}
               className={cn(
                 "flex w-full px-3 py-1.5 text-left font-sans text-[12px] hover:bg-muted/60",
-                value === f.id
-                  ? "font-medium text-foreground"
-                  : "text-foreground/90",
+                value === f.id ? "font-medium text-foreground" : "text-foreground/90",
               )}
               onClick={() => {
                 onChange(f.id)
@@ -1283,10 +1235,7 @@ function AnalysisRow({
         </span>
       </button>
       {actionItems ? (
-        <SidebarEntityActionsMenu
-          items={actionItems}
-          menuLabel={t("library.analysisActions")}
-        />
+        <SidebarEntityActionsMenu items={actionItems} menuLabel={t("library.analysisActions")} />
       ) : null}
     </li>
   )
@@ -1335,12 +1284,8 @@ export function UserFolderBlock({
   const folderActionItems =
     onRename || onDelete
       ? [
-          ...(onRename
-            ? [{ label: t("library.renameFolder"), onSelect: onRename }]
-            : []),
-          ...(onDelete
-            ? [{ label: t("library.deleteFolder"), onSelect: onDelete }]
-            : []),
+          ...(onRename ? [{ label: t("library.renameFolder"), onSelect: onRename }] : []),
+          ...(onDelete ? [{ label: t("library.deleteFolder"), onSelect: onDelete }] : []),
         ]
       : null
 
@@ -1414,19 +1359,13 @@ export function UserFolderBlock({
               onOpen={() => onOpen(item.id)}
               className={rowClass}
               archivedLabel={archivedLabel}
-              onRename={
-                onRenameAnalysis ? () => onRenameAnalysis(item) : undefined
-              }
+              onRename={onRenameAnalysis ? () => onRenameAnalysis(item) : undefined}
               onMove={onMoveAnalysis ? () => onMoveAnalysis(item) : undefined}
-              onTrash={
-                onTrashAnalysis ? () => onTrashAnalysis(item.id) : undefined
-              }
+              onTrash={onTrashAnalysis ? () => onTrashAnalysis(item.id) : undefined}
             />
           ))}
           {items.length === 0 ? (
-            <li className="px-2 py-1 font-sans text-[11px] text-muted-foreground">
-              —
-            </li>
+            <li className="px-2 py-1 font-sans text-[11px] text-muted-foreground">—</li>
           ) : null}
         </ul>
       ) : null}
@@ -1450,9 +1389,7 @@ function SidebarEntityActionsMenu({
   const triggerRef = useRef<HTMLButtonElement | null>(null)
   const menuRef = useRef<HTMLDivElement | null>(null)
   const menuId = useId()
-  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(
-    null,
-  )
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null)
 
   const updateMenuPos = useCallback(() => {
     const el = triggerRef.current
@@ -1575,13 +1512,7 @@ function SidebarEntityActionsMenu({
   )
 }
 
-function DialogShell({
-  children,
-  onClose,
-}: {
-  children: ReactNode
-  onClose: () => void
-}) {
+function DialogShell({ children, onClose }: { children: ReactNode; onClose: () => void }) {
   if (typeof document === "undefined") return null
   return createPortal(
     <div

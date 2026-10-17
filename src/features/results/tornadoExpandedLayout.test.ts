@@ -19,12 +19,8 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function tornadoSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ResultsTornado.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ResultsTornado.tsx"), "utf8")
 }
 
 describe("expanded Tornado balanced layout", () => {
@@ -39,15 +35,9 @@ describe("expanded Tornado balanced layout", () => {
   it("B: name and plot use equal flexible tracks with a small gap", () => {
     const expanded = tornadoModeMetrics(true)
     const inline = tornadoModeMetrics(false)
-    expect(expanded.gridTemplateColumns).toBe(
-      TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS,
-    )
-    expect(inline.gridTemplateColumns).toBe(
-      TORNADO_INLINE_GRID_TEMPLATE_COLUMNS,
-    )
-    expect(expanded.gridTemplateColumns).toBe(
-      "minmax(0, 1fr) minmax(0, 1fr)",
-    )
+    expect(expanded.gridTemplateColumns).toBe(TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS)
+    expect(inline.gridTemplateColumns).toBe(TORNADO_INLINE_GRID_TEMPLATE_COLUMNS)
+    expect(expanded.gridTemplateColumns).toBe("minmax(0, 1fr) minmax(0, 1fr)")
     const src = tornadoSource()
     expect(src).toContain("TORNADO_COLUMN_GAP_CLASS")
     expect(src).toContain("gap-x-3")
@@ -69,9 +59,7 @@ describe("expanded Tornado balanced layout", () => {
 
   it("D: 50/50 relationship stays stable as shell width changes (equal fr tracks)", () => {
     const expanded = tornadoModeMetrics(true)
-    expect(expanded.gridTemplateColumns).toBe(
-      "minmax(0, 1fr) minmax(0, 1fr)",
-    )
+    expect(expanded.gridTemplateColumns).toBe("minmax(0, 1fr) minmax(0, 1fr)")
     expect(expanded.fillShellWidth).toBe(true)
   })
 
@@ -86,9 +74,7 @@ describe("expanded Tornado balanced layout", () => {
     expect(TORNADO_CENTER_X).toBe(50)
     const halfSpan = 40
     expect(tornadoValueToX(0, 10, halfSpan)).toBe(TORNADO_CENTER_X)
-    expect(tornadoBarLength(-5, 10, halfSpan)).toBe(
-      tornadoBarLength(5, 10, halfSpan),
-    )
+    expect(tornadoBarLength(-5, 10, halfSpan)).toBe(tornadoBarLength(5, 10, halfSpan))
     const neg = tornadoBarRect(-5, 10, halfSpan)
     const pos = tornadoBarRect(5, 10, halfSpan)
     expect(neg?.w).toBe(pos?.w)

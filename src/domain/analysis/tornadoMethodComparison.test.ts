@@ -7,7 +7,10 @@ import {
 import { computeMonteCarloConditionalTornadoRows } from "@/domain/simulation/monteCarloConditionalTornado"
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import { createSeededRng } from "@/domain/simulation/shapleyAttribution"
-import { sampleCorrelatedUniforms, prepareCostCorrelationCholesky } from "@/domain/simulation/costCorrelation"
+import {
+  sampleCorrelatedUniforms,
+  prepareCostCorrelationCholesky,
+} from "@/domain/simulation/costCorrelation"
 import { percentile } from "@/domain/simulation/stats"
 import type { Project } from "@/domain/analysis/project"
 import {
@@ -33,9 +36,7 @@ function simulateSeededClean(opts: {
   incurredCosts?: number
 }): { values: number[]; inputSeries: SimulationInputSeriesItem[] } {
   const rng = createSeededRng(opts.seed)
-  const incurred = Number.isFinite(opts.incurredCosts)
-    ? Math.max(0, opts.incurredCosts!)
-    : 0
+  const incurred = Number.isFinite(opts.incurredCosts) ? Math.max(0, opts.incurredCosts!) : 0
   const values: number[] = new Array(opts.runs)
   const costSamples: number[][] = opts.costTriangles.map(() => new Array(opts.runs))
   const driverSamples: number[][] = opts.drivers.map(() => new Array(opts.runs))
@@ -47,14 +48,9 @@ function simulateSeededClean(opts: {
   for (let i = 0; i < opts.runs; i++) {
     let costValues: number[]
     if (opts.costTriangles.length <= 1) {
-      costValues = opts.costTriangles.map((c) =>
-        triangularQuantile(c.min, c.mode, c.max, rng()),
-      )
+      costValues = opts.costTriangles.map((c) => triangularQuantile(c.min, c.mode, c.max, rng()))
     } else {
-      const uniforms = sampleCorrelatedUniforms(
-        costCorrelationPrep.choleskyL,
-        rng,
-      )
+      const uniforms = sampleCorrelatedUniforms(costCorrelationPrep.choleskyL, rng)
       costValues = opts.costTriangles.map((c, idx) =>
         triangularQuantile(c.min, c.mode, c.max, uniforms[idx]!),
       )
@@ -130,20 +126,13 @@ function compareProject(
     driverNames: payload.driverNames,
     incurredCosts: payload.incurredCosts,
   })
-  const mcRows = computeMonteCarloConditionalTornadoRows(
-    sim.values,
-    sim.inputSeries,
-    12,
-  )
+  const mcRows = computeMonteCarloConditionalTornadoRows(sim.values, sim.inputSeries, 12)
   const det = computeCrystalBallTornadoReference(project, 12)
   if (!det) throw new Error("deterministic reference failed")
 
   const mcBaselineP50 = percentile(sim.values, 50)
 
-  const allNames = new Set([
-    ...mcRows.map((r) => r.name),
-    ...det.rows.map((r) => r.name),
-  ])
+  const allNames = new Set([...mcRows.map((r) => r.name), ...det.rows.map((r) => r.name)])
   const rows: ComparisonRow[] = []
   for (const name of allNames) {
     const mc = mcRows.find((r) => r.name === name)
@@ -316,10 +305,7 @@ describe("Tornado method comparison (MC conditional vs Crystal Ball–style)", (
       id: "d",
       name: "D",
       incurredCosts: 0,
-      costRows: [
-        cost("c1", "A", "0", "100", "0"),
-        cost("c2", "B", "0", "100", "0"),
-      ],
+      costRows: [cost("c1", "A", "0", "100", "0"), cost("c2", "B", "0", "100", "0")],
       driverRows: [driver("d1", "Partial", "-10", "0", "20")],
       driverImpacts: { d1: { c1: "100", c2: "30" } },
     }
@@ -392,10 +378,7 @@ describe("Tornado method comparison (MC conditional vs Crystal Ball–style)", (
       name: "F",
       incurredCosts: 0,
       costRows: [cost("c1", "Cost", "-5", "100", "5")],
-      driverRows: [
-        driver("d1", "D1", "-10", "0", "20"),
-        driver("d2", "D2", "-15", "0", "15"),
-      ],
+      driverRows: [driver("d1", "D1", "-10", "0", "20"), driver("d2", "D2", "-15", "0", "15")],
     }
     const det = computeCrystalBallTornadoReference(project)!
     const d1Det = det.rows.find((r) => r.name === "D1")!

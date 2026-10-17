@@ -37,38 +37,29 @@ describe("Result Preferences model", () => {
   it("defaults preserve current Key Figures / S-curve experience", () => {
     expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showBaseCost).toBe(true)
     expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showExpectedAddition).toBe(true)
-    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showUncertaintyReserve).toBe(
-      true,
-    )
+    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showUncertaintyReserve).toBe(true)
     expect(DEFAULT_RESULT_PREFERENCES.keyFigures.percentiles).toEqual([50, 85])
     expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showExpectedValue).toBe(false)
     expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showStdDev).toBe(false)
-    expect(
-      DEFAULT_RESULT_PREFERENCES.keyFigures.showProbabilityAtBaseCost,
-    ).toBe(false)
-    expect(
-      DEFAULT_RESULT_PREFERENCES.keyFigures.probabilityBelowCostLevel,
-    ).toEqual({ enabled: false, amount: null })
+    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.showProbabilityAtBaseCost).toBe(false)
+    expect(DEFAULT_RESULT_PREFERENCES.keyFigures.probabilityBelowCostLevel).toEqual({
+      enabled: false,
+      amount: null,
+    })
     expect(DEFAULT_RESULT_PREFERENCES.sCurve.useKeyFigurePercentiles).toBe(true)
     expect("displayMode" in DEFAULT_RESULT_PREFERENCES.sCurve).toBe(false)
-    expect(resolveSCurvePercentiles(DEFAULT_RESULT_PREFERENCES)).toEqual([
-      50, 85,
-    ])
+    expect(resolveSCurvePercentiles(DEFAULT_RESULT_PREFERENCES)).toEqual([50, 85])
   })
 
   it("sanitizes percentiles: integers 1–99, unique, sorted", () => {
-    expect(sanitizePercentileList([85, 15, 50, 15, 0, 100, 50.4])).toEqual([
-      15, 50, 85,
-    ])
+    expect(sanitizePercentileList([85, 15, 50, 15, 0, 100, 50.4])).toEqual([15, 50, 85])
     expect(sanitizePercentileList(["70", "x", null])).toEqual([70])
     expect(sanitizePercentileList(null)).toEqual([])
   })
 
   it("normalize falls back safely for malformed input", () => {
     expect(normalizeResultPreferences(null)).toEqual(DEFAULT_RESULT_PREFERENCES)
-    expect(normalizeResultPreferences("{bad")).toEqual(
-      DEFAULT_RESULT_PREFERENCES,
-    )
+    expect(normalizeResultPreferences("{bad")).toEqual(DEFAULT_RESULT_PREFERENCES)
     const partial = normalizeResultPreferences({
       version: 99,
       keyFigures: { showBaseCost: false, percentiles: [70] },
@@ -94,9 +85,9 @@ describe("Result Preferences model", () => {
       enabled: true,
       amount: 8_181_000_000,
     })
-    expect(shouldShowProbabilityBelowCostLevel(normalized.keyFigures.probabilityBelowCostLevel)).toBe(
-      true,
-    )
+    expect(
+      shouldShowProbabilityBelowCostLevel(normalized.keyFigures.probabilityBelowCostLevel),
+    ).toBe(true)
   })
 
   it("malformed probabilityBelowCostLevel amounts fall back safely", () => {
@@ -111,30 +102,18 @@ describe("Result Preferences model", () => {
         },
       }).keyFigures.probabilityBelowCostLevel,
     ).toEqual({ enabled: true, amount: null })
-    expect(
-      shouldShowProbabilityBelowCostLevel({ enabled: true, amount: null }),
-    ).toBe(false)
-    expect(
-      shouldShowProbabilityBelowCostLevel({ enabled: false, amount: 100 }),
-    ).toBe(false)
+    expect(shouldShowProbabilityBelowCostLevel({ enabled: true, amount: null })).toBe(false)
+    expect(shouldShowProbabilityBelowCostLevel({ enabled: false, amount: 100 })).toBe(false)
   })
 
   it("parses and formats preference amounts in NO/EN", () => {
-    expect(parseResultPreferenceAmount("8 181 000 000", "no")).toBe(
-      8_181_000_000,
-    )
-    expect(parseResultPreferenceAmount("8,181,000,000", "en")).toBe(
-      8_181_000_000,
-    )
+    expect(parseResultPreferenceAmount("8 181 000 000", "no")).toBe(8_181_000_000)
+    expect(parseResultPreferenceAmount("8,181,000,000", "en")).toBe(8_181_000_000)
     expect(parseResultPreferenceAmount("", "no")).toBeNull()
     expect(parseResultPreferenceAmount("abc", "en")).toBeNull()
     expect(parseResultPreferenceAmount("-10", "en")).toBeNull()
-    expect(formatResultPreferenceAmount(8_181_000_000, "no")).toBe(
-      "8 181 000 000",
-    )
-    expect(formatResultPreferenceAmount(8_181_000_000, "en")).toBe(
-      "8,181,000,000",
-    )
+    expect(formatResultPreferenceAmount(8_181_000_000, "no")).toBe("8 181 000 000")
+    expect(formatResultPreferenceAmount(8_181_000_000, "en")).toBe("8,181,000,000")
   })
 
   it("add/remove percentiles and keep at least one", () => {
@@ -229,19 +208,19 @@ describe("Result Preferences storage", () => {
       },
     })
     saveResultPreferences(next)
-    expect(loadResultPreferences().keyFigures.probabilityBelowCostLevel).toEqual(
-      { enabled: true, amount: 1000 },
-    )
-    expect(resetResultPreferences().keyFigures.probabilityBelowCostLevel).toEqual(
-      { enabled: false, amount: null },
-    )
+    expect(loadResultPreferences().keyFigures.probabilityBelowCostLevel).toEqual({
+      enabled: true,
+      amount: 1000,
+    })
+    expect(resetResultPreferences().keyFigures.probabilityBelowCostLevel).toEqual({
+      enabled: false,
+      amount: null,
+    })
     vi.unstubAllGlobals()
   })
 
   it("storage key is device-scoped, not project/share", () => {
-    expect(RESULT_PREFERENCES_STORAGE_KEY).toBe(
-      "cost-simulator:v1:resultPreferences",
-    )
+    expect(RESULT_PREFERENCES_STORAGE_KEY).toBe("cost-simulator:v1:resultPreferences")
     expect(RESULT_PREFERENCES_STORAGE_KEY).not.toContain("projects")
     expect(RESULT_PREFERENCES_STORAGE_KEY).not.toContain("share")
   })
@@ -296,10 +275,7 @@ describe("Result metric helpers", () => {
     expect(probabilityAtOrBelowPercent(values, 70)).toBe(0)
     expect(probabilityAtOrBelowPercent(values, 120)).toBe(100)
     // Exact equality counts as <=
-    expect(probabilityAtOrBelowPercent([10, 20, 30], 20)).toBeCloseTo(
-      (2 / 3) * 100,
-      8,
-    )
+    expect(probabilityAtOrBelowPercent([10, 20, 30], 20)).toBeCloseTo((2 / 3) * 100, 8)
   })
 
   it("probability below cost level uses same helper per project distribution", () => {
@@ -326,15 +302,9 @@ describe("Result Preferences UI wiring", () => {
   it("panel and consumers are wired without touching share/project schema", async () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
-    const panel = readFileSync(
-      join(root, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
     const share = readFileSync(join(root, "src/persistence/shareLink.ts"), "utf8")
-    const expander = readFileSync(
-      join(root, "src/shared/SectionExpander.tsx"),
-      "utf8",
-    )
+    const expander = readFileSync(join(root, "src/shared/SectionExpander.tsx"), "utf8")
     const keyFigures = readFileSync(
       join(root, "src/features/results/ResultsKeyFiguresTable.tsx"),
       "utf8",
@@ -349,19 +319,14 @@ describe("Result Preferences UI wiring", () => {
     expect(app).toContain("useResultPreferences")
     expect(app).toContain("liveResultPreferences={resultPreferences}")
     expect(panel).toContain("headerTrailing=")
-    expect(panel).toMatch(
-      /results\.resultsHeading[\s\S]{0,400}headerTrailing=\{/,
-    )
+    expect(panel).toMatch(/results\.resultsHeading[\s\S]{0,400}headerTrailing=\{/)
     // Global Result Preferences live on the Results header, not Key Figures toolbar.
     expect(panel).not.toContain("toolbarLeading=")
     expect(keyFigures).not.toContain("toolbarLeading")
     // ChartExpandHost still supports an optional toolbarLeading slot.
     expect(expandHost).toContain("toolbarLeading")
     expect(expandHost).toContain("data-chart-expand-toolbar-leading")
-    const scurve = readFileSync(
-      join(root, "src/features/results/ResultsSCurve.tsx"),
-      "utf8",
-    )
+    const scurve = readFileSync(join(root, "src/features/results/ResultsSCurve.tsx"), "utf8")
     expect(scurve).not.toContain("toolbarLeading")
     expect(scurve).not.toContain("displayModeControl")
     expect(scurve).not.toContain("horizontalZoomControl")

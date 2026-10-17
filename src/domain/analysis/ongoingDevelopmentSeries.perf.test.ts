@@ -25,7 +25,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function results(projectId: string, values: number[]): ProjectResult[] {
   return [
     {
@@ -57,18 +56,14 @@ function countLargeArraySorts(run: () => void, minLength = 50): number {
 describe("extractDevelopmentMetrics", () => {
   it("matches extractKeyFigureValue for baseCost / p50 / p85", () => {
     const projectId = "p1"
-    const values = [
-      10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
-    ]
+    const values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]
     const source = {
       projectResults: results(projectId, values),
       simulatedBaseCostByProjectId: { [projectId]: 42 },
       resultsComparable: true as const,
     }
     const m = extractDevelopmentMetrics(source, projectId)
-    expect(m.baseCost).toBe(
-      extractKeyFigureValue(source, projectId, "baseCost"),
-    )
+    expect(m.baseCost).toBe(extractKeyFigureValue(source, projectId, "baseCost"))
     expect(m.p50).toBe(extractKeyFigureValue(source, projectId, "p50"))
     expect(m.p85).toBe(extractKeyFigureValue(source, projectId, "p85"))
     expect(m.p50).toBe(percentile(values, 50))
@@ -202,16 +197,11 @@ describe("buildOngoingDevelopmentSeries performance invariants", () => {
 describe("Development wiring stability (source / memo / hover)", () => {
   it("App memoizes checkpointComparisonResultSource", () => {
     const app = readAppSource()
-    expect(app).toContain(
-      "const checkpointComparisonResultSource = useMemo",
-    )
+    expect(app).toContain("const checkpointComparisonResultSource = useMemo")
   })
 
   it("ResultsPanel development memo ignores result preferences and archived nav tip", () => {
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(panel).toContain("viewedDraftCheckpointId")
     expect(panel).toContain("developmentLiveResultSource")
     const memoStart = panel.indexOf("const developmentSeries = useMemo")

@@ -1,4 +1,7 @@
-import { costAbsoluteLikelyToTriangular, type TriangularParams } from "@/domain/simulation/simulation"
+import {
+  costAbsoluteLikelyToTriangular,
+  type TriangularParams,
+} from "@/domain/simulation/simulation"
 import { parseNumberField } from "@/domain/results/numberField"
 import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
 

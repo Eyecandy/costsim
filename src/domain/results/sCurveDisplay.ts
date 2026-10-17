@@ -24,10 +24,8 @@ export const SCURVE_PLOT_ASPECT_CLASS = "aspect-[4/3]"
  * while aspect-[4/3] keeps height proportional. Outer card padding supplies
  * breathing room so the plot does not hug the edges.
  */
-export const SCURVE_INLINE_SHELL_CLASS =
-  "mx-auto w-full max-w-[min(100%,36rem)]"
-export const SCURVE_EXPANDED_SHELL_CLASS =
-  "mx-auto w-full max-w-[min(100%,48rem)]"
+export const SCURVE_INLINE_SHELL_CLASS = "mx-auto w-full max-w-[min(100%,36rem)]"
+export const SCURVE_EXPANDED_SHELL_CLASS = "mx-auto w-full max-w-[min(100%,48rem)]"
 
 /**
  * Evenly index into a sorted CDF so the visible polyline stays deterministic,

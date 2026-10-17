@@ -73,10 +73,7 @@ describe("reported 202.8 M reconciliation example", () => {
       config: { permutations: 100, runsPerSubset: 3000, convergenceBatchSize: 50 },
     })
 
-    const contributionSum = result.contributions.reduce(
-      (acc, row) => acc + row.contribution,
-      0,
-    )
+    const contributionSum = result.contributions.reduce((acc, row) => acc + row.contribution, 0)
     const mainExpectedAddition = userMainP50 - baseCost
     const scale = resolveWaterfallDisplayScale([
       baseCost,
@@ -98,14 +95,10 @@ describe("reported 202.8 M reconciliation example", () => {
       additivityResidual: result.diagnostics.additivityResidual,
       lastPositionCounts: result.diagnostics.permutationLastPositionCounts,
       formattedMainNo: formatWaterfallValueWithScale(userMainP50, scale, "no"),
-      formattedWaterfallNo: formatWaterfallValueWithScale(
-        result.estimatedP50,
-        scale,
-        "no",
-      ),
+      formattedWaterfallNo: formatWaterfallValueWithScale(result.estimatedP50, scale, "no"),
     }
 
-    // eslint-disable-next-line no-console
+     
     console.table(report)
 
     expect(result.estimatedP50).toBe(userMainP50)

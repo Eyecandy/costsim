@@ -13,9 +13,7 @@ import {
   shouldHideOrdinaryXTickLabel,
   shouldHideOrdinaryYTickLabel,
 } from "@/domain/results/sCurveClassicGuides"
-import {
-  plotYFromProbability,
-} from "@/domain/results/sCurveHover"
+import { plotYFromProbability } from "@/domain/results/sCurveHover"
 import {
   DEFAULT_RESULT_PREFERENCES,
   normalizeResultPreferences,
@@ -24,7 +22,6 @@ import { messages } from "@/i18n/messages"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -108,9 +105,7 @@ describe("classic S-curve guides", () => {
     expect(p84.y).toBeCloseTo(plotYFromProbability(0.84), 6)
     expect(p85.y).toBeCloseTo(plotYFromProbability(0.85), 6)
     // Prefer outer lane over moving along the data axis.
-    expect(p84.lane !== p85.lane || Math.abs(p84.labelY - p85.labelY) >= 4.2).toBe(
-      true,
-    )
+    expect(p84.lane !== p85.lane || Math.abs(p84.labelY - p85.labelY) >= 4.2).toBe(true)
     // Lane 0 aligns with ordinary tick text; lane 1 is further outward.
     expect(classicYLabelX(10, 0)).toBe(10 - 1.5)
     expect(classicYLabelX(10, 1)).toBeLessThan(classicYLabelX(10, 0))
@@ -200,7 +195,7 @@ describe("classic S-curve guides", () => {
     expect(scurve).toContain("formatSCurveYAxisPercentileTick")
     expect(scurve).toContain("tickPercentile")
     expect(scurve).not.toContain("${Math.round(tick * 100)}%")
-    expect(scurve).toContain('data-scurve-y-tick-p={tickPercentile}')
+    expect(scurve).toContain("data-scurve-y-tick-p={tickPercentile}")
   })
 
   it("hides ordinary X tick text when it overlaps a custom cost label", () => {
@@ -308,9 +303,7 @@ describe("S-curve legend project highlight", () => {
     expect(emphasis).toContain("toggleSelectedProjectId")
 
     // Shared Classic Y labels stay outside project opacity wrappers
-    const classicYBlock = scurve.match(
-      /\{classicYLabels\.map\(\(label\) => \([\s\S]*?\)\)\}/,
-    )?.[0]
+    const classicYBlock = scurve.match(/\{classicYLabels\.map\(\(label\) => \([\s\S]*?\)\)\}/)?.[0]
     expect(classicYBlock).toBeTruthy()
     expect(classicYBlock!).toContain("data-scurve-classic-y-label")
     expect(classicYBlock!).not.toContain("projectLayerOpacity")
@@ -321,18 +314,12 @@ describe("S-curve legend project highlight", () => {
     expect(panel).toContain("clearSCurveProjectSelection")
     expect(panel).toContain('document.addEventListener("pointerdown"')
     expect(panel).toContain('target.closest("[data-scurve-legend]")')
-    expect(panel).toMatch(
-      /if \(sCurveSelectedProjectIds\.length === 0\) return/,
-    )
+    expect(panel).toMatch(/if \(sCurveSelectedProjectIds\.length === 0\) return/)
     expect(panel).toMatch(
       /selectedProjectIds=\{sCurveSelectedProjectIds\}[\s\S]*?onToggleProjectSelection=\{toggleSCurveProjectSelection\}/,
     )
-    expect(panel).toMatch(
-      /expanded[\s\S]*?selectedProjectIds=\{sCurveSelectedProjectIds\}/,
-    )
-    expect(panel).not.toMatch(
-      /sCurveSelectedProjectIds[\s\S]{0,120}(localStorage|saveAsDefault)/,
-    )
+    expect(panel).toMatch(/expanded[\s\S]*?selectedProjectIds=\{sCurveSelectedProjectIds\}/)
+    expect(panel).not.toMatch(/sCurveSelectedProjectIds[\s\S]{0,120}(localStorage|saveAsDefault)/)
     expect(scurve).toContain('data-scurve-legend=""')
 
     // Not persisted in chart component
@@ -353,6 +340,6 @@ describe("S-curve legend project highlight", () => {
     expect(scurve).toContain("title={c.label}")
     expect(scurve).toContain("aria-label={c.label}")
     expect(scurve).toContain('className="scurve-legend-label"')
-    expect(scurve).toContain("showExpand && \"pr-9\"")
+    expect(scurve).toContain('showExpand && "pr-9"')
   })
 })

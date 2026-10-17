@@ -5,9 +5,7 @@ import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreG
  * Reuses Guided editable-control rules and also skips overlays that own
  * keyboard interaction (expanded charts, Result Settings, menus, confirms).
  */
-export function shouldIgnoreFocusArrowNavigation(
-  target: EventTarget | null,
-): boolean {
+export function shouldIgnoreFocusArrowNavigation(target: EventTarget | null): boolean {
   if (shouldIgnoreGuidedArrowNavigation(target)) return true
   if (typeof document === "undefined") return false
 
@@ -32,5 +30,4 @@ export function shouldIgnoreFocusArrowNavigation(
 }
 
 /** @deprecated Use shouldIgnoreFocusArrowNavigation — same behavior. */
-export const shouldIgnoreFocusResultsArrowNavigation =
-  shouldIgnoreFocusArrowNavigation
+export const shouldIgnoreFocusResultsArrowNavigation = shouldIgnoreFocusArrowNavigation

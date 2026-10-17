@@ -12,7 +12,6 @@ import { navigateTo } from "@/shared/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function stubWindowLocation(href = "http://localhost/library") {
   const url = new URL(href)
   const listeners = new Set<() => void>()
@@ -92,9 +91,7 @@ describe("empty-library New Analysis shares sidebar action", () => {
     )
     expect(nav).toContain("openNewAnalysisFromToolbar")
     expect(nav).toContain("openNewAnalysisActionRef")
-    expect(nav).toContain(
-      "openNewAnalysisActionRef.current = openNewAnalysisFromToolbar",
-    )
+    expect(nav).toContain("openNewAnalysisActionRef.current = openNewAnalysisFromToolbar")
     expect(nav).toContain("onClick={() => openNewAnalysisFromToolbar()}")
   })
 
@@ -104,13 +101,9 @@ describe("empty-library New Analysis shares sidebar action", () => {
       "utf8",
     )
     expect(page).toContain("openNewAnalysisActionRef")
-    expect(page).toContain(
-      "onNewAnalysis={() => openNewAnalysisActionRef.current?.()}",
-    )
+    expect(page).toContain("onNewAnalysis={() => openNewAnalysisActionRef.current?.()}")
     // Must not wire Home to the folder-request counter path (click-event bug).
-    expect(page).not.toMatch(
-      /LibraryHomeContent[\s\S]*onNewAnalysis=\{requestNewAnalysis\}/,
-    )
+    expect(page).not.toMatch(/LibraryHomeContent[\s\S]*onNewAnalysis=\{requestNewAnalysis\}/)
   })
 
   it("empty-state button and sidebar call the same registered function", () => {
@@ -129,8 +122,7 @@ describe("empty-library New Analysis shares sidebar action", () => {
   })
 
   it("Get Started empty state is only when active count is 0", () => {
-    const isEmptyLibrary = (loading: boolean, activeCount: number) =>
-      !loading && activeCount === 0
+    const isEmptyLibrary = (loading: boolean, activeCount: number) => !loading && activeCount === 0
     expect(isEmptyLibrary(false, 0)).toBe(true)
     expect(isEmptyLibrary(false, 1)).toBe(false)
     expect(isEmptyLibrary(true, 0)).toBe(false)

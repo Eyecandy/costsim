@@ -6,7 +6,6 @@ import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }

@@ -13,19 +13,16 @@ export const TORNADO_BAR_H = 2.4
 export const TORNADO_LABEL_FONT_SIZE = 2.4
 
 /** Natural width of one row SVG if aspect ratio of the viewBox is preserved at ROW_PX height. */
-export const TORNADO_NATURAL_PLOT_WIDTH_PX =
-  TORNADO_ROW_PX * (TORNADO_VIEW_W / TORNADO_VIEW_H)
+export const TORNADO_NATURAL_PLOT_WIDTH_PX = TORNADO_ROW_PX * (TORNADO_VIEW_W / TORNADO_VIEW_H)
 
 /**
  * Equal flexible tracks for name and plot.
  * Used for both inline (full panel) and expanded (inside a capped shell).
  */
-export const TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS =
-  "minmax(0, 1fr) minmax(0, 1fr)"
+export const TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS = "minmax(0, 1fr) minmax(0, 1fr)"
 
 /** @deprecated Alias — prefer TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS. */
-export const TORNADO_INLINE_GRID_TEMPLATE_COLUMNS =
-  TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS
+export const TORNADO_INLINE_GRID_TEMPLATE_COLUMNS = TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS
 
 /** Expanded: modestly taller rows for easier inspection of the six factors. */
 export const TORNADO_EXPANDED_ROW_PX = 36
@@ -37,8 +34,7 @@ export const TORNADO_EXPANDED_LABEL_FONT_SIZE = 2.7
  * ~56rem ≈ 896px: with a 50/50 grid each track is ≈ natural plot width at
  * expanded row height, so bars enlarge with the figure without dominating.
  */
-export const TORNADO_EXPANDED_INNER_MAX_CLASS =
-  "mx-auto w-full max-w-[min(100%,56rem)]"
+export const TORNADO_EXPANDED_INNER_MAX_CLASS = "mx-auto w-full max-w-[min(100%,56rem)]"
 
 /** Compact gap between name and plot (same as Tailwind gap-x-3). */
 export const TORNADO_COLUMN_GAP_CLASS = "gap-x-3"
@@ -91,9 +87,7 @@ export function tornadoPlotRegionStyle(expanded: boolean): {
   return { width: "100%", minWidth: "6rem" }
 }
 
-export function tornadoPreserveAspectRatio(
-  expanded: boolean,
-): "none" | "xMidYMid meet" {
+export function tornadoPreserveAspectRatio(expanded: boolean): "none" | "xMidYMid meet" {
   return tornadoModeMetrics(expanded).preserveAspectRatio
 }
 
@@ -130,11 +124,7 @@ export function tornadoBarRect(
   return { x, w }
 }
 
-export function tornadoBarLength(
-  value: number,
-  maxAbs: number,
-  halfSpan: number,
-): number {
+export function tornadoBarLength(value: number, maxAbs: number, halfSpan: number): number {
   if (!Number.isFinite(value) || value === 0) return 0
   return (Math.abs(value) / Math.max(maxAbs, 1e-12)) * halfSpan
 }

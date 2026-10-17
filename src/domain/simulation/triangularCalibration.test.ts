@@ -7,10 +7,7 @@ import {
   triangularCdf,
   triangularParamsFromPercentiles,
 } from "@/domain/simulation/triangularCalibration"
-import {
-  costAbsoluteLikelyToTriangular,
-  triangularQuantile,
-} from "@/domain/simulation/simulation"
+import { costAbsoluteLikelyToTriangular, triangularQuantile } from "@/domain/simulation/simulation"
 import { messages } from "@/i18n/messages"
 import {
   parseCostForSimulation,
@@ -22,8 +19,9 @@ import {
 import { percentile } from "@/domain/simulation/stats"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
-function row(partial: Partial<ScenarioRow> & Pick<ScenarioRow, "optimistic" | "likely" | "pessimistic">): ScenarioRow {
+function row(
+  partial: Partial<ScenarioRow> & Pick<ScenarioRow, "optimistic" | "likely" | "pessimistic">,
+): ScenarioRow {
   return {
     id: "t",
     name: "x",
@@ -157,9 +155,7 @@ describe("calibrateTriangularFromPercentiles", () => {
 
 describe("boundary ordering through parsers", () => {
   it("driver 0/0/1 parses successfully", () => {
-    const params = parseDriverForSimulation(
-      row({ optimistic: "0", likely: "0", pessimistic: "1" }),
-    )
+    const params = parseDriverForSimulation(row({ optimistic: "0", likely: "0", pessimistic: "1" }))
     expect(params).not.toBeNull()
     expect(params!.mode).toBe(0)
     expect(params!.min).toBeLessThan(0)
@@ -171,32 +167,20 @@ describe("boundary ordering through parsers", () => {
       row({ optimistic: "-1", likely: "0", pessimistic: "0" }),
     )
     expect(params).not.toBeNull()
-    expect(triangularCdf(-1, params!.min, params!.mode, params!.max)).toBeCloseTo(
-      0.1,
-      10,
-    )
-    expect(triangularCdf(0, params!.min, params!.mode, params!.max)).toBeCloseTo(
-      0.9,
-      10,
-    )
+    expect(triangularCdf(-1, params!.min, params!.mode, params!.max)).toBeCloseTo(0.1, 10)
+    expect(triangularCdf(0, params!.min, params!.mode, params!.max)).toBeCloseTo(0.9, 10)
   })
 
   it("equality is not flagged as outside span", () => {
-    expect(
-      driverLikelyOutsideSpan(
-        row({ optimistic: "0", likely: "0", pessimistic: "1" }),
-      ),
-    ).toBe(false)
-    expect(
-      driverLikelyOutsideSpan(
-        row({ optimistic: "-1", likely: "0", pessimistic: "0" }),
-      ),
-    ).toBe(false)
-    expect(
-      driverLikelyOutsideSpan(
-        row({ optimistic: "1", likely: "0", pessimistic: "2" }),
-      ),
-    ).toBe(true)
+    expect(driverLikelyOutsideSpan(row({ optimistic: "0", likely: "0", pessimistic: "1" }))).toBe(
+      false,
+    )
+    expect(driverLikelyOutsideSpan(row({ optimistic: "-1", likely: "0", pessimistic: "0" }))).toBe(
+      false,
+    )
+    expect(driverLikelyOutsideSpan(row({ optimistic: "1", likely: "0", pessimistic: "2" }))).toBe(
+      true,
+    )
   })
 
   it("ordered driver with calibrated support ≤ −100 is rejected separately", () => {
@@ -206,9 +190,7 @@ describe("boundary ordering through parsers", () => {
     expect(driverCalibratedSupportInvalid(extreme)).toBe(true)
     expect(parseDriverForSimulation(extreme)).toBeNull()
     expect(
-      driverCalibratedSupportInvalid(
-        row({ optimistic: "0", likely: "0", pessimistic: "1" }),
-      ),
+      driverCalibratedSupportInvalid(row({ optimistic: "0", likely: "0", pessimistic: "1" })),
     ).toBe(false)
   })
 
@@ -217,13 +199,10 @@ describe("boundary ordering through parsers", () => {
       "Spennet for «{driverName}» går for langt mot nedsiden. Sett den optimistiske verdien nærmere mest sannsynlig.",
     )
     expect(messages.en.inputs.driverCalibratedSupportInvalid).toBe(
-      'The range for “{driverName}” extends too far on the downside. Move the optimistic value closer to the most likely value.',
+      "The range for “{driverName}” extends too far on the downside. Move the optimistic value closer to the most likely value.",
     )
     expect(
-      messages.no.inputs.driverCalibratedSupportInvalid.replace(
-        "{driverName}",
-        "test 2",
-      ),
+      messages.no.inputs.driverCalibratedSupportInvalid.replace("{driverName}", "test 2"),
     ).toBe(
       "Spennet for «test 2» går for langt mot nedsiden. Sett den optimistiske verdien nærmere mest sannsynlig.",
     )
@@ -245,10 +224,7 @@ describe("boundary ordering through parsers", () => {
     expect(params!.mode).toBe(100)
     expect(params!.min).toBeLessThan(100)
     expect(params!.max).toBeGreaterThan(140)
-    expect(triangularCdf(100, params!.min, params!.mode, params!.max)).toBeCloseTo(
-      0.1,
-      8,
-    )
+    expect(triangularCdf(100, params!.min, params!.mode, params!.max)).toBeCloseTo(0.1, 8)
   })
 })
 

@@ -9,7 +9,6 @@ import { I18nProvider } from "@/i18n/I18nProvider"
 import type { AnalysisSummary } from "@/domain/analysis/analysisDocument"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 const sampleItems: AnalysisSummary[] = [
   {
     id: "a1",

@@ -5,7 +5,6 @@ import { join } from "node:path"
 import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 describe("shouldIgnoreGuidedArrowNavigation", () => {
   it("exports a function and ignores non-elements", () => {
     expect(typeof shouldIgnoreGuidedArrowNavigation).toBe("function")

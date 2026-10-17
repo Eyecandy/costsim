@@ -46,8 +46,18 @@ export function InputPanels({
   librarySession: ReturnType<typeof useLibraryAnalysisSession>
   setProjects: Dispatch<SetStateAction<Project[]>>
   showValidationFeedback: boolean
-  validationInvalidCellKeys: { cost: ReadonlySet<string>; drivers: ReadonlySet<string>; driverImpacts: ReadonlySet<string>; } | { cost: Set<string>; drivers: Set<string>; driverImpacts?: undefined; }
-  visibleStaleChangedCellKeys: { cost: ReadonlySet<string>; drivers: ReadonlySet<string>; driverImpacts: ReadonlySet<string>; }
+  validationInvalidCellKeys:
+    | {
+        cost: ReadonlySet<string>
+        drivers: ReadonlySet<string>
+        driverImpacts: ReadonlySet<string>
+      }
+    | { cost: Set<string>; drivers: Set<string>; driverImpacts?: undefined }
+  visibleStaleChangedCellKeys: {
+    cost: ReadonlySet<string>
+    drivers: ReadonlySet<string>
+    driverImpacts: ReadonlySet<string>
+  }
 }) {
   const { t } = useI18n()
   const {
@@ -85,11 +95,7 @@ export function InputPanels({
   } = guidedFocusSession
   return (
     <>
-      <div
-        className={
-          isOngoingAnalysis ? ONGOING_COST_CELL_CLASS : "pb-7"
-        }
-      >
+      <div className={isOngoingAnalysis ? ONGOING_COST_CELL_CLASS : "pb-7"}>
         {activeProject ? (
           <div
             key={`${librarySession.activeCheckpoint?.id ?? "single"}:${activeProject.id}`}
@@ -100,40 +106,31 @@ export function InputPanels({
             className="relative min-w-0 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-reduce:animate-none"
           >
             {!isOngoingAnalysis ? (
-            <div
-              className={cn(
-                PROJECT_PROFILE_FOCUS_ROW_CLASS,
-                PROJECT_PROFILE_SECTION_SPACING_CLASS,
-              )}
-              data-project-profile-focus-row=""
-            >
-              <div className="min-w-0">
-                <ProjectProfileSection
-                  profile={activeProject.profile}
-                  readOnly={analysisReadOnly}
-                  onChange={
-                    analysisReadOnly
-                      ? undefined
-                      : (next) =>
-                          setProjects((prev) =>
-                            patchProjectProfile(
-                              prev,
-                              activeProject.id,
-                              next,
-                            ),
-                          )
-                  }
-                />
+              <div
+                className={cn(
+                  PROJECT_PROFILE_FOCUS_ROW_CLASS,
+                  PROJECT_PROFILE_SECTION_SPACING_CLASS,
+                )}
+                data-project-profile-focus-row=""
+              >
+                <div className="min-w-0">
+                  <ProjectProfileSection
+                    profile={activeProject.profile}
+                    readOnly={analysisReadOnly}
+                    onChange={
+                      analysisReadOnly
+                        ? undefined
+                        : (next) =>
+                            setProjects((prev) => patchProjectProfile(prev, activeProject.id, next))
+                    }
+                  />
+                </div>
+                {!analysisReadOnly ? (
+                  <PrimaryFocusModeEntry onClick={openFocusModePrimary} />
+                ) : null}
               </div>
-              {!analysisReadOnly ? (
-                <PrimaryFocusModeEntry onClick={openFocusModePrimary} />
-              ) : null}
-            </div>
             ) : null}
-            <div
-              ref={impactEditingAreaRef}
-              className="flex min-w-0 flex-col gap-6"
-            >
+            <div ref={impactEditingAreaRef} className="flex min-w-0 flex-col gap-6">
               <Card
                 data-cost-items-card=""
                 className="overflow-visible border border-border bg-[var(--km-surface)] ring-0 [--km-surface:color-mix(in_oklab,var(--color-muted)_35%,var(--color-background))]"
@@ -150,11 +147,7 @@ export function InputPanels({
                           ? undefined
                           : (text) =>
                               setProjects((prev) =>
-                                patchProjectAddAssumption(
-                                  prev,
-                                  activeProject.id,
-                                  text,
-                                ),
+                                patchProjectAddAssumption(prev, activeProject.id, text),
                               )
                       }
                       onUpdateAssumption={
@@ -175,28 +168,18 @@ export function InputPanels({
                           ? undefined
                           : (assumptionId) =>
                               setProjects((prev) =>
-                                patchProjectRemoveAssumption(
-                                  prev,
-                                  activeProject.id,
-                                  assumptionId,
-                                ),
+                                patchProjectRemoveAssumption(prev, activeProject.id, assumptionId),
                               )
                       }
                       onIncurredCostsChange={(value) => {
                         if (analysisReadOnly) return
                         setProjects((prev) =>
-                          patchProjectIncurredCosts(
-                            prev,
-                            activeProject.id,
-                            value,
-                          ),
+                          patchProjectIncurredCosts(prev, activeProject.id, value),
                         )
                       }}
                       changedCellKeys={visibleStaleChangedCellKeys.cost}
                       invalidCellKeys={
-                        showValidationFeedback
-                          ? validationInvalidCellKeys.cost
-                          : undefined
+                        showValidationFeedback ? validationInvalidCellKeys.cost : undefined
                       }
                       costImpactSliders={
                         impactModeActive && impactSelectedDriverRow
@@ -205,13 +188,8 @@ export function InputPanels({
                               selectedDriverRowId: impactSelectedDriverRow.row.id,
                               selectedDriverLabel: impactSelectedDriverRow.label,
                               driverImpacts: activeProject.driverImpacts,
-                              changedCellKeys:
-                                visibleStaleChangedCellKeys.driverImpacts,
-                              onImpactChange: (
-                                driverRowId,
-                                costRowId,
-                                value,
-                              ) => {
+                              changedCellKeys: visibleStaleChangedCellKeys.driverImpacts,
+                              onImpactChange: (driverRowId, costRowId, value) => {
                                 if (analysisReadOnly) return
                                 setProjects((prev) =>
                                   patchProjectDriverImpact(
@@ -228,28 +206,19 @@ export function InputPanels({
                       }
                       onRowsChange={(updater) => {
                         if (analysisReadOnly) return
-                        setProjects((prev) =>
-                          patchProjectCostRows(
-                            prev,
-                            activeProject.id,
-                            updater,
-                          ),
-                        )
+                        setProjects((prev) => patchProjectCostRows(prev, activeProject.id, updater))
                       }}
                       costCorrelationMode={{
                         active: correlationModeActive,
                         onToggle: handleCorrelationModeToggle,
-                        selectedCostRowIds: correlationModeActive
-                          ? correlationSelectedCostIds
-                          : [],
+                        selectedCostRowIds: correlationModeActive ? correlationSelectedCostIds : [],
                         onToggleCostSelection: handleToggleCorrelationCost,
                         onOpenSummary: handleOpenCorrelationSummary,
                         onRemoveSummary: handleRemoveCorrelationSummary,
                         pendingRho: correlationPendingRho,
                         pendingMixed: correlationPendingMixed,
                         onPendingRhoChange: handleCorrelationPendingChange,
-                        onApplyGroupCorrelation:
-                          handleCostCorrelationGroupApply,
+                        onApplyGroupCorrelation: handleCostCorrelationGroupApply,
                         savedSummaries: savedCorrelationSummaries,
                         saveConfirmVisible: correlationSaveConfirmVisible,
                         saveConfirmKind: correlationFeedbackKind,
@@ -264,9 +233,7 @@ export function InputPanels({
                       defineMode={{
                         active: defineModeActive,
                         onToggle: handleDefineModeToggle,
-                        selectedRowId: defineModeActive
-                          ? defineSelectedRowId
-                          : null,
+                        selectedRowId: defineModeActive ? defineSelectedRowId : null,
                         onSelectRow: (rowId) => {
                           if (!defineModeActive) return
                           setDefineSelectedRowId(rowId)
@@ -299,9 +266,7 @@ export function InputPanels({
                       readOnly={analysisReadOnly}
                       changedCellKeys={visibleStaleChangedCellKeys.drivers}
                       invalidCellKeys={
-                        showValidationFeedback
-                          ? validationInvalidCellKeys.drivers
-                          : undefined
+                        showValidationFeedback ? validationInvalidCellKeys.drivers : undefined
                       }
                       driverImpactMode={{
                         active: impactModeActive,
@@ -322,9 +287,7 @@ export function InputPanels({
                       defineMode={{
                         active: defineModeActive,
                         onToggle: handleDefineModeToggle,
-                        selectedRowId: defineModeActive
-                          ? defineSelectedRowId
-                          : null,
+                        selectedRowId: defineModeActive ? defineSelectedRowId : null,
                         onSelectRow: (rowId) => {
                           if (!defineModeActive) return
                           setDefineSelectedRowId(rowId)
@@ -347,11 +310,7 @@ export function InputPanels({
                       onRowsChange={(updater) => {
                         if (analysisReadOnly) return
                         setProjects((prev) =>
-                          patchProjectDriverRows(
-                            prev,
-                            activeProject.id,
-                            updater,
-                          ),
+                          patchProjectDriverRows(prev, activeProject.id, updater),
                         )
                       }}
                     />

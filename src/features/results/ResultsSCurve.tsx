@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type PointerEvent,
-} from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from "react"
 
 import { ChartExpandHost } from "@/features/results/ChartExpandButton"
 import { shouldShowChartExpand } from "@/features/results/chartExpand"
@@ -160,10 +153,7 @@ export function ResultsSCurve({
       .filter((s) => s.points.length > 0)
   }, [series])
 
-  const primaryCurves = useMemo(
-    () => curves.filter((c) => c.emphasis !== "reference"),
-    [curves],
-  )
+  const primaryCurves = useMemo(() => curves.filter((c) => c.emphasis !== "reference"), [curves])
 
   const curveTopPad = DEFAULT_CURVE_TOP_PAD
 
@@ -217,15 +207,9 @@ export function ResultsSCurve({
     })
   }, [primaryCurves, markerLevels, axisMinX, axisMaxX, chartW])
 
-  const classicYLabels = useMemo(
-    () => layoutClassicYAxisLabels(markerLevels),
-    [markerLevels],
-  )
+  const classicYLabels = useMemo(() => layoutClassicYAxisLabels(markerLevels), [markerLevels])
 
-  const classicXLabels = useMemo(
-    () => layoutClassicXAxisLabels(classicGuides),
-    [classicGuides],
-  )
+  const classicXLabels = useMemo(() => layoutClassicXAxisLabels(classicGuides), [classicGuides])
 
   /** Shared monetary scale for ticks, percentile costs, and hover. */
   const costDisplayScale = useMemo(
@@ -259,17 +243,10 @@ export function ResultsSCurve({
   }, [curves, expanded])
   const inspectionCost = activeSCurveInspectionCost(pinnedCost, hoverCost)
   const inspectionPlotX =
-    inspectionCost === null
-      ? null
-      : plotXFromCost(inspectionCost, axisMinX, axisMaxX, chartW)
-  const hoverRows =
-    inspectionCost === null
-      ? null
-      : hoverRowsAtCost(hoverProjects, inspectionCost)
+    inspectionCost === null ? null : plotXFromCost(inspectionCost, axisMinX, axisMaxX, chartW)
+  const hoverRows = inspectionCost === null ? null : hoverRowsAtCost(hoverProjects, inspectionCost)
   const tooltipSide =
-    inspectionPlotX === null
-      ? "right"
-      : scurveTooltipPlacement(inspectionPlotX, chartW)
+    inspectionPlotX === null ? "right" : scurveTooltipPlacement(inspectionPlotX, chartW)
   const isPinned = pinnedCost !== null
 
   const costFromClientPoint = useCallback(
@@ -283,8 +260,7 @@ export function ResultsSCurve({
         chartW,
         CHART_H,
       )
-      if (!point || !isInsideSCurvePlot(point.x, point.y, chartW, curveTopPad))
-        return null
+      if (!point || !isInsideSCurvePlot(point.x, point.y, chartW, curveTopPad)) return null
       return costFromPlotX(point.x, axisMinX, axisMaxX, chartW)
     },
     [axisMinX, axisMaxX, chartW, curveTopPad],
@@ -331,11 +307,7 @@ export function ResultsSCurve({
     const onPointerDownOutside = (event: globalThis.PointerEvent) => {
       const capture = hoverCaptureRef.current
       const target = event.target
-      if (
-        capture &&
-        target instanceof Node &&
-        (capture === target || capture.contains(target))
-      ) {
+      if (capture && target instanceof Node && (capture === target || capture.contains(target))) {
         return
       }
       setPinnedCost(null)
@@ -456,356 +428,334 @@ export function ResultsSCurve({
           className={expanded ? SCURVE_EXPANDED_SHELL_CLASS : SCURVE_INLINE_SHELL_CLASS}
           data-scurve-available=""
         >
-            <div
-              className={cn("relative w-full", SCURVE_PLOT_ASPECT_CLASS)}
-              data-scurve-plot=""
+          <div className={cn("relative w-full", SCURVE_PLOT_ASPECT_CLASS)} data-scurve-plot="">
+            <svg
+              ref={svgRef}
+              viewBox={svgViewBox}
+              preserveAspectRatio="xMidYMid meet"
+              className="h-full w-full"
+              role="img"
+              aria-label="S-kurve for simuleringsresultater"
             >
-        <svg
-          ref={svgRef}
-          viewBox={svgViewBox}
-          preserveAspectRatio="xMidYMid meet"
-          className="h-full w-full"
-          role="img"
-          aria-label="S-kurve for simuleringsresultater"
-        >
-          <defs>
-            <clipPath id={curveClipPathId}>
-              <rect
-                x={PAD_X - CURVE_CLIP_PAD}
-                y={curveTopPad - CURVE_CLIP_PAD}
-                width={chartW - PAD_X * 2 + CURVE_CLIP_PAD * 2}
-                height={
-                  CHART_H - curveTopPad - CURVE_BOTTOM_PAD + CURVE_CLIP_PAD * 2
-                }
-              />
-            </clipPath>
-          </defs>
-          {xTicks.map((tick) => {
-            const x = xForValue(tick, axisMinX, axisMaxX, chartW)
-            const tickText = formatSCurveCost(tick, costDisplayScale, language)
-            const hideTickText =
-              shouldHideOrdinaryXTickLabel({
-                tickX: x,
-                tickY: CHART_H - PAD_Y + 1.8,
-                tickText,
-                customLabels: classicXLabelRender,
-              })
-            return (
-              <g key={`x-grid-${tick}`}>
-                <line
-                  x1={x}
-                  x2={x}
-                  y1={curveTopPad}
-                  y2={CHART_H - PAD_Y}
-                  stroke="currentColor"
-                  strokeWidth={CHART_GRID_STROKE_WIDTH}
-                  className={CHART_GRID_STROKE_CLASS}
-                />
-                {!hideTickText ? (
-                  <text
-                    x={x}
-                    y={CHART_H - PAD_Y + 1.8}
-                    textAnchor="middle"
-                    dominantBaseline="hanging"
-                    className={CHART_TICK_FILL_CLASS}
-                    fontSize={CHART_SVG_TICK_FONT_SIZE}
-                    fontWeight={400}
-                    data-scurve-x-tick=""
-                  >
-                    {tickText}
-                  </text>
-                ) : null}
-              </g>
-            )
-          })}
-          {Y_TICKS.map((tick) => {
-            const y = yForProbability(tick, curveTopPad)
-            const tickPercentile = Math.round(tick * 100)
-            const tickText = formatSCurveYAxisPercentileTick(tick)
-            const hideTickText =
-              shouldHideOrdinaryYTickLabel({
-                tickY: y,
-                tickText,
-                padX: PAD_X,
-                customLabels: classicYLabels,
-                tickPercentile,
-              })
-            return (
-              <g key={`y-grid-${tick}`}>
-                <line
-                  x1={PAD_X}
-                  x2={chartW - PAD_X}
-                  y1={y}
-                  y2={y}
-                  stroke="currentColor"
-                  strokeWidth={CHART_GRID_STROKE_WIDTH}
-                  className={CHART_GRID_STROKE_CLASS}
-                />
-                {!hideTickText ? (
-                  <text
-                    x={PAD_X - 1.5}
-                    y={y}
-                    textAnchor="end"
-                    dominantBaseline="middle"
-                    className={CHART_TICK_FILL_CLASS}
-                    fontSize={CHART_SVG_TICK_FONT_SIZE}
-                    fontWeight={400}
-                    data-scurve-y-tick=""
-                    data-scurve-y-tick-p={tickPercentile}
-                  >
-                    {tickText}
-                  </text>
-                ) : null}
-              </g>
-            )
-          })}
-          <path
-            d={`M ${PAD_X} ${CHART_H - PAD_Y} H ${chartW - PAD_X}`}
-            stroke="currentColor"
-            strokeWidth={CHART_AXIS_STROKE_WIDTH}
-            className={CHART_AXIS_STROKE_CLASS}
-            fill="none"
-          />
-          <text
-            x={AXIS_P_X}
-            y={AXIS_P_Y}
-            dominantBaseline="hanging"
-            className={CHART_TICK_FILL_CLASS}
-            fontSize={CHART_SVG_TICK_FONT_SIZE}
-            fontWeight={400}
-          >
-            {t("charts.axisY")}
-          </text>
-          <text
-            x={axisCX}
-            y={AXIS_C_Y}
-            textAnchor="end"
-            dominantBaseline="auto"
-            className={CHART_TICK_FILL_CLASS}
-            fontSize={CHART_SVG_TICK_FONT_SIZE}
-            fontWeight={400}
-          >
-            {t("charts.axisX")}
-          </text>
-
-          <g clipPath={`url(#${curveClipPathId})`}>
-            {curves.map((c) => {
-              const isReference = c.emphasis === "reference"
-              return (
-                <g
-                  key={c.id}
-                  className="scurve-project-layer"
-                  style={{
-                    opacity: isReference
-                      ? 0.55
-                      : projectLayerOpacity(c.id),
-                  }}
-                  data-scurve-curve={c.id}
-                  data-scurve-emphasis={c.emphasis}
-                >
-                  <path
-                    d={toPath(c.points, axisMinX, axisMaxX, chartW, curveTopPad)}
-                    fill="none"
-                    stroke={
-                      isReference
-                        ? "var(--muted-foreground)"
-                        : `var(${c.colorVar})`
-                    }
-                    strokeWidth={
-                      isReference
-                        ? CHART_PRIMARY_STROKE_WIDTH * 0.9
-                        : CHART_PRIMARY_STROKE_WIDTH
-                    }
-                    strokeLinecap={SCURVE_CURVE_STROKE_LINECAP}
-                    strokeLinejoin={SCURVE_CURVE_STROKE_LINEJOIN}
-                    strokeDasharray={isReference ? "2.4 1.8" : undefined}
+              <defs>
+                <clipPath id={curveClipPathId}>
+                  <rect
+                    x={PAD_X - CURVE_CLIP_PAD}
+                    y={curveTopPad - CURVE_CLIP_PAD}
+                    width={chartW - PAD_X * 2 + CURVE_CLIP_PAD * 2}
+                    height={CHART_H - curveTopPad - CURVE_BOTTOM_PAD + CURVE_CLIP_PAD * 2}
                   />
-                </g>
-              )
-            })}
-          </g>
-
-          <g data-scurve-classic-guides="">
-            {classicGuides.map((g) => (
-              <g
-                key={`classic-${g.projectId}-${g.percentile}`}
-                className="scurve-project-layer"
-                style={{ opacity: projectLayerOpacity(g.projectId) }}
-                data-scurve-classic-guide={`${g.projectId}-${g.percentile}`}
-              >
-                <line
-                  x1={PAD_X}
-                  x2={g.x}
-                  y1={g.y}
-                  y2={g.y}
-                  stroke={`var(${g.colorVar})`}
-                  strokeOpacity={chartPercentileGuideOpacity(g.percentile)}
-                  strokeDasharray={g.dash}
-                  strokeWidth={CHART_SECONDARY_STROKE_WIDTH}
-                />
-                <line
-                  x1={g.x}
-                  x2={g.x}
-                  y1={g.y}
-                  y2={REF_LINE_BOTTOM_Y}
-                  stroke={`var(${g.colorVar})`}
-                  strokeOpacity={chartPercentileGuideOpacity(g.percentile)}
-                  strokeDasharray={g.dash}
-                  strokeWidth={CHART_SECONDARY_STROKE_WIDTH}
-                />
-                <circle
-                  cx={g.x}
-                  cy={g.y}
-                  r={0.9}
-                  fill={`var(${g.colorVar})`}
-                  fillOpacity={CHART_CLASSIC_MARKER_FILL_OPACITY}
-                />
-              </g>
-            ))}
-            {classicYLabels.map((label) => (
-              <text
-                key={`classic-y-${label.percentile}`}
-                x={classicYLabelX(PAD_X, label.lane)}
-                y={label.labelY}
-                textAnchor="end"
-                dominantBaseline="middle"
-                className={CHART_PRIMARY_ANNOTATION_FILL_CLASS}
-                fontSize={CHART_SVG_TICK_FONT_SIZE}
-                fontWeight={500}
-                letterSpacing="0.02em"
-                data-scurve-classic-y-label={label.percentile}
-                data-scurve-classic-y-lane={label.lane}
-              >
-                {label.text}
-              </text>
-            ))}
-            {classicXLabelRender.map((label) => (
-              <text
-                key={`classic-x-${label.key}`}
-                className="scurve-project-layer"
-                style={{ opacity: projectLayerOpacity(label.projectId) }}
-                x={label.x}
-                y={label.y}
-                textAnchor="middle"
-                dominantBaseline="hanging"
-                fill={`var(${label.colorVar})`}
-                fillOpacity={CHART_PRIMARY_ANNOTATION_FILL_OPACITY}
-                fontSize={label.fontSize}
-                fontWeight={500}
-                data-scurve-classic-x-label={label.key}
-                data-scurve-classic-x-row={label.row}
-              >
-                {label.text}
-              </text>
-            ))}
-          </g>
-
-          {expanded &&
-          inspectionCost !== null &&
-          inspectionPlotX !== null &&
-          hoverRows ? (
-            <g
-              data-scurve-hover-overlay=""
-              data-scurve-pinned={isPinned ? "true" : undefined}
-              pointerEvents="none"
-            >
-              <line
-                data-scurve-crosshair=""
-                x1={inspectionPlotX}
-                x2={inspectionPlotX}
-                y1={curveTopPad}
-                y2={REF_LINE_BOTTOM_Y}
-                stroke="currentColor"
-                strokeWidth={SCURVE_HOVER_CROSSHAIR_STROKE_WIDTH}
-                className="text-foreground/28"
-              />
-              {hoverProjects.map((project, idx) => {
-                const row = hoverRows[idx]!
+                </clipPath>
+              </defs>
+              {xTicks.map((tick) => {
+                const x = xForValue(tick, axisMinX, axisMaxX, chartW)
+                const tickText = formatSCurveCost(tick, costDisplayScale, language)
+                const hideTickText = shouldHideOrdinaryXTickLabel({
+                  tickX: x,
+                  tickY: CHART_H - PAD_Y + 1.8,
+                  tickText,
+                  customLabels: classicXLabelRender,
+                })
                 return (
-                  <circle
-                    key={`hover-marker-${project.id}`}
-                    className="scurve-project-layer stroke-background"
-                    style={{ opacity: projectLayerOpacity(project.id) }}
-                    data-scurve-hover-marker={project.id}
-                    cx={inspectionPlotX}
-                    cy={plotYFromProbability(row.probability, curveTopPad)}
-                    r={SCURVE_HOVER_MARKER_RADIUS}
-                    fill={`var(${project.colorVar})`}
-                    strokeWidth="0.35"
-                  />
+                  <g key={`x-grid-${tick}`}>
+                    <line
+                      x1={x}
+                      x2={x}
+                      y1={curveTopPad}
+                      y2={CHART_H - PAD_Y}
+                      stroke="currentColor"
+                      strokeWidth={CHART_GRID_STROKE_WIDTH}
+                      className={CHART_GRID_STROKE_CLASS}
+                    />
+                    {!hideTickText ? (
+                      <text
+                        x={x}
+                        y={CHART_H - PAD_Y + 1.8}
+                        textAnchor="middle"
+                        dominantBaseline="hanging"
+                        className={CHART_TICK_FILL_CLASS}
+                        fontSize={CHART_SVG_TICK_FONT_SIZE}
+                        fontWeight={400}
+                        data-scurve-x-tick=""
+                      >
+                        {tickText}
+                      </text>
+                    ) : null}
+                  </g>
                 )
               })}
-            </g>
-          ) : null}
-
-          {expanded ? (
-            <rect
-              ref={hoverCaptureRef}
-              data-scurve-hover-capture=""
-              x={PAD_X}
-              y={curveTopPad}
-              width={chartW - PAD_X * 2}
-              height={CHART_H - curveTopPad - PAD_Y}
-              fill="transparent"
-              style={{ touchAction: "none", cursor: "crosshair" }}
-              onPointerDown={handlePlotPointerDown}
-              onPointerMove={updateHoverFromPointer}
-              onPointerLeave={clearHover}
-              onPointerCancel={clearHover}
-            />
-          ) : null}
-        </svg>
-        {expanded &&
-        inspectionCost !== null &&
-        inspectionPlotX !== null &&
-        hoverRows ? (
-          <div
-            data-scurve-hover-tooltip=""
-            data-scurve-pinned={isPinned ? "true" : undefined}
-            role="status"
-            className={cn(
-              "pointer-events-none absolute top-[10%] z-10 min-w-[7.5rem] max-w-[min(100%,16rem)] rounded-md border bg-background/95 px-2 py-1.5 text-[11px] shadow-sm",
-              isPinned ? "border-border" : "border-border/70",
-            )}
-            style={{
-              left: `${(inspectionPlotX / chartW) * 100}%`,
-              transform:
-                tooltipSide === "right"
-                  ? "translateX(10px)"
-                  : "translateX(calc(-100% - 10px))",
-            }}
-          >
-            <div className="font-medium tabular-nums text-foreground">
-              {formatSCurveCost(inspectionCost, costDisplayScale, language)}
-            </div>
-            <div className="mt-1 space-y-0.5">
-              {hoverRows.map((row, idx) => (
-                <div
-                  key={row.id}
-                  className="flex items-baseline justify-between gap-3 text-muted-foreground"
-                >
-                  <span className="inline-flex min-w-0 items-center gap-1.5">
-                    <span
-                      className="h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{
-                        backgroundColor: `var(${hoverProjects[idx]!.colorVar})`,
-                      }}
-                      aria-hidden
+              {Y_TICKS.map((tick) => {
+                const y = yForProbability(tick, curveTopPad)
+                const tickPercentile = Math.round(tick * 100)
+                const tickText = formatSCurveYAxisPercentileTick(tick)
+                const hideTickText = shouldHideOrdinaryYTickLabel({
+                  tickY: y,
+                  tickText,
+                  padX: PAD_X,
+                  customLabels: classicYLabels,
+                  tickPercentile,
+                })
+                return (
+                  <g key={`y-grid-${tick}`}>
+                    <line
+                      x1={PAD_X}
+                      x2={chartW - PAD_X}
+                      y1={y}
+                      y2={y}
+                      stroke="currentColor"
+                      strokeWidth={CHART_GRID_STROKE_WIDTH}
+                      className={CHART_GRID_STROKE_CLASS}
                     />
-                    <span className="truncate">{row.label}</span>
-                  </span>
-                  <span className="shrink-0 tabular-nums text-foreground">
-                    {row.percentileLabel}
-                  </span>
+                    {!hideTickText ? (
+                      <text
+                        x={PAD_X - 1.5}
+                        y={y}
+                        textAnchor="end"
+                        dominantBaseline="middle"
+                        className={CHART_TICK_FILL_CLASS}
+                        fontSize={CHART_SVG_TICK_FONT_SIZE}
+                        fontWeight={400}
+                        data-scurve-y-tick=""
+                        data-scurve-y-tick-p={tickPercentile}
+                      >
+                        {tickText}
+                      </text>
+                    ) : null}
+                  </g>
+                )
+              })}
+              <path
+                d={`M ${PAD_X} ${CHART_H - PAD_Y} H ${chartW - PAD_X}`}
+                stroke="currentColor"
+                strokeWidth={CHART_AXIS_STROKE_WIDTH}
+                className={CHART_AXIS_STROKE_CLASS}
+                fill="none"
+              />
+              <text
+                x={AXIS_P_X}
+                y={AXIS_P_Y}
+                dominantBaseline="hanging"
+                className={CHART_TICK_FILL_CLASS}
+                fontSize={CHART_SVG_TICK_FONT_SIZE}
+                fontWeight={400}
+              >
+                {t("charts.axisY")}
+              </text>
+              <text
+                x={axisCX}
+                y={AXIS_C_Y}
+                textAnchor="end"
+                dominantBaseline="auto"
+                className={CHART_TICK_FILL_CLASS}
+                fontSize={CHART_SVG_TICK_FONT_SIZE}
+                fontWeight={400}
+              >
+                {t("charts.axisX")}
+              </text>
+
+              <g clipPath={`url(#${curveClipPathId})`}>
+                {curves.map((c) => {
+                  const isReference = c.emphasis === "reference"
+                  return (
+                    <g
+                      key={c.id}
+                      className="scurve-project-layer"
+                      style={{
+                        opacity: isReference ? 0.55 : projectLayerOpacity(c.id),
+                      }}
+                      data-scurve-curve={c.id}
+                      data-scurve-emphasis={c.emphasis}
+                    >
+                      <path
+                        d={toPath(c.points, axisMinX, axisMaxX, chartW, curveTopPad)}
+                        fill="none"
+                        stroke={isReference ? "var(--muted-foreground)" : `var(${c.colorVar})`}
+                        strokeWidth={
+                          isReference
+                            ? CHART_PRIMARY_STROKE_WIDTH * 0.9
+                            : CHART_PRIMARY_STROKE_WIDTH
+                        }
+                        strokeLinecap={SCURVE_CURVE_STROKE_LINECAP}
+                        strokeLinejoin={SCURVE_CURVE_STROKE_LINEJOIN}
+                        strokeDasharray={isReference ? "2.4 1.8" : undefined}
+                      />
+                    </g>
+                  )
+                })}
+              </g>
+
+              <g data-scurve-classic-guides="">
+                {classicGuides.map((g) => (
+                  <g
+                    key={`classic-${g.projectId}-${g.percentile}`}
+                    className="scurve-project-layer"
+                    style={{ opacity: projectLayerOpacity(g.projectId) }}
+                    data-scurve-classic-guide={`${g.projectId}-${g.percentile}`}
+                  >
+                    <line
+                      x1={PAD_X}
+                      x2={g.x}
+                      y1={g.y}
+                      y2={g.y}
+                      stroke={`var(${g.colorVar})`}
+                      strokeOpacity={chartPercentileGuideOpacity(g.percentile)}
+                      strokeDasharray={g.dash}
+                      strokeWidth={CHART_SECONDARY_STROKE_WIDTH}
+                    />
+                    <line
+                      x1={g.x}
+                      x2={g.x}
+                      y1={g.y}
+                      y2={REF_LINE_BOTTOM_Y}
+                      stroke={`var(${g.colorVar})`}
+                      strokeOpacity={chartPercentileGuideOpacity(g.percentile)}
+                      strokeDasharray={g.dash}
+                      strokeWidth={CHART_SECONDARY_STROKE_WIDTH}
+                    />
+                    <circle
+                      cx={g.x}
+                      cy={g.y}
+                      r={0.9}
+                      fill={`var(${g.colorVar})`}
+                      fillOpacity={CHART_CLASSIC_MARKER_FILL_OPACITY}
+                    />
+                  </g>
+                ))}
+                {classicYLabels.map((label) => (
+                  <text
+                    key={`classic-y-${label.percentile}`}
+                    x={classicYLabelX(PAD_X, label.lane)}
+                    y={label.labelY}
+                    textAnchor="end"
+                    dominantBaseline="middle"
+                    className={CHART_PRIMARY_ANNOTATION_FILL_CLASS}
+                    fontSize={CHART_SVG_TICK_FONT_SIZE}
+                    fontWeight={500}
+                    letterSpacing="0.02em"
+                    data-scurve-classic-y-label={label.percentile}
+                    data-scurve-classic-y-lane={label.lane}
+                  >
+                    {label.text}
+                  </text>
+                ))}
+                {classicXLabelRender.map((label) => (
+                  <text
+                    key={`classic-x-${label.key}`}
+                    className="scurve-project-layer"
+                    style={{ opacity: projectLayerOpacity(label.projectId) }}
+                    x={label.x}
+                    y={label.y}
+                    textAnchor="middle"
+                    dominantBaseline="hanging"
+                    fill={`var(${label.colorVar})`}
+                    fillOpacity={CHART_PRIMARY_ANNOTATION_FILL_OPACITY}
+                    fontSize={label.fontSize}
+                    fontWeight={500}
+                    data-scurve-classic-x-label={label.key}
+                    data-scurve-classic-x-row={label.row}
+                  >
+                    {label.text}
+                  </text>
+                ))}
+              </g>
+
+              {expanded && inspectionCost !== null && inspectionPlotX !== null && hoverRows ? (
+                <g
+                  data-scurve-hover-overlay=""
+                  data-scurve-pinned={isPinned ? "true" : undefined}
+                  pointerEvents="none"
+                >
+                  <line
+                    data-scurve-crosshair=""
+                    x1={inspectionPlotX}
+                    x2={inspectionPlotX}
+                    y1={curveTopPad}
+                    y2={REF_LINE_BOTTOM_Y}
+                    stroke="currentColor"
+                    strokeWidth={SCURVE_HOVER_CROSSHAIR_STROKE_WIDTH}
+                    className="text-foreground/28"
+                  />
+                  {hoverProjects.map((project, idx) => {
+                    const row = hoverRows[idx]!
+                    return (
+                      <circle
+                        key={`hover-marker-${project.id}`}
+                        className="scurve-project-layer stroke-background"
+                        style={{ opacity: projectLayerOpacity(project.id) }}
+                        data-scurve-hover-marker={project.id}
+                        cx={inspectionPlotX}
+                        cy={plotYFromProbability(row.probability, curveTopPad)}
+                        r={SCURVE_HOVER_MARKER_RADIUS}
+                        fill={`var(${project.colorVar})`}
+                        strokeWidth="0.35"
+                      />
+                    )
+                  })}
+                </g>
+              ) : null}
+
+              {expanded ? (
+                <rect
+                  ref={hoverCaptureRef}
+                  data-scurve-hover-capture=""
+                  x={PAD_X}
+                  y={curveTopPad}
+                  width={chartW - PAD_X * 2}
+                  height={CHART_H - curveTopPad - PAD_Y}
+                  fill="transparent"
+                  style={{ touchAction: "none", cursor: "crosshair" }}
+                  onPointerDown={handlePlotPointerDown}
+                  onPointerMove={updateHoverFromPointer}
+                  onPointerLeave={clearHover}
+                  onPointerCancel={clearHover}
+                />
+              ) : null}
+            </svg>
+            {expanded && inspectionCost !== null && inspectionPlotX !== null && hoverRows ? (
+              <div
+                data-scurve-hover-tooltip=""
+                data-scurve-pinned={isPinned ? "true" : undefined}
+                role="status"
+                className={cn(
+                  "pointer-events-none absolute top-[10%] z-10 min-w-[7.5rem] max-w-[min(100%,16rem)] rounded-md border bg-background/95 px-2 py-1.5 text-[11px] shadow-sm",
+                  isPinned ? "border-border" : "border-border/70",
+                )}
+                style={{
+                  left: `${(inspectionPlotX / chartW) * 100}%`,
+                  transform:
+                    tooltipSide === "right" ? "translateX(10px)" : "translateX(calc(-100% - 10px))",
+                }}
+              >
+                <div className="font-medium tabular-nums text-foreground">
+                  {formatSCurveCost(inspectionCost, costDisplayScale, language)}
                 </div>
-              ))}
-            </div>
+                <div className="mt-1 space-y-0.5">
+                  {hoverRows.map((row, idx) => (
+                    <div
+                      key={row.id}
+                      className="flex items-baseline justify-between gap-3 text-muted-foreground"
+                    >
+                      <span className="inline-flex min-w-0 items-center gap-1.5">
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{
+                            backgroundColor: `var(${hoverProjects[idx]!.colorVar})`,
+                          }}
+                          aria-hidden
+                        />
+                        <span className="truncate">{row.label}</span>
+                      </span>
+                      <span className="shrink-0 tabular-nums text-foreground">
+                        {row.percentileLabel}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-            </div>
         </div>
       </div>
-
     </ChartExpandHost>
   )
 }
@@ -877,13 +827,10 @@ function prevNiceStep(step: number): number {
   if (m > 3.75) return 2.5 * base
   if (m > 2.25) return 2 * base
   if (m > 1.5) return 1 * base
-  return 5 * (10 ** (exp - 1))
+  return 5 * 10 ** (exp - 1)
 }
 
-function yForProbability(
-  probability: number,
-  curveTopPad: number = DEFAULT_CURVE_TOP_PAD,
-): number {
+function yForProbability(probability: number, curveTopPad: number = DEFAULT_CURVE_TOP_PAD): number {
   const innerH = CHART_H - curveTopPad - CURVE_BOTTOM_PAD
   return CHART_H - CURVE_BOTTOM_PAD - probability * innerH
 }
@@ -911,12 +858,7 @@ function toPath(
   return d.join(" ")
 }
 
-function xForValue(
-  value: number,
-  minX: number,
-  maxX: number,
-  chartWidth: number,
-): number {
+function xForValue(value: number, minX: number, maxX: number, chartWidth: number): number {
   const spanX = maxX - minX || 1
   const innerW = chartWidth - PAD_X * 2
   const nx = (value - minX) / spanX

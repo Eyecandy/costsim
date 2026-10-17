@@ -24,7 +24,6 @@ import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function snapshotFor(projects: Project[], activeProjectId: string, tag = "a") {
   const fakeResults: ProjectResult[] = projects.map((p) => ({
     projectId: p.id,
@@ -36,9 +35,7 @@ function snapshotFor(projects: Project[], activeProjectId: string, tag = "a") {
     projects,
     activeProjectId,
     projectResults: fakeResults,
-    simulatedBaseCostByProjectId: Object.fromEntries(
-      projects.map((p) => [p.id, 100]),
-    ),
+    simulatedBaseCostByProjectId: Object.fromEntries(projects.map((p) => [p.id, 100])),
     inputSignature: `sig-${tag}`,
     simulationCount: 20_000,
     resultPreferences: DEFAULT_RESULT_PREFERENCES,
@@ -52,11 +49,7 @@ function archiveTip(
   tag?: string,
 ) {
   const tip = getLatestCheckpoint(ongoing)!
-  return archiveCheckpoint(
-    ongoing,
-    tip.id,
-    snapshotFor(projects, activeProjectId, tag),
-  )
+  return archiveCheckpoint(ongoing, tip.id, snapshotFor(projects, activeProjectId, tag))
 }
 
 describe("completeOngoingAnalysis", () => {
@@ -94,13 +87,9 @@ describe("completeOngoingAnalysis", () => {
     expect(completed.ongoing?.checkpoints).toHaveLength(1)
     expect(completed.ongoing?.checkpoints[0]!.status).toBe("archived")
     expect(completed.ongoing?.activeCheckpointId).toBe(ongoing.activeCheckpointId)
-    expect(completed.ongoing?.checkpoints[0]!.archivedSnapshot?.inputSignature).toBe(
-      "sig-cp1",
-    )
+    expect(completed.ongoing?.checkpoints[0]!.archivedSnapshot?.inputSignature).toBe("sig-cp1")
     expect(canCreateNextCheckpoint(completed.ongoing)).toBe(false)
-    expect(getCreateNextCheckpointBlockReason(completed.ongoing)).toBe(
-      "lifecycle_completed",
-    )
+    expect(getCreateNextCheckpointBlockReason(completed.ongoing)).toBe("lifecycle_completed")
 
     const listed = await repo.listSummaries()
     expect(listed.find((s) => s.id === created.id)?.status).toBe("archived")
@@ -152,12 +141,7 @@ describe("completeOngoingAnalysis", () => {
         activeProjectId: blank.activeProjectId,
       },
     })
-    let ongoing = archiveTip(
-      created.ongoing!,
-      blank.projects,
-      blank.activeProjectId,
-      "cp1",
-    )
+    let ongoing = archiveTip(created.ongoing!, blank.projects, blank.activeProjectId, "cp1")
     let next = createNextCheckpoint(ongoing, {
       name: "CP2",
       analysisName: created.name,
@@ -193,9 +177,11 @@ describe("completeOngoingAnalysis", () => {
     expect(completed.ongoing?.checkpoints.map((c) => c.id)).toEqual(
       checkpointsBefore.map((c) => c.id),
     )
-    expect(
-      completed.ongoing?.checkpoints.map((c) => c.archivedSnapshot?.inputSignature),
-    ).toEqual(["sig-cp1", "sig-cp2", "sig-cp3"])
+    expect(completed.ongoing?.checkpoints.map((c) => c.archivedSnapshot?.inputSignature)).toEqual([
+      "sig-cp1",
+      "sig-cp2",
+      "sig-cp3",
+    ])
 
     const nav = selectCheckpoint(completed.ongoing!, checkpointsBefore[0]!.id)
     expect(nav?.activeCheckpointId).toBe(checkpointsBefore[0]!.id)
@@ -230,12 +216,7 @@ describe("completeOngoingAnalysis", () => {
         activeProjectId: blank.activeProjectId,
       },
     })
-    const ongoing = archiveTip(
-      created.ongoing!,
-      blank.projects,
-      blank.activeProjectId,
-      "freeze",
-    )
+    const ongoing = archiveTip(created.ongoing!, blank.projects, blank.activeProjectId, "freeze")
     const snapBefore = structuredClone(ongoing.checkpoints[0]!.archivedSnapshot)
     await repo.saveDraft({ ...created, ongoing })
     const completed = await repo.completeOngoingAnalysis(created.id)
@@ -254,11 +235,7 @@ describe("completeOngoingAnalysis", () => {
         activeProjectId: blank.activeProjectId,
       },
     })
-    const ongoing = archiveTip(
-      created.ongoing!,
-      blank.projects,
-      blank.activeProjectId,
-    )
+    const ongoing = archiveTip(created.ongoing!, blank.projects, blank.activeProjectId)
     await repo.saveDraft({ ...created, ongoing })
 
     const nativeStringify = JSON.stringify.bind(JSON)
@@ -267,8 +244,7 @@ describe("completeOngoingAnalysis", () => {
         value &&
         typeof value === "object" &&
         (value as { status?: string }).status === "archived" &&
-        (value as { ongoing?: { lifecycle?: string } }).ongoing?.lifecycle ===
-          "completed"
+        (value as { ongoing?: { lifecycle?: string } }).ongoing?.lifecycle === "completed"
       ) {
         throw new Error("serialize fail")
       }
@@ -302,9 +278,7 @@ describe("completeOngoingAnalysis", () => {
         ongoing: null,
       }),
     ).toBe("not_ongoing")
-    await expect(repo.completeOngoingAnalysis(created.id)).rejects.toThrow(
-      /not_ongoing/,
-    )
+    await expect(repo.completeOngoingAnalysis(created.id)).rejects.toThrow(/not_ongoing/)
     const archived = await repo.archive({
       analysisId: created.id,
       snapshot: snapshotFor(blank.projects, blank.activeProjectId, "single"),
@@ -314,18 +288,10 @@ describe("completeOngoingAnalysis", () => {
   })
 
   it("UI strings and wiring for finish action exist", () => {
-    expect(messages.no.checkpoints.finishOngoingAction).toBe(
-      "Avslutt løpende analyse",
-    )
-    expect(messages.en.checkpoints.finishOngoingAction).toBe(
-      "Finish ongoing analysis",
-    )
-    expect(messages.no.checkpoints.finishOngoingConfirmTitle).toBe(
-      "Avslutt løpende analyse?",
-    )
-    expect(messages.en.checkpoints.finishOngoingConfirmAction).toBe(
-      "Finish and archive",
-    )
+    expect(messages.no.checkpoints.finishOngoingAction).toBe("Avslutt løpende analyse")
+    expect(messages.en.checkpoints.finishOngoingAction).toBe("Finish ongoing analysis")
+    expect(messages.no.checkpoints.finishOngoingConfirmTitle).toBe("Avslutt løpende analyse?")
+    expect(messages.en.checkpoints.finishOngoingConfirmAction).toBe("Finish and archive")
 
     const app = readAppSource()
     expect(app).toContain("finishOngoingConfirmOpen")
@@ -340,10 +306,7 @@ describe("completeOngoingAnalysis", () => {
     expect(menu).toContain("finishOngoingLabel")
     expect(menu).toContain("onFinishOngoing")
 
-    const results = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const results = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(results).toContain("onRequestFinishOngoingAnalysis")
     expect(results).toContain('data-finish-ongoing-analysis=""')
   })

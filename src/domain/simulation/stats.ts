@@ -78,10 +78,7 @@ export function probabilityAtOrBelowPercent(
  * Same interpolation as {@link percentile} (R‑7-like on (n−1)·p/100).
  * Does not copy or sort. Empty → null; one value → that value.
  */
-export function percentileFromSorted(
-  sortedAscending: readonly number[],
-  p: number,
-): number | null {
+export function percentileFromSorted(sortedAscending: readonly number[], p: number): number | null {
   if (!Number.isFinite(p) || p < 0 || p > 100) return null
   const n = sortedAscending.length
   if (n === 0) return null
@@ -90,18 +87,13 @@ export function percentileFromSorted(
   const lo = Math.floor(h)
   const hi = Math.ceil(h)
   if (lo === hi) return sortedAscending[lo]!
-  return (
-    sortedAscending[lo]! +
-    (h - lo) * (sortedAscending[hi]! - sortedAscending[lo]!)
-  )
+  return sortedAscending[lo]! + (h - lo) * (sortedAscending[hi]! - sortedAscending[lo]!)
 }
 
 /**
  * Finite values only, ascending sort — shared prep for multi-percentile reads.
  */
-export function sortedFiniteValues(
-  values: readonly number[],
-): number[] {
+export function sortedFiniteValues(values: readonly number[]): number[] {
   return values
     .filter((x) => Number.isFinite(x))
     .slice()

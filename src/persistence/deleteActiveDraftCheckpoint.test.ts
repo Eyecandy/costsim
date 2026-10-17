@@ -58,12 +58,7 @@ function resultsFor(project: Project, center: number): ProjectResult[] {
   ]
 }
 
-function makeCompact(
-  analysisId: string,
-  checkpointId: string,
-  project: Project,
-  center = 1000,
-) {
+function makeCompact(analysisId: string, checkpointId: string, project: Project, center = 1000) {
   return buildOngoingCheckpointResultSnapshot({
     analysisId,
     checkpointId,
@@ -111,8 +106,7 @@ beforeEach(() => clearLocalAnalysisLibraryStorageForTests())
 
 describe("delete active draft checkpoint — not analysis delete", () => {
   it("A: deletes CP2 only; document stays; deletedAt null; CP1 intact", async () => {
-    const { repo, doc, ongoing, cp1Id, created, compact } =
-      await setupCp1ArchivedCp2Draft()
+    const { repo, doc, ongoing, cp1Id, created, compact } = await setupCp1ArchivedCp2Draft()
     const before = await repo.get(doc.id)
     expect(before!.deletedAt).toBeNull()
     expect(isAnalysisTrashed(before!)).toBe(false)
@@ -125,9 +119,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
       ...(await repo.get(doc.id))!,
       deletedAt: null,
       ongoing: deleted.ongoing,
-      workspace: ensureSingleProjectWorkspace(
-        deleted.restoredCheckpoint.workspace,
-      ),
+      workspace: ensureSingleProjectWorkspace(deleted.restoredCheckpoint.workspace),
       ongoingDraftResult: undefined,
     })
 
@@ -142,9 +134,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
     expect(after!.ongoing!.checkpoints).toHaveLength(1)
     expect(after!.ongoing!.activeCheckpointId).toBe(cp1Id)
     expect(after!.ongoing!.checkpoints[0]!.archivedSnapshot).toEqual(compact)
-    expect(
-      after!.ongoing!.checkpoints.some((c) => c.id === created.newCheckpoint.id),
-    ).toBe(false)
+    expect(after!.ongoing!.checkpoints.some((c) => c.id === created.newCheckpoint.id)).toBe(false)
     expect(after!.ongoingDraftResult).toBeUndefined()
   })
 
@@ -156,9 +146,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
     await repo.saveDraft({
       ...(await repo.get(doc.id))!,
       ongoing: deleted.ongoing,
-      workspace: ensureSingleProjectWorkspace(
-        deleted.restoredCheckpoint.workspace,
-      ),
+      workspace: ensureSingleProjectWorkspace(deleted.restoredCheckpoint.workspace),
       ongoingDraftResult: undefined,
     })
 
@@ -197,9 +185,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
       appSource.indexOf("open={finishOngoingConfirmOpen}"),
     )
     expect(confirmBlock).toContain("deleteActiveDraftCheckpoint")
-    expect(confirmBlock).toMatch(
-      /onConfirm=\{\(\) => \{[\s\S]*?deleteActiveDraftCheckpoint\(\)/,
-    )
+    expect(confirmBlock).toMatch(/onConfirm=\{\(\) => \{[\s\S]*?deleteActiveDraftCheckpoint\(\)/)
     expect(confirmBlock).not.toContain("setTrashConfirmOpen")
     expect(confirmBlock).not.toContain("moveCurrentToTrash()")
     expect(confirmBlock).toContain("checkpoints.deleteCheckpointConfirm")
@@ -210,9 +196,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
     const { ongoing, cp1Id } = await setupCp1ArchivedCp2Draft()
     const viewingCp1 = selectCheckpointInState(ongoing, cp1Id)!
     expect(canDeleteActiveDraftCheckpoint(viewingCp1)).toBe(false)
-    expect(getDeleteActiveDraftCheckpointBlockReason(viewingCp1)).toBe(
-      "not_draft",
-    )
+    expect(getDeleteActiveDraftCheckpointBlockReason(viewingCp1)).toBe("not_draft")
     const tipArchivedOnly = await (async () => {
       const blank = createBlankWorkspaceRuntimeState()
       const project = blank.projects[0]!
@@ -237,20 +221,13 @@ describe("delete active draft checkpoint — not analysis delete", () => {
       activeProjectId: blank.activeProjectId,
     })
     expect(canDeleteActiveDraftCheckpoint(ongoing)).toBe(false)
-    expect(getDeleteActiveDraftCheckpointBlockReason(ongoing)).toBe(
-      "no_archived_predecessor",
-    )
+    expect(getDeleteActiveDraftCheckpointBlockReason(ongoing)).toBe("no_archived_predecessor")
   })
 
   it("F: delete simulated CP2 + reload — CP2 gone, CP1 intact", async () => {
     const { repo, doc, project, ongoing, cp1Id, created, compact } =
       await setupCp1ArchivedCp2Draft()
-    const tipCompact = makeCompact(
-      doc.id,
-      created.newCheckpoint.id,
-      project,
-      9000,
-    )
+    const tipCompact = makeCompact(doc.id, created.newCheckpoint.id, project, 9000)
     await repo.saveDraft({
       ...(await repo.get(doc.id))!,
       ongoing,
@@ -263,9 +240,7 @@ describe("delete active draft checkpoint — not analysis delete", () => {
     await repo.saveDraft({
       ...(await repo.get(doc.id))!,
       ongoing: deleted.ongoing,
-      workspace: ensureSingleProjectWorkspace(
-        deleted.restoredCheckpoint.workspace,
-      ),
+      workspace: ensureSingleProjectWorkspace(deleted.restoredCheckpoint.workspace),
       ongoingDraftResult: undefined,
     })
 

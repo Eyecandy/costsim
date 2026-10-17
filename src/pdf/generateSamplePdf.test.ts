@@ -86,10 +86,7 @@ function seriesAround(center: number, n = 1200): number[] {
 
 type DocProps = ComponentProps<typeof ProjectReportDocument>
 
-function baseDocProps(
-  projects: Project[],
-  overrides: Partial<DocProps> = {},
-): DocProps {
+function baseDocProps(projects: Project[], overrides: Partial<DocProps> = {}): DocProps {
   const columns = projects.map((p) => ({ label: p.name }))
   const rows = [
     {
@@ -126,8 +123,7 @@ function baseDocProps(
     columns,
     rows,
     sCurveTitle: "S-KURVE",
-    sCurveFootnote:
-      "S-kurven viser fordelingen av totale kostnader. P50 og P85 er markert.",
+    sCurveFootnote: "S-kurven viser fordelingen av totale kostnader. P50 og P85 er markert.",
     sCurveSeries: projects.map((project, idx) => ({
       id: project.id,
       label: project.name,
@@ -170,8 +166,7 @@ function baseDocProps(
     impactColPct: "Påvirkning",
     correlationTitle: "Korrelasjon",
     correlationNone: "Det er ikke lagt inn korrelasjon mellom kostnadspostene.",
-    correlationUnlistedNote:
-      "Ikke oppførte sammenhenger behandles som ukorrelerte.",
+    correlationUnlistedNote: "Ikke oppførte sammenhenger behandles som ukorrelerte.",
     correlationColA: "Kostnadspost A",
     correlationColB: "Kostnadspost B",
     correlationColRho: "ρ",
@@ -210,11 +205,9 @@ function countPdfPages(buffer: Buffer): number {
 }
 
 function mediaBoxes(buffer: Buffer): string[] {
-  return [
-    ...buffer
-      .toString("latin1")
-      .matchAll(/\/MediaBox\s*\[\s*([^\]]+)\]/g),
-  ].map((m) => m[1]!.trim().replace(/\s+/g, " "))
+  return [...buffer.toString("latin1").matchAll(/\/MediaBox\s*\[\s*([^\]]+)\]/g)].map((m) =>
+    m[1]!.trim().replace(/\s+/g, " "),
+  )
 }
 
 function assertUniformA4(buffer: Buffer) {
@@ -232,9 +225,7 @@ function assertUniformA4(buffer: Buffer) {
 
 async function writeCase(name: string, projects: Project[]) {
   await ensurePdfFonts()
-  const blob = await pdf(
-    createElement(ProjectReportDocument, baseDocProps(projects)),
-  ).toBlob()
+  const blob = await pdf(createElement(ProjectReportDocument, baseDocProps(projects))).toBlob()
   mkdirSync(outDir, { recursive: true })
   const outPath = join(outDir, name)
   const buffer = Buffer.from(await blob.arrayBuffer())
@@ -260,12 +251,13 @@ describe("sample PDF generation — cover layout + assumptions chapter", () => {
         assumptions: sampleAssumptionsA,
       }),
     ]
-    expect(buildPdfAssumptionTexts(projects[0]!)).toEqual(
-      sampleAssumptionsA.map((a) => a.text),
-    )
-    expect(formatPdfCoverProjectContext(projects.map((p) => p.name), "no")).toBe(
-      "Alternativ A",
-    )
+    expect(buildPdfAssumptionTexts(projects[0]!)).toEqual(sampleAssumptionsA.map((a) => a.text))
+    expect(
+      formatPdfCoverProjectContext(
+        projects.map((p) => p.name),
+        "no",
+      ),
+    ).toBe("Alternativ A")
     expect(resolvePdfCoverLayout(1).showTocSubsections).toBe(true)
 
     const buffer = await writeCase("case-a-assumptions-one-project.pdf", projects)
@@ -282,10 +274,7 @@ describe("sample PDF generation — cover layout + assumptions chapter", () => {
   it("CASE B: one project with no assumptions", async () => {
     const projects = [makeProject("a", "Alternativ A", { withCorr: false })]
     expect(buildPdfAssumptionTexts(projects[0]!)).toEqual([])
-    const buffer = await writeCase(
-      "case-b-assumptions-empty-one-project.pdf",
-      projects,
-    )
+    const buffer = await writeCase("case-b-assumptions-empty-one-project.pdf", projects)
     expect(buffer.byteLength).toBeGreaterThan(8_000)
     assertUniformA4(buffer)
     expect(buffer.toString("latin1")).toContain(PDF_CHAPTER_IDS.assumptions)
@@ -300,10 +289,7 @@ describe("sample PDF generation — cover layout + assumptions chapter", () => {
     ]
     expect(buildPdfAssumptionTexts(projects[0]!)).toHaveLength(2)
     expect(buildPdfAssumptionTexts(projects[1]!)).toEqual([])
-    const buffer = await writeCase(
-      "case-c-assumptions-mixed-projects.pdf",
-      projects,
-    )
+    const buffer = await writeCase("case-c-assumptions-mixed-projects.pdf", projects)
     expect(buffer.byteLength).toBeGreaterThan(8_000)
     assertUniformA4(buffer)
     expect(buffer.toString("latin1")).toContain(PDF_CHAPTER_IDS.assumptions)
@@ -316,9 +302,12 @@ describe("sample PDF generation — cover layout + assumptions chapter", () => {
       makeProject("c", "Alternativ C"),
       makeProject("d", "Alternativ D", { withCorr: true }),
     ]
-    expect(formatPdfCoverProjectContext(projects.map((p) => p.name), "no")).toBe(
-      "4 alternativer",
-    )
+    expect(
+      formatPdfCoverProjectContext(
+        projects.map((p) => p.name),
+        "no",
+      ),
+    ).toBe("4 alternativer")
     expect(resolvePdfCoverLayout(4).showTocSubsections).toBe(true)
     const buffer = await writeCase("case-d-cover-four-projects.pdf", projects)
     expect(buffer.byteLength).toBeGreaterThan(8_000)
@@ -333,10 +322,7 @@ describe("sample PDF generation — cover layout + assumptions chapter", () => {
       }),
     )
     expect(projects).toHaveLength(max)
-    const buffer = await writeCase(
-      `case-e-cover-max-${max}-projects.pdf`,
-      projects,
-    )
+    const buffer = await writeCase(`case-e-cover-max-${max}-projects.pdf`, projects)
     expect(buffer.byteLength).toBeGreaterThan(8_000)
     expect(resolvePdfCoverLayout(max).metricFontSize).toBeGreaterThanOrEqual(7)
     assertUniformA4(buffer)

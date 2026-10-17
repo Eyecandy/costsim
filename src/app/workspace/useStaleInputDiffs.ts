@@ -48,10 +48,7 @@ export function useStaleInputDiffs({
   const staleInputChangedCellKeys = useMemo(() => {
     // Green-cell / Undo baseline is lastSimulatedProjects (including after
     // compact draft reload). Do not require live projectResults arrays.
-    if (
-      lastSimulatedProjects.length === 0 ||
-      liveResultValidity.kind !== "stale"
-    ) {
+    if (lastSimulatedProjects.length === 0 || liveResultValidity.kind !== "stale") {
       return {
         cost: EMPTY_STALE_CELL_KEYS,
         drivers: EMPTY_STALE_CELL_KEYS,
@@ -91,12 +88,7 @@ export function useStaleInputDiffs({
           : undefined,
       ),
     }
-  }, [
-    projects,
-    activeProjectId,
-    lastSimulatedProjects,
-    liveResultValidity.kind,
-  ])
+  }, [projects, activeProjectId, lastSimulatedProjects, liveResultValidity.kind])
 
   /** Presentation gate over existing changed-cell sets (same comparison, opt-in green). */
   const visibleStaleChangedCellKeys = useMemo(() => {

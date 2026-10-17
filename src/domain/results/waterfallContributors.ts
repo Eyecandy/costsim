@@ -52,8 +52,6 @@ export function groupWaterfallContributors(
   ]
 }
 
-export function sumWaterfallDisplayContributions(
-  rows: readonly WaterfallDisplayRow[],
-): number {
+export function sumWaterfallDisplayContributions(rows: readonly WaterfallDisplayRow[]): number {
   return rows.reduce((acc, row) => acc + row.contribution, 0)
 }

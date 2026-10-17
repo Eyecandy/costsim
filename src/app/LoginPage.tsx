@@ -36,11 +36,7 @@ export function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header
-        className={cn(
-          "sticky top-0 z-50 bg-background/95 backdrop-blur-sm",
-        )}
-      >
+      <header className={cn("sticky top-0 z-50 bg-background/95 backdrop-blur-sm")}>
         <div className="mx-auto flex max-w-[90rem] items-center justify-between px-3 py-3 md:px-5 lg:px-6">
           {/*
             Pre-auth login: product wordmark withheld until brand/domain is secured.

@@ -60,9 +60,7 @@ export function CheckpointNav({
           const isArchived = cp.status === "archived"
           const isDraft = cp.status === "draft"
           const stageId = checkpointPrimaryStageId(cp)
-          const stageLabel = stageId
-            ? t(`projectProfile.options.${stageId}`)
-            : null
+          const stageLabel = stageId ? t(`projectProfile.options.${stageId}`) : null
           const hasNext = index < ordered.length - 1
           return (
             <div
@@ -93,9 +91,7 @@ export function CheckpointNav({
                 className={cn(
                   "relative z-[1] flex w-full cursor-pointer flex-col items-center gap-1 rounded-md px-1.5 py-0.5 text-center font-sans outline-none",
                   "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                  isSelected
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                  isSelected ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <span
@@ -124,10 +120,7 @@ export function CheckpointNav({
                       isSelected ? "font-semibold" : "font-medium",
                     )}
                   >
-                    {t("checkpoints.sequenceLabel").replace(
-                      "{n}",
-                      String(cp.sequence),
-                    )}
+                    {t("checkpoints.sequenceLabel").replace("{n}", String(cp.sequence))}
                   </span>
                   <span
                     className={cn(
@@ -146,14 +139,10 @@ export function CheckpointNav({
                   <span
                     className={cn(
                       "text-[9px] font-medium uppercase tracking-wider",
-                      isDraft
-                        ? "text-[#1d868c]"
-                        : "text-muted-foreground/70",
+                      isDraft ? "text-[#1d868c]" : "text-muted-foreground/70",
                     )}
                   >
-                    {isArchived
-                      ? t("checkpoints.statusArchived")
-                      : t("checkpoints.statusActive")}
+                    {isArchived ? t("checkpoints.statusArchived") : t("checkpoints.statusActive")}
                   </span>
                 </span>
               </button>
@@ -194,10 +183,7 @@ export function CheckpointNav({
         ) : null}
       </div>
       {atCheckpointLimit ? (
-        <p
-          className="mt-1 font-sans text-[10px] text-muted-foreground/80"
-          role="status"
-        >
+        <p className="mt-1 font-sans text-[10px] text-muted-foreground/80" role="status">
           {t("checkpoints.limitReached")}
         </p>
       ) : null}

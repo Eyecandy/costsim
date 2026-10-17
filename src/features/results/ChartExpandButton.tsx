@@ -16,11 +16,7 @@ export type ChartExpandButtonProps = {
 }
 
 /** Subtle Maximize2 control for opening a figure in ExpandedChartDialog. */
-export function ChartExpandButton({
-  label,
-  onClick,
-  className,
-}: ChartExpandButtonProps) {
+export function ChartExpandButton({ label, onClick, className }: ChartExpandButtonProps) {
   return (
     <button
       type="button"
@@ -70,20 +66,14 @@ export function ChartExpandHost({
   const interactive = Boolean(label && onClick) || Boolean(toolbarLeading)
   if (!interactive) {
     return (
-      <div
-        className={cn(reserveTop && CHART_EXPAND_RESERVE_TOP_CLASS, className)}
-        {...rest}
-      >
+      <div className={cn(reserveTop && CHART_EXPAND_RESERVE_TOP_CLASS, className)} {...rest}>
         {children}
       </div>
     )
   }
   return (
     <div
-      className={cn(
-        "group/chart-expand relative",
-        reserveTop && CHART_EXPAND_RESERVE_TOP_CLASS,
-      )}
+      className={cn("group/chart-expand relative", reserveTop && CHART_EXPAND_RESERVE_TOP_CLASS)}
       data-chart-expand-host=""
       {...rest}
     >
@@ -96,22 +86,14 @@ export function ChartExpandHost({
         data-chart-expand-slot=""
       >
         {toolbarLeading ? (
-          <div
-            className="pointer-events-auto"
-            data-chart-expand-toolbar-leading=""
-          >
+          <div className="pointer-events-auto" data-chart-expand-toolbar-leading="">
             {toolbarLeading}
           </div>
         ) : null}
         {label && onClick ? (
-          <ChartExpandButton
-            label={label}
-            onClick={onClick}
-            className="pointer-events-auto"
-          />
+          <ChartExpandButton label={label} onClick={onClick} className="pointer-events-auto" />
         ) : null}
       </div>
     </div>
   )
 }
-

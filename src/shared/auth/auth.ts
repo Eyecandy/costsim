@@ -1,9 +1,6 @@
 import { useCallback } from "react"
 
-import {
-  isShareDeepLink,
-  LIBRARY_PATH,
-} from "@/persistence/analysisLibraryRoutes"
+import { isShareDeepLink, LIBRARY_PATH } from "@/persistence/analysisLibraryRoutes"
 
 /** Query param on `/login` carrying the post-auth destination (path + search + hash). */
 export const LOGIN_REDIRECT_PARAM = "redirect"
@@ -37,10 +34,7 @@ function sanitizePostLoginPath(raw: string | null): string {
   try {
     const url = new URL(raw, window.location.origin)
     if (url.origin !== window.location.origin) return LIBRARY_PATH
-    if (
-      url.pathname === LIBRARY_PATH ||
-      url.pathname.startsWith(`${LIBRARY_PATH}/`)
-    ) {
+    if (url.pathname === LIBRARY_PATH || url.pathname.startsWith(`${LIBRARY_PATH}/`)) {
       return LIBRARY_PATH
     }
     if (url.pathname !== "/app" && !url.pathname.startsWith("/app/")) {

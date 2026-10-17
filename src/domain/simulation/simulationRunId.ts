@@ -5,9 +5,7 @@ export function createSimulationRunIdsForProjects(
   projectIds: readonly string[],
   batchSeq: number,
 ): Record<string, string> {
-  return Object.fromEntries(
-    projectIds.map((projectId) => [projectId, `${batchSeq}:${projectId}`]),
-  )
+  return Object.fromEntries(projectIds.map((projectId) => [projectId, `${batchSeq}:${projectId}`]))
 }
 
 /** Stable key for detecting when any displayed project's simulation run changed. */
@@ -16,10 +14,7 @@ export function simulationRunKeyForProjects(
   simulationRunIdByProjectId: SimulationRunIdByProjectId,
 ): string {
   return JSON.stringify(
-    projectIds.map((projectId) => [
-      projectId,
-      simulationRunIdByProjectId[projectId] ?? "",
-    ]),
+    projectIds.map((projectId) => [projectId, simulationRunIdByProjectId[projectId] ?? ""]),
   )
 }
 

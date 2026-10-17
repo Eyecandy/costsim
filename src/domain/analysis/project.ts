@@ -8,10 +8,7 @@ import {
   createAssumption,
   parseAssumptionText,
 } from "@/domain/analysis/assumptions"
-import {
-  type ProjectProfile,
-  normalizeProjectProfile,
-} from "@/domain/analysis/projectProfile"
+import { type ProjectProfile, normalizeProjectProfile } from "@/domain/analysis/projectProfile"
 import {
   type CostElementRow,
   defaultCostRows,
@@ -75,9 +72,7 @@ function resolveStoredCostCorrelation(
   rowIdB: string,
 ): number {
   if (rowIdA === rowIdB) return 1
-  const direct =
-    costCorrelations?.[rowIdA]?.[rowIdB] ??
-    costCorrelations?.[rowIdB]?.[rowIdA]
+  const direct = costCorrelations?.[rowIdA]?.[rowIdB] ?? costCorrelations?.[rowIdB]?.[rowIdA]
   return parseCorrelationCoefficient(direct)
 }
 
@@ -94,11 +89,7 @@ export function buildSimulationCostCorrelationMatrix(
   const matrix = identityCorrelationMatrix(n)
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
-      const rho = resolveStoredCostCorrelation(
-        costCorrelations,
-        costRows[i]!.id,
-        costRows[j]!.id,
-      )
+      const rho = resolveStoredCostCorrelation(costCorrelations, costRows[i]!.id, costRows[j]!.id)
       matrix[i]![j] = rho
       matrix[j]![i] = rho
     }
@@ -139,15 +130,8 @@ export function isCostCorrelationPatchValid(
   costRowIdB: string,
   raw: string,
 ): boolean {
-  const patched = applyCostCorrelationPairPatch(
-    costCorrelations,
-    costRowIdA,
-    costRowIdB,
-    raw,
-  )
-  return isValidCorrelationMatrix(
-    buildSimulationCostCorrelationMatrix(costRows, patched),
-  )
+  const patched = applyCostCorrelationPairPatch(costCorrelations, costRowIdA, costRowIdB, raw)
+  return isValidCorrelationMatrix(buildSimulationCostCorrelationMatrix(costRows, patched))
 }
 
 /**
@@ -189,24 +173,15 @@ export function isCostCorrelationGroupPatchValid(
   selectedCostRowIds: readonly string[],
   raw: string,
 ): boolean {
-  const patched = applyCostCorrelationGroupPatch(
-    costCorrelations,
-    selectedCostRowIds,
-    raw,
-  )
-  return isValidCorrelationMatrix(
-    buildSimulationCostCorrelationMatrix(costRows, patched),
-  )
+  const patched = applyCostCorrelationGroupPatch(costCorrelations, selectedCostRowIds, raw)
+  return isValidCorrelationMatrix(buildSimulationCostCorrelationMatrix(costRows, patched))
 }
 
 /** Uniform value among all unique pairs in a selection, or mixed/empty. */
 export function getSelectedGroupCorrelationState(
   costCorrelations: CostCorrelationsByRowId | undefined,
   selectedCostRowIds: readonly string[],
-):
-  | { kind: "empty" }
-  | { kind: "uniform"; value: number }
-  | { kind: "mixed" } {
+): { kind: "empty" } | { kind: "uniform"; value: number } | { kind: "mixed" } {
   const unique: string[] = []
   const seen = new Set<string>()
   for (const id of selectedCostRowIds) {
@@ -219,11 +194,7 @@ export function getSelectedGroupCorrelationState(
   let first: number | null = null
   for (let i = 0; i < unique.length; i++) {
     for (let j = i + 1; j < unique.length; j++) {
-      const rho = resolveStoredCostCorrelation(
-        costCorrelations,
-        unique[i]!,
-        unique[j]!,
-      )
+      const rho = resolveStoredCostCorrelation(costCorrelations, unique[i]!, unique[j]!)
       if (first === null) first = rho
       else if (first !== rho) return { kind: "mixed" }
     }
@@ -325,9 +296,7 @@ export function patchProjectIncurredCosts(
   incurredCosts: number,
 ): Project[] {
   const safe = normalizeIncurredCosts(incurredCosts)
-  return projects.map((p) =>
-    p.id === projectId ? { ...p, incurredCosts: safe } : p,
-  )
+  return projects.map((p) => (p.id === projectId ? { ...p, incurredCosts: safe } : p))
 }
 
 export const MAX_PROJECTS = 2
@@ -338,9 +307,7 @@ export const PROJECT_NAME_MAX_LENGTH = 80
 /** Faste visningsnavn per plass (maks to alternativer). */
 export const PROJECT_SLOT_NAMES = ["Alternativ A", "Alternativ B"] as const
 
-export function createProject(
-  overrides?: Partial<Pick<Project, "id" | "name">>,
-): Project {
+export function createProject(overrides?: Partial<Pick<Project, "id" | "name">>): Project {
   return {
     id: overrides?.id ?? newId(),
     name: overrides?.name ?? PROJECT_SLOT_NAMES[0],
@@ -359,12 +326,8 @@ export function projectFromTemplateEmptyRows(
     id: newId(),
     name,
     incurredCosts: 0,
-    costRows: Array.from({ length: template.costRows.length }, () =>
-      emptyScenarioRow(),
-    ),
-    driverRows: Array.from({ length: template.driverRows.length }, () =>
-      emptyScenarioRow(),
-    ),
+    costRows: Array.from({ length: template.costRows.length }, () => emptyScenarioRow()),
+    driverRows: Array.from({ length: template.driverRows.length }, () => emptyScenarioRow()),
   }
 }
 
@@ -417,22 +380,13 @@ export function addProjectIfAllowed(
   return [...projects, project]
 }
 
-export function patchProjectName(
-  projects: Project[],
-  projectId: string,
-  name: string,
-): Project[] {
+export function patchProjectName(projects: Project[], projectId: string, name: string): Project[] {
   const safe =
-    name.length <= PROJECT_NAME_MAX_LENGTH
-      ? name
-      : name.slice(0, PROJECT_NAME_MAX_LENGTH)
+    name.length <= PROJECT_NAME_MAX_LENGTH ? name : name.slice(0, PROJECT_NAME_MAX_LENGTH)
   return projects.map((p) => (p.id === projectId ? { ...p, name: safe } : p))
 }
 
-function withAssumptions(
-  project: Project,
-  assumptions: ProjectAssumption[] | undefined,
-): Project {
+function withAssumptions(project: Project, assumptions: ProjectAssumption[] | undefined): Project {
   if (!assumptions || assumptions.length === 0) {
     const { assumptions: _omit, ...rest } = project
     return rest
@@ -440,10 +394,7 @@ function withAssumptions(
   return { ...project, assumptions }
 }
 
-function withProfile(
-  project: Project,
-  profile: ProjectProfile | undefined,
-): Project {
+function withProfile(project: Project, profile: ProjectProfile | undefined): Project {
   const normalized = normalizeProjectProfile(profile)
   if (!normalized) {
     const { profile: _omit, ...rest } = project
@@ -491,9 +442,7 @@ export function patchProjectUpdateAssumption(
     const list = p.assumptions ?? []
     const index = list.findIndex((a) => a.id === assumptionId)
     if (index < 0) return p
-    const next = list.map((a) =>
-      a.id === assumptionId ? { ...a, text: parsed } : a,
-    )
+    const next = list.map((a) => (a.id === assumptionId ? { ...a, text: parsed } : a))
     return withAssumptions(p, next)
   })
 }

@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   isAnalysisTrashed,
@@ -19,7 +17,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 async function createDraft(name: string, folderId: string | null = null) {
   const repo = getAnalysisLibraryRepository()
@@ -59,9 +56,7 @@ describe("Analysis Library Trash", () => {
 
     await repo.restore(doc.id)
     const restored = await repo.get(doc.id)
-    expect(restored?.deletedAt == null || restored?.deletedAt === null).toBe(
-      true,
-    )
+    expect(restored?.deletedAt == null || restored?.deletedAt === null).toBe(true)
     expect(restored?.status).toBe("draft")
     expect((await repo.listSummaries()).some((s) => s.id === doc.id)).toBe(true)
     expect((await repo.listTrash()).length).toBe(0)
@@ -165,9 +160,7 @@ describe("Analysis Library Trash", () => {
 
   it("H: 30-day expiry purges on list", async () => {
     const repo = getAnalysisLibraryRepository()
-    const { __setDeletedAtForTests } = await import(
-      "@/persistence/localAnalysisLibraryRepository"
-    )
+    const { __setDeletedAtForTests } = await import("@/persistence/localAnalysisLibraryRepository")
     const fresh = await createDraft("Fresh trash")
     const old = await createDraft("Expired trash")
     await repo.moveToTrash(fresh.id)
@@ -184,10 +177,7 @@ describe("Analysis Library Trash", () => {
   })
 
   it("J: UI copy — soft delete is recoverable; permanent is irreversible", () => {
-    const messages = readFileSync(
-      join(repoRoot, "src/i18n/messages.ts"),
-      "utf8",
-    )
+    const messages = readFileSync(join(repoRoot, "src/i18n/messages.ts"), "utf8")
     expect(messages).toContain('delete: "Slett"')
     expect(messages).toContain('delete: "Delete"')
     expect(messages).toContain("Slettede analyser")
@@ -211,11 +201,7 @@ describe("Analysis Library Trash", () => {
     expect(messages).not.toContain("Flytt til papirkurv")
     expect(messages).not.toContain("Tøm papirkurv")
     // Soft-delete confirm explains recovery; irreversible only on permanent
-    expect(messages).toMatch(
-      /deleteConfirm:[\s\S]*?Slettede analyser[\s\S]*?30 dager/,
-    )
-    expect(messages).toMatch(
-      /deleteConfirm:[\s\S]*?Deleted analyses[\s\S]*?30 days/,
-    )
+    expect(messages).toMatch(/deleteConfirm:[\s\S]*?Slettede analyser[\s\S]*?30 dager/)
+    expect(messages).toMatch(/deleteConfirm:[\s\S]*?Deleted analyses[\s\S]*?30 days/)
   })
 })

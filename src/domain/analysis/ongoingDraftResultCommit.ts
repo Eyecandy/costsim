@@ -1,9 +1,7 @@
 import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { getSimulationRunIdForProject } from "@/domain/simulation/simulationRunId"
 
-export function simulationRunIdForSnapshot(
-  snapshot: OngoingCheckpointResultSnapshotV1,
-): string {
+export function simulationRunIdForSnapshot(snapshot: OngoingCheckpointResultSnapshotV1): string {
   return getSimulationRunIdForProject(
     snapshot.activeProjectId,
     snapshot.simulationRunIdByProjectId ?? {},

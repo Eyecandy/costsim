@@ -156,9 +156,7 @@ function PrimaryQuantityRow({
             )}
             data-project-profile-quantity-value=""
           >
-            {hasValue
-              ? `${formatProjectQuantityValue(value, language)} ${unit}`
-              : "—"}
+            {hasValue ? `${formatProjectQuantityValue(value, language)} ${unit}` : "—"}
           </span>
         ) : (
           <>
@@ -232,9 +230,7 @@ export function ProjectProfileSection({
   const { t } = useI18n()
   const [openState, setOpenState] = useState(defaultOpen)
   const open = embedded || openState
-  const [pendingChange, setPendingChange] = useState<ProfileChangePlan | null>(
-    null,
-  )
+  const [pendingChange, setPendingChange] = useState<ProfileChangePlan | null>(null)
   const rootRef = useRef<HTMLElement | null>(null)
   const triggerRef = useRef<HTMLButtonElement | null>(null)
   const panelId = useId()
@@ -242,9 +238,7 @@ export function ProjectProfileSection({
 
   const summaryOptionIds = collectProjectProfileSummaryOptionIds(profile)
   const summaryText = hasSelection
-    ? formatProjectProfileSummaryText(
-        summaryOptionIds.map((id) => t(optionLabelKey(id))),
-      )
+    ? formatProjectProfileSummaryText(summaryOptionIds.map((id) => t(optionLabelKey(id))))
     : t("projectProfile.collapsedEmptyHint")
 
   // Shared outside-click + Escape pattern (mousedown on document, root contains).
@@ -302,10 +296,7 @@ export function ProjectProfileSection({
     : ""
 
   const flowSteps = visibleProjectProfileFlowSteps(profile)
-  const quantityDef = getPrimaryQuantityDefinition(
-    profile?.projectType,
-    profile?.projectArea,
-  )
+  const quantityDef = getPrimaryQuantityDefinition(profile?.projectType, profile?.projectArea)
 
   return (
     <section
@@ -348,9 +339,7 @@ export function ProjectProfileSection({
               open
                 ? "text-muted-foreground"
                 : cn(
-                    hasSelection
-                      ? "text-muted-foreground/75"
-                      : "text-muted-foreground/65",
+                    hasSelection ? "text-muted-foreground/75" : "text-muted-foreground/65",
                     "group-hover/profile-trigger:text-muted-foreground",
                     "group-focus-within/profile-trigger:text-muted-foreground",
                   ),
@@ -399,9 +388,7 @@ export function ProjectProfileSection({
                 )
               }
 
-              const category = PROJECT_PROFILE_CATEGORIES.find(
-                (c) => c.id === stepId,
-              )
+              const category = PROJECT_PROFILE_CATEGORIES.find((c) => c.id === stepId)
               if (!category) return null
               const optionIds =
                 stepId === "projectType"
@@ -449,20 +436,10 @@ export function ProjectProfileSection({
                           onClick={() => {
                             if (readOnly) return
                             if (isSingleSelectCategory(category.id)) {
-                              requestChange(
-                                planSingleSelectChange(
-                                  profile,
-                                  category.id,
-                                  optionId,
-                                ),
-                              )
+                              requestChange(planSingleSelectChange(profile, category.id, optionId))
                             } else {
                               requestChange(
-                                planMultiSelectChange(
-                                  profile,
-                                  "interventionTypes",
-                                  optionId,
-                                ),
+                                planMultiSelectChange(profile, "interventionTypes", optionId),
                               )
                             }
                           }}
@@ -487,8 +464,7 @@ export function ProjectProfileSection({
                                     ? "border-[#1d868c]/55 bg-[rgba(29,134,140,0.10)] text-[#1d868c]"
                                     : cn(
                                         "border-border/45 bg-transparent text-muted-foreground",
-                                        !readOnly &&
-                                          "hover:border-border hover:text-foreground/80",
+                                        !readOnly && "hover:border-border hover:text-foreground/80",
                                         !hasSelection &&
                                           "opacity-80 group-hover/project-profile:opacity-100 group-focus-within/project-profile:opacity-100",
                                       ),
@@ -515,9 +491,7 @@ export function ProjectProfileSection({
                         {optionButtons}
                       </div>
                     ) : (
-                      <div className="flex flex-wrap gap-0.5">
-                        {optionButtons}
-                      </div>
+                      <div className="flex flex-wrap gap-0.5">{optionButtons}</div>
                     )
                   })()}
                 </div>

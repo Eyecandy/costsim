@@ -11,10 +11,7 @@ type ProjectColorSwatchProps = {
  * Small decorative project-identity bullet (matches tabs / S-curve legend).
  * Color is supplementary — project name remains the primary label.
  */
-export function ProjectColorSwatch({
-  projectIndex,
-  className,
-}: ProjectColorSwatchProps) {
+export function ProjectColorSwatch({ projectIndex, className }: ProjectColorSwatchProps) {
   return (
     <span
       className={cn("size-1.5 shrink-0 rounded-full", className)}

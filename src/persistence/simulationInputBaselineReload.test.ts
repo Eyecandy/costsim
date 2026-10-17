@@ -10,12 +10,8 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/persistence/localAnalysisLibraryRepository"
 import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
-import {
-  buildOngoingCheckpointResultSnapshot,
-} from "@/domain/analysis/ongoingCheckpointResultSnapshot"
-import {
-  changedCostTableCellKeySet,
-} from "@/domain/analysis/simInputSnapshotDiff"
+import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
+import { changedCostTableCellKeySet } from "@/domain/analysis/simInputSnapshotDiff"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
@@ -45,9 +41,7 @@ function resultsFor(project: Project, center: number): ProjectResult[] {
 function editLikely(project: Project, likely: string): Project {
   return {
     ...project,
-    costRows: project.costRows.map((row, i) =>
-      i === 0 ? { ...row, likely } : row,
-    ),
+    costRows: project.costRows.map((row, i) => (i === 0 ? { ...row, likely } : row)),
   }
 }
 
@@ -91,10 +85,7 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
       inputSignature: buildSimulationInputSignature([withCost]),
       simulationCount: 20_000,
       resultPreferences: DEFAULT_RESULT_PREFERENCES,
-      simulationRunIdByProjectId: createSimulationRunIdsForProjects(
-        [withCost.id],
-        1,
-      ),
+      simulationRunIdByProjectId: createSimulationRunIdsForProjects([withCost.id], 1),
     })
     expect(draft.projectsAtRun?.[0]?.costRows[0]?.likely).toBe("100")
 
@@ -170,9 +161,7 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
       singleDraftResult: draft,
     })
     const cold = await repo.get(doc.id)
-    const restored = structuredClone(
-      cold!.singleDraftResult!.projectsAtRun!,
-    ) as Project[]
+    const restored = structuredClone(cold!.singleDraftResult!.projectsAtRun!) as Project[]
     expect(restored[0]!.costRows[0]!.likely).toBe("100")
     expect(
       getLiveResultValidity({
@@ -223,14 +212,8 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
     })
     expect(draftB.projectsAtRun?.[0]?.costRows[0]?.likely).toBe("250")
     const editedAfterB = editLikely(b, "300")
-    expect(
-      costChangedKeys(editedAfterB, draftB.projectsAtRun![0]!).has(
-        "cost-1:likely",
-      ),
-    ).toBe(true)
-    expect(
-      costChangedKeys(editedAfterB, a).has("cost-1:likely"),
-    ).toBe(true)
+    expect(costChangedKeys(editedAfterB, draftB.projectsAtRun![0]!).has("cost-1:likely")).toBe(true)
+    expect(costChangedKeys(editedAfterB, a).has("cost-1:likely")).toBe(true)
     // Baseline is B (250), not A (100).
     expect(draftB.projectsAtRun![0]!.costRows[0]!.likely).not.toBe("100")
   })
@@ -307,11 +290,9 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
     const cold = await repo.get(doc.id)
     const baseline = cold!.ongoingDraftResult!.projectsAtRun!
     expect(baseline[0]!.costRows[0]!.likely).toBe("100")
-    expect(
-      costChangedKeys(cold!.workspace.projects[0]!, baseline[0]!).has(
-        "cost-1:likely",
-      ),
-    ).toBe(true)
+    expect(costChangedKeys(cold!.workspace.projects[0]!, baseline[0]!).has("cost-1:likely")).toBe(
+      true,
+    )
   })
 
   it("E: Ongoing rerun baseline becomes B", () => {
@@ -386,9 +367,7 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
       name: "Version next",
     })
     expect(next.singleDraftResult?.projectsAtRun?.length).toBe(1)
-    expect(next.singleDraftResult?.projectsAtRun?.[0]?.costRows[0]?.likely).toBe(
-      "100",
-    )
+    expect(next.singleDraftResult?.projectsAtRun?.[0]?.costRows[0]?.likely).toBe("100")
     const edited = editLikely(next.workspace.projects[0]!, "250")
     expect(
       costChangedKeys(edited, next.singleDraftResult!.projectsAtRun![0]!).has(
@@ -398,9 +377,8 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
   })
 
   it("G: result/baseline stay paired on authoritative session pick", async () => {
-    const { pickAuthoritativeSingleDraftResult } = await import(
-      "@/domain/analysis/singleDraftResultSnapshot"
-    )
+    const { pickAuthoritativeSingleDraftResult } =
+      await import("@/domain/analysis/singleDraftResultSnapshot")
     const blank = createBlankWorkspaceRuntimeState()
     const project = blank.projects[0]!
     const a: Project = {
@@ -458,8 +436,7 @@ describe("simulation input baseline reload (green-cell / Undo)", () => {
     })
     const withoutBaseline = { ...draft, projectsAtRun: undefined }
     const withBaseline = draft
-    const delta =
-      JSON.stringify(withBaseline).length - JSON.stringify(withoutBaseline).length
+    const delta = JSON.stringify(withBaseline).length - JSON.stringify(withoutBaseline).length
     console.info("projectsAtRun baseline added bytes", delta)
     expect(JSON.stringify(draft)).not.toContain('"values":[')
     expect(delta).toBeLessThan(50_000)

@@ -2,9 +2,7 @@ import { useMemo, useState } from "react"
 
 import { ChartExpandHost } from "@/features/results/ChartExpandButton"
 import { useI18n } from "@/i18n/useI18n"
-import {
-  formatKeyFigureStat,
-} from "@/domain/results/keyFiguresDisplay"
+import { formatKeyFigureStat } from "@/domain/results/keyFiguresDisplay"
 import {
   ongoingDevelopmentAxisLabel,
   type OngoingDevelopmentPoint,
@@ -51,10 +49,7 @@ function niceDomain(values: number[]): { min: number; max: number } {
   return { min: min - margin, max: max + margin }
 }
 
-function formatSignedDelta(
-  change: number | null,
-  language: "no" | "en",
-): string {
+function formatSignedDelta(change: number | null, language: "no" | "en"): string {
   if (change === null || !Number.isFinite(change)) return "—"
   if (change === 0) return formatKeyFigureStat(0, language)
   const abs = formatKeyFigureStat(Math.abs(change), language)
@@ -84,16 +79,10 @@ function bandPath(
   const usable = points
     .map((p, i) => ({ i, p50: p.p50, p85: p.p85 }))
     .filter(
-      (x) =>
-        x.p50 !== null &&
-        x.p85 !== null &&
-        Number.isFinite(x.p50) &&
-        Number.isFinite(x.p85),
+      (x) => x.p50 !== null && x.p85 !== null && Number.isFinite(x.p50) && Number.isFinite(x.p85),
     )
   if (usable.length === 0) return null
-  const top = usable
-    .map((x, idx) => `${idx === 0 ? "M" : "L"}${xAt(x.i)},${yAt(x.p85!)}`)
-    .join(" ")
+  const top = usable.map((x, idx) => `${idx === 0 ? "M" : "L"}${xAt(x.i)},${yAt(x.p85!)}`).join(" ")
   const bottom = [...usable]
     .reverse()
     .map((x) => `L${xAt(x.i)},${yAt(x.p50!)}`)
@@ -111,10 +100,7 @@ export function ResultsDevelopmentChart({
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   const points = series.points
-  const domain = useMemo(
-    () => niceDomain(finiteValues(points)),
-    [points],
-  )
+  const domain = useMemo(() => niceDomain(finiteValues(points)), [points])
 
   const plotW = VB_W - PAD.left - PAD.right
   const plotH = VB_H - PAD.top - PAD.bottom
@@ -184,9 +170,7 @@ export function ResultsDevelopmentChart({
             )
           })}
 
-          {band ? (
-            <path d={band} fill={COLOR_BAND} stroke="none" />
-          ) : null}
+          {band ? <path d={band} fill={COLOR_BAND} stroke="none" /> : null}
 
           {basePath ? (
             <path
@@ -228,12 +212,7 @@ export function ResultsDevelopmentChart({
             return (
               <g key={p.checkpointId}>
                 {cy !== null ? (
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={hoverIndex === i ? 4 : 3}
-                    fill={COLOR_P50}
-                  />
+                  <circle cx={cx} cy={cy} r={hoverIndex === i ? 4 : 3} fill={COLOR_P50} />
                 ) : null}
                 <text
                   x={cx}
@@ -263,9 +242,7 @@ export function ResultsDevelopmentChart({
             className="pointer-events-none absolute right-2 top-2 z-10 min-w-[10.5rem] rounded-md border border-border/60 bg-background/95 px-2.5 py-2 font-sans text-[11px] shadow-sm"
             role="status"
           >
-            <div className="mb-1.5 truncate font-medium text-foreground">
-              {hovered.name}
-            </div>
+            <div className="mb-1.5 truncate font-medium text-foreground">{hovered.name}</div>
             <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 gap-y-0.5 text-muted-foreground">
               <span>{t("keyMetrics.baseCost")}</span>
               <span className="tabular-nums text-foreground">
@@ -278,40 +255,27 @@ export function ResultsDevelopmentChart({
               <span className="tabular-nums text-foreground">
                 {formatKeyFigureStat(hovered.p50, language)}
               </span>
-              <span className="tabular-nums">
-                {formatSignedDelta(hovered.deltaP50, language)}
-              </span>
+              <span className="tabular-nums">{formatSignedDelta(hovered.deltaP50, language)}</span>
               <span>{t("keyMetrics.p85")}</span>
               <span className="tabular-nums text-foreground">
                 {formatKeyFigureStat(hovered.p85, language)}
               </span>
-              <span className="tabular-nums">
-                {formatSignedDelta(hovered.deltaP85, language)}
-              </span>
+              <span className="tabular-nums">{formatSignedDelta(hovered.deltaP85, language)}</span>
             </div>
           </div>
         ) : null}
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-sans text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-px w-3 bg-muted-foreground/70"
-              aria-hidden
-            />
+            <span className="inline-block h-px w-3 bg-muted-foreground/70" aria-hidden />
             {t("keyMetrics.baseCost")}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-0.5 w-3 rounded-full bg-[#1d868c]"
-              aria-hidden
-            />
+            <span className="inline-block h-0.5 w-3 rounded-full bg-[#1d868c]" aria-hidden />
             {t("keyMetrics.p50")}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2 w-3 rounded-sm bg-[#1d868c]/20"
-              aria-hidden
-            />
+            <span className="inline-block h-2 w-3 rounded-sm bg-[#1d868c]/20" aria-hidden />
             {t("checkpoints.developmentBandLegend")}
           </span>
         </div>

@@ -5,23 +5,16 @@ import { describe, expect, it } from "vitest"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function resultsPanelSource() {
   return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 function expandedDialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ExpandedChartDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ExpandedChartDialog.tsx"), "utf8")
 }
 
 function expandButtonSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ChartExpandButton.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ChartExpandButton.tsx"), "utf8")
 }
 
 function sCurveSource() {
@@ -29,10 +22,7 @@ function sCurveSource() {
 }
 
 function tornadoSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ResultsTornado.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ResultsTornado.tsx"), "utf8")
 }
 
 describe("expanded chart view", () => {
@@ -70,9 +60,7 @@ describe("expanded chart view", () => {
   it("E: Clicking expand opens the correct chart in the shared expanded-view dialog", () => {
     const src = resultsPanelSource()
     expect(src).toContain("<ExpandedChartDialog")
-    expect(src).toMatch(
-      /expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/,
-    )
+    expect(src).toMatch(/expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/)
     expect(src).toContain("<ResultsTornado")
     expect(src).toContain("<ResultsWaterfall")
     expect(src).toContain("<ResultsReserveWaterfall")
@@ -82,9 +70,7 @@ describe("expanded chart view", () => {
 
   it("F: Only one expanded chart can be open at a time", () => {
     const src = resultsPanelSource()
-    expect(src).toContain(
-      "useState<ExpandedResultChart | null>(",
-    )
+    expect(src).toContain("useState<ExpandedResultChart | null>(")
     expect(src).toContain("open={expandedChart !== null}")
     // Single state slot — setting a new kind replaces the previous
     expect(src.match(/setExpandedChart\(/g)?.length).toBeGreaterThanOrEqual(4)
@@ -109,13 +95,9 @@ describe("expanded chart view", () => {
     const src = resultsPanelSource()
     expect(src).toContain("<ResultsSCurve")
     expect(src).toContain("series={cdfSeries}")
-    expect(src).toMatch(
-      /expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/,
-    )
+    expect(src).toMatch(/expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/)
     expect(src).toContain("tornadoRowsByProjectId.get(p.id)")
-    expect(src).toContain(
-      "tornadoRowsByProjectId.get(expandedChart.projectId)",
-    )
+    expect(src).toContain("tornadoRowsByProjectId.get(expandedChart.projectId)")
     expect(src).toContain("result={state.result}")
     expect(src).toContain("result={attributionState.result}")
     expect(sCurveSource()).toContain("expanded?: boolean")
@@ -124,9 +106,7 @@ describe("expanded chart view", () => {
 
   it("J: Opening a chart does not trigger simulation or Shapley", () => {
     const src = resultsPanelSource()
-    const expandHandlers = src.match(
-      /onExpand=\{\(\) =>\s*setExpandedChart\([\s\S]*?\)\}/g,
-    )
+    const expandHandlers = src.match(/onExpand=\{\(\) =>\s*setExpandedChart\([\s\S]*?\)\}/g)
     expect(expandHandlers?.length).toBeGreaterThanOrEqual(4)
     for (const handler of expandHandlers ?? []) {
       expect(handler).not.toContain("requestCalculation")
@@ -137,9 +117,7 @@ describe("expanded chart view", () => {
 
   it("K: Parent result expander state is not modified", () => {
     const src = resultsPanelSource()
-    const expandHandlers = src.match(
-      /onExpand=\{\(\) =>\s*setExpandedChart\([\s\S]*?\)\}/g,
-    )
+    const expandHandlers = src.match(/onExpand=\{\(\) =>\s*setExpandedChart\([\s\S]*?\)\}/g)
     for (const handler of expandHandlers ?? []) {
       expect(handler).not.toContain("setSCurveOpen")
       expect(handler).not.toContain("setTornadoOpen")

@@ -5,18 +5,12 @@
  * intentionally (blur / Cmd|Ctrl+Enter), not on every keystroke.
  */
 
-export function clampGuidedDefinitionDraft(
-  value: string,
-  maxLength: number,
-): string {
+export function clampGuidedDefinitionDraft(value: string, maxLength: number): string {
   return value.slice(0, maxLength)
 }
 
 /** True when the local draft differs from the last known canonical description. */
-export function guidedDefinitionDraftNeedsCommit(
-  draft: string,
-  baseline: string,
-): boolean {
+export function guidedDefinitionDraftNeedsCommit(draft: string, baseline: string): boolean {
   return draft !== baseline
 }
 
@@ -42,18 +36,12 @@ export function syncGuidedDefinitionDraft(
   prev: GuidedDefinitionDraftState,
   next: { rowId: string; sourceDescription: string; maxLength: number },
 ): GuidedDefinitionDraftSyncResult {
-  const source = clampGuidedDefinitionDraft(
-    String(next.sourceDescription ?? ""),
-    next.maxLength,
-  )
+  const source = clampGuidedDefinitionDraft(String(next.sourceDescription ?? ""), next.maxLength)
 
   if (prev.rowId !== next.rowId) {
     let pendingCommit: GuidedDefinitionDraftSyncResult["pendingCommit"] = null
     if (prev.dirty) {
-      const description = clampGuidedDefinitionDraft(
-        prev.draft,
-        next.maxLength,
-      )
+      const description = clampGuidedDefinitionDraft(prev.draft, next.maxLength)
       if (guidedDefinitionDraftNeedsCommit(description, prev.baseline)) {
         pendingCommit = { rowId: prev.rowId, description }
       }

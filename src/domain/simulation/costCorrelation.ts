@@ -31,12 +31,9 @@ function erf(x: number): number {
   const t = 1 / (1 + 0.3275911 * ax)
   const y =
     1 -
-    (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t -
-      0.284496736) *
-      t +
-      0.254829592) *
+    ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) *
       t *
-      Math.exp(-ax * ax))
+      Math.exp(-ax * ax)
   return sign * y
 }
 
@@ -49,10 +46,7 @@ export function randomStandardNormal(rng: () => number = Math.random): number {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v)
 }
 
-export function sampleStandardNormals(
-  n: number,
-  rng: () => number = Math.random,
-): number[] {
+export function sampleStandardNormals(n: number, rng: () => number = Math.random): number[] {
   const out = new Array<number>(n)
   for (let i = 0; i < n; i++) out[i] = randomStandardNormal(rng)
   return out
@@ -89,9 +83,7 @@ export function sanitizeCorrelationMatrix(matrix: number[][]): number[][] {
   const out = identityCorrelationMatrix(n)
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
-      const avg = clampCorrelationCoefficient(
-        (matrix[i]![j]! + matrix[j]![i]!) / 2,
-      )
+      const avg = clampCorrelationCoefficient((matrix[i]![j]! + matrix[j]![i]!) / 2)
       out[i]![j] = avg
       out[j]![i] = avg
     }
@@ -202,8 +194,7 @@ function symmetricEigenDecomposition(matrix: number[][]): {
         if (Math.abs(apq) < tolerance) continue
 
         const tau = (aqq - app) / (2 * apq)
-        const t =
-          Math.sign(tau) / (Math.abs(tau) + Math.sqrt(1 + tau * tau))
+        const t = Math.sign(tau) / (Math.abs(tau) + Math.sqrt(1 + tau * tau))
         const c = 1 / Math.sqrt(1 + t * t)
         const s = t * c
 
@@ -286,8 +277,7 @@ export function prepareCostCorrelationCholesky(
       choleskyL: identityCorrelationMatrix(n),
       status: {
         kind: "identity",
-        reason:
-          (costItemCount ?? 0) <= 1 ? "single_item" : "missing",
+        reason: (costItemCount ?? 0) <= 1 ? "single_item" : "missing",
       },
     }
   }

@@ -43,9 +43,7 @@ export function extractCheckpointAnalyticalSlice(
     driverRowIds: (project?.driverRows ?? []).map((r) => r.id),
     costById,
     driverById,
-    driverImpacts: project?.driverImpacts
-      ? structuredClone(project.driverImpacts)
-      : undefined,
+    driverImpacts: project?.driverImpacts ? structuredClone(project.driverImpacts) : undefined,
     costCorrelations: project?.costCorrelations
       ? structuredClone(project.costCorrelations)
       : undefined,
@@ -76,10 +74,7 @@ export type RowIdDiff = {
   onlyLater: string[]
 }
 
-export function diffRowIds(
-  earlierIds: readonly string[],
-  laterIds: readonly string[],
-): RowIdDiff {
+export function diffRowIds(earlierIds: readonly string[], laterIds: readonly string[]): RowIdDiff {
   const earlier = new Set(earlierIds)
   const later = new Set(laterIds)
   const shared: string[] = []

@@ -11,12 +11,7 @@ export const TRIANGULAR_PERCENTILE_BETA = 0.9
  * CDF of a triangular distribution on [low, high] with mode.
  * Returns values in [0, 1]. Degenerate support → step at mode.
  */
-export function triangularCdf(
-  x: number,
-  low: number,
-  mode: number,
-  high: number,
-): number {
+export function triangularCdf(x: number, low: number, mode: number, high: number): number {
   if (
     !Number.isFinite(x) ||
     !Number.isFinite(low) ||
@@ -29,9 +24,9 @@ export function triangularCdf(
   if (x <= low) return 0
   if (x >= high) return 1
   if (x <= mode) {
-    return ((x - low) ** 2) / ((high - low) * (mode - low))
+    return (x - low) ** 2 / ((high - low) * (mode - low))
   }
-  return 1 - ((high - x) ** 2) / ((high - low) * (high - mode))
+  return 1 - (high - x) ** 2 / ((high - low) * (high - mode))
 }
 
 function solveLeftSupportWidth(

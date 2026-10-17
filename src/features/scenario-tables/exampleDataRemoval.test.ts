@@ -6,7 +6,6 @@ import { featureConfigByVariant } from "@/config/appVariant"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function scenarioTableSource() {
   return readFileSync(
     join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
@@ -40,12 +39,8 @@ describe("Example Data removal / toolbar order", () => {
     expect(messages.en.inputs).not.toHaveProperty("exampleDataTooltipDrivers")
     expect(messages.en.inputs).not.toHaveProperty("exampleDataConfirmReplace")
     expect(appVariantSource()).not.toContain("showExampleDataButtons")
-    expect(featureConfigByVariant.pilot).not.toHaveProperty(
-      "showExampleDataButtons",
-    )
-    expect(featureConfigByVariant.public_mvp).not.toHaveProperty(
-      "showExampleDataButtons",
-    )
+    expect(featureConfigByVariant.pilot).not.toHaveProperty("showExampleDataButtons")
+    expect(featureConfigByVariant.public_mvp).not.toHaveProperty("showExampleDataButtons")
   })
 
   it("remaining toolbar controls still render", () => {

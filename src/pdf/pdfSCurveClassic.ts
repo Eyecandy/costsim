@@ -6,9 +6,7 @@
  * and without the app's 200×150 viewBox pads.
  */
 
-import {
-  formatSCurveYAxisPercentileTick,
-} from "@/domain/results/sCurveClassicGuides"
+import { formatSCurveYAxisPercentileTick } from "@/domain/results/sCurveClassicGuides"
 import { formatSCurveCost, resolveSCurveCostDisplayScale } from "@/domain/results/sCurveHover"
 import type { AppLanguage } from "@/domain/results/formatNumber"
 import { formatPercentileLabel } from "@/domain/results/resultPreferences"
@@ -95,25 +93,16 @@ export function pdfSCurveXForValue(
   geometry: PdfSCurveGeometry,
 ): number {
   const spanX = maxX - minX || 1
-  return (
-    geometry.plotLeft +
-    ((value - minX) / spanX) * (geometry.plotRight - geometry.plotLeft)
-  )
+  return geometry.plotLeft + ((value - minX) / spanX) * (geometry.plotRight - geometry.plotLeft)
 }
 
-export function pdfSCurveYForProbability(
-  probability: number,
-  geometry: PdfSCurveGeometry,
-): number {
+export function pdfSCurveYForProbability(probability: number, geometry: PdfSCurveGeometry): number {
   const p = Math.min(1, Math.max(0, probability))
   return geometry.plotBottom - p * (geometry.plotBottom - geometry.plotTop)
 }
 
 /** One chart-level cost scale for x ticks AND percentile costs. */
-export function resolvePdfSCurveCostScale(
-  minX: number,
-  maxX: number,
-): PdfSCurveCostScale {
+export function resolvePdfSCurveCostScale(minX: number, maxX: number): PdfSCurveCostScale {
   return resolveSCurveCostDisplayScale(minX, maxX)
 }
 
@@ -129,11 +118,7 @@ export function estimatePdfTextWidth(text: string, fontSize: number): number {
   return Math.max(0, text.length) * fontSize * PDF_SCURVE_TEXT_WIDTH_FACTOR
 }
 
-export function pdfSCurveLGuidePath(
-  x: number,
-  y: number,
-  geometry: PdfSCurveGeometry,
-): string {
+export function pdfSCurveLGuidePath(x: number, y: number, geometry: PdfSCurveGeometry): string {
   return `M ${geometry.plotLeft.toFixed(2)} ${y.toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)} L ${x.toFixed(2)} ${geometry.plotBottom.toFixed(2)}`
 }
 
@@ -171,8 +156,7 @@ export function buildPdfClassicGuides(args: {
       out.push({
         projectId: curve.id,
         color: curve.color,
-        dash:
-          PDF_SCURVE_DASH_PATTERNS[curve.index % PDF_SCURVE_DASH_PATTERNS.length]!,
+        dash: PDF_SCURVE_DASH_PATTERNS[curve.index % PDF_SCURVE_DASH_PATTERNS.length]!,
         percentile: m.percentile,
         cost: m.value,
         x,
@@ -192,9 +176,7 @@ export function layoutPdfClassicYLabels(
   percentiles: readonly number[],
   geometry: PdfSCurveGeometry,
 ): PdfSCurveYLabel[] {
-  const levels = [...new Set(percentiles.filter((p) => Number.isFinite(p)))].sort(
-    (a, b) => a - b,
-  )
+  const levels = [...new Set(percentiles.filter((p) => Number.isFinite(p)))].sort((a, b) => a - b)
   const labels: PdfSCurveYLabel[] = levels.map((p) => {
     const y = pdfSCurveYForProbability(p / 100, geometry)
     return {
@@ -215,8 +197,7 @@ export function layoutPdfClassicYLabels(
       .slice(0, i)
       .some(
         (prev) =>
-          prev.lane === cur.lane &&
-          Math.abs(cur.labelY - prev.labelY) < PDF_SCURVE_Y_LABEL_MIN_GAP,
+          prev.lane === cur.lane && Math.abs(cur.labelY - prev.labelY) < PDF_SCURVE_Y_LABEL_MIN_GAP,
       )
     if (conflict) {
       cur.lane = 1
@@ -261,8 +242,7 @@ export function layoutPdfClassicOrdinaryYTicks(
     const hidden = emphasized.some(
       (l) =>
         l.percentile === percentilePoint ||
-        (l.lane === 0 &&
-          Math.abs(l.labelY - y) < PDF_SCURVE_Y_LABEL_MIN_GAP),
+        (l.lane === 0 && Math.abs(l.labelY - y) < PDF_SCURVE_Y_LABEL_MIN_GAP),
     )
     if (hidden) continue
     out.push({
@@ -288,10 +268,7 @@ export function layoutPdfClassicXCostLabels(args: {
 }): PdfSCurveXCostLabel[] {
   const fontSize = args.fontSize ?? PDF_SCURVE_LABEL_FONT
   const sorted = [...args.guides].sort(
-    (a, b) =>
-      a.x - b.x ||
-      a.percentile - b.percentile ||
-      a.projectId.localeCompare(b.projectId),
+    (a, b) => a.x - b.x || a.percentile - b.percentile || a.projectId.localeCompare(b.projectId),
   )
   const placed: Array<{ x: number; width: number; row: number }> = []
   const out: PdfSCurveXCostLabel[] = []
@@ -302,8 +279,7 @@ export function layoutPdfClassicXCostLabels(args: {
     while (row < PDF_SCURVE_X_LABEL_MAX_ROWS - 1) {
       const hit = placed.some(
         (p) =>
-          p.row === row &&
-          Math.abs(g.x - p.x) < (width + p.width) / 2 + PDF_SCURVE_X_LABEL_PAD,
+          p.row === row && Math.abs(g.x - p.x) < (width + p.width) / 2 + PDF_SCURVE_X_LABEL_PAD,
       )
       if (!hit) break
       row += 1
@@ -316,10 +292,7 @@ export function layoutPdfClassicXCostLabels(args: {
       percentile: g.percentile,
       cost: g.cost,
       x: g.x,
-      y:
-        args.geometry.plotBottom +
-        PDF_SCURVE_X_LABEL_BASE_DY +
-        row * PDF_SCURVE_X_LABEL_ROW_STEP,
+      y: args.geometry.plotBottom + PDF_SCURVE_X_LABEL_BASE_DY + row * PDF_SCURVE_X_LABEL_ROW_STEP,
       row,
       text,
     })

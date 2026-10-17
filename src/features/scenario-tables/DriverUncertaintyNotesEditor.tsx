@@ -26,18 +26,14 @@ const noteInputClassName = cn(
   "outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
 )
 
-function coerceNotes(
-  notes: DriverUncertaintyNotes | undefined,
-): DriverUncertaintyNotes {
+function coerceNotes(notes: DriverUncertaintyNotes | undefined): DriverUncertaintyNotes {
   return {
     lowerOutcome: [...(notes?.lowerOutcome ?? [])],
     higherOutcome: [...(notes?.higherOutcome ?? [])],
   }
 }
 
-function omitIfEmpty(
-  notes: DriverUncertaintyNotes,
-): DriverUncertaintyNotes | undefined {
+function omitIfEmpty(notes: DriverUncertaintyNotes): DriverUncertaintyNotes | undefined {
   if (notes.lowerOutcome.length === 0 && notes.higherOutcome.length === 0) {
     return undefined
   }
@@ -146,10 +142,7 @@ function NoteSide({
   const editCanCommit = parseDriverUncertaintyNote(editDraft) !== null
 
   return (
-    <div
-      className="flex min-h-0 min-w-0 flex-col gap-2.5"
-      data-driver-uncertainty-side={side}
-    >
+    <div className="flex min-h-0 min-w-0 flex-col gap-2.5" data-driver-uncertainty-side={side}>
       <div className="space-y-1">
         <p className="m-0 text-center font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
           {percentileLabel}
@@ -307,10 +300,7 @@ function NoteSide({
           ) : null}
 
           {adding ? (
-            <div
-              className="flex min-w-0 items-center gap-1.5"
-              data-driver-uncertainty-draft=""
-            >
+            <div className="flex min-w-0 items-center gap-1.5" data-driver-uncertainty-draft="">
               <input
                 ref={addInputRef}
                 type="text"
@@ -413,10 +403,7 @@ export function DriverUncertaintyNotesEditor({
 
   return (
     <div
-      className={cn(
-        "grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6",
-        className,
-      )}
+      className={cn("grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6", className)}
       data-driver-uncertainty-notes=""
       data-readonly={readOnly ? "" : undefined}
     >
@@ -425,10 +412,7 @@ export function DriverUncertaintyNotesEditor({
         percentileLabel={t("inputs.guidedDriverUncertaintyLowerPercentile")}
         prompt={t("inputs.guidedDriverUncertaintyLowerPrompt")}
         items={current.lowerOutcome}
-        canAdd={
-          !readOnly &&
-          current.lowerOutcome.length < DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE
-        }
+        canAdd={!readOnly && current.lowerOutcome.length < DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE}
         readOnly={readOnly}
         onAddNote={(text) => addNote("lowerOutcome", text)}
         onUpdateNote={(index, text) => updateNote("lowerOutcome", index, text)}
@@ -439,10 +423,7 @@ export function DriverUncertaintyNotesEditor({
         percentileLabel={t("inputs.guidedDriverUncertaintyHigherPercentile")}
         prompt={t("inputs.guidedDriverUncertaintyHigherPrompt")}
         items={current.higherOutcome}
-        canAdd={
-          !readOnly &&
-          current.higherOutcome.length < DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE
-        }
+        canAdd={!readOnly && current.higherOutcome.length < DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE}
         readOnly={readOnly}
         onAddNote={(text) => addNote("higherOutcome", text)}
         onUpdateNote={(index, text) => updateNote("higherOutcome", index, text)}

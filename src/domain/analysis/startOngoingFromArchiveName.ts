@@ -61,10 +61,7 @@ export function applyManualNameEdit(
   return { ...state, name, nameManuallyEdited: true }
 }
 
-export type StartOngoingSubmitBlock =
-  | "empty_name"
-  | "no_selection"
-  | "duplicate_name"
+export type StartOngoingSubmitBlock = "empty_name" | "no_selection" | "duplicate_name"
 
 export function validateStartOngoingSubmit(args: {
   name: string

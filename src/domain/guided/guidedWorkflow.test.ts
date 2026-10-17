@@ -8,9 +8,7 @@ import {
 } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -20,9 +18,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -153,9 +149,7 @@ describe("guidedWorkflow sequence", () => {
     expect(steps[3]).toEqual({ phase: "incurred" })
     expect(steps[4]).toEqual({ phase: "estimateUncertaintyIntro" })
     expect(steps[5]).toMatchObject({ phase: "cost", rowId: "c1" })
-    expect(steps.find((s) => s.phase === "correlation")?.phase).toBe(
-      "correlation",
-    )
+    expect(steps.find((s) => s.phase === "correlation")?.phase).toBe("correlation")
   })
 
   it("Cost Items play (startRowIndex 0) opens Assumptions first", () => {
@@ -204,9 +198,7 @@ describe("guidedWorkflow sequence", () => {
     expect(driverSteps.some((s) => s.phase === "assumptions")).toBe(true)
     expect(driverSteps.some((s) => s.phase === "incurred")).toBe(true)
     expect(driverSteps.some((s) => s.phase === "correlation")).toBe(true)
-    expect(driverSteps.some((s) => s.phase === "estimateUncertaintyIntro")).toBe(
-      true,
-    )
+    expect(driverSteps.some((s) => s.phase === "estimateUncertaintyIntro")).toBe(true)
     expect(driverSteps.some((s) => s.phase === "projectProfile")).toBe(true)
     const land = initialGuidedWorkflowStepIndex({
       entry: "driver",
@@ -264,12 +256,8 @@ describe("guidedWorkflow sequence", () => {
     expect(steps[land]?.phase).toBe("driversIntro")
     expect(land).toBeGreaterThan(0)
     // Prior Costs/Project steps remain reachable via Previous.
-    expect(steps.slice(0, land).some((s) => s.phase === "assumptions")).toBe(
-      true,
-    )
-    expect(steps.slice(0, land).some((s) => s.phase === "projectProfile")).toBe(
-      true,
-    )
+    expect(steps.slice(0, land).some((s) => s.phase === "assumptions")).toBe(true)
+    expect(steps.slice(0, land).some((s) => s.phase === "projectProfile")).toBe(true)
     const resume = initialGuidedWorkflowStepIndex({
       entry: "driver",
       steps,

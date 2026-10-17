@@ -48,24 +48,15 @@ export function loadAppInputStateFromStorage(): {
 } {
   if (cachedInitialInput) return cachedInitialInput
 
-  const rawProjects = loadFromStorage<unknown | null>(
-    STORAGE_KEYS.projects,
-    null,
-  )
+  const rawProjects = loadFromStorage<unknown | null>(STORAGE_KEYS.projects, null)
   let projects = parseProjectsPayload(rawProjects)
   if (!projects || projects.length === 0) {
     projects = initialProjects()
   }
 
-  const rawActive = loadFromStorage<unknown | null>(
-    STORAGE_KEYS.activeProjectId,
-    null,
-  )
+  const rawActive = loadFromStorage<unknown | null>(STORAGE_KEYS.activeProjectId, null)
   let activeProjectId = ""
-  if (
-    typeof rawActive === "string" &&
-    projects.some((p) => p.id === rawActive)
-  ) {
+  if (typeof rawActive === "string" && projects.some((p) => p.id === rawActive)) {
     activeProjectId = rawActive
   } else {
     activeProjectId = projects[0]?.id ?? ""

@@ -7,12 +7,10 @@
  */
 
 /** Contained Focus card (non-fullscreen). Matches Guided modal dimensions. */
-export const FOCUS_SESSION_CARD_CLASS =
-  "h-[min(92vh,48rem)] w-[min(96vw,60rem)]"
+export const FOCUS_SESSION_CARD_CLASS = "h-[min(92vh,48rem)] w-[min(96vw,60rem)]"
 
 /** Focus card while the session host is in browser fullscreen. */
-export const FOCUS_SESSION_CARD_FULLSCREEN_CLASS =
-  "h-[min(100%,56rem)] w-[min(100%,80rem)]"
+export const FOCUS_SESSION_CARD_FULLSCREEN_CLASS = "h-[min(100%,56rem)] w-[min(100%,80rem)]"
 
 /**
  * Shared Focus header chrome (Input + Results).
@@ -26,8 +24,7 @@ export const FOCUS_SESSION_HEADER_CLASS =
  * Left title stack (project context + section title).
  * Extra right padding clears the absolute session toolbar.
  */
-export const FOCUS_SESSION_HEADER_TITLE_CLASS =
-  "min-w-0 space-y-1 pr-20 sm:pr-24" as const
+export const FOCUS_SESSION_HEADER_TITLE_CLASS = "min-w-0 space-y-1 pr-20 sm:pr-24" as const
 
 /**
  * Reserved auxiliary row under the title — phase overview + item progress.
@@ -64,5 +61,4 @@ export const FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS =
 export const FOCUS_NEXT_STEPS_ACTION_CLASS =
   "h-8 w-full justify-center px-3 text-center text-[12px]" as const
 
-export const FOCUS_NEXT_STEPS_ACTION_COL_CLASS =
-  "w-full shrink-0 sm:w-44" as const
+export const FOCUS_NEXT_STEPS_ACTION_COL_CLASS = "w-full shrink-0 sm:w-44" as const

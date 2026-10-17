@@ -66,9 +66,7 @@ export function ConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         {title ? (
-          <h2 className="m-0 mb-2 font-sans text-[15px] font-medium text-foreground">
-            {title}
-          </h2>
+          <h2 className="m-0 mb-2 font-sans text-[15px] font-medium text-foreground">{title}</h2>
         ) : null}
         <p
           id={title ? "confirm-dialog-message" : undefined}

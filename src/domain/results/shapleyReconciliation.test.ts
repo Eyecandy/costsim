@@ -17,9 +17,7 @@ const RECON_CONFIG = {
   convergenceBatchSize: 50,
 } as const
 
-function baseInput(
-  overrides: Partial<ShapleyAttributionInput> = {},
-): ShapleyAttributionInput {
+function baseInput(overrides: Partial<ShapleyAttributionInput> = {}): ShapleyAttributionInput {
   return {
     costTriangles: [
       { min: 90, mode: 100, max: 130 },
@@ -48,22 +46,16 @@ function contributionSum(result: ReturnType<typeof computeShapleyAttribution>) {
 describe("Shapley full-coalition reconciliation", () => {
   it("A/B: waterfall endpoint and contributions reconcile to main simulation P50", () => {
     const mainP50 = 512_345.678
-    const result = computeShapleyAttribution(
-      baseInput({ mainSimulationP50: mainP50 }),
-    )
+    const result = computeShapleyAttribution(baseInput({ mainSimulationP50: mainP50 }))
 
     expect(result.estimatedP50).toBe(mainP50)
-    expect(
-      Math.abs(result.baseCost + contributionSum(result) - mainP50),
-    ).toBeLessThan(1e-9)
+    expect(Math.abs(result.baseCost + contributionSum(result) - mainP50)).toBeLessThan(1e-9)
     expect(Math.abs(result.diagnostics.additivityResidual)).toBeLessThan(1e-9)
   })
 
   it("C/D: preserves raw Shapley full P50 and reconciliation delta diagnostics", () => {
     const mainP50 = 600_000
-    const result = computeShapleyAttribution(
-      baseInput({ mainSimulationP50: mainP50 }),
-    )
+    const result = computeShapleyAttribution(baseInput({ mainSimulationP50: mainP50 }))
 
     expect(result.diagnostics.rawShapleyFullP50).not.toBeNull()
     expect(result.diagnostics.mainSimulationP50).toBe(mainP50)
@@ -93,13 +85,9 @@ describe("Shapley full-coalition reconciliation", () => {
   it("F: does not proportionally rescale contributions after calculation", () => {
     const unpinned = computeShapleyAttribution(baseInput())
     const mainP50 = unpinned.estimatedP50 + 75_000
-    const pinned = computeShapleyAttribution(
-      baseInput({ mainSimulationP50: mainP50 }),
-    )
+    const pinned = computeShapleyAttribution(baseInput({ mainSimulationP50: mainP50 }))
 
-    expect(Math.abs(pinned.diagnostics.fullCoalitionReconciliationDelta!)).toBeGreaterThan(
-      1000,
-    )
+    expect(Math.abs(pinned.diagnostics.fullCoalitionReconciliationDelta!)).toBeGreaterThan(1000)
 
     const ratios = unpinned.contributions
       .map((row, i) => pinned.contributions[i]!.contribution / row.contribution)
@@ -107,16 +95,12 @@ describe("Shapley full-coalition reconciliation", () => {
 
     expect(ratios.length).toBeGreaterThanOrEqual(2)
     const firstRatio = ratios[0]!
-    const allSameRatio = ratios.every(
-      (ratio) => Math.abs(ratio - firstRatio) < 1e-9,
-    )
+    const allSameRatio = ratios.every((ratio) => Math.abs(ratio - firstRatio) < 1e-9)
     expect(allSameRatio).toBe(false)
   })
 
   it("G: records valid random permutation last-position counts for all players", () => {
-    const result = computeShapleyAttribution(
-      baseInput({ mainSimulationP50: 500_000 }),
-    )
+    const result = computeShapleyAttribution(baseInput({ mainSimulationP50: 500_000 }))
     const counts = result.diagnostics.permutationLastPositionCounts
 
     expect(counts).not.toBeNull()
@@ -152,11 +136,7 @@ describe("Shapley full-coalition reconciliation", () => {
     ])
 
     const formattedMain = formatWaterfallValueWithScale(mainP50, scale, "no")
-    const formattedWaterfall = formatWaterfallValueWithScale(
-      result.estimatedP50,
-      scale,
-      "no",
-    )
+    const formattedWaterfall = formatWaterfallValueWithScale(result.estimatedP50, scale, "no")
 
     const report = {
       rawShapleyFullP50: result.diagnostics.rawShapleyFullP50,
@@ -175,7 +155,7 @@ describe("Shapley full-coalition reconciliation", () => {
       formattedWaterfall,
     }
 
-    // eslint-disable-next-line no-console
+     
     console.table(report)
 
     expect(formattedWaterfall).toBe(formattedMain)

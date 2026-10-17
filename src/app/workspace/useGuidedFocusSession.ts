@@ -108,16 +108,10 @@ export function useGuidedFocusSession({
   } = guidedFocusState
 
   const impactSelectedDriverRow = useMemo(() => {
-    if (
-      !impactModeActive ||
-      !activeProject ||
-      impactSelectedDriverId === null
-    ) {
+    if (!impactModeActive || !activeProject || impactSelectedDriverId === null) {
       return null
     }
-    const index = activeProject.driverRows.findIndex(
-      (r) => r.id === impactSelectedDriverId,
-    )
+    const index = activeProject.driverRows.findIndex((r) => r.id === impactSelectedDriverId)
     if (index < 0) return null
     const row = activeProject.driverRows[index]!
     if (parseDriverForSimulation(row) === null) return null
@@ -164,7 +158,12 @@ export function useGuidedFocusSession({
         setCorrelationFeedbackKind(null)
       }, CORRELATION_SAVE_CONFIRM_MS)
     },
-    [clearCorrelationSaveConfirm, correlationSaveConfirmTimerRef, setCorrelationFeedbackKind, setCorrelationSaveConfirmVisible],
+    [
+      clearCorrelationSaveConfirm,
+      correlationSaveConfirmTimerRef,
+      setCorrelationFeedbackKind,
+      setCorrelationSaveConfirmVisible,
+    ],
   )
 
   const clearCorrelationEditingState = useCallback(() => {
@@ -172,7 +171,12 @@ export function useGuidedFocusSession({
     setCorrelationPendingRho(0)
     setCorrelationPendingMixed(false)
     setCorrelationEditBlocked(false)
-  }, [setCorrelationEditBlocked, setCorrelationPendingMixed, setCorrelationPendingRho, setCorrelationSelectedCostIds])
+  }, [
+    setCorrelationEditBlocked,
+    setCorrelationPendingMixed,
+    setCorrelationPendingRho,
+    setCorrelationSelectedCostIds,
+  ])
 
   useEffect(() => {
     return () => {
@@ -195,11 +199,7 @@ export function useGuidedFocusSession({
       clearCorrelationEditingState()
       clearCorrelationSaveConfirm()
     }
-  }, [
-    correlationModeActive,
-    clearCorrelationEditingState,
-    clearCorrelationSaveConfirm,
-  ])
+  }, [correlationModeActive, clearCorrelationEditingState, clearCorrelationSaveConfirm])
 
   useEffect(() => {
     setImpactSelectedDriverId(null)
@@ -266,31 +266,53 @@ export function useGuidedFocusSession({
       }
       return prev
     })
-  }, [clearStoredFocusSessionResume, setFocusView, setGuidedInputKind, setGuidedResume, setGuidedResumePhase, setGuidedSemanticResume, setGuidedStartPhase])
+  }, [
+    clearStoredFocusSessionResume,
+    setFocusView,
+    setGuidedInputKind,
+    setGuidedResume,
+    setGuidedResumePhase,
+    setGuidedSemanticResume,
+    setGuidedStartPhase,
+  ])
 
-  const openGuidedInput = useCallback((
-    kind: GuidedInputKind,
-    startIndex = 0,
-    options?: { startPhase?: "focusIntro" | null },
-  ) => {
-    if (analysisReadOnly) return
-    setGuidedStartPhase(options?.startPhase ?? null)
-    setImpactModeActive(false)
-    setImpactSelectedDriverId(null)
-    setCorrelationModeActive(false)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    setGuidedResume(null)
-    setGuidedResumePhase(null)
-    setGuidedInputStartIndex(startIndex)
-    setGuidedInputKind(kind)
-    // Enter shared Focus session immediately so Input uses the shell-owned
-    // lightweight footer from the first paint (same as after Results round-trip).
-    // Standalone Guided modal (heavy Next) is not used for normal Input opens.
-    setFocusView("input")
-  }, [analysisReadOnly, clearCorrelationEditingState, clearCorrelationSaveConfirm, setCorrelationModeActive, setDefineModeActive, setDefineSelectedRowId, setFocusView, setGuidedInputKind, setGuidedInputStartIndex, setGuidedResume, setGuidedResumePhase, setGuidedStartPhase, setImpactModeActive, setImpactSelectedDriverId])
+  const openGuidedInput = useCallback(
+    (kind: GuidedInputKind, startIndex = 0, options?: { startPhase?: "focusIntro" | null }) => {
+      if (analysisReadOnly) return
+      setGuidedStartPhase(options?.startPhase ?? null)
+      setImpactModeActive(false)
+      setImpactSelectedDriverId(null)
+      setCorrelationModeActive(false)
+      setDefineModeActive(false)
+      setDefineSelectedRowId(null)
+      clearCorrelationEditingState()
+      clearCorrelationSaveConfirm()
+      setGuidedResume(null)
+      setGuidedResumePhase(null)
+      setGuidedInputStartIndex(startIndex)
+      setGuidedInputKind(kind)
+      // Enter shared Focus session immediately so Input uses the shell-owned
+      // lightweight footer from the first paint (same as after Results round-trip).
+      // Standalone Guided modal (heavy Next) is not used for normal Input opens.
+      setFocusView("input")
+    },
+    [
+      analysisReadOnly,
+      clearCorrelationEditingState,
+      clearCorrelationSaveConfirm,
+      setCorrelationModeActive,
+      setDefineModeActive,
+      setDefineSelectedRowId,
+      setFocusView,
+      setGuidedInputKind,
+      setGuidedInputStartIndex,
+      setGuidedResume,
+      setGuidedResumePhase,
+      setGuidedStartPhase,
+      setImpactModeActive,
+      setImpactSelectedDriverId,
+    ],
+  )
 
   /**
    * Primary Focus mode entry (INPUT column header). Starts at the Focus-mode
@@ -590,9 +612,7 @@ export function useGuidedFocusSession({
 
   const validSimCostRows = useMemo(() => {
     if (!activeProject) return []
-    return activeProject.costRows.filter(
-      (row) => parseCostForSimulation(row) !== null,
-    )
+    return activeProject.costRows.filter((row) => parseCostForSimulation(row) !== null)
   }, [activeProject])
 
   useEffect(() => {
@@ -620,15 +640,11 @@ export function useGuidedFocusSession({
   const handleToggleCorrelationCost = useCallback(
     (costRowId: string) => {
       if (!correlationModeActive || !activeProject) return
-      if (
-        activeProject.costRows.find((r) => r.id === costRowId) === undefined
-      ) {
+      if (activeProject.costRows.find((r) => r.id === costRowId) === undefined) {
         return
       }
       if (
-        parseCostForSimulation(
-          activeProject.costRows.find((r) => r.id === costRowId)!,
-        ) === null
+        parseCostForSimulation(activeProject.costRows.find((r) => r.id === costRowId)!) === null
       ) {
         return
       }
@@ -636,10 +652,7 @@ export function useGuidedFocusSession({
         const next = prev.includes(costRowId)
           ? prev.filter((id) => id !== costRowId)
           : [...prev, costRowId]
-        syncCorrelationPendingFromSelection(
-          next,
-          activeProject.costCorrelations,
-        )
+        syncCorrelationPendingFromSelection(next, activeProject.costCorrelations)
         setCorrelationEditBlocked(false)
         return next
       })
@@ -653,11 +666,14 @@ export function useGuidedFocusSession({
     ],
   )
 
-  const handleCorrelationPendingChange = useCallback((value: number) => {
-    setCorrelationPendingRho(value)
-    setCorrelationPendingMixed(false)
-    setCorrelationEditBlocked(false)
-  }, [setCorrelationEditBlocked, setCorrelationPendingMixed, setCorrelationPendingRho])
+  const handleCorrelationPendingChange = useCallback(
+    (value: number) => {
+      setCorrelationPendingRho(value)
+      setCorrelationPendingMixed(false)
+      setCorrelationEditBlocked(false)
+    },
+    [setCorrelationEditBlocked, setCorrelationPendingMixed, setCorrelationPendingRho],
+  )
 
   const handleOpenCorrelationSummary = useCallback(
     (rowIds: readonly string[]) => {
@@ -701,14 +717,7 @@ export function useGuidedFocusSession({
         return
       }
       setCorrelationEditBlocked(false)
-      setProjects((prev) =>
-        patchProjectCostCorrelationGroup(
-          prev,
-          activeProject.id,
-          rowIds,
-          "0",
-        ),
-      )
+      setProjects((prev) => patchProjectCostCorrelationGroup(prev, activeProject.id, rowIds, "0"))
       clearCorrelationEditingState()
       flashCorrelationFeedback("removed")
     },
@@ -743,12 +752,7 @@ export function useGuidedFocusSession({
     }
     setCorrelationEditBlocked(false)
     setProjects((prev) =>
-      patchProjectCostCorrelationGroup(
-        prev,
-        activeProject.id,
-        correlationSelectedCostIds,
-        raw,
-      ),
+      patchProjectCostCorrelationGroup(prev, activeProject.id, correlationSelectedCostIds, raw),
     )
     clearCorrelationEditingState()
     flashCorrelationFeedback("saved")
@@ -767,16 +771,12 @@ export function useGuidedFocusSession({
 
   const savedCorrelationSummaries = useMemo(() => {
     if (!correlationModeActive || !activeProject) return []
-    return deriveSavedCorrelationSummaries(
-      validSimCostRows,
-      activeProject.costCorrelations,
-    )
+    return deriveSavedCorrelationSummaries(validSimCostRows, activeProject.costCorrelations)
   }, [correlationModeActive, activeProject, validSimCostRows])
 
   const activeCostCorrelationPrep = useMemo(() => {
     if (!activeProject) return undefined
-    return projectResults.find((r) => r.projectId === activeProject.id)
-      ?.costCorrelationPrep
+    return projectResults.find((r) => r.projectId === activeProject.id)?.costCorrelationPrep
   }, [activeProject, projectResults])
 
   const currentFocusUserPhase = useMemo(
@@ -796,16 +796,13 @@ export function useGuidedFocusSession({
       setGuidedLandFocusPhase(null)
       return
     }
-    setFurthestReachedFocusPhase((prev) =>
-      advanceFurthestFocusPhase(prev, currentFocusUserPhase),
-    )
+    setFurthestReachedFocusPhase((prev) => advanceFurthestFocusPhase(prev, currentFocusUserPhase))
   }, [focusView, currentFocusUserPhase, setFurthestReachedFocusPhase, setGuidedLandFocusPhase])
 
   const navigateToFocusUserPhase = useCallback(
     (phase: FocusUserPhase) => {
       const allowed =
-        isFocusPhaseReached(phase, furthestReachedFocusPhase) ||
-        phase === currentFocusUserPhase
+        isFocusPhaseReached(phase, furthestReachedFocusPhase) || phase === currentFocusUserPhase
       if (!allowed) return
 
       if (phase === "results") {
@@ -850,7 +847,18 @@ export function useGuidedFocusSession({
     setGuidedResumePhase(null)
     setGuidedResume(null)
     setGuidedInputKind(null)
-  }, [clearStoredFocusSessionResume, focusShellRef, setFocusResultStepIndex, setFocusView, setFurthestReachedFocusPhase, setGuidedInputKind, setGuidedLandFocusPhase, setGuidedResume, setGuidedResumePhase, setGuidedSemanticResume])
+  }, [
+    clearStoredFocusSessionResume,
+    focusShellRef,
+    setFocusResultStepIndex,
+    setFocusView,
+    setFurthestReachedFocusPhase,
+    setGuidedInputKind,
+    setGuidedLandFocusPhase,
+    setGuidedResume,
+    setGuidedResumePhase,
+    setGuidedSemanticResume,
+  ])
 
   const openFocusResults = useCallback(() => {
     if (!hasViewableResults) return
@@ -876,7 +884,14 @@ export function useGuidedFocusSession({
     // Belt-and-suspenders: resume effect + imperative handle.
     setGuidedResumePhase("simulation")
     guidedDialogRef.current?.goToSimulation()
-  }, [guidedInputKind, analysisReadOnly, openGuidedInput, guidedDialogRef, setFocusView, setGuidedResumePhase])
+  }, [
+    guidedInputKind,
+    analysisReadOnly,
+    openGuidedInput,
+    guidedDialogRef,
+    setFocusView,
+    setGuidedResumePhase,
+  ])
 
   /**
    * Stale "Show changes": enable existing green highlighting, exit Focus,
@@ -894,7 +909,19 @@ export function useGuidedFocusSession({
     setGuidedResumePhase(null)
     setGuidedResume(null)
     setGuidedInputKind(null)
-  }, [clearStoredFocusSessionResume, focusShellRef, setFocusResultStepIndex, setFocusView, setFurthestReachedFocusPhase, setGuidedInputKind, setGuidedLandFocusPhase, setGuidedResume, setGuidedResumePhase, setGuidedSemanticResume, setShowStaleInputChanges])
+  }, [
+    clearStoredFocusSessionResume,
+    focusShellRef,
+    setFocusResultStepIndex,
+    setFocusView,
+    setFurthestReachedFocusPhase,
+    setGuidedInputKind,
+    setGuidedLandFocusPhase,
+    setGuidedResume,
+    setGuidedResumePhase,
+    setGuidedSemanticResume,
+    setShowStaleInputChanges,
+  ])
 
   /** Next Steps: exit Focus to normal Input without enabling green highlighting. */
   const handleFocusReviewInput = useCallback(() => {
@@ -908,7 +935,18 @@ export function useGuidedFocusSession({
     setGuidedResumePhase(null)
     setGuidedResume(null)
     setGuidedInputKind(null)
-  }, [clearStoredFocusSessionResume, focusShellRef, setFocusResultStepIndex, setFocusView, setFurthestReachedFocusPhase, setGuidedInputKind, setGuidedLandFocusPhase, setGuidedResume, setGuidedResumePhase, setGuidedSemanticResume])
+  }, [
+    clearStoredFocusSessionResume,
+    focusShellRef,
+    setFocusResultStepIndex,
+    setFocusView,
+    setFurthestReachedFocusPhase,
+    setGuidedInputKind,
+    setGuidedLandFocusPhase,
+    setGuidedResume,
+    setGuidedResumePhase,
+    setGuidedSemanticResume,
+  ])
 
   useLayoutEffect(() => {
     // Keep the Focus content portal target for the whole Focus session
@@ -919,9 +957,7 @@ export function useGuidedFocusSession({
       return
     }
     const sync = () => {
-      setFocusPortalTarget(
-        focusShellRef.current?.getContentElement() ?? null,
-      )
+      setFocusPortalTarget(focusShellRef.current?.getContentElement() ?? null)
     }
     sync()
     const id = window.requestAnimationFrame(sync)
@@ -940,25 +976,21 @@ export function useGuidedFocusSession({
       buildFocusResultSteps({
         includeDevelopment: Boolean(
           isOngoingAnalysis &&
-            librarySession.ongoing?.checkpoints &&
-            librarySession.ongoing.checkpoints.length > 0,
+          librarySession.ongoing?.checkpoints &&
+          librarySession.ongoing.checkpoints.length > 0,
         ),
         includeContribution: appFeatures.showExpectedAddition,
       }),
-    [
-      isOngoingAnalysis,
-      librarySession.ongoing?.checkpoints,
-    ],
+    [isOngoingAnalysis, librarySession.ongoing?.checkpoints],
   )
 
   const focusResultSection: FocusResultSectionId | null =
     focusView === "results" && hasViewableResults
       ? (focusResultSteps[
-          Math.min(
-            Math.max(0, focusResultStepIndex),
-            Math.max(0, focusResultSteps.length - 1),
-          )
-        ] ?? focusResultSteps[0] ?? null)
+          Math.min(Math.max(0, focusResultStepIndex), Math.max(0, focusResultSteps.length - 1))
+        ] ??
+        focusResultSteps[0] ??
+        null)
       : null
 
   // Clear sessionStorage when Focus fully exits (not Input ↔ Results).
@@ -977,9 +1009,7 @@ export function useGuidedFocusSession({
     if (!analysisId || focusView === null) return
     if (!activeProjectId) return
 
-    const checkpointId = isOngoingAnalysis
-      ? (librarySession.activeCheckpoint?.id ?? null)
-      : null
+    const checkpointId = isOngoingAnalysis ? (librarySession.activeCheckpoint?.id ?? null) : null
 
     const base: FocusSessionResumeV1 = {
       v: 1,
@@ -987,9 +1017,7 @@ export function useGuidedFocusSession({
       projectId: activeProjectId,
       checkpointId,
       focusView,
-      ...(furthestReachedFocusPhase
-        ? { furthestReachedPhase: furthestReachedFocusPhase }
-        : {}),
+      ...(furthestReachedFocusPhase ? { furthestReachedPhase: furthestReachedFocusPhase } : {}),
     }
 
     if (focusView === "input") {
@@ -1036,9 +1064,7 @@ export function useGuidedFocusSession({
     const stored = readFocusSessionResume(analysisId)
     if (!stored) return
 
-    const checkpointId = isOngoingAnalysis
-      ? (librarySession.activeCheckpoint?.id ?? null)
-      : null
+    const checkpointId = isOngoingAnalysis ? (librarySession.activeCheckpoint?.id ?? null) : null
     if (
       !focusSessionResumeMatchesContext(stored, {
         analysisId,
@@ -1067,10 +1093,7 @@ export function useGuidedFocusSession({
 
     if (view === "results") {
       setFocusResultStepIndex(
-        resolveFocusResultStepIndexForResume(
-          focusResultSteps,
-          stored.resultSectionId,
-        ),
+        resolveFocusResultStepIndexForResume(focusResultSteps, stored.resultSectionId),
       )
       setFocusView("results")
       return

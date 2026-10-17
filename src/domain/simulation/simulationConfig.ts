@@ -16,14 +16,8 @@ export const simulationConfig = {
  *
  * Does not affect analytical validity / input signatures.
  */
-export function resolveReportedSimulationCount(
-  persisted: number | null | undefined,
-): number {
-  if (
-    typeof persisted === "number" &&
-    Number.isFinite(persisted) &&
-    persisted > 0
-  ) {
+export function resolveReportedSimulationCount(persisted: number | null | undefined): number {
+  if (typeof persisted === "number" && Number.isFinite(persisted) && persisted > 0) {
     return Math.trunc(persisted)
   }
   return simulationConfig.mainRuns

@@ -10,10 +10,7 @@ import {
   type ArchivedAnalysisSnapshotV1,
 } from "@/domain/analysis/archivedAnalysisSnapshot"
 import type { Project } from "@/domain/analysis/project"
-import {
-  resolveResultView,
-  type ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import { resolveResultView, type ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import {
@@ -57,8 +54,7 @@ export function buildArchivedAnalysisSnapshot(
   input: BuildArchiveSnapshotInput,
 ): ArchivedAnalysisSnapshotV1 {
   const projectsAtArchive = structuredClone(input.projects) as Project[]
-  const tornadoByProjectId: ArchivedAnalysisSnapshotV1["tornadoByProjectId"] =
-    {}
+  const tornadoByProjectId: ArchivedAnalysisSnapshotV1["tornadoByProjectId"] = {}
   for (const p of projectsAtArchive) {
     const pr = input.projectResults.find((r) => r.projectId === p.id)
     if (pr && pr.values.length > 0) {
@@ -68,8 +64,7 @@ export function buildArchivedAnalysisSnapshot(
     }
   }
 
-  const shapleyByProjectId: ArchivedAnalysisSnapshotV1["shapleyByProjectId"] =
-    {}
+  const shapleyByProjectId: ArchivedAnalysisSnapshotV1["shapleyByProjectId"] = {}
   for (const p of projectsAtArchive) {
     shapleyByProjectId[p.id] = input.shapleyByProjectId?.[p.id] ?? null
   }
@@ -108,9 +103,7 @@ export type ArchiveBlockReason =
   /** Compact tip lacks derived analytics requested by current Result Preferences. */
   | "result_settings_need_rerun"
 
-function validityKindToArchiveBlock(
-  kind: LiveResultValidityKind,
-): ArchiveBlockReason | null {
+function validityKindToArchiveBlock(kind: LiveResultValidityKind): ArchiveBlockReason | null {
   switch (kind) {
     case "valid":
       return null
@@ -145,16 +138,10 @@ export function getOngoingCompactArchiveBlockReason(args: {
   if (!compact || !isOngoingCheckpointResultSnapshot(compact)) {
     return "no_results"
   }
-  if (
-    args.analysisId != null &&
-    args.analysisId !== compact.analysisId
-  ) {
+  if (args.analysisId != null && args.analysisId !== compact.analysisId) {
     return "wrong_analysis"
   }
-  if (
-    args.checkpointId != null &&
-    args.checkpointId !== compact.checkpointId
-  ) {
+  if (args.checkpointId != null && args.checkpointId !== compact.checkpointId) {
     return "wrong_checkpoint"
   }
   // Single Analysis never passes compact; Ongoing always has a checkpoint id.
@@ -207,8 +194,7 @@ export function getArchiveBlockReason(args: {
 
   const validity = getLiveResultValidity({
     analysisId: args.analysisId ?? state.analysisId,
-    checkpointId:
-      args.checkpointId !== undefined ? args.checkpointId : state.checkpointId,
+    checkpointId: args.checkpointId !== undefined ? args.checkpointId : state.checkpointId,
     currentProjects: args.projects,
     simulationState: state,
     ongoingCompactResult: args.ongoingCompactResult,
@@ -228,32 +214,18 @@ export function getArchiveBlockReason(args: {
   const prefs = args.resultPreferences
   if (!prefs) return null
 
-  if (
-    args.ongoingCompactResult &&
-    isOngoingCheckpointResultSnapshot(args.ongoingCompactResult)
-  ) {
-    if (
-      !compactFrozenKeyFiguresSupportPreferences(
-        args.ongoingCompactResult.keyFigures,
-        prefs,
-      )
-    ) {
+  if (args.ongoingCompactResult && isOngoingCheckpointResultSnapshot(args.ongoingCompactResult)) {
+    if (!compactFrozenKeyFiguresSupportPreferences(args.ongoingCompactResult.keyFigures, prefs)) {
       return "result_settings_need_rerun"
     }
   }
 
-  if (
-    args.singleDraftResult &&
-    isSingleDraftResultSnapshot(args.singleDraftResult)
-  ) {
+  if (args.singleDraftResult && isSingleDraftResultSnapshot(args.singleDraftResult)) {
     const activeId = args.singleDraftResult.activeProjectIdAtRun
     const compactProject = args.singleDraftResult.byProjectId[activeId]
     if (
       compactProject &&
-      !compactFrozenKeyFiguresSupportPreferences(
-        compactProject.keyFigures,
-        prefs,
-      )
+      !compactFrozenKeyFiguresSupportPreferences(compactProject.keyFigures, prefs)
     ) {
       return "result_settings_need_rerun"
     }

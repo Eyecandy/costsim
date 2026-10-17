@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  type ReactNode,
-} from "react"
+import { useEffect, useId, useRef, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 
@@ -107,9 +102,7 @@ export function ExpandedChartDialog({
             <X className="size-4" strokeWidth={2} aria-hidden />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-auto px-4 py-4 sm:px-5 sm:py-5">
-          {children}
-        </div>
+        <div className="min-h-0 flex-1 overflow-auto px-4 py-4 sm:px-5 sm:py-5">{children}</div>
       </div>
     </div>,
     portalContainer,

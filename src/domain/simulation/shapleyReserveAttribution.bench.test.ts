@@ -36,16 +36,14 @@ describe("subset quantile extraction benchmark", () => {
       p85OnlyMs: Number(p85OnlyMs.toFixed(3)),
       bothMs: Number(bothMs.toFixed(3)),
       incrementalBothOverP50Ms: Number((bothMs - p50OnlyMs).toFixed(3)),
-      incrementalBothOverP50Pct: Number(
-        (((bothMs - p50OnlyMs) / p50OnlyMs) * 100).toFixed(1),
-      ),
+      incrementalBothOverP50Pct: Number((((bothMs - p50OnlyMs) / p50OnlyMs) * 100).toFixed(1)),
       p50MatchesStats: medianOfNumbers(totals),
       p85MatchesStats: percentileOfNumbers(totals, 85),
       statsP50: percentile(totals, 50),
       statsP85: percentile(totals, 85),
     }
 
-    // eslint-disable-next-line no-console
+     
     console.table(report)
 
     expect(report.p50MatchesStats).toBeCloseTo(report.statsP50!, 9)

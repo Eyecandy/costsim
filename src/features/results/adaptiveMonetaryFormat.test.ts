@@ -10,7 +10,6 @@ import {
 } from "@/domain/results/formatWaterfallValue"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 describe("Contribution Analysis adaptive monetary formatting", () => {
   it("picks unit by magnitude", () => {
     expect(resolveAdaptiveMonetaryScale(5_000).kind).toBe("thousands")
@@ -70,12 +69,8 @@ describe("Contribution Analysis adaptive monetary formatting", () => {
 
   it("does not change Tornado k precision (still allows one decimal)", () => {
     const kScale = { kind: "thousands" as const, unitSuffix: "k" as const }
-    expect(formatTornadoSignedDeltaWithScale(3_200, kScale, "en")).toBe(
-      "+3.2 k",
-    )
-    expect(formatTornadoSignedDeltaWithScale(837_400, kScale, "en")).toBe(
-      "+837.4 k",
-    )
+    expect(formatTornadoSignedDeltaWithScale(3_200, kScale, "en")).toBe("+3.2 k")
+    expect(formatTornadoSignedDeltaWithScale(837_400, kScale, "en")).toBe("+837.4 k")
   })
 
   it("AttributionWaterfall uses adaptive helpers for all labels", () => {

@@ -13,7 +13,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { shouldShowDefineSelectHint } from "@/domain/results/scenarioTableModes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function scenarioTableSource() {
   return readFileSync(
     join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
@@ -22,10 +21,7 @@ function scenarioTableSource() {
 }
 
 function popoverSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/DefineRowPopover.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/scenario-tables/DefineRowPopover.tsx"), "utf8")
 }
 
 function costRow(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
@@ -118,9 +114,7 @@ describe("Define row-anchored popover UX", () => {
     expect(src).not.toMatch(
       /<\/div>\s*\{defineSelectedRow && defineMode\?\.active \? \(\s*variant === "costMixed"/,
     )
-    expect(src).not.toMatch(
-      /className="mt-2 space-y-2 rounded-md border border-border\/80 bg-card/,
-    )
+    expect(src).not.toMatch(/className="mt-2 space-y-2 rounded-md border border-border\/80 bg-card/)
   })
 
   it("H: Cost and driver both use the popover editor", () => {
@@ -129,15 +123,13 @@ describe("Define row-anchored popover UX", () => {
     expect(src).toContain('kind="driver"')
     expect(src).toContain("withDriverDescription")
     expect(src).toContain("withDriverUncertaintyNotes")
-    expect(src).toContain('popoverKind=')
+    expect(src).toContain("popoverKind=")
     expect(src).toContain(
       "w-[min(40rem,calc(100vw-1.5rem))] max-h-[min(70vh,36rem)] overflow-y-auto",
     )
     expect(driverRowHasDefinition(driverRow({ id: "d1" }))).toBe(false)
     expect(
-      driverRowHasDefinition(
-        withDriverDescription(driverRow({ id: "d1" }), "Markedseffekter"),
-      ),
+      driverRowHasDefinition(withDriverDescription(driverRow({ id: "d1" }), "Markedseffekter")),
     ).toBe(true)
   })
 

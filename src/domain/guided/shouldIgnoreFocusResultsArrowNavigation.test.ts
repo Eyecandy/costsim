@@ -5,7 +5,6 @@ import { join } from "node:path"
 import { shouldIgnoreFocusArrowNavigation } from "@/features/focus-mode/shouldIgnoreFocusArrowNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 describe("shouldIgnoreFocusArrowNavigation", () => {
   it("exports a function and reuses Guided editable-control rules", () => {
     expect(typeof shouldIgnoreFocusArrowNavigation).toBe("function")

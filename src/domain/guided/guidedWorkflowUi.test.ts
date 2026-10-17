@@ -14,21 +14,15 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function appSource() {
   return readAppSource()
 }
 
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -38,9 +32,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -103,22 +95,13 @@ describe("Guided workflow UI contracts", () => {
 
     const project: Project = {
       ...createProject({ id: "p1", name: "P" }),
-      costRows: [
-        cost({ id: "c1", name: "K1" }),
-        cost({ id: "c2", name: "K2" }),
-      ],
+      costRows: [cost({ id: "c1", name: "K1" }), cost({ id: "c2", name: "K2" })],
       costCorrelations: { c1: { c2: "0.5" } },
     }
-    const summaries = deriveSavedCorrelationSummaries(
-      project.costRows,
-      project.costCorrelations,
-    )
+    const summaries = deriveSavedCorrelationSummaries(project.costRows, project.costCorrelations)
     expect(summaries.length).toBeGreaterThan(0)
 
-    const empty = deriveSavedCorrelationSummaries(
-      project.costRows,
-      undefined,
-    )
+    const empty = deriveSavedCorrelationSummaries(project.costRows, undefined)
     expect(empty).toEqual([])
 
     const app = appSource()
@@ -170,20 +153,16 @@ describe("Guided workflow UI contracts", () => {
       costRows: [cost({ id: "c1" })],
       driverRows: [driver({ id: "d1" })],
     })
-    expect(
-      costSteps[
-        initialGuidedWorkflowStepIndex({ entry: "cost", steps: costSteps })
-      ],
-    ).toEqual({ phase: "assumptions" })
+    expect(costSteps[initialGuidedWorkflowStepIndex({ entry: "cost", steps: costSteps })]).toEqual({
+      phase: "assumptions",
+    })
     const driverSteps = buildGuidedWorkflowSteps({
       entry: "driver",
       costRows: [cost({ id: "c1" })],
       driverRows: [driver({ id: "d1" })],
     })
     expect(
-      driverSteps[
-        initialGuidedWorkflowStepIndex({ entry: "driver", steps: driverSteps })
-      ]?.phase,
+      driverSteps[initialGuidedWorkflowStepIndex({ entry: "driver", steps: driverSteps })]?.phase,
     ).toBe("driversIntro")
     expect(driverSteps.some((s) => s.phase === "projectProfile")).toBe(true)
   })

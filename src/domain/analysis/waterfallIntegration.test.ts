@@ -23,7 +23,6 @@ import {
 import { buildWaterfallChartLayout } from "@/domain/results/waterfallLayout"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function sampleProject(overrides: Partial<Project> = {}): Project {
   const base = createProject({ id: "p1", name: "Project A" })
   return {
@@ -53,10 +52,7 @@ function sampleProject(overrides: Partial<Project> = {}): Project {
 
 describe("lazy Shapley integration", () => {
   it("A: normal simulation worker does not compute Shapley", () => {
-    const src = readFileSync(
-      join(repoRoot, "src/workers/simulation.worker.ts"),
-      "utf8",
-    )
+    const src = readFileSync(join(repoRoot, "src/workers/simulation.worker.ts"), "utf8")
     expect(src).not.toContain("computeShapleyAttribution")
     expect(src).not.toContain("shapleyAttribution")
   })
@@ -156,18 +152,10 @@ describe("waterfall contributors", () => {
 
 describe("waterfall formatting", () => {
   it("G: chart-level millions formatting stays consistent across rows", () => {
-    const scale = resolveWaterfallDisplayScale([
-      202_834_534,
-      202_000_000,
-      620_000,
-    ])
+    const scale = resolveWaterfallDisplayScale([202_834_534, 202_000_000, 620_000])
     expect(formatWaterfallValueWithScale(620_000, scale, "en")).toBe("0.6 M")
-    expect(formatWaterfallValueWithScale(202_834_534, scale, "en")).toBe(
-      "202.8 M",
-    )
-    expect(formatWaterfallSignedDeltaWithScale(-4250, scale, "en")).toBe(
-      "-0.004 M",
-    )
+    expect(formatWaterfallValueWithScale(202_834_534, scale, "en")).toBe("202.8 M")
+    expect(formatWaterfallSignedDeltaWithScale(-4250, scale, "en")).toBe("-0.004 M")
   })
 })
 
@@ -183,14 +171,9 @@ describe("waterfall arithmetic", () => {
       maxIndividual: 6,
       otherLabel: "Other",
     })
-    const layout = buildWaterfallChartLayout(
-      result.baseCost,
-      result.estimatedP50,
-      grouped,
-    )
+    const layout = buildWaterfallChartLayout(result.baseCost, result.estimatedP50, grouped)
 
-    const displayedSum =
-      result.baseCost + sumWaterfallDisplayContributions(grouped)
+    const displayedSum = result.baseCost + sumWaterfallDisplayContributions(grouped)
     expect(displayedSum).toBeCloseTo(mainP50, 9)
     expect(layout.endValue).toBe(mainP50)
     expect(Math.abs(result.diagnostics.additivityResidual)).toBeLessThan(1e-9)

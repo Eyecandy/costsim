@@ -33,11 +33,7 @@ export type OngoingPdfSectionId =
 
 export type OngoingPdfFrozenSource = "compact" | "legacy"
 
-export type OngoingPdfKeyFigureMetricId =
-  | "baseCost"
-  | "p50"
-  | "p85"
-  | "expectedValue"
+export type OngoingPdfKeyFigureMetricId = "baseCost" | "p50" | "p85" | "expectedValue"
 
 export type OngoingPdfKeyFigures = {
   baseCost: number | null
@@ -206,10 +202,7 @@ export type OngoingPdfReportModel = {
   }
 }
 
-export type OngoingPdfBuildFailureReason =
-  | "no_archived_checkpoints"
-  | "no_frozen_results"
+export type OngoingPdfBuildFailureReason = "no_archived_checkpoints" | "no_frozen_results"
 
 export type BuildOngoingPdfReportModelResult =
-  | { ok: true; model: OngoingPdfReportModel }
-  | { ok: false; reason: OngoingPdfBuildFailureReason }
+  { ok: true; model: OngoingPdfReportModel } | { ok: false; reason: OngoingPdfBuildFailureReason }

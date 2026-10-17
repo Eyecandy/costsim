@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
 import { I18nContext, type I18nContextValue, type Language } from "@/i18n/i18nContext"
 
 const STORAGE_KEY = "language"
@@ -32,11 +27,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
     window.localStorage.setItem(STORAGE_KEY, language)
   }, [language])
 
-  const value = useMemo<I18nContextValue>(
-    () => ({ language, setLanguage }),
-    [language],
-  )
+  const value = useMemo<I18nContextValue>(() => ({ language, setLanguage }), [language])
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }
-

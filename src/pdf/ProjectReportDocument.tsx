@@ -940,18 +940,12 @@ function TocBlock({
   layout: PdfCoverLayout
 }) {
   return (
-    <View
-      style={{ marginTop: layout.tocTopMargin }}
-      wrap={false}
-    >
+    <View style={{ marginTop: layout.tocTopMargin }} wrap={false}>
       <Text style={styles.tocTitle}>{title}</Text>
       {chapters.map((chapter) => (
         <View key={chapter.id} wrap={false}>
           <Link src={`#${chapter.id}`} style={styles.tocLink}>
-            <View
-              style={[styles.tocRow, { marginBottom: layout.tocRowGap }]}
-              wrap={false}
-            >
+            <View style={[styles.tocRow, { marginBottom: layout.tocRowGap }]} wrap={false}>
               <Text style={styles.tocLabel}>{chapter.label}</Text>
               <View style={styles.tocDots} />
               <Text
@@ -1086,10 +1080,7 @@ function SCurveSection({
     uniquePdfMarkerPercentiles(curves),
     SCURVE_PDF_GEOMETRY,
   )
-  const yOrdinaryTicks = layoutPdfClassicOrdinaryYTicks(
-    yEmphasized,
-    SCURVE_PDF_GEOMETRY,
-  )
+  const yOrdinaryTicks = layoutPdfClassicOrdinaryYTicks(yEmphasized, SCURVE_PDF_GEOMETRY)
   const xCostLabels = layoutPdfClassicXCostLabels({
     guides,
     scale: costScale,
@@ -1100,11 +1091,7 @@ function SCurveSection({
 
   return (
     <View style={styles.sectionBlock} wrap={false}>
-      <SectionTitle
-        id={PDF_SECTION_IDS.sCurve}
-        label={title}
-        pageRefs={pageRefs}
-      />
+      <SectionTitle id={PDF_SECTION_IDS.sCurve} label={title} pageRefs={pageRefs} />
       {curves.length > 0 ? (
         <>
           {multi ? (
@@ -1259,11 +1246,7 @@ function TornadoSection({
 }) {
   return (
     <View style={styles.sectionBlock}>
-      <SectionTitle
-        id={PDF_SECTION_IDS.tornado}
-        label={title}
-        pageRefs={pageRefs}
-      />
+      <SectionTitle id={PDF_SECTION_IDS.tornado} label={title} pageRefs={pageRefs} />
       <Text style={styles.bodyMuted}>{explanation}</Text>
       {tornadoProjects.map((project, projectIdx) => {
         const chartHeight = Math.max(1, project.rows.length) * TORNADO_ROW_H
@@ -1276,11 +1259,15 @@ function TornadoSection({
             <Text style={styles.tornadoProjectTitle}>{project.projectName}</Text>
             <View style={[styles.tornadoProjectHint, styles.tornadoProjectHintRow]}>
               <View style={styles.tornadoProjectHintItem}>
-                <View style={[styles.tornadoProjectHintPill, { backgroundColor: TORNADO_P10_COLOR }]} />
+                <View
+                  style={[styles.tornadoProjectHintPill, { backgroundColor: TORNADO_P10_COLOR }]}
+                />
                 <Text style={styles.tornadoProjectHintText}>P10</Text>
               </View>
               <View style={styles.tornadoProjectHintItem}>
-                <View style={[styles.tornadoProjectHintPill, { backgroundColor: TORNADO_P90_COLOR }]} />
+                <View
+                  style={[styles.tornadoProjectHintPill, { backgroundColor: TORNADO_P90_COLOR }]}
+                />
                 <Text style={styles.tornadoProjectHintText}>P90</Text>
               </View>
             </View>
@@ -1447,11 +1434,7 @@ function CostItemBlocks({
           <PercentileTriplet
             mostLikelyLabel={mostLikelyLabel}
             p10Value={formatPdfSignedPct(item.optimisticPct, language)}
-            mostLikelyValue={formatPdfAbsoluteAmount(
-              item.mostLikely,
-              language,
-              amountScale,
-            )}
+            mostLikelyValue={formatPdfAbsoluteAmount(item.mostLikely, language, amountScale)}
             p90Value={formatPdfSignedPct(item.pessimisticPct, language)}
           />
         </View>
@@ -1553,10 +1536,7 @@ function ImpactOverridesTable({
               <Text style={[styles.compactCell, { width: costW }]} wrap={false}>
                 {row.costItemName}
               </Text>
-              <Text
-                style={[styles.compactCell, { width: pctW, textAlign: "right" }]}
-                wrap={false}
-              >
+              <Text style={[styles.compactCell, { width: pctW, textAlign: "right" }]} wrap={false}>
                 {`${row.impactPct} %`}
               </Text>
             </View>
@@ -1608,10 +1588,7 @@ function CorrelationBlock({
             <Text style={[styles.compactCellBold, { width: bW }]} wrap={false}>
               {colB}
             </Text>
-            <Text
-              style={[styles.compactCellBold, { width: rW, textAlign: "right" }]}
-              wrap={false}
-            >
+            <Text style={[styles.compactCellBold, { width: rW, textAlign: "right" }]} wrap={false}>
               {colRho}
             </Text>
           </View>
@@ -1627,10 +1604,7 @@ function CorrelationBlock({
               <Text style={[styles.compactCell, { width: bW }]} wrap={false}>
                 {p.costItemBName}
               </Text>
-              <Text
-                style={[styles.compactCell, { width: rW, textAlign: "right" }]}
-                wrap={false}
-              >
+              <Text style={[styles.compactCell, { width: rW, textAlign: "right" }]} wrap={false}>
                 {formatPdfRho(p.rho, language)}
               </Text>
             </View>
@@ -1646,10 +1620,7 @@ function CorrelationBlock({
     56,
     Math.max(28, Math.floor(PAGE_CONTENT_WIDTH * (n >= 12 ? 0.08 : 0.12))),
   )
-  const cellW = Math.max(
-    16,
-    Math.floor((PAGE_CONTENT_WIDTH - labelW) / Math.max(n, 1)),
-  )
+  const cellW = Math.max(16, Math.floor((PAGE_CONTENT_WIDTH - labelW) / Math.max(n, 1)))
   const headerFont = n > 12 ? 4 : n > 9 ? 4.5 : 5.5
   const cellFont = n > 12 ? 5 : n > 9 ? 5.5 : 6.5
   const rowH = n > 12 ? 10 : n > 9 ? 11 : 13
@@ -1667,9 +1638,7 @@ function CorrelationBlock({
               style={[styles.corrHeaderCell, { width: cellW, height: rowH + 10 }]}
             >
               <Text style={[styles.corrHeaderText, { fontSize: headerFont }]}>
-                {name.length > maxLabelChars
-                  ? `${name.slice(0, maxLabelChars - 1)}…`
-                  : name}
+                {name.length > maxLabelChars ? `${name.slice(0, maxLabelChars - 1)}…` : name}
               </Text>
             </View>
           ))}
@@ -1738,11 +1707,7 @@ function ContributionSection({
   if (blocks.length === 0) return null
   return (
     <View style={styles.sectionBlock}>
-      <SectionTitle
-        id={PDF_SECTION_IDS.contribution}
-        label={title}
-        pageRefs={pageRefs}
-      />
+      <SectionTitle id={PDF_SECTION_IDS.contribution} label={title} pageRefs={pageRefs} />
       {blocks.map((block, idx) => (
         <View key={`${block.projectName}-${idx}`} style={styles.contribBlock} wrap={false}>
           <Text style={styles.tornadoProjectTitle}>{block.projectName}</Text>
@@ -1756,9 +1721,7 @@ function ContributionSection({
             language={language}
             showTotalSpanBar
           />
-          <Text style={[styles.contribSubtitle, { marginTop: 8 }]}>
-            {reserveLabel}
-          </Text>
+          <Text style={[styles.contribSubtitle, { marginTop: 8 }]}>{reserveLabel}</Text>
           <PdfWaterfallChart
             waterfall={block.uncertaintyReserve}
             startLabel={p50Label}
@@ -1840,16 +1803,12 @@ export function ProjectReportDocument({
 
   const curves = sCurveSeries
     .map((series) => {
-      const values =
-        series.values ?? series.displayPoints?.map((point) => point.x) ?? []
+      const values = series.values ?? series.displayPoints?.map((point) => point.x) ?? []
       const points =
-        series.displayPoints?.map((point) => ({ ...point })) ??
-        computeSCurveDisplaySeries(values)
+        series.displayPoints?.map((point) => ({ ...point })) ?? computeSCurveDisplaySeries(values)
       if (points.length === 0) return null
       const markers = markerLevels.flatMap((p) => {
-        const value = series.values
-          ? percentile(series.values, p)
-          : percentile(values, p)
+        const value = series.values ? percentile(series.values, p) : percentile(values, p)
         if (value === null) return []
         return [{ percentile: p, value }]
       })
@@ -1860,8 +1819,7 @@ export function ProjectReportDocument({
       }
     })
     .filter(
-      (series): series is NonNullable<typeof series> =>
-        series !== null && series.points.length > 0,
+      (series): series is NonNullable<typeof series> => series !== null && series.points.length > 0,
     )
 
   let minX = Number.POSITIVE_INFINITY
@@ -1926,9 +1884,7 @@ export function ProjectReportDocument({
         <View wrap={false}>
           <Text style={styles.brand}>{brandName}</Text>
           <Text style={styles.title}>{title}</Text>
-          {coverContext ? (
-            <Text style={styles.projectNames}>{coverContext}</Text>
-          ) : null}
+          {coverContext ? <Text style={styles.projectNames}>{coverContext}</Text> : null}
           <Text style={styles.meta}>{generatedAtLabel}</Text>
 
           <CoverKeyFigures
@@ -2014,10 +1970,7 @@ export function ProjectReportDocument({
           const hasAssumptions = project.assumptions.length > 0
           const [firstAssumption, ...restAssumptions] = project.assumptions
           return (
-            <View
-              key={`${project.projectName}-assumptions-${pIdx}`}
-              style={styles.sectionBlock}
-            >
+            <View key={`${project.projectName}-assumptions-${pIdx}`} style={styles.sectionBlock}>
               <View wrap={false} minPresenceAhead={48}>
                 {multiProject ? (
                   <Text style={styles.projectHeading}>{project.projectName}</Text>
@@ -2045,9 +1998,7 @@ export function ProjectReportDocument({
         />
 
         {projectsBasis.map((project, pIdx) => {
-          const amountScale = resolvePdfAmountScale(
-            project.costItems.map((c) => c.mostLikely),
-          )
+          const amountScale = resolvePdfAmountScale(project.costItems.map((c) => c.mostLikely))
           return (
             <View key={`${project.projectName}-basis-${pIdx}`}>
               {multiProject ? (
@@ -2106,11 +2057,7 @@ export function ProjectReportDocument({
             minPresenceAhead={48}
           />
           {projectsBasis.map((project, pIdx) => (
-            <View
-              key={`${project.projectName}-impact-${pIdx}`}
-              wrap={false}
-              minPresenceAhead={64}
-            >
+            <View key={`${project.projectName}-impact-${pIdx}`} wrap={false} minPresenceAhead={64}>
               {multiProject ? (
                 <Text style={styles.projectHeading}>{project.projectName}</Text>
               ) : null}
@@ -2137,9 +2084,7 @@ export function ProjectReportDocument({
             <View
               key={`${project.projectName}-corr-${pIdx}`}
               wrap={false}
-              minPresenceAhead={
-                project.correlation.kind === "matrix" ? 280 : 72
-              }
+              minPresenceAhead={project.correlation.kind === "matrix" ? 280 : 72}
             >
               {multiProject ? (
                 <Text style={styles.projectHeading}>{project.projectName}</Text>
@@ -2158,11 +2103,7 @@ export function ProjectReportDocument({
         </View>
 
         <View style={styles.sectionBlock} wrap={false} minPresenceAhead={120}>
-          <ChapterTitle
-            id={PDF_CHAPTER_IDS.method}
-            label={methodTitle}
-            pageRefs={pageRefs}
-          />
+          <ChapterTitle id={PDF_CHAPTER_IDS.method} label={methodTitle} pageRefs={pageRefs} />
           {methodParagraphs.map((para, idx) => (
             <Text key={`m-${idx}`} style={styles.methodPara}>
               {para}
@@ -2187,4 +2128,3 @@ export function ProjectReportDocument({
     </Document>
   )
 }
-

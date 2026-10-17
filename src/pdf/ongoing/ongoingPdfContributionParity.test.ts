@@ -32,10 +32,14 @@ import {
   type PdfContributionWaterfall,
 } from "@/pdf/buildPdfReportModel"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import { PDF_WATERFALL_PLOT_WIDTH, pdfWaterfallTotalSpanBar, pdfWaterfallValueToX, preparePdfWaterfallPresentation } from "@/pdf/pdfWaterfallLayout"
+import {
+  PDF_WATERFALL_PLOT_WIDTH,
+  pdfWaterfallTotalSpanBar,
+  pdfWaterfallValueToX,
+  preparePdfWaterfallPresentation,
+} from "@/pdf/pdfWaterfallLayout"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -135,8 +139,7 @@ function sampleShapleyContribution(args: {
 }
 
 const coverCopy = {
-  reportBasisArchivedOnly:
-    "Report basis: Archived checkpoints up to and including {cutoffLabel}.",
+  reportBasisArchivedOnly: "Report basis: Archived checkpoints up to and including {cutoffLabel}.",
   reportBasisWithExcludedDraft:
     "Report basis: Archived checkpoints up to and including {cutoffLabel}. {draftLabel} is active and is not included in the report.",
   reportMeaning: "Ongoing report meaning.",
@@ -216,12 +219,8 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
       language: "en",
       valueFormat: "adaptive",
     })
-    expect(prepared.displayRows.map((r) => r.id)).toEqual(
-      appRows.map((r) => r.id),
-    )
-    expect(prepared.displayRows.map((r) => r.name)).toEqual(
-      appRows.map((r) => r.name),
-    )
+    expect(prepared.displayRows.map((r) => r.id)).toEqual(appRows.map((r) => r.id))
+    expect(prepared.displayRows.map((r) => r.name)).toEqual(appRows.map((r) => r.name))
     expect(prepared.displayRows).toHaveLength(7) // 6 + Other
     expect(prepared.displayRows[6]!.id).toBe("__other__")
   })
@@ -271,9 +270,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
       language: "en",
       valueFormat: "adaptive",
     })
-    expect(prepared.formatted.start).toBe(
-      formatAdaptiveMonetaryValue(100_000_000, "en"),
-    )
+    expect(prepared.formatted.start).toBe(formatAdaptiveMonetaryValue(100_000_000, "en"))
     expect(prepared.formatted.rows[0]!.delta).toBe(
       formatAdaptiveMonetarySignedDelta(1_900_000, "en"),
     )
@@ -358,10 +355,9 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
     expect(built.ok).toBe(true)
     if (!built.ok) return
     expect(built.model.latestDetail.contribution).not.toBeNull()
-    const names =
-      built.model.latestDetail.contribution!.expectedAddition.contributions.map(
-        (c) => c.name,
-      )
+    const names = built.model.latestDetail.contribution!.expectedAddition.contributions.map(
+      (c) => c.name,
+    )
     expect(names).toContain("CP1-Steel")
     expect(names).not.toContain("CP2-Steel")
     expect(built.model.cutoff.sequence).toBe(1)
@@ -390,8 +386,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
     // Default chart-level format — no adaptive override on Single.
     expect(singleDoc).not.toContain('valueFormat="adaptive"')
     const shared =
-      readSrc("src/pdf/pdfWaterfallChart.tsx") +
-      readSrc("src/pdf/pdfWaterfallLayout.ts")
+      readSrc("src/pdf/pdfWaterfallChart.tsx") + readSrc("src/pdf/pdfWaterfallLayout.ts")
     expect(shared).toContain('valueFormat = "chart"')
     expect(shared).toContain("PDF_WATERFALL_PLOT_WIDTH")
     expect(PDF_WATERFALL_PLOT_WIDTH).toBe(96)
@@ -403,9 +398,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
       waterfall: {
         startValue: 100_000_000,
         endValue: 101_000_000,
-        contributions: [
-          { id: "a", name: "A", contribution: 1_000_000, type: "cost" },
-        ],
+        contributions: [{ id: "a", name: "A", contribution: 1_000_000, type: "cost" }],
       },
       otherLabel: "Other",
       language: "en",
@@ -416,9 +409,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
       waterfall: {
         startValue: 100,
         endValue: 200,
-        contributions: [
-          { id: "a", name: "A", contribution: 100, type: "cost" },
-        ],
+        contributions: [{ id: "a", name: "A", contribution: 100, type: "cost" }],
       },
       otherLabel: "Other",
       language: "en",
@@ -458,23 +449,13 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
     const groupedBar = pdfWaterfallTotalSpanBar(grouped.layout)
 
     // Summary start/end = waterfall start/final endpoint (same mapping as bars).
+    expect(smallBar.xStart).toBe(pdfWaterfallValueToX(small.layout.startValue, small.layout))
+    expect(smallBar.xEnd).toBe(pdfWaterfallValueToX(small.layout.endValue, small.layout))
     expect(smallBar.xStart).toBe(
-      pdfWaterfallValueToX(small.layout.startValue, small.layout),
+      pdfWaterfallValueToX(small.layout.contributionRows[0]!.cumulativeBefore, small.layout),
     )
     expect(smallBar.xEnd).toBe(
-      pdfWaterfallValueToX(small.layout.endValue, small.layout),
-    )
-    expect(smallBar.xStart).toBe(
-      pdfWaterfallValueToX(
-        small.layout.contributionRows[0]!.cumulativeBefore,
-        small.layout,
-      ),
-    )
-    expect(smallBar.xEnd).toBe(
-      pdfWaterfallValueToX(
-        small.layout.contributionRows.at(-1)!.cumulativeAfter,
-        small.layout,
-      ),
+      pdfWaterfallValueToX(small.layout.contributionRows.at(-1)!.cumulativeAfter, small.layout),
     )
 
     // Changing span changes summary width (not a fixed default).
@@ -483,9 +464,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
       waterfall: {
         startValue: 100,
         endValue: 110,
-        contributions: [
-          { id: "a", name: "A", contribution: 10, type: "cost" },
-        ],
+        contributions: [{ id: "a", name: "A", contribution: 10, type: "cost" }],
       },
       otherLabel: "Other",
       language: "en",
@@ -500,18 +479,14 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
 
     // Mixed: endpoint is start+net, not geometric bar bbox extremes.
     expect(mixed.layout.endValue).toBe(110)
-    expect(mixedBar.xEnd).toBe(
-      pdfWaterfallValueToX(mixed.layout.endValue, mixed.layout),
-    )
+    expect(mixedBar.xEnd).toBe(pdfWaterfallValueToX(mixed.layout.endValue, mixed.layout))
 
     // Grouped Top-6+Other: last cumulativeAfter equals endValue.
     expect(grouped.layout.contributionRows.at(-1)!.cumulativeAfter).toBeCloseTo(
       grouped.layout.endValue,
       9,
     )
-    expect(groupedBar.xEnd).toBe(
-      pdfWaterfallValueToX(grouped.layout.endValue, grouped.layout),
-    )
+    expect(groupedBar.xEnd).toBe(pdfWaterfallValueToX(grouped.layout.endValue, grouped.layout))
     expect(grouped.displayRows.some((r) => r.id === "__other__")).toBe(true)
 
     const shared = readSrc("src/pdf/pdfWaterfallChart.tsx")

@@ -11,7 +11,11 @@ import { createPortal } from "react-dom"
 import { ChevronDown, Archive, Menu, MoreHorizontal, Plus } from "lucide-react"
 
 import { AnalysisLibraryNav } from "@/features/analysis-library/AnalysisLibraryNav"
-import { buildLibraryPath, readLibraryFilterFromLocation, type LibraryNavFilter } from "@/features/analysis-library/libraryNavigation"
+import {
+  buildLibraryPath,
+  readLibraryFilterFromLocation,
+  type LibraryNavFilter,
+} from "@/features/analysis-library/libraryNavigation"
 import { BrandWordmark } from "@/shared/BrandWordmark"
 import { PRODUCT_NAME } from "@/shared/brand"
 import { AnalysisModeIndicator } from "@/features/analysis-library/AnalysisModeIndicator"
@@ -25,10 +29,7 @@ import {
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
 } from "@/domain/analysis/analysisNameUniqueness"
-import type {
-  AnalysisFolder,
-  AnalysisSummary,
-} from "@/domain/analysis/analysisDocument"
+import type { AnalysisFolder, AnalysisSummary } from "@/domain/analysis/analysisDocument"
 import {
   buildAnalysisWorkspacePath,
   getLocationPathKey,
@@ -66,10 +67,7 @@ function resolveLibraryHeading(
   if (filter.kind === "all") return t("library.allAnalyses")
   if (filter.kind === "folder") {
     if (filter.folderId === null) return t("library.ungrouped")
-    return (
-      folders.find((f) => f.id === filter.folderId)?.name ??
-      t("library.folders")
-    )
+    return folders.find((f) => f.id === filter.folderId)?.name ?? t("library.folders")
   }
   // Legacy recent/archived nav kinds — fall back to All heading if reached.
   return t("library.allAnalyses")
@@ -80,9 +78,7 @@ export type LibrarySortMode = "updatedAt" | "nameAsc" | "nameDesc"
 export type TrashSortMode = "deletedAt" | LibrarySortMode
 
 type ConfirmKind =
-  | { kind: "trash"; id: string }
-  | { kind: "permanent"; id: string }
-  | { kind: "empty" }
+  { kind: "trash"; id: string } | { kind: "permanent"; id: string } | { kind: "empty" }
 
 function compareAnalysisNames(
   a: string,
@@ -102,20 +98,13 @@ function sortLibraryList(
 ): AnalysisSummary[] {
   const next = list.slice()
   if (sortMode === "deletedAt") {
-    next.sort(
-      (a, b) =>
-        new Date(b.deletedAt ?? 0).getTime() -
-        new Date(a.deletedAt ?? 0).getTime(),
-    )
+    next.sort((a, b) => new Date(b.deletedAt ?? 0).getTime() - new Date(a.deletedAt ?? 0).getTime())
   } else if (sortMode === "nameAsc") {
     next.sort((a, b) => compareAnalysisNames(a.name, b.name, language, "asc"))
   } else if (sortMode === "nameDesc") {
     next.sort((a, b) => compareAnalysisNames(a.name, b.name, language, "desc"))
   } else {
-    next.sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-    )
+    next.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
   }
   return next
 }
@@ -154,8 +143,7 @@ export function AnalysisLibraryPage() {
   const setFilter = useCallback((next: LibraryNavFilter) => {
     navigateTo(buildLibraryPath(next))
   }, [])
-  const [statusFilter, setStatusFilter] =
-    useState<LibraryStatusFilter>("all")
+  const [statusFilter, setStatusFilter] = useState<LibraryStatusFilter>("all")
   const [sortMode, setSortMode] = useState<LibrarySortMode>("updatedAt")
   const [loading, setLoading] = useState(true)
   const [confirm, setConfirm] = useState<ConfirmKind | null>(null)
@@ -199,14 +187,11 @@ export function AnalysisLibraryPage() {
 
   /** Open New Analysis with optional folder preselection (folder empty states). Home CTA uses openNewAnalysisActionRef instead. */
   const requestNewAnalysis = (folderId?: string | null) => {
-    setNewAnalysisFolderOverride(
-      folderId !== undefined ? folderId : undefined,
-    )
+    setNewAnalysisFolderOverride(folderId !== undefined ? folderId : undefined)
     setNewAnalysisOpenRequest((n) => n + 1)
   }
 
-  const isRealFolderView =
-    filter.kind === "folder" && filter.folderId != null
+  const isRealFolderView = filter.kind === "folder" && filter.folderId != null
 
   const folderIsEmpty = useMemo(() => {
     if (!isRealFolderView || filter.kind !== "folder") return false
@@ -218,11 +203,7 @@ export function AnalysisLibraryPage() {
     () =>
       summaries
         .slice()
-        .sort(
-          (a, b) =>
-            new Date(b.lastOpenedAt).getTime() -
-            new Date(a.lastOpenedAt).getTime(),
-        )
+        .sort((a, b) => new Date(b.lastOpenedAt).getTime() - new Date(a.lastOpenedAt).getTime())
         .slice(0, HOME_RECENT_LIMIT),
     [summaries],
   )
@@ -243,20 +224,9 @@ export function AnalysisLibraryPage() {
 
     list = applyStatusFilter(list, statusFilter)
     return sortLibraryList(list, sortMode, language)
-  }, [
-    summaries,
-    trashItems,
-    filter,
-    recentForHome,
-    statusFilter,
-    sortMode,
-    language,
-  ])
+  }, [summaries, trashItems, filter, recentForHome, statusFilter, sortMode, language])
 
-  const pageHeading = useMemo(
-    () => resolveLibraryHeading(filter, folders, t),
-    [filter, folders, t],
-  )
+  const pageHeading = useMemo(() => resolveLibraryHeading(filter, folders, t), [filter, folders, t])
 
   const emptyFilterMessage = useMemo(() => {
     const inFolder = filter.kind === "folder"
@@ -264,9 +234,7 @@ export function AnalysisLibraryPage() {
       return inFolder ? t("library.noDraftsInFolder") : t("library.noDrafts")
     }
     if (statusFilter === "archived") {
-      return inFolder
-        ? t("library.noArchivedInFolder")
-        : t("library.noArchived")
+      return inFolder ? t("library.noArchivedInFolder") : t("library.noArchived")
     }
     return t("library.noAnalysesInFilter")
   }, [filter.kind, statusFilter, t])
@@ -349,8 +317,7 @@ export function AnalysisLibraryPage() {
       await refresh()
     } catch (error) {
       setMoveError(
-        isAnalysisNameConflictOnMoveError(error) ||
-          isAnalysisNameConflictError(error)
+        isAnalysisNameConflictOnMoveError(error) || isAnalysisNameConflictError(error)
           ? t("library.duplicateNameOnMove")
           : t("library.saveError"),
       )
@@ -438,10 +405,7 @@ export function AnalysisLibraryPage() {
       ) : null}
 
       <div className="mx-auto flex w-full max-w-[90rem] flex-1 gap-8 px-3 py-6 md:px-5 lg:px-6">
-        <nav
-          className="hidden w-56 shrink-0 md:block"
-          aria-label={t("library.title")}
-        >
+        <nav className="hidden w-56 shrink-0 md:block" aria-label={t("library.title")}>
           <AnalysisLibraryNav
             filter={filter}
             onFilterChange={setFilter}
@@ -481,9 +445,7 @@ export function AnalysisLibraryPage() {
               items={trashItems}
               language={language}
               onRestore={(id) => void restoreItem(id)}
-              onDeletePermanently={(id) =>
-                setConfirm({ kind: "permanent", id })
-              }
+              onDeletePermanently={(id) => setConfirm({ kind: "permanent", id })}
               onEmptyTrash={() => setConfirm({ kind: "empty" })}
             />
           ) : (
@@ -592,9 +554,7 @@ export function AnalysisLibraryPage() {
                               setMoveError(null)
                               setMoveTarget(item)
                             }}
-                            onMoveToTrash={() =>
-                              setConfirm({ kind: "trash", id: item.id })
-                            }
+                            onMoveToTrash={() => setConfirm({ kind: "trash", id: item.id })}
                           />
                         ))
                       )}
@@ -607,10 +567,7 @@ export function AnalysisLibraryPage() {
         </main>
       </div>
 
-      <div
-        className="mt-auto flex justify-center pt-10 pb-8 text-center"
-        role="contentinfo"
-      >
+      <div className="mt-auto flex justify-center pt-10 pb-8 text-center" role="contentinfo">
         <span className="block font-sans text-[10px] leading-none text-muted-foreground/70">
           © 2026 {PRODUCT_NAME}
         </span>
@@ -663,10 +620,7 @@ export function AnalysisLibraryPage() {
                   }}
                 />
                 {renameError ? (
-                  <p
-                    className="m-0 mb-3 font-sans text-[12px] text-destructive"
-                    role="alert"
-                  >
+                  <p className="m-0 mb-3 font-sans text-[12px] text-destructive" role="alert">
                     {renameError}
                   </p>
                 ) : (
@@ -750,8 +704,7 @@ function LibraryListToolbarSelect<T extends string>({
     }
   }, [open])
 
-  const currentLabel =
-    options.find((o) => o.value === value)?.label ?? options[0]?.label ?? ""
+  const currentLabel = options.find((o) => o.value === value)?.label ?? options[0]?.label ?? ""
 
   return (
     <div className="relative shrink-0" ref={rootRef}>
@@ -786,9 +739,7 @@ function LibraryListToolbarSelect<T extends string>({
               aria-selected={opt.value === value}
               className={cn(
                 "flex w-full px-3 py-1.5 text-left font-sans text-[12px] hover:bg-muted/60",
-                opt.value === value
-                  ? "font-medium text-foreground"
-                  : "text-foreground/90",
+                opt.value === value ? "font-medium text-foreground" : "text-foreground/90",
               )}
               onClick={() => {
                 onChange(opt.value)
@@ -830,9 +781,7 @@ function LibraryHomeContent({
   const { t } = useI18n()
 
   if (loading) {
-    return (
-      <p className="m-0 py-8 font-sans text-[13px] text-muted-foreground">…</p>
-    )
+    return <p className="m-0 py-8 font-sans text-[13px] text-muted-foreground">…</p>
   }
 
   if (isEmptyLibrary) {
@@ -896,8 +845,7 @@ function TrashView({
   onEmptyTrash: () => void
 }) {
   const { t } = useI18n()
-  const [statusFilter, setStatusFilter] =
-    useState<LibraryStatusFilter>("all")
+  const [statusFilter, setStatusFilter] = useState<LibraryStatusFilter>("all")
   const [sortMode, setSortMode] = useState<TrashSortMode>("deletedAt")
 
   const visible = useMemo(() => {
@@ -913,9 +861,7 @@ function TrashView({
         : t("library.trashEmpty")
 
   if (loading) {
-    return (
-      <p className="m-0 py-8 font-sans text-[13px] text-muted-foreground">…</p>
-    )
+    return <p className="m-0 py-8 font-sans text-[13px] text-muted-foreground">…</p>
   }
 
   const hasItems = items.length > 0
@@ -1182,14 +1128,10 @@ function LibraryListRow({
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         )}
         title={
-          item.status === "archived"
-            ? `${item.name} — ${t("library.statusArchived")}`
-            : item.name
+          item.status === "archived" ? `${item.name} — ${t("library.statusArchived")}` : item.name
         }
         aria-label={
-          item.status === "archived"
-            ? `${item.name} — ${t("library.statusArchived")}`
-            : item.name
+          item.status === "archived" ? `${item.name} — ${t("library.statusArchived")}` : item.name
         }
         onClick={onOpen}
       >
@@ -1208,16 +1150,12 @@ function LibraryListRow({
         </span>
         <span className="mt-0.5 flex flex-wrap items-center gap-x-2 font-sans text-[11px] text-muted-foreground">
           <span>
-            {item.status === "archived"
-              ? t("library.statusArchived")
-              : t("library.statusDraft")}
+            {item.status === "archived" ? t("library.statusArchived") : t("library.statusDraft")}
           </span>
           <span aria-hidden>·</span>
           <span>
             {formatShortDate(
-              item.status === "archived"
-                ? (item.archivedAt ?? item.updatedAt)
-                : item.updatedAt,
+              item.status === "archived" ? (item.archivedAt ?? item.updatedAt) : item.updatedAt,
               language,
             )}
           </span>
@@ -1260,12 +1198,7 @@ function TrashListRow({
 
   return (
     <li className="flex items-center justify-between gap-2 border-b border-border/40 py-1.5">
-      <div
-        className={cn(
-          "min-w-0 flex-1 rounded px-2 py-1.5",
-          "text-foreground/90",
-        )}
-      >
+      <div className={cn("min-w-0 flex-1 rounded px-2 py-1.5", "text-foreground/90")}>
         <span className="inline-flex min-w-0 max-w-full items-center gap-1.5">
           <span className="min-w-0 truncate font-sans text-[13px] font-medium text-foreground">
             {item.name}
@@ -1281,9 +1214,7 @@ function TrashListRow({
         </span>
         <span className="mt-0.5 flex flex-wrap items-center gap-x-2 font-sans text-[11px] text-muted-foreground">
           <span>
-            {item.status === "archived"
-              ? t("library.statusArchived")
-              : t("library.statusDraft")}
+            {item.status === "archived" ? t("library.statusArchived") : t("library.statusDraft")}
           </span>
           {item.deletedAt ? (
             <>

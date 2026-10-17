@@ -5,12 +5,7 @@ import {
 } from "@/domain/guided/guidedWorkflow"
 
 /** Broad user-facing Focus phases (not every internal Guided step). */
-export type FocusUserPhase =
-  | "project"
-  | "costs"
-  | "drivers"
-  | "simulation"
-  | "results"
+export type FocusUserPhase = "project" | "costs" | "drivers" | "simulation" | "results"
 
 export const FOCUS_USER_PHASES: readonly FocusUserPhase[] = [
   "project",
@@ -31,9 +26,7 @@ const PHASE_ORDER: Record<FocusUserPhase, number> = {
 }
 
 /** Map a Guided workflow phase → broad Focus phase (Intro → null). */
-export function getFocusPhaseForGuidedStep(
-  phase: GuidedWorkflowPhase,
-): FocusUserPhase | null {
+export function getFocusPhaseForGuidedStep(phase: GuidedWorkflowPhase): FocusUserPhase | null {
   switch (phase) {
     case "focusIntro":
       return null
@@ -70,10 +63,7 @@ export function getFocusUserPhase(args: {
   return getFocusPhaseForGuidedStep(args.guidedWorkflowPhase)
 }
 
-export function compareFocusUserPhases(
-  a: FocusUserPhase,
-  b: FocusUserPhase,
-): number {
+export function compareFocusUserPhases(a: FocusUserPhase, b: FocusUserPhase): number {
   return PHASE_ORDER[a] - PHASE_ORDER[b]
 }
 

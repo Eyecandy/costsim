@@ -21,7 +21,6 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -53,19 +52,13 @@ describe("deriveSavedCorrelationSummaries", () => {
   })
 
   it("B: uniform complete group is summarized as one group", () => {
-    const store = applyCostCorrelationGroupPatch(
-      undefined,
-      ["a", "b", "c"],
-      "0.5",
-    )
+    const store = applyCostCorrelationGroupPatch(undefined, ["a", "b", "c"], "0.5")
     const summaries = deriveSavedCorrelationSummaries(rows, store)
     expect(summaries).toHaveLength(1)
     expect(summaries[0]?.kind).toBe("group")
     expect(summaries[0]?.rowIds).toEqual(["a", "b", "c"])
     expect(summaries[0]?.rho).toBe(0.5)
-    expect(
-      isUniformCorrelationClique(store, ["a", "b", "c"], 0.5),
-    ).toBe(true)
+    expect(isUniformCorrelationClique(store, ["a", "b", "c"], 0.5)).toBe(true)
     const label = formatSavedCorrelationSummaryLabel({
       summary: summaries[0]!,
       nameById: new Map(rows.map((r) => [r.id, r.name])),
@@ -90,36 +83,21 @@ describe("deriveSavedCorrelationSummaries", () => {
           s.rho === 0.3,
       ),
     ).toBe(true)
-    expect(
-      summaries.filter((s) => s.rho === 0.5 && s.kind === "pair"),
-    ).toHaveLength(2)
+    expect(summaries.filter((s) => s.rho === 0.5 && s.kind === "pair")).toHaveLength(2)
   })
 
   it("L: zero correlations are omitted from overview", () => {
-    let store = applyCostCorrelationGroupPatch(
-      undefined,
-      ["a", "b", "c"],
-      "0.5",
-    )
+    let store = applyCostCorrelationGroupPatch(undefined, ["a", "b", "c"], "0.5")
     store = applyCostCorrelationGroupPatch(store, ["a", "b", "c"], "0")
     expect(deriveSavedCorrelationSummaries(rows, store)).toEqual([])
   })
 
   it("M: overlapping edits update overview truthfully", () => {
-    let store = applyCostCorrelationGroupPatch(
-      undefined,
-      ["a", "b", "c"],
-      "0.5",
-    )
+    let store = applyCostCorrelationGroupPatch(undefined, ["a", "b", "c"], "0.5")
     expect(deriveSavedCorrelationSummaries(rows, store)).toHaveLength(1)
     store = applyCostCorrelationGroupPatch(store, ["a", "b"], "0.3")
     const summaries = deriveSavedCorrelationSummaries(rows, store)
-    expect(
-      summaries.some(
-        (s) =>
-          s.rowIds.length === 3 && s.rho === 0.5,
-      ),
-    ).toBe(false)
+    expect(summaries.some((s) => s.rowIds.length === 3 && s.rho === 0.5)).toBe(false)
     expect(
       summaries.some(
         (s) =>
@@ -129,9 +107,7 @@ describe("deriveSavedCorrelationSummaries", () => {
           s.rho === 0.3,
       ),
     ).toBe(true)
-    expect(
-      summaries.filter((s) => s.rho === 0.5),
-    ).toHaveLength(2)
+    expect(summaries.filter((s) => s.rho === 0.5)).toHaveLength(2)
   })
 
   it("N: pairwise matrix remains source of truth (no separate group store)", () => {
@@ -209,23 +185,14 @@ describe("correlation overview UX wiring", () => {
       appSource().indexOf("const savedCorrelationSummaries"),
     )
     expect(applyFn).toContain("setCorrelationEditBlocked(true)")
-    expect(applyFn).toMatch(
-      /setCorrelationEditBlocked\(true\)\s*return/,
-    )
-    const failBranch = applyFn.slice(
-      0,
-      applyFn.indexOf("setCorrelationEditBlocked(false)"),
-    )
+    expect(applyFn).toMatch(/setCorrelationEditBlocked\(true\)\s*return/)
+    const failBranch = applyFn.slice(0, applyFn.indexOf("setCorrelationEditBlocked(false)"))
     expect(failBranch).not.toContain("flashCorrelationFeedback")
     expect(failBranch).not.toContain("clearCorrelationEditingState")
   })
 
   it("remove control zeros represented pairs only; overlaps preserved", () => {
-    let store = applyCostCorrelationGroupPatch(
-      undefined,
-      ["a", "b", "c"],
-      "0.5",
-    )
+    let store = applyCostCorrelationGroupPatch(undefined, ["a", "b", "c"], "0.5")
     store = applyCostCorrelationPairPatch(store, "a", "d", "0.3")
     const before = deriveSavedCorrelationSummaries(rows, store)
     expect(before.some((s) => s.rowIds.length === 3 && s.rho === 0.5)).toBe(true)
@@ -243,12 +210,7 @@ describe("correlation overview UX wiring", () => {
     const after = deriveSavedCorrelationSummaries(rows, store)
     expect(after.some((s) => s.rowIds.length === 3)).toBe(false)
     expect(
-      after.some(
-        (s) =>
-          s.rowIds.includes("a") &&
-          s.rowIds.includes("d") &&
-          s.rho === 0.3,
-      ),
+      after.some((s) => s.rowIds.includes("a") && s.rowIds.includes("d") && s.rho === 0.3),
     ).toBe(true)
   })
 
@@ -266,9 +228,7 @@ describe("correlation overview UX wiring", () => {
     const css = readFileSync(join(repoRoot, "src/index.css"), "utf8")
     expect(css).toContain(".corr-summary-remove")
     expect(css).toContain("@media (hover: none)")
-    expect(css).toMatch(
-      /\.group\\\/corr-summary:hover \.corr-summary-remove/,
-    )
+    expect(css).toMatch(/\.group\\\/corr-summary:hover \.corr-summary-remove/)
 
     const app = appSource()
     expect(app).toContain("handleRemoveCorrelationSummary")
@@ -287,18 +247,9 @@ describe("correlation overview UX wiring", () => {
     store = applyCostCorrelationPairPatch(store, "a", "c", "0.5")
     store = applyCostCorrelationGroupPatch(store, ["a", "b"], "0")
     const summaries = deriveSavedCorrelationSummaries(rows, store)
+    expect(summaries.some((s) => s.rowIds.includes("a") && s.rowIds.includes("b"))).toBe(false)
     expect(
-      summaries.some(
-        (s) => s.rowIds.includes("a") && s.rowIds.includes("b"),
-      ),
-    ).toBe(false)
-    expect(
-      summaries.some(
-        (s) =>
-          s.rowIds.includes("a") &&
-          s.rowIds.includes("c") &&
-          s.rho === 0.5,
-      ),
+      summaries.some((s) => s.rowIds.includes("a") && s.rowIds.includes("c") && s.rho === 0.5),
     ).toBe(true)
   })
 
@@ -337,11 +288,7 @@ describe("correlation overview UX wiring", () => {
   })
 
   it("clicking summary initializes uniform slider state", () => {
-    const store = applyCostCorrelationGroupPatch(
-      undefined,
-      ["a", "b", "c"],
-      "0.5",
-    )
+    const store = applyCostCorrelationGroupPatch(undefined, ["a", "b", "c"], "0.5")
     expect(getSelectedGroupCorrelationState(store, ["a", "b", "c"])).toEqual({
       kind: "uniform",
       value: 0.5,

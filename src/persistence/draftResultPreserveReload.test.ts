@@ -52,25 +52,17 @@ function persistPrefsPreservingResults(args: {
 }): AnalysisDocument {
   const authoritativeOngoing =
     args.existing.analysisMode === "ongoing"
-      ? pickAuthoritativeOngoingDraftResult(
-          args.sessionOngoing,
-          args.existing.ongoingDraftResult,
-        )
+      ? pickAuthoritativeOngoingDraftResult(args.sessionOngoing, args.existing.ongoingDraftResult)
       : undefined
   const authoritativeSingle =
     args.existing.analysisMode === "single"
-      ? pickAuthoritativeSingleDraftResult(
-          args.sessionSingle,
-          args.existing.singleDraftResult,
-        )
+      ? pickAuthoritativeSingleDraftResult(args.sessionSingle, args.existing.singleDraftResult)
       : undefined
   return {
     ...args.existing,
     ...replaceDraftResultField(
       "ongoingDraftResult",
-      args.existing.analysisMode === "ongoing"
-        ? authoritativeOngoing
-        : undefined,
+      args.existing.analysisMode === "ongoing" ? authoritativeOngoing : undefined,
     ),
     ...replaceDraftResultField(
       "singleDraftResult",
@@ -207,12 +199,8 @@ describe("draft result preserve / Results visibility", () => {
     )
     const cold = await repo.get(doc.id)
     expect(isSingleDraftResultSnapshot(cold?.singleDraftResult)).toBe(true)
-    expect(
-      cold?.singleDraftResult?.byProjectId[project.id]?.keyFigures.percentiles,
-    ).toEqual(frozen)
-    expect(cold?.draftResultPreferences?.keyFigures.percentiles).toEqual([
-      10, 50, 90,
-    ])
+    expect(cold?.singleDraftResult?.byProjectId[project.id]?.keyFigures.percentiles).toEqual(frozen)
+    expect(cold?.draftResultPreferences?.keyFigures.percentiles).toEqual([10, 50, 90])
   })
 
   it("D: Pref save with no new Single result does not remove singleDraftResult", () => {
@@ -225,9 +213,7 @@ describe("draft result preserve / Results visibility", () => {
       ...existing,
       singleDraftResult: undefined as undefined,
     }
-    expect(
-      JSON.parse(JSON.stringify(wiped)).singleDraftResult,
-    ).toBeUndefined()
+    expect(JSON.parse(JSON.stringify(wiped)).singleDraftResult).toBeUndefined()
 
     const preserved = {
       ...existing,
@@ -277,9 +263,7 @@ describe("draft result preserve / Results visibility", () => {
     })
     await repo.saveDraft({ ...doc, singleDraftResult: compact })
     const before = await repo.get(doc.id)
-    await repo.saveDraft(
-      omitDraftResultFields(before!, "singleDraftResult"),
-    )
+    await repo.saveDraft(omitDraftResultFields(before!, "singleDraftResult"))
     const after = await repo.get(doc.id)
     expect(after?.singleDraftResult).toBeUndefined()
   })
@@ -312,9 +296,7 @@ describe("draft result preserve / Results visibility", () => {
       ongoingDraftResult: compact,
     })
     const before = await repo.get(doc.id)
-    await repo.saveDraft(
-      omitDraftResultFields(before!, "ongoingDraftResult"),
-    )
+    await repo.saveDraft(omitDraftResultFields(before!, "ongoingDraftResult"))
     const after = await repo.get(doc.id)
     expect(after?.ongoingDraftResult).toBeUndefined()
   })
@@ -328,9 +310,7 @@ describe("draft result preserve / Results visibility", () => {
     expect(gate).toContain("librarySession.ongoingDraftResult")
     expect(gate).toContain("librarySession.activeCheckpoint?.id")
     expect(gate).toContain("librarySession.singleDraftResult")
-    expect(app).toContain(
-      "ongoingCompactResult ??",
-    )
+    expect(app).toContain("ongoingCompactResult ??")
   })
 
   it("I: Wrong-checkpoint Ongoing result does not match mount ownership", () => {
@@ -339,24 +319,21 @@ describe("draft result preserve / Results visibility", () => {
       analysisId: "a1",
       checkpointId: "cp-other",
     }
-    const matches =
-      draft.analysisId === "a1" && draft.checkpointId === activeCheckpointId
+    const matches = draft.analysisId === "a1" && draft.checkpointId === activeCheckpointId
     expect(matches).toBe(false)
   })
 
   it("J: replaceDraftResultField omits nullish; omit clears intentionally", () => {
     expect(replaceDraftResultField("singleDraftResult", null)).toEqual({})
     expect(replaceDraftResultField("singleDraftResult", undefined)).toEqual({})
-    expect(
-      replaceDraftResultField("singleDraftResult", { kind: "x" }),
-    ).toEqual({ singleDraftResult: { kind: "x" } })
+    expect(replaceDraftResultField("singleDraftResult", { kind: "x" })).toEqual({
+      singleDraftResult: { kind: "x" },
+    })
     const cleared = omitDraftResultFields(
       { a: 1, singleDraftResult: { kind: "x" }, b: 2 },
       "singleDraftResult",
     )
     expect(cleared).toEqual({ a: 1, b: 2 })
-    expect(
-      Object.prototype.hasOwnProperty.call(cleared, "singleDraftResult"),
-    ).toBe(false)
+    expect(Object.prototype.hasOwnProperty.call(cleared, "singleDraftResult")).toBe(false)
   })
 })

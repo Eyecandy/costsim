@@ -29,7 +29,7 @@ export function SimulationStrip({
   showValidationFeedback,
 }: {
   analysisReadOnly: boolean
-  currentValidationError: 'projects.invalidInputForRun' | 'projects.emptyCostBasisForRun' | null
+  currentValidationError: "projects.invalidInputForRun" | "projects.emptyCostBasisForRun" | null
   handleRevertInputsToLastSimulation: () => void
   handleRun: () => void
   isOngoingAnalysis: boolean
@@ -45,9 +45,7 @@ export function SimulationStrip({
     <>
       <div
         className={
-          isOngoingAnalysis
-            ? ONGOING_SIMULATION_CELL_CLASS
-            : STICKY_CONTROL_STRIP_CLASSNAME
+          isOngoingAnalysis ? ONGOING_SIMULATION_CELL_CLASS : STICKY_CONTROL_STRIP_CLASSNAME
         }
         role="region"
         aria-label={t("projects.simulationStripRegion")}
@@ -65,10 +63,7 @@ export function SimulationStrip({
             <SpotlightLoadingText
               text={t("buttons.simulating")}
               tone="primary"
-              className={cn(
-                "font-sans text-xs font-semibold",
-                brandPrimaryTextClass,
-              )}
+              className={cn("font-sans text-xs font-semibold", brandPrimaryTextClass)}
               data-simulation-loading=""
               aria-live="polite"
               aria-busy="true"
@@ -100,18 +95,12 @@ export function SimulationStrip({
         </div>
         <div className={SIMULATION_NOTICE_ZONE_CLASS}>
           {runErrorKey === "projects.workerError" ? (
-            <p
-              className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}
-              role="alert"
-            >
+            <p className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")} role="alert">
               {t(runErrorKey)}
             </p>
           ) : null}
           {showValidationFeedback ? (
-            <p
-              className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}
-              role="alert"
-            >
+            <p className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")} role="alert">
               {noticeWithColorWord(
                 // showValidationFeedback implies a non-null validation error.
                 t(currentValidationError!),
@@ -130,12 +119,7 @@ export function SimulationStrip({
               >
                 {t("projects.staleInputsTitle")}
               </p>
-              <p
-                className={cn(
-                  SIMULATION_NOTICE_TEXT_CLASS,
-                  "min-w-0 break-words",
-                )}
-              >
+              <p className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}>
                 {showStaleInputChanges
                   ? noticeWithColorWord(
                       t("projects.staleInputsNoticeWithChanges"),
@@ -151,9 +135,7 @@ export function SimulationStrip({
                   size="sm"
                   className="h-auto min-h-0 w-fit shrink-0 self-start px-0 py-0 text-xs leading-snug"
                   aria-pressed={showStaleInputChanges}
-                  onClick={() =>
-                    setShowStaleInputChanges((prev) => !prev)
-                  }
+                  onClick={() => setShowStaleInputChanges((prev) => !prev)}
                 >
                   {showStaleInputChanges
                     ? t("projects.hideInputChanges")

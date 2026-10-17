@@ -12,16 +12,12 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
 
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function tableSource() {
@@ -31,9 +27,7 @@ function tableSource() {
   )
 }
 
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -43,9 +37,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -74,7 +66,7 @@ describe("Guided Input pause/resume", () => {
   it("D–E return action only when resume context (correlation)", () => {
     const table = tableSource()
     expect(table).toContain("data-guided-return={guidedReturnKind}")
-    expect(table).toContain('guidedReturnKind = showCorrelationReturn')
+    expect(table).toContain("guidedReturnKind = showCorrelationReturn")
     expect(table).toContain('? "correlation"')
     expect(table).toContain('? "impact"')
     expect(table).toContain("guidedReturnToReview")
@@ -109,9 +101,7 @@ describe("Guided Input pause/resume", () => {
     const happy = ret.slice(ret.indexOf("const { after, entry }"))
     expect(happy).not.toContain("setGuidedResume(null)")
     expect(happy).not.toContain("setTimeout")
-    expect(happy).toContain(
-      "Keep guidedResume until Guided Input has applied",
-    )
+    expect(happy).toContain("Keep guidedResume until Guided Input has applied")
 
     const dialog = dialogSource()
     expect(dialog).toContain("resumePhase")
@@ -119,9 +109,7 @@ describe("Guided Input pause/resume", () => {
     expect(dialog).toContain("resumeAppliedForOpenRef")
     expect(dialog).toContain("onResumeApplied")
     // Clearing resumePhase must not fall back to first page
-    expect(dialog).toContain(
-      "if (resumeAppliedForOpenRef.current) return",
-    )
+    expect(dialog).toContain("if (resumeAppliedForOpenRef.current) return")
 
     const steps = buildGuidedWorkflowSteps({
       entry: "cost",
@@ -173,9 +161,7 @@ describe("Guided Input pause/resume", () => {
     expect(applied).toContain("setGuidedResume(null)")
     expect(applied).toContain("setGuidedResumePhase(null)")
     // No premature setTimeout clear
-    expect(app).not.toMatch(
-      /setTimeout\(\(\) => setGuidedResumePhase\(null\)/,
-    )
+    expect(app).not.toMatch(/setTimeout\(\(\) => setGuidedResumePhase\(null\)/)
     // Fresh guided open clears resume
     const open = app.slice(
       app.indexOf("const openGuidedInput"),
@@ -213,12 +199,8 @@ describe("Guided Input pause/resume", () => {
   })
 
   it("i18n return action labels", () => {
-    expect(messages.no.inputs.guidedReturnToReview).toBe(
-      "Tilbake til veiledet gjennomgang",
-    )
-    expect(messages.en.inputs.guidedReturnToReview).toBe(
-      "Back to guided review",
-    )
+    expect(messages.no.inputs.guidedReturnToReview).toBe("Tilbake til veiledet gjennomgang")
+    expect(messages.en.inputs.guidedReturnToReview).toBe("Back to guided review")
   })
 
   it("summaries refresh from live project on resume (no cached summary)", () => {

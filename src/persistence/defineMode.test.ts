@@ -7,10 +7,7 @@ import {
   shouldShowDefineSelectHint,
 } from "@/domain/results/scenarioTableModes"
 import { messages } from "@/i18n/messages"
-import {
-  createProject,
-  type Project,
-} from "@/domain/analysis/project"
+import { createProject, type Project } from "@/domain/analysis/project"
 import {
   costRowHasDefinition,
   driverRowHasDefinition,
@@ -27,7 +24,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -40,17 +36,11 @@ function scenarioTableSource() {
 }
 
 function defineEditorSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/DefineRowEditor.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/scenario-tables/DefineRowEditor.tsx"), "utf8")
 }
 
 function guidedSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function costRow(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
@@ -105,9 +95,7 @@ describe("Define mode", () => {
   it("C: Cost rows open a Description editor in Define mode", () => {
     expect(messages.no.inputs.defineDescriptionLabel).toBe("Beskrivelse")
     expect(messages.en.inputs.defineDescriptionLabel).toBe("Description")
-    expect(messages.no.inputs.defineCostDescriptionPlaceholder).toBe(
-      "Hva inngår i kostnadsposten?",
-    )
+    expect(messages.no.inputs.defineCostDescriptionPlaceholder).toBe("Hva inngår i kostnadsposten?")
     expect(messages.en.inputs.defineCostDescriptionPlaceholder).toBe(
       "What is included in this cost item?",
     )
@@ -116,9 +104,7 @@ describe("Define mode", () => {
   })
 
   it("D: Driver rows open Description + shared uncertainty notes editor", () => {
-    expect(messages.no.inputs.defineDriverDescriptionPlaceholder).toBe(
-      "Hva innebærer driveren?",
-    )
+    expect(messages.no.inputs.defineDriverDescriptionPlaceholder).toBe("Hva innebærer driveren?")
     expect(messages.en.inputs.defineDriverDescriptionPlaceholder).toBe(
       "What does this driver represent?",
     )
@@ -175,16 +161,11 @@ describe("Define mode", () => {
     })
     expect(costRowHasDefinition(row)).toBe(true)
     expect(row.description).toBe("Existing note")
-    expect(scenarioTableSource()).toContain(
-      "(defineSelectedRow as CostElementRow).description",
-    )
+    expect(scenarioTableSource()).toContain("(defineSelectedRow as CostElementRow).description")
   })
 
   it("H: Clearing documentation removes stored value", () => {
-    const row = withCostDescription(
-      costRow({ id: "c1", description: "Keep" }),
-      "   ",
-    )
+    const row = withCostDescription(costRow({ id: "c1", description: "Keep" }), "   ")
     expect(row.description).toBeUndefined()
     expect(costRowHasDefinition(row)).toBe(false)
 
@@ -215,9 +196,7 @@ describe("Define mode", () => {
       p.id === "p1"
         ? {
             ...p,
-            costRows: p.costRows.map((r, i) =>
-              i === 0 ? withCostDescription(r, "Only in A") : r,
-            ),
+            costRows: p.costRows.map((r, i) => (i === 0 ? withCostDescription(r, "Only in A") : r)),
           }
         : p,
     )
@@ -245,9 +224,7 @@ describe("Define mode", () => {
     const base = createProject({ id: "p1", name: "A" })
     const withDefs: Project = {
       ...base,
-      costRows: base.costRows.map((r, i) =>
-        i === 0 ? withCostDescription(r, "Cost note") : r,
-      ),
+      costRows: base.costRows.map((r, i) => (i === 0 ? withCostDescription(r, "Cost note") : r)),
       driverRows: base.driverRows.map((r, i) =>
         i === 0
           ? withDriverUncertaintyNotes(withDriverDescription(r, "Driver note"), {
@@ -267,9 +244,7 @@ describe("Define mode", () => {
         defineModeActive: false,
       }),
     ).toBe(false)
-    expect(appSource()).toContain(
-      "if (!defineModeActive) setDefineSelectedRowId(null)",
-    )
+    expect(appSource()).toContain("if (!defineModeActive) setDefineSelectedRowId(null)")
     expect(
       shouldShowDefineSelectHint({
         defineModeActive: false,
@@ -384,9 +359,11 @@ describe("Define mode", () => {
     expect(messages.en.expanders.define).toBe("Define")
     expect(parseCostDescription("")).toBeNull()
     expect(parseDriverDescription("  x  ")).toBe("x")
-    expect(shouldShowDefineSelectHint({
-      defineModeActive: true,
-      selectedRowId: null,
-    })).toBe(true)
+    expect(
+      shouldShowDefineSelectHint({
+        defineModeActive: true,
+        selectedRowId: null,
+      }),
+    ).toBe(true)
   })
 })

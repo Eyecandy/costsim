@@ -22,9 +22,7 @@ import {
  * `saveAsDefault` writes through the storage adapter for future sessions.
  */
 export function useResultPreferences() {
-  const [preferences, setPreferences] = useState<ResultPreferencesV1>(() =>
-    loadResultPreferences(),
-  )
+  const [preferences, setPreferences] = useState<ResultPreferencesV1>(() => loadResultPreferences())
 
   const replacePreferences = useCallback((next: ResultPreferencesV1) => {
     setPreferences(normalizeResultPreferences(next))
@@ -62,8 +60,7 @@ export function useResultPreferences() {
       patchPreferences((prev) => addKeyFigurePercentile(prev, p)),
     removeKeyFigurePercentile: (p: number) =>
       patchPreferences((prev) => removeKeyFigurePercentile(prev, p)),
-    addSCurvePercentile: (p: number) =>
-      patchPreferences((prev) => addSCurvePercentile(prev, p)),
+    addSCurvePercentile: (p: number) => patchPreferences((prev) => addSCurvePercentile(prev, p)),
     removeSCurvePercentile: (p: number) =>
       patchPreferences((prev) => removeSCurvePercentile(prev, p)),
   }

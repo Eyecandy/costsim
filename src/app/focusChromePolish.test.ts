@@ -13,7 +13,6 @@ import { focusResultHelpCopyKeys } from "@/domain/guided/focusResultSteps"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -27,9 +26,7 @@ describe("Focus chrome visual polish", () => {
     expect(guided).toContain('data-guided-simulation-run=""')
     expect(guided).toContain("h-8 w-full shrink-0")
     expect(app).toContain("brandPrimaryButtonClass")
-    expect(guided).not.toMatch(
-      /data-guided-simulation-run[\s\S]{0,400}bg-\[#1d868c\]/,
-    )
+    expect(guided).not.toMatch(/data-guided-simulation-run[\s\S]{0,400}bg-\[#1d868c\]/)
   })
 
   it("B/C: Results Focus header shows alternative and Results context (no Results help)", () => {
@@ -69,9 +66,7 @@ describe("Focus chrome visual polish", () => {
     const app = readAppSource()
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(FOCUS_SESSION_FOOTER_CLASS).toContain("px-5 py-3 sm:px-8")
-    expect(FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS).toContain(
-      "text-muted-foreground",
-    )
+    expect(FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS).toContain("text-muted-foreground")
     expect(guided).toContain("FOCUS_SESSION_FOOTER_CLASS")
     expect(guided).toContain("FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS")
     expect(shell).toContain("FOCUS_SESSION_FOOTER_CLASS")
@@ -114,23 +109,11 @@ describe("Focus chrome visual polish", () => {
   })
 
   it("reuses existing result guidance keys for Focus section titles", () => {
-    expect(focusResultHelpCopyKeys("keyFigures").meaningKey).toBe(
-      "helper.resultsKeyMetrics",
-    )
-    expect(focusResultHelpCopyKeys("scurve").meaningKey).toBe(
-      "charts.sCurveSubtitle",
-    )
-    expect(focusResultHelpCopyKeys("tornado").meaningKey).toBe(
-      "charts.tornadoSubtitle",
-    )
-    expect(focusResultHelpCopyKeys("contribution").meaningKey).toBe(
-      "charts.attributionSubtitle",
-    )
-    expect(messages.no.inputs.focusNextStepsHelpMeaning.length).toBeGreaterThan(
-      10,
-    )
-    expect(messages.en.inputs.focusNextStepsHelpMeaning.length).toBeGreaterThan(
-      10,
-    )
+    expect(focusResultHelpCopyKeys("keyFigures").meaningKey).toBe("helper.resultsKeyMetrics")
+    expect(focusResultHelpCopyKeys("scurve").meaningKey).toBe("charts.sCurveSubtitle")
+    expect(focusResultHelpCopyKeys("tornado").meaningKey).toBe("charts.tornadoSubtitle")
+    expect(focusResultHelpCopyKeys("contribution").meaningKey).toBe("charts.attributionSubtitle")
+    expect(messages.no.inputs.focusNextStepsHelpMeaning.length).toBeGreaterThan(10)
+    expect(messages.en.inputs.focusNextStepsHelpMeaning.length).toBeGreaterThan(10)
   })
 })

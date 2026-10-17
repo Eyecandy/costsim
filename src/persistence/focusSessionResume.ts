@@ -5,10 +5,7 @@ import {
   type FocusUserPhase,
 } from "@/domain/guided/focusPhaseNav"
 import type { FocusResultSectionId } from "@/domain/guided/focusResultSteps"
-import type {
-  GuidedWorkflowPhase,
-  GuidedWorkflowStep,
-} from "@/domain/guided/guidedWorkflow"
+import type { GuidedWorkflowPhase, GuidedWorkflowStep } from "@/domain/guided/guidedWorkflow"
 
 /** Versioned Focus UI resume blob (sessionStorage only). */
 export type FocusSessionResumeV1 = {
@@ -62,30 +59,21 @@ function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 function isGuidedWorkflowPhase(value: unknown): value is GuidedWorkflowPhase {
-  return (
-    typeof value === "string" &&
-    (GUIDED_WORKFLOW_PHASES as readonly string[]).includes(value)
-  )
+  return typeof value === "string" && (GUIDED_WORKFLOW_PHASES as readonly string[]).includes(value)
 }
 
 function isFocusResultSectionId(value: unknown): value is FocusResultSectionId {
   return (
-    typeof value === "string" &&
-    (FOCUS_RESULT_SECTION_IDS as readonly string[]).includes(value)
+    typeof value === "string" && (FOCUS_RESULT_SECTION_IDS as readonly string[]).includes(value)
   )
 }
 
 function isFocusUserPhase(value: unknown): value is FocusUserPhase {
-  return (
-    typeof value === "string" &&
-    (FOCUS_USER_PHASES as readonly string[]).includes(value)
-  )
+  return typeof value === "string" && (FOCUS_USER_PHASES as readonly string[]).includes(value)
 }
 
 /** Parse and validate a resume blob. Returns null when unusable. */
-export function parseFocusSessionResume(
-  raw: unknown,
-): FocusSessionResumeV1 | null {
+export function parseFocusSessionResume(raw: unknown): FocusSessionResumeV1 | null {
   if (!isObject(raw)) return null
   if (raw.v !== 1) return null
   if (typeof raw.analysisId !== "string" || raw.analysisId.trim() === "") {
@@ -170,19 +158,13 @@ export function writeFocusSessionResume(
   if (!store) return
   if (!state.analysisId) return
   try {
-    store.setItem(
-      focusSessionResumeStorageKey(state.analysisId),
-      JSON.stringify(state),
-    )
+    store.setItem(focusSessionResumeStorageKey(state.analysisId), JSON.stringify(state))
   } catch {
     // Quota / private mode — ignore.
   }
 }
 
-export function clearFocusSessionResume(
-  analysisId: string,
-  storage?: Storage | null,
-): void {
+export function clearFocusSessionResume(analysisId: string, storage?: Storage | null): void {
   if (!analysisId) return
   const store = storage ?? (typeof sessionStorage !== "undefined" ? sessionStorage : null)
   if (!store) return
@@ -208,15 +190,9 @@ export function resolveGuidedStepIndexForResume(
     return assumptions >= 0 ? assumptions : 0
   }
 
-  if (
-    (guidedPhase === "cost" || guidedPhase === "driver") &&
-    guidedRowId
-  ) {
+  if ((guidedPhase === "cost" || guidedPhase === "driver") && guidedRowId) {
     const exact = steps.findIndex(
-      (s) =>
-        s.phase === guidedPhase &&
-        "rowId" in s &&
-        s.rowId === guidedRowId,
+      (s) => s.phase === guidedPhase && "rowId" in s && s.rowId === guidedRowId,
     )
     if (exact >= 0) return exact
 

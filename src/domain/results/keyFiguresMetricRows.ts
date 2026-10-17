@@ -95,16 +95,8 @@ export function buildKeyFigureMetricTableRows(opts: {
         const base = baseCostByProjectId.get(project.id) ?? null
         const simulatedIncurred =
           simulatedIncurredByProjectId.get(project.id) ?? project.incurredCosts
-        const delta = computeUncertainDeltaWithPct(
-          p50,
-          base,
-          simulatedIncurred,
-        )
-        return formatKeyFigureAbsoluteWithPercent(
-          delta.absolute,
-          delta.percent,
-          language,
-        )
+        const delta = computeUncertainDeltaWithPct(p50, base, simulatedIncurred)
+        return formatKeyFigureAbsoluteWithPercent(delta.absolute, delta.percent, language)
       }),
     })
   }
@@ -136,25 +128,14 @@ export function buildKeyFigureMetricTableRows(opts: {
           const p50 = percentile(values, 50)
           const simulatedIncurred =
             simulatedIncurredByProjectId.get(project.id) ?? project.incurredCosts
-          const premium = computeUncertainDeltaWithPct(
-            p85,
-            p50,
-            simulatedIncurred,
-          )
-          return formatKeyFigureAbsoluteWithPercent(
-            premium.absolute,
-            premium.percent,
-            language,
-          )
+          const premium = computeUncertainDeltaWithPct(p85, p50, simulatedIncurred)
+          return formatKeyFigureAbsoluteWithPercent(premium.absolute, premium.percent, language)
         }),
       })
     }
   }
 
-  if (
-    kf.showUncertaintyReserve &&
-    !rows.some((r) => r.id === "uncertaintyReserve")
-  ) {
+  if (kf.showUncertaintyReserve && !rows.some((r) => r.id === "uncertaintyReserve")) {
     rows.push({
       id: "uncertaintyReserve",
       label: labels.uncertaintyPremium,
@@ -165,16 +146,8 @@ export function buildKeyFigureMetricTableRows(opts: {
         const p50 = percentile(values, 50)
         const simulatedIncurred =
           simulatedIncurredByProjectId.get(project.id) ?? project.incurredCosts
-        const premium = computeUncertainDeltaWithPct(
-          p85,
-          p50,
-          simulatedIncurred,
-        )
-        return formatKeyFigureAbsoluteWithPercent(
-          premium.absolute,
-          premium.percent,
-          language,
-        )
+        const premium = computeUncertainDeltaWithPct(p85, p50, simulatedIncurred)
+        return formatKeyFigureAbsoluteWithPercent(premium.absolute, premium.percent, language)
       }),
     })
   }
@@ -184,10 +157,7 @@ export function buildKeyFigureMetricTableRows(opts: {
       id: "expectedValue",
       label: labels.expectedValue,
       values: projects.map((project) =>
-        formatKeyFigureStat(
-          mean(valuesByProjectId.get(project.id) ?? []),
-          language,
-        ),
+        formatKeyFigureStat(mean(valuesByProjectId.get(project.id) ?? []), language),
       ),
     })
   }
@@ -200,10 +170,7 @@ export function buildKeyFigureMetricTableRows(opts: {
         const values = valuesByProjectId.get(project.id) ?? []
         const abs = standardDeviation(values)
         const expectedValue = mean(values)
-        const relativePct = relativeStandardDeviationPercent(
-          abs,
-          expectedValue,
-        )
+        const relativePct = relativeStandardDeviationPercent(abs, expectedValue)
         return formatKeyFigureAbsoluteWithPercent(abs, relativePct, language)
       }),
     })
@@ -217,9 +184,7 @@ export function buildKeyFigureMetricTableRows(opts: {
         const base = baseCostByProjectId.get(project.id)
         const values = valuesByProjectId.get(project.id) ?? []
         const pct =
-          base === null || base === undefined
-            ? null
-            : probabilityAtOrBelowPercent(values, base)
+          base === null || base === undefined ? null : probabilityAtOrBelowPercent(values, base)
         return formatKeyFigurePercent(pct, language)
       }),
     })
@@ -230,11 +195,7 @@ export function buildKeyFigureMetricTableRows(opts: {
     const amount = probBelow.amount!
     rows.push({
       id: "probBelowCostLevel",
-      label: formatProbabilityBelowRowLabel(
-        amount,
-        labels.probabilityBelowCostLevel,
-        language,
-      ),
+      label: formatProbabilityBelowRowLabel(amount, labels.probabilityBelowCostLevel, language),
       values: projects.map((project) => {
         const values = valuesByProjectId.get(project.id) ?? []
         const pct = probabilityAtOrBelowPercent(values, amount)
@@ -257,9 +218,7 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
   const { resultView, projectIds, frozenByProjectId, language, labels } = opts
   const kf = resultView.keyFigures
   const rows: KeyFigureMetricTableRow[] = []
-  const values = (
-    pick: (frozen: OngoingFrozenKeyFiguresV1) => string,
-  ): string[] =>
+  const values = (pick: (frozen: OngoingFrozenKeyFiguresV1) => string): string[] =>
     projectIds.map((id) => {
       const frozen = frozenByProjectId.get(id)
       return frozen ? pick(frozen) : "—"
@@ -276,11 +235,7 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
       id: "expectedAddition",
       label: labels.expectedAddition,
       values: values((f) =>
-        formatKeyFigureAbsoluteWithPercent(
-          f.expectedAddition,
-          f.expectedAdditionPct,
-          language,
-        ),
+        formatKeyFigureAbsoluteWithPercent(f.expectedAddition, f.expectedAdditionPct, language),
       ),
     })
   }
@@ -291,10 +246,7 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
       values: values((f) =>
         level === 85 && !appFeatures.showP85
           ? labels.locked
-          : formatKeyFigureStat(
-              f.percentiles[String(level)] ?? null,
-              language,
-            ),
+          : formatKeyFigureStat(f.percentiles[String(level)] ?? null, language),
       ),
     })
     if (
@@ -317,10 +269,7 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
       })
     }
   }
-  if (
-    kf.showUncertaintyReserve &&
-    !rows.some((row) => row.id === "uncertaintyReserve")
-  ) {
+  if (kf.showUncertaintyReserve && !rows.some((row) => row.id === "uncertaintyReserve")) {
     rows.push({
       id: "uncertaintyReserve",
       label: labels.uncertaintyPremium,
@@ -346,9 +295,7 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
     rows.push({
       id: "stdDev",
       label: labels.stdDev,
-      values: values((f) =>
-        formatKeyFigureAbsoluteWithPercent(f.stdDev, f.stdDevPct, language),
-      ),
+      values: values((f) => formatKeyFigureAbsoluteWithPercent(f.stdDev, f.stdDevPct, language)),
     })
   }
   if (kf.showProbabilityAtBaseCost) {
@@ -362,16 +309,9 @@ export function buildKeyFigureMetricTableRowsFromFrozen(opts: {
     const amount = kf.probabilityBelowCostLevel.amount!
     rows.push({
       id: "probBelowCostLevel",
-      label: formatProbabilityBelowRowLabel(
-        amount,
-        labels.probabilityBelowCostLevel,
-        language,
-      ),
+      label: formatProbabilityBelowRowLabel(amount, labels.probabilityBelowCostLevel, language),
       values: values((f) =>
-        formatKeyFigurePercent(
-          frozenProbabilityBelowForAmount(f, amount),
-          language,
-        ),
+        formatKeyFigurePercent(frozenProbabilityBelowForAmount(f, amount), language),
       ),
     })
   }

@@ -113,9 +113,7 @@ describe("Result Settings archive coherence", () => {
     const prefs = cloneResultPreferences(DEFAULT_RESULT_PREFERENCES)
     prefs.keyFigures.showStdDev = true
 
-    expect(compactFrozenKeyFiguresSupportPreferences(compact.keyFigures, prefs)).toBe(
-      true,
-    )
+    expect(compactFrozenKeyFiguresSupportPreferences(compact.keyFigures, prefs)).toBe(true)
     expect(
       getArchiveBlockReason({
         analysisId: "a1",
@@ -153,11 +151,7 @@ describe("Result Settings archive coherence", () => {
         projects: [project],
         projectResults: liveResults,
         lastSimulatedInputSignature: buildSimulationInputSignature([project]),
-        ongoingCompactResult: makeDefaultCompact(
-          "a1",
-          ongoing.activeCheckpointId,
-          project,
-        ),
+        ongoingCompactResult: makeDefaultCompact("a1", ongoing.activeCheckpointId, project),
         resultPreferences: prefs,
       }),
     ).toBeNull()
@@ -186,12 +180,7 @@ describe("Result Settings archive coherence", () => {
       activeProjectId: project.id,
     })
     const prefs = prefsWithP70()
-    const afterRerun = makeDefaultCompact(
-      "a1",
-      ongoing.activeCheckpointId,
-      project,
-      prefs,
-    )
+    const afterRerun = makeDefaultCompact("a1", ongoing.activeCheckpointId, project, prefs)
 
     expect(compactSnapshotSupportsResultPreferences(afterRerun, prefs)).toBe(true)
     expect(
@@ -220,11 +209,7 @@ describe("Result Settings archive coherence", () => {
       projects: [project],
       activeProjectId: project.id,
     })
-    const defaultCompact = makeDefaultCompact(
-      "a1",
-      ongoing.activeCheckpointId,
-      project,
-    )
+    const defaultCompact = makeDefaultCompact("a1", ongoing.activeCheckpointId, project)
     const prefs = prefsWithP70()
 
     // Unsupported → block (no silent freeze with dropped P70).
@@ -241,12 +226,7 @@ describe("Result Settings archive coherence", () => {
     ).toBe("result_settings_need_rerun")
 
     // Supported path freezes the requested prefs, not the old tip prefs alone.
-    const withP70 = makeDefaultCompact(
-      "a1",
-      ongoing.activeCheckpointId,
-      project,
-      prefs,
-    )
+    const withP70 = makeDefaultCompact("a1", ongoing.activeCheckpointId, project, prefs)
     const frozen = freezeOngoingCompactForArchive(withP70, {
       resultPreferences: prefs,
     })
@@ -335,10 +315,7 @@ describe("createNext durable-first", () => {
 
     const originalSave = repo.saveDraft.bind(repo)
     repo.saveDraft = async () => {
-      throw new AnalysisPersistenceError(
-        "Failed to persist draft analysis",
-        "quota",
-      )
+      throw new AnalysisPersistenceError("Failed to persist draft analysis", "quota")
     }
     let saveErr: unknown = null
     try {
@@ -393,13 +370,8 @@ describe("persistence failure classification", () => {
       expect(writeJson(LIBRARY_STORAGE_KEYS.index, { v: 1 })).toBe(true)
       failWrites = true
       expect(writeJson(LIBRARY_STORAGE_KEYS.index, { v: 2 })).toBe(false)
-      expect(isQuotaExceededStorageError({ name: "QuotaExceededError" })).toBe(
-        true,
-      )
-      const err = new AnalysisPersistenceError(
-        "Failed to persist draft analysis",
-        "quota",
-      )
+      expect(isQuotaExceededStorageError({ name: "QuotaExceededError" })).toBe(true)
+      const err = new AnalysisPersistenceError("Failed to persist draft analysis", "quota")
       expect(err.failureKind).toBe("quota")
       expect(librarySaveStatusFromError(err)).toBe("error_quota")
     } finally {
@@ -428,10 +400,7 @@ describe("persistence failure classification", () => {
     try {
       failWrites = true
       expect(writeJson(LIBRARY_STORAGE_KEYS.index, { v: 1 })).toBe(false)
-      const err = new AnalysisPersistenceError(
-        "Failed to persist draft analysis",
-        "generic",
-      )
+      const err = new AnalysisPersistenceError("Failed to persist draft analysis", "generic")
       expect(librarySaveStatusFromError(err)).toBe("error")
       expect(librarySaveStatusFromError(new Error("other"))).toBe("error")
     } finally {

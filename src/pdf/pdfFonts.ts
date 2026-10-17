@@ -28,10 +28,7 @@ export async function ensurePdfFonts(): Promise<void> {
       const fontDir = join(dirname(fileURLToPath(import.meta.url)), "fonts")
       const toDataUri = (filename: string, href: string): string => {
         const fromHref = href.startsWith("file:") ? fileURLToPath(href) : null
-        const path =
-          fromHref && existsSync(fromHref)
-            ? fromHref
-            : join(fontDir, filename)
+        const path = fromHref && existsSync(fromHref) ? fromHref : join(fontDir, filename)
         return `data:font/ttf;base64,${readFileSync(path).toString("base64")}`
       }
       regularSrc = toDataUri("NotoSans-Regular.ttf", regularSrc)

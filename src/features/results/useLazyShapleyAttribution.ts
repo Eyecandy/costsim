@@ -41,9 +41,7 @@ export function useLazyShapleyAttribution({
   const queueRef = useRef(new ShapleyRequestQueue())
   const [cache, setCache] = useState<Record<string, ShapleyCacheEntry>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [calculatingProjectId, setCalculatingProjectId] = useState<string | null>(
-    null,
-  )
+  const [calculatingProjectId, setCalculatingProjectId] = useState<string | null>(null)
   const [queueVersion, setQueueVersion] = useState(0)
 
   const signaturesByProjectId = useMemo(() => {
@@ -69,10 +67,7 @@ export function useLazyShapleyAttribution({
   signaturesByProjectIdRef.current = signaturesByProjectId
 
   const mainQuantilesByProjectId = useMemo(() => {
-    const m = new Map<
-      string,
-      { p50: number | null; p85: number | null }
-    >()
+    const m = new Map<string, { p50: number | null; p85: number | null }>()
     for (const project of displayProjects) {
       const pr = projectResults.find((r) => r.projectId === project.id)
       if (pr && pr.values.length > 0) {
@@ -128,10 +123,7 @@ export function useLazyShapleyAttribution({
     }
 
     const inputSignature = signaturesByProjectId.get(projectId) ?? ""
-    const simulationRunId = getSimulationRunIdForProject(
-      projectId,
-      simulationRunIdByProjectId,
-    )
+    const simulationRunId = getSimulationRunIdForProject(projectId, simulationRunIdByProjectId)
     const cached = cache[projectId]
     if (isShapleyCacheEntryValid(cached, inputSignature, simulationRunId)) {
       queue.complete(projectId)
@@ -189,8 +181,7 @@ export function useLazyShapleyAttribution({
             ...prev,
             [msg.projectId]: {
               result: msg.result,
-              inputSignature:
-                signaturesByProjectIdRef.current.get(msg.projectId) ?? "",
+              inputSignature: signaturesByProjectIdRef.current.get(msg.projectId) ?? "",
               simulationRunId: msg.simulationRunId,
             },
           }))
@@ -242,14 +233,9 @@ export function useLazyShapleyAttribution({
 
     let enqueued = false
     for (const project of displayProjects) {
-      const projectResult = projectResults.find(
-        (result) => result.projectId === project.id,
-      )
+      const projectResult = projectResults.find((result) => result.projectId === project.id)
       const inputSignature = signaturesByProjectId.get(project.id) ?? ""
-      const simulationRunId = getSimulationRunIdForProject(
-        project.id,
-        simulationRunIdByProjectId,
-      )
+      const simulationRunId = getSimulationRunIdForProject(project.id, simulationRunIdByProjectId)
       if (
         !shouldAutoRequestShapleyCalculation({
           inputsStale,
@@ -290,17 +276,8 @@ export function useLazyShapleyAttribution({
       if (inputsStale) return
 
       const inputSignature = signaturesByProjectId.get(projectId) ?? ""
-      const simulationRunId = getSimulationRunIdForProject(
-        projectId,
-        simulationRunIdByProjectId,
-      )
-      if (
-        isShapleyCacheEntryValid(
-          cache[projectId],
-          inputSignature,
-          simulationRunId,
-        )
-      ) {
+      const simulationRunId = getSimulationRunIdForProject(projectId, simulationRunIdByProjectId)
+      if (isShapleyCacheEntryValid(cache[projectId], inputSignature, simulationRunId)) {
         return
       }
 
@@ -318,12 +295,8 @@ export function useLazyShapleyAttribution({
   const getStatus = useCallback(
     (projectId: string): ShapleyProjectStatus => {
       const inputSignature = signaturesByProjectId.get(projectId) ?? ""
-      const simulationRunId = getSimulationRunIdForProject(
-        projectId,
-        simulationRunIdByProjectId,
-      )
-      const queued =
-        queueRef.current.isQueued(projectId) && calculatingProjectId !== projectId
+      const simulationRunId = getSimulationRunIdForProject(projectId, simulationRunIdByProjectId)
+      const queued = queueRef.current.isQueued(projectId) && calculatingProjectId !== projectId
       if (queued && !errors[projectId]) {
         return "calculating"
       }
@@ -351,14 +324,9 @@ export function useLazyShapleyAttribution({
   const getResult = useCallback(
     (projectId: string): ShapleyAttributionResult | null => {
       const inputSignature = signaturesByProjectId.get(projectId) ?? ""
-      const simulationRunId = getSimulationRunIdForProject(
-        projectId,
-        simulationRunIdByProjectId,
-      )
+      const simulationRunId = getSimulationRunIdForProject(projectId, simulationRunIdByProjectId)
       const entry = cache[projectId]
-      if (
-        !isShapleyCacheEntryValid(entry, inputSignature, simulationRunId)
-      ) {
+      if (!isShapleyCacheEntryValid(entry, inputSignature, simulationRunId)) {
         return null
       }
       return entry.result

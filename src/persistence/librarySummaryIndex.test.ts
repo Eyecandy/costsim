@@ -47,10 +47,7 @@ function makeValues(n: number): number[] {
   return out
 }
 
-function archiveTipWithResults(
-  ongoing: ReturnType<typeof createInitialOngoingState>,
-  tag: string,
-) {
+function archiveTipWithResults(ongoing: ReturnType<typeof createInitialOngoingState>, tag: string) {
   const tip = getLatestCheckpoint(ongoing)!
   const project = tip.workspace.projects[0]!
   const results: ProjectResult[] = [
@@ -119,9 +116,7 @@ describe("library summary index (hot path)", () => {
 
     expect(summaries).toHaveLength(2)
     expect(summaries.map((s) => s.name).sort()).toEqual(["Heavy A", "Single B"])
-    expect(summaries.find((s) => s.name === "Heavy A")?.analysisMode).toBe(
-      "ongoing",
-    )
+    expect(summaries.find((s) => s.name === "Heavy A")?.analysisMode).toBe("ongoing")
     expect(summaries.find((s) => s.name === "Heavy A")?.status).toBe("draft")
     expect(loads).toBe(0)
   })
@@ -206,9 +201,7 @@ describe("library summary index (hot path)", () => {
     const listed = await repo.listSummaries()
     expect(__getFullDocumentLoadCountForTests()).toBe(0)
     expect(listed.find((s) => s.id === created.id)?.status).toBe("archived")
-    expect(listed.find((s) => s.id === created.id)?.analysisMode).toBe(
-      "ongoing",
-    )
+    expect(listed.find((s) => s.id === created.id)?.analysisMode).toBe("ongoing")
   })
 
   it("lastOpenedAt with knownDocument does not load the full document again", async () => {
@@ -233,11 +226,7 @@ describe("library summary index (hot path)", () => {
     expect(doc).toBeTruthy()
     __resetFullDocumentLoadCountForTests()
     const openedAt = nowIso()
-    await repo.touchMetadata(
-      created.id,
-      { lastOpenedAt: openedAt },
-      { knownDocument: doc! },
-    )
+    await repo.touchMetadata(created.id, { lastOpenedAt: openedAt }, { knownDocument: doc! })
     expect(__getFullDocumentLoadCountForTests()).toBe(0)
 
     __resetFullDocumentLoadCountForTests()
@@ -248,8 +237,7 @@ describe("library summary index (hot path)", () => {
     const reloaded = await repo.get(created.id)
     expect(reloaded?.lastOpenedAt).toBe(openedAt)
     // Analytical payload unchanged
-    const reloadedSnapshot =
-      reloaded?.ongoing?.checkpoints[0]?.archivedSnapshot
+    const reloadedSnapshot = reloaded?.ongoing?.checkpoints[0]?.archivedSnapshot
     expect(
       reloadedSnapshot && "projectResults" in reloadedSnapshot
         ? reloadedSnapshot.projectResults[0]?.values
@@ -323,9 +311,11 @@ describe("library summary index (hot path)", () => {
       },
     })
     // Strip summaries to simulate pre-optimization index.
-    const raw = JSON.parse(
-      localStorage.getItem(LIBRARY_STORAGE_KEYS.index)!,
-    ) as { v: 1; folders: unknown[]; analysisIds: string[] }
+    const raw = JSON.parse(localStorage.getItem(LIBRARY_STORAGE_KEYS.index)!) as {
+      v: 1
+      folders: unknown[]
+      analysisIds: string[]
+    }
     localStorage.setItem(
       LIBRARY_STORAGE_KEYS.index,
       JSON.stringify({

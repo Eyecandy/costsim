@@ -29,14 +29,7 @@ import {
   standardDeviation,
 } from "@/domain/simulation/stats"
 import { cn } from "@/shared/utils"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table"
 import type { OngoingFrozenKeyFiguresV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 
 export type ResultsKeyFiguresTableProps = {
@@ -45,10 +38,7 @@ export type ResultsKeyFiguresTableProps = {
   baseCostByProjectId: ReadonlyMap<string, number | null>
   simulatedIncurredByProjectId: ReadonlyMap<string, number>
   preferences: ResultPreferencesV1
-  frozenKeyFiguresByProjectId?: ReadonlyMap<
-    string,
-    OngoingFrozenKeyFiguresV1
-  >
+  frozenKeyFiguresByProjectId?: ReadonlyMap<string, OngoingFrozenKeyFiguresV1>
   /** Larger layout for ExpandedChartDialog; same values as inline. */
   expanded?: boolean
   expandLabel?: string
@@ -78,10 +68,7 @@ function renderMetricValue(
   )
 }
 
-function renderProjectHeaderLabel(
-  label: string,
-  expanded: boolean,
-): ReactElement {
+function renderProjectHeaderLabel(label: string, expanded: boolean): ReactElement {
   if (!expanded) {
     return (
       <span
@@ -100,10 +87,7 @@ function renderProjectHeaderLabel(
   return (
     <span
       title={label}
-      className={cn(
-        "inline-grid w-full items-end",
-        KEY_FIGURES_METRIC_GRID_EXPANDED,
-      )}
+      className={cn("inline-grid w-full items-end", KEY_FIGURES_METRIC_GRID_EXPANDED)}
       data-key-figures-project-header=""
     >
       <span
@@ -145,26 +129,20 @@ export function ResultsKeyFiguresTable({
 }: ResultsKeyFiguresTableProps) {
   const { t, language } = useI18n()
   const kf = preferences.keyFigures
-  const frozenFor = (projectId: string) =>
-    frozenKeyFiguresByProjectId?.get(projectId)
+  const frozenFor = (projectId: string) => frozenKeyFiguresByProjectId?.get(projectId)
 
   const projectColumns: (Project | null)[] =
     projects.length === 1 ? [projects[0]!, null] : [...projects]
 
-  const useScrollable =
-    expanded ? projects.length >= 4 : projects.length > 2
+  const useScrollable = expanded ? projects.length >= 4 : projects.length > 2
 
   const stickySurfaceClass = useScrollable
     ? expanded
       ? "bg-background"
       : "bg-[var(--km-surface)]"
     : ""
-  const stickyFirstColHeadClass = useScrollable
-    ? `sticky left-0 z-[1] ${stickySurfaceClass}`
-    : ""
-  const stickyFirstColCellClass = useScrollable
-    ? `sticky left-0 z-0 ${stickySurfaceClass}`
-    : ""
+  const stickyFirstColHeadClass = useScrollable ? `sticky left-0 z-[1] ${stickySurfaceClass}` : ""
+  const stickyFirstColCellClass = useScrollable ? `sticky left-0 z-0 ${stickySurfaceClass}` : ""
 
   const nameColWidth = expanded
     ? useScrollable
@@ -182,9 +160,7 @@ export function ResultsKeyFiguresTable({
       : "26%"
 
   const expandedMinWidth =
-    expanded && useScrollable
-      ? `${14 + projects.length * 12.5}rem`
-      : undefined
+    expanded && useScrollable ? `${14 + projects.length * 12.5}rem` : undefined
 
   const showExpand = shouldShowChartExpand(expanded, onExpand, expandLabel)
 
@@ -197,9 +173,7 @@ export function ResultsKeyFiguresTable({
       renderCell: (p, exp) =>
         renderMetricValue(
           formatKeyFigureStat(
-            frozenFor(p.id)?.baseCost ??
-              baseCostByProjectId.get(p.id) ??
-              null,
+            frozenFor(p.id)?.baseCost ?? baseCostByProjectId.get(p.id) ?? null,
             language,
           ),
           undefined,
@@ -230,13 +204,8 @@ export function ResultsKeyFiguresTable({
         const values = valuesByProjectId.get(p.id) ?? []
         const p50 = percentile(values, 50)
         const base = baseCostByProjectId.get(p.id) ?? null
-        const simulatedIncurred =
-          simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
-        const delta = computeUncertainDeltaWithPct(
-          p50,
-          base,
-          simulatedIncurred,
-        )
+        const simulatedIncurred = simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
+        const delta = computeUncertainDeltaWithPct(p50, base, simulatedIncurred)
         return renderMetricValue(
           formatKeyFigureStat(delta.absolute, language),
           `(${formatKeyFigurePercent(delta.percent, language)})`,
@@ -256,21 +225,13 @@ export function ResultsKeyFiguresTable({
       label: formatPercentileLabel(pLevel),
       renderCell: (p, exp) => {
         if (lockedP85) {
-          return renderMetricValue(
-            t("results.locked"),
-            undefined,
-            true,
-            undefined,
-            undefined,
-            exp,
-          )
+          return renderMetricValue(t("results.locked"), undefined, true, undefined, undefined, exp)
         }
         const frozen = frozenFor(p.id)
         const values = valuesByProjectId.get(p.id) ?? []
         return renderMetricValue(
           formatKeyFigureStat(
-            frozen?.percentiles[String(pLevel)] ??
-              percentile(values, pLevel),
+            frozen?.percentiles[String(pLevel)] ?? percentile(values, pLevel),
             language,
           ),
           undefined,
@@ -316,13 +277,8 @@ export function ResultsKeyFiguresTable({
           const values = valuesByProjectId.get(p.id) ?? []
           const p85 = percentile(values, 85)
           const p50 = percentile(values, 50)
-          const simulatedIncurred =
-            simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
-          const premium = computeUncertainDeltaWithPct(
-            p85,
-            p50,
-            simulatedIncurred,
-          )
+          const simulatedIncurred = simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
+          const premium = computeUncertainDeltaWithPct(p85, p50, simulatedIncurred)
           return renderMetricValue(
             formatKeyFigureStat(premium.absolute, language),
             `(${formatKeyFigurePercent(premium.percent, language)})`,
@@ -336,23 +292,13 @@ export function ResultsKeyFiguresTable({
     }
   }
 
-  if (
-    kf.showUncertaintyReserve &&
-    !rows.some((r) => r.id === "uncertaintyReserve")
-  ) {
+  if (kf.showUncertaintyReserve && !rows.some((r) => r.id === "uncertaintyReserve")) {
     rows.push({
       id: "uncertaintyReserve",
       label: t("keyMetrics.uncertaintyPremium"),
       renderCell: (p, exp) => {
         if (!appFeatures.showContingency) {
-          return renderMetricValue(
-            t("results.locked"),
-            undefined,
-            true,
-            undefined,
-            undefined,
-            exp,
-          )
+          return renderMetricValue(t("results.locked"), undefined, true, undefined, undefined, exp)
         }
         const frozen = frozenFor(p.id)
         if (frozen) {
@@ -368,13 +314,8 @@ export function ResultsKeyFiguresTable({
         const values = valuesByProjectId.get(p.id) ?? []
         const p85 = percentile(values, 85)
         const p50 = percentile(values, 50)
-        const simulatedIncurred =
-          simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
-        const premium = computeUncertainDeltaWithPct(
-          p85,
-          p50,
-          simulatedIncurred,
-        )
+        const simulatedIncurred = simulatedIncurredByProjectId.get(p.id) ?? p.incurredCosts
+        const premium = computeUncertainDeltaWithPct(p85, p50, simulatedIncurred)
         return renderMetricValue(
           formatKeyFigureStat(premium.absolute, language),
           `(${formatKeyFigurePercent(premium.percent, language)})`,
@@ -394,8 +335,7 @@ export function ResultsKeyFiguresTable({
       renderCell: (p, exp) =>
         renderMetricValue(
           formatKeyFigureStat(
-            frozenFor(p.id)?.expectedValue ??
-              mean(valuesByProjectId.get(p.id) ?? []),
+            frozenFor(p.id)?.expectedValue ?? mean(valuesByProjectId.get(p.id) ?? []),
             language,
           ),
           undefined,
@@ -426,10 +366,7 @@ export function ResultsKeyFiguresTable({
         const values = valuesByProjectId.get(p.id) ?? []
         const abs = standardDeviation(values)
         const expectedValue = mean(values)
-        const relativePct = relativeStandardDeviationPercent(
-          abs,
-          expectedValue,
-        )
+        const relativePct = relativeStandardDeviationPercent(abs, expectedValue)
         return renderMetricValue(
           formatKeyFigureStat(abs, language),
           `(${formatKeyFigurePercent(relativePct, language)})`,
@@ -452,8 +389,7 @@ export function ResultsKeyFiguresTable({
         const values = valuesByProjectId.get(p.id) ?? []
         const pct = frozen
           ? frozen.probAtBase
-          :
-          base === null || base === undefined
+          : base === null || base === undefined
             ? null
             : probabilityAtOrBelowPercent(values, base)
         return renderMetricValue(
@@ -501,18 +437,14 @@ export function ResultsKeyFiguresTable({
       label={showExpand ? expandLabel : undefined}
       onClick={showExpand ? onExpand : undefined}
       reserveTop={showExpand}
-      className={cn(
-        expanded && "rounded-md border border-border/50 bg-muted/15 p-3 sm:p-4",
-      )}
+      className={cn(expanded && "rounded-md border border-border/50 bg-muted/15 p-3 sm:p-4")}
       data-key-figures-expanded={expanded ? "true" : undefined}
     >
       <div className={cn(useScrollable && "overflow-x-auto")}>
         <Table
           className={cn(
             "table-fixed",
-            useScrollable &&
-              !expanded &&
-              "[&_th]:px-0.5 [&_td]:px-0.5 min-w-[49.5rem]",
+            useScrollable && !expanded && "[&_th]:px-0.5 [&_td]:px-0.5 min-w-[49.5rem]",
             expanded && useScrollable && "min-w-[var(--km-expanded-min-w)]",
             expanded && "[&_th]:px-2 [&_td]:px-2",
           )}
@@ -542,11 +474,7 @@ export function ResultsKeyFiguresTable({
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead
-                className={cn(
-                  "truncate text-left",
-                  stickyFirstColHeadClass,
-                  expanded && "py-2.5",
-                )}
+                className={cn("truncate text-left", stickyFirstColHeadClass, expanded && "py-2.5")}
               >
                 {t("keyMetrics.name")}
               </TableHead>
@@ -581,9 +509,7 @@ export function ResultsKeyFiguresTable({
                     className={cn(
                       "table-value text-right tabular-nums",
                       expanded && "py-2.5",
-                      row.id === "p85" &&
-                        !appFeatures.showP85 &&
-                        "text-muted-foreground/80",
+                      row.id === "p85" && !appFeatures.showP85 && "text-muted-foreground/80",
                     )}
                   >
                     {p ? row.renderCell(p, expanded) : null}

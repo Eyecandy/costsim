@@ -43,10 +43,7 @@ function ToggleRow({
   onChange: (next: boolean) => void
 }) {
   return (
-    <label
-      htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-3 py-0.5"
-    >
+    <label htmlFor={id} className="flex cursor-pointer items-center justify-between gap-3 py-0.5">
       <span className="font-sans text-[12px] text-foreground">{label}</span>
       <input
         id={id}
@@ -73,9 +70,7 @@ function ProbabilityBelowAmountField({
   const { language } = useI18n()
   const inputId = useId()
   const suppressBlurCommitRef = useRef(false)
-  const [draft, setDraft] = useState(() =>
-    formatResultPreferenceAmount(amount, language),
-  )
+  const [draft, setDraft] = useState(() => formatResultPreferenceAmount(amount, language))
   const [showInvalid, setShowInvalid] = useState(false)
 
   useEffect(() => {
@@ -106,10 +101,7 @@ function ProbabilityBelowAmountField({
   return (
     <div className="space-y-1 pl-0.5" data-result-pref-prob-below-amount="">
       <div className="flex items-center gap-2">
-        <label
-          htmlFor={inputId}
-          className="shrink-0 font-sans text-[11px] text-muted-foreground"
-        >
+        <label htmlFor={inputId} className="shrink-0 font-sans text-[11px] text-muted-foreground">
           {amountLabel}
         </label>
         <input
@@ -142,17 +134,13 @@ function ProbabilityBelowAmountField({
             "h-7 min-w-0 flex-1 rounded border bg-background px-1.5",
             "font-sans text-[12px] tabular-nums outline-none",
             "focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
-            showInvalid || amount === null
-              ? "border-[#c24141]/55"
-              : "border-border/70",
+            showInvalid || amount === null ? "border-[#c24141]/55" : "border-border/70",
           )}
           data-result-pref-prob-below-input=""
         />
       </div>
       {showInvalid || amount === null ? (
-        <p className="m-0 font-sans text-[10px] text-[#c24141]/90">
-          {invalidLabel}
-        </p>
+        <p className="m-0 font-sans text-[10px] text-[#c24141]/90">{invalidLabel}</p>
       ) : null}
     </div>
   )
@@ -302,9 +290,7 @@ export function ResultPreferencesPanel({
         className={buttonVariants({
           variant: "ghost",
           size: "icon-sm",
-          className: cn(
-            "text-muted-foreground/70 hover:bg-muted/60 hover:text-foreground",
-          ),
+          className: cn("text-muted-foreground/70 hover:bg-muted/60 hover:text-foreground"),
         })}
         aria-label={t("resultPreferences.open")}
         title={t("resultPreferences.open")}
@@ -331,228 +317,221 @@ export function ResultPreferencesPanel({
                 data-result-preferences-panel=""
                 onClick={(e) => e.stopPropagation()}
               >
-              <div className="mb-2 flex items-start justify-between gap-2">
-                <h4
-                  id={titleId}
-                  className="m-0 font-sans text-[13px] font-medium text-foreground"
-                >
-                  {t("resultPreferences.title")}
-                </h4>
-                <button
-                  type="button"
-                  className="flex size-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-muted"
-                  aria-label={t("resultPreferences.close")}
-                  onClick={close}
-                >
-                  <X className="size-3.5" strokeWidth={2} aria-hidden />
-                </button>
-              </div>
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <h4
+                    id={titleId}
+                    className="m-0 font-sans text-[13px] font-medium text-foreground"
+                  >
+                    {t("resultPreferences.title")}
+                  </h4>
+                  <button
+                    type="button"
+                    className="flex size-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-muted"
+                    aria-label={t("resultPreferences.close")}
+                    onClick={close}
+                  >
+                    <X className="size-3.5" strokeWidth={2} aria-hidden />
+                  </button>
+                </div>
 
-              {compactDerivedMetricsDeferred ? (
-                <p
-                  className="m-0 font-sans text-[11px] leading-snug text-muted-foreground"
-                  role="note"
-                  data-result-pref-compact-deferred=""
-                >
-                  {t("resultPreferences.compactDerivedMetricsDeferred")}
-                </p>
-              ) : null}
-
-              <div className="space-y-3">
-                <section className="space-y-1">
-                  <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {t("resultPreferences.keyFiguresHeading")}
+                {compactDerivedMetricsDeferred ? (
+                  <p
+                    className="m-0 font-sans text-[11px] leading-snug text-muted-foreground"
+                    role="note"
+                    data-result-pref-compact-deferred=""
+                  >
+                    {t("resultPreferences.compactDerivedMetricsDeferred")}
                   </p>
-                  <ToggleRow
-                    id="rp-base"
-                    label={t("resultPreferences.showBaseCost")}
-                    checked={kf.showBaseCost}
-                    onChange={(showBaseCost) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showBaseCost },
-                      })
-                    }
-                  />
-                  <ToggleRow
-                    id="rp-ev"
-                    label={t("resultPreferences.showExpectedValue")}
-                    checked={kf.showExpectedValue}
-                    onChange={(showExpectedValue) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showExpectedValue },
-                      })
-                    }
-                  />
-                  <ToggleRow
-                    id="rp-ea"
-                    label={t("resultPreferences.showExpectedAddition")}
-                    checked={kf.showExpectedAddition}
-                    onChange={(showExpectedAddition) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showExpectedAddition },
-                      })
-                    }
-                  />
-                  <ToggleRow
-                    id="rp-reserve"
-                    label={t("resultPreferences.showUncertaintyReserve")}
-                    checked={kf.showUncertaintyReserve}
-                    onChange={(showUncertaintyReserve) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showUncertaintyReserve },
-                      })
-                    }
-                  />
-                  <ToggleRow
-                    id="rp-std"
-                    label={t("resultPreferences.showStdDev")}
-                    checked={kf.showStdDev}
-                    onChange={(showStdDev) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showStdDev },
-                      })
-                    }
-                  />
-                  <ToggleRow
-                    id="rp-prob"
-                    label={t("resultPreferences.showProbabilityAtBaseCost")}
-                    checked={kf.showProbabilityAtBaseCost}
-                    onChange={(showProbabilityAtBaseCost) =>
-                      onChange({
-                        ...preferences,
-                        keyFigures: { ...kf, showProbabilityAtBaseCost },
-                      })
-                    }
-                  />
-                  <div className="space-y-1">
+                ) : null}
+
+                <div className="space-y-3">
+                  <section className="space-y-1">
+                    <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                      {t("resultPreferences.keyFiguresHeading")}
+                    </p>
                     <ToggleRow
-                      id="rp-prob-below"
-                      label={t(
-                        "resultPreferences.showProbabilityBelowCostLevel",
-                      )}
-                      checked={kf.probabilityBelowCostLevel.enabled}
-                      onChange={(enabled) =>
+                      id="rp-base"
+                      label={t("resultPreferences.showBaseCost")}
+                      checked={kf.showBaseCost}
+                      onChange={(showBaseCost) =>
                         onChange({
                           ...preferences,
-                          keyFigures: {
-                            ...kf,
-                            probabilityBelowCostLevel: {
-                              ...kf.probabilityBelowCostLevel,
-                              enabled,
-                            },
-                          },
+                          keyFigures: { ...kf, showBaseCost },
                         })
                       }
                     />
-                    {kf.probabilityBelowCostLevel.enabled ? (
-                      <ProbabilityBelowAmountField
-                        amount={kf.probabilityBelowCostLevel.amount}
-                        amountLabel={t(
-                          "resultPreferences.probabilityBelowAmount",
-                        )}
-                        invalidLabel={t(
-                          "resultPreferences.probabilityBelowAmountInvalid",
-                        )}
-                        onCommit={(amount) =>
+                    <ToggleRow
+                      id="rp-ev"
+                      label={t("resultPreferences.showExpectedValue")}
+                      checked={kf.showExpectedValue}
+                      onChange={(showExpectedValue) =>
+                        onChange({
+                          ...preferences,
+                          keyFigures: { ...kf, showExpectedValue },
+                        })
+                      }
+                    />
+                    <ToggleRow
+                      id="rp-ea"
+                      label={t("resultPreferences.showExpectedAddition")}
+                      checked={kf.showExpectedAddition}
+                      onChange={(showExpectedAddition) =>
+                        onChange({
+                          ...preferences,
+                          keyFigures: { ...kf, showExpectedAddition },
+                        })
+                      }
+                    />
+                    <ToggleRow
+                      id="rp-reserve"
+                      label={t("resultPreferences.showUncertaintyReserve")}
+                      checked={kf.showUncertaintyReserve}
+                      onChange={(showUncertaintyReserve) =>
+                        onChange({
+                          ...preferences,
+                          keyFigures: { ...kf, showUncertaintyReserve },
+                        })
+                      }
+                    />
+                    <ToggleRow
+                      id="rp-std"
+                      label={t("resultPreferences.showStdDev")}
+                      checked={kf.showStdDev}
+                      onChange={(showStdDev) =>
+                        onChange({
+                          ...preferences,
+                          keyFigures: { ...kf, showStdDev },
+                        })
+                      }
+                    />
+                    <ToggleRow
+                      id="rp-prob"
+                      label={t("resultPreferences.showProbabilityAtBaseCost")}
+                      checked={kf.showProbabilityAtBaseCost}
+                      onChange={(showProbabilityAtBaseCost) =>
+                        onChange({
+                          ...preferences,
+                          keyFigures: { ...kf, showProbabilityAtBaseCost },
+                        })
+                      }
+                    />
+                    <div className="space-y-1">
+                      <ToggleRow
+                        id="rp-prob-below"
+                        label={t("resultPreferences.showProbabilityBelowCostLevel")}
+                        checked={kf.probabilityBelowCostLevel.enabled}
+                        onChange={(enabled) =>
                           onChange({
                             ...preferences,
                             keyFigures: {
                               ...kf,
                               probabilityBelowCostLevel: {
                                 ...kf.probabilityBelowCostLevel,
-                                amount,
+                                enabled,
                               },
                             },
                           })
                         }
                       />
-                    ) : null}
-                  </div>
-                </section>
+                      {kf.probabilityBelowCostLevel.enabled ? (
+                        <ProbabilityBelowAmountField
+                          amount={kf.probabilityBelowCostLevel.amount}
+                          amountLabel={t("resultPreferences.probabilityBelowAmount")}
+                          invalidLabel={t("resultPreferences.probabilityBelowAmountInvalid")}
+                          onCommit={(amount) =>
+                            onChange({
+                              ...preferences,
+                              keyFigures: {
+                                ...kf,
+                                probabilityBelowCostLevel: {
+                                  ...kf.probabilityBelowCostLevel,
+                                  amount,
+                                },
+                              },
+                            })
+                          }
+                        />
+                      ) : null}
+                    </div>
+                  </section>
 
-                <section className="space-y-1.5">
-                  <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {t("resultPreferences.percentilesHeading")}
-                  </p>
-                  <PercentileChips
-                    percentiles={kf.percentiles}
-                    onRemove={onRemoveKeyFigurePercentile}
-                    onAdd={onAddKeyFigurePercentile}
-                    addLabel={t("resultPreferences.addPercentile")}
-                    inputAriaLabel={t("resultPreferences.percentileInput")}
-                  />
-                </section>
-
-                <section className="space-y-1.5">
-                  <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {t("resultPreferences.sCurveHeading")}
-                  </p>
-                  <ToggleRow
-                    id="rp-scurve-sync"
-                    label={t("resultPreferences.useSamePercentiles")}
-                    checked={preferences.sCurve.useKeyFigurePercentiles}
-                    onChange={(useKeyFigurePercentiles) =>
-                      onChange({
-                        ...preferences,
-                        sCurve: {
-                          ...preferences.sCurve,
-                          useKeyFigurePercentiles,
-                        },
-                      })
-                    }
-                  />
-                  {!preferences.sCurve.useKeyFigurePercentiles ? (
+                  <section className="space-y-1.5">
+                    <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                      {t("resultPreferences.percentilesHeading")}
+                    </p>
                     <PercentileChips
-                      percentiles={preferences.sCurve.percentiles}
-                      onRemove={onRemoveSCurvePercentile}
-                      onAdd={onAddSCurvePercentile}
+                      percentiles={kf.percentiles}
+                      onRemove={onRemoveKeyFigurePercentile}
+                      onAdd={onAddKeyFigurePercentile}
                       addLabel={t("resultPreferences.addPercentile")}
                       inputAriaLabel={t("resultPreferences.percentileInput")}
                     />
-                  ) : null}
-                </section>
+                  </section>
 
-                <div className="flex flex-wrap items-center gap-2 border-t border-border/50 pt-2.5">
-                  <button
-                    type="button"
-                    className={buttonVariants({
-                      variant: "default",
-                      className:
-                        "h-8 bg-[#1d868c] px-2.5 text-[12px] hover:bg-[#1d868c]/90",
-                    })}
-                    data-result-pref-save=""
-                    onClick={() => {
-                      onSaveAsDefault()
-                      setSavedFlash(true)
-                      window.setTimeout(() => setSavedFlash(false), 1600)
-                    }}
-                  >
-                    {t("resultPreferences.saveAsDefault")}
-                  </button>
-                  <button
-                    type="button"
-                    className={buttonVariants({
-                      variant: "ghost",
-                      className:
-                        "h-8 px-2 text-[12px] text-muted-foreground hover:text-foreground",
-                    })}
-                    data-result-pref-reset=""
-                    onClick={onReset}
-                  >
-                    {t("resultPreferences.reset")}
-                  </button>
+                  <section className="space-y-1.5">
+                    <p className="m-0 font-sans text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                      {t("resultPreferences.sCurveHeading")}
+                    </p>
+                    <ToggleRow
+                      id="rp-scurve-sync"
+                      label={t("resultPreferences.useSamePercentiles")}
+                      checked={preferences.sCurve.useKeyFigurePercentiles}
+                      onChange={(useKeyFigurePercentiles) =>
+                        onChange({
+                          ...preferences,
+                          sCurve: {
+                            ...preferences.sCurve,
+                            useKeyFigurePercentiles,
+                          },
+                        })
+                      }
+                    />
+                    {!preferences.sCurve.useKeyFigurePercentiles ? (
+                      <PercentileChips
+                        percentiles={preferences.sCurve.percentiles}
+                        onRemove={onRemoveSCurvePercentile}
+                        onAdd={onAddSCurvePercentile}
+                        addLabel={t("resultPreferences.addPercentile")}
+                        inputAriaLabel={t("resultPreferences.percentileInput")}
+                      />
+                    ) : null}
+                  </section>
+
+                  <div className="flex flex-wrap items-center gap-2 border-t border-border/50 pt-2.5">
+                    <button
+                      type="button"
+                      className={buttonVariants({
+                        variant: "default",
+                        className: "h-8 bg-[#1d868c] px-2.5 text-[12px] hover:bg-[#1d868c]/90",
+                      })}
+                      data-result-pref-save=""
+                      onClick={() => {
+                        onSaveAsDefault()
+                        setSavedFlash(true)
+                        window.setTimeout(() => setSavedFlash(false), 1600)
+                      }}
+                    >
+                      {t("resultPreferences.saveAsDefault")}
+                    </button>
+                    <button
+                      type="button"
+                      className={buttonVariants({
+                        variant: "ghost",
+                        className:
+                          "h-8 px-2 text-[12px] text-muted-foreground hover:text-foreground",
+                      })}
+                      data-result-pref-reset=""
+                      onClick={onReset}
+                    >
+                      {t("resultPreferences.reset")}
+                    </button>
+                  </div>
+                  {savedFlash ? (
+                    <p className="m-0 font-sans text-[11px] text-muted-foreground">
+                      {t("resultPreferences.saved")}
+                    </p>
+                  ) : null}
                 </div>
-                {savedFlash ? (
-                  <p className="m-0 font-sans text-[11px] text-muted-foreground">
-                    {t("resultPreferences.saved")}
-                  </p>
-                ) : null}
-              </div>
               </div>
             </div>,
             document.body,

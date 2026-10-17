@@ -24,10 +24,7 @@ export function PrimaryFocusModeEntry({ onClick }: { onClick: () => void }) {
         aria-label={t("inputs.guidedFocusMode")}
         title={t("inputs.guidedFocusMode")}
       >
-        <Play
-          className={cn("size-3.5 fill-current", brandPrimaryTextClass)}
-          aria-hidden
-        />
+        <Play className={cn("size-3.5 fill-current", brandPrimaryTextClass)} aria-hidden />
         {t("inputs.guidedFocusMode")}
       </button>
     </div>

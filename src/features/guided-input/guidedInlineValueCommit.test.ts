@@ -3,19 +3,12 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function guidedDialogSource() {
-  return readFileSync(
-    join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(root, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function arrowNavSource() {
-  return readFileSync(
-    join(root, "src/domain/guided/shouldIgnoreGuidedArrowNavigation.ts"),
-    "utf8",
-  )
+  return readFileSync(join(root, "src/domain/guided/shouldIgnoreGuidedArrowNavigation.ts"), "utf8")
 }
 
 /**
@@ -35,7 +28,7 @@ describe("Focus uncertainty range Enter-only numeric commit", () => {
     const inline = guidedInlineValueSource()
     expect(inline).toContain('commitMode = "blur"')
     expect(inline).toContain('commitMode?: "enter" | "blur"')
-    expect(inline).toContain('data-guided-commit-mode={commitMode}')
+    expect(inline).toContain("data-guided-commit-mode={commitMode}")
     // Typing updates draft only.
     expect(inline).toContain("onChange={(e) => setDraft(e.target.value)}")
     // Enter commits once.
@@ -85,9 +78,7 @@ describe("Focus uncertainty range Enter-only numeric commit", () => {
   it("G: numeric → slider: enter-mode blur discards before slider live commit", () => {
     const inline = guidedInlineValueSource()
     // Enter-mode blur discards; blur-mode still saves after that branch returns.
-    expect(inline).toMatch(
-      /if \(commitMode === "enter"\) \{\s*discardDraft\(\)\s*return\s*\}/,
-    )
+    expect(inline).toMatch(/if \(commitMode === "enter"\) \{\s*discardDraft\(\)\s*return\s*\}/)
     expect(inline).toMatch(
       /if \(commitMode === "enter"\) \{\s*discardDraft\(\)\s*return\s*\}\s*save\(\)/,
     )

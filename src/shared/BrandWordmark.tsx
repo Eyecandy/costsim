@@ -72,9 +72,5 @@ export function BrandWordmark({
     )
   }
 
-  return (
-    <span className={cn("inline-flex items-baseline gap-1.5", className)}>
-      {content}
-    </span>
-  )
+  return <span className={cn("inline-flex items-baseline gap-1.5", className)}>{content}</span>
 }

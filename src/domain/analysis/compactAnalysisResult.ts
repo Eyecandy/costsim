@@ -80,26 +80,16 @@ export function buildCompactProjectResult(args: {
   const p85 = percentiles["85"] ?? null
   const expectedValue = mean(values)
   const stdDev = standardDeviation(values)
-  const expectedAddition = computeUncertainDeltaWithPct(
-    p50,
-    baseCost,
-    incurredCosts,
-  )
-  const uncertaintyReserve = computeUncertainDeltaWithPct(
-    p85,
-    p50,
-    incurredCosts,
-  )
-  const probabilityBelowAmount =
-    args.resultView.keyFigures.probabilityBelowCostLevel.amount
+  const expectedAddition = computeUncertainDeltaWithPct(p50, baseCost, incurredCosts)
+  const uncertaintyReserve = computeUncertainDeltaWithPct(p85, p50, incurredCosts)
+  const probabilityBelowAmount = args.resultView.keyFigures.probabilityBelowCostLevel.amount
   const probabilityBelowEnabled =
     args.resultView.keyFigures.probabilityBelowCostLevel.enabled &&
     probabilityBelowAmount !== null &&
     Number.isFinite(probabilityBelowAmount)
-  const points = computeSCurveDisplaySeries(
-    values,
-    SCURVE_DISPLAY_POINT_TARGET,
-  ).map((point) => ({ ...point }))
+  const points = computeSCurveDisplaySeries(values, SCURVE_DISPLAY_POINT_TARGET).map((point) => ({
+    ...point,
+  }))
 
   const compact: CompactProjectResultV1 = {
     projectId: args.project.id,
@@ -109,25 +99,17 @@ export function buildCompactProjectResult(args: {
       baseCost,
       expectedValue: finiteOrNull(expectedValue),
       stdDev: finiteOrNull(stdDev),
-      stdDevPct: finiteOrNull(
-        relativeStandardDeviationPercent(stdDev, expectedValue),
-      ),
+      stdDevPct: finiteOrNull(relativeStandardDeviationPercent(stdDev, expectedValue)),
       expectedAddition: finiteOrNull(expectedAddition.absolute),
       expectedAdditionPct: finiteOrNull(expectedAddition.percent),
       uncertaintyReserve: finiteOrNull(uncertaintyReserve.absolute),
       uncertaintyReservePct: finiteOrNull(uncertaintyReserve.percent),
       probAtBase:
-        baseCost === null
-          ? null
-          : finiteOrNull(probabilityAtOrBelowPercent(values, baseCost)),
+        baseCost === null ? null : finiteOrNull(probabilityAtOrBelowPercent(values, baseCost)),
       probBelowCostLevel: probabilityBelowEnabled
-        ? finiteOrNull(
-            probabilityAtOrBelowPercent(values, probabilityBelowAmount),
-          )
+        ? finiteOrNull(probabilityAtOrBelowPercent(values, probabilityBelowAmount))
         : null,
-      probabilityBelowAmount: probabilityBelowEnabled
-        ? probabilityBelowAmount
-        : null,
+      probabilityBelowAmount: probabilityBelowEnabled ? probabilityBelowAmount : null,
       percentiles,
     },
     sCurve: {
@@ -135,10 +117,7 @@ export function buildCompactProjectResult(args: {
       pointCount: points.length,
       points,
     },
-    tornado:
-      values.length > 0
-        ? computeDeterministicTornadoRows(args.project, 6)
-        : null,
+    tornado: values.length > 0 ? computeDeterministicTornadoRows(args.project, 6) : null,
     contribution: args.contribution ?? null,
   }
   assertNoHeavyValuesInCompact(compact)

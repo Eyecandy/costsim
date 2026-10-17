@@ -14,11 +14,9 @@ export const uncertaintyModelConfig = {
   inputInterpretation: "p10_mode_p90",
 } as const
 
-export type UncertaintyMarginalDistribution =
-  typeof uncertaintyModelConfig.marginalDistribution
+export type UncertaintyMarginalDistribution = typeof uncertaintyModelConfig.marginalDistribution
 
-export type UncertaintyInputInterpretation =
-  typeof uncertaintyModelConfig.inputInterpretation
+export type UncertaintyInputInterpretation = typeof uncertaintyModelConfig.inputInterpretation
 
 type MarginalDistributionLabels = {
   singular: string
@@ -67,10 +65,7 @@ export function fillUncertaintyModelCopy(
     count?: string
   },
 ): string {
-  let out = template.replace(
-    "{distributions}",
-    formatMarginalDistributionPlural(args.language),
-  )
+  let out = template.replace("{distributions}", formatMarginalDistributionPlural(args.language))
   if (args.count !== undefined) {
     out = out.replace("{count}", args.count)
   }

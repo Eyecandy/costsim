@@ -24,8 +24,7 @@ export const RESULTS_COLUMN_CLASS = cn(
 )
 
 /** Bottom breathing room under Single Analysis tabs (mirrors simulation notice zone). */
-export const STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS =
-  "pb-[calc(0.6375rem+4.25rem)]"
+export const STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS = "pb-[calc(0.6375rem+4.25rem)]"
 
 /**
  * Project Profile sits in the left column only (Single Analysis). Modest top
@@ -35,8 +34,7 @@ export const STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS =
  * line boxes). Primary Focus mode sits on this same row.
  */
 export const PROJECT_PROFILE_SECTION_SPACING_CLASS = "mt-4 mb-5"
-export const RESULTS_ALIGN_WITH_COST_ITEMS_CLASS =
-  "md:pt-[calc(1rem+2.5rem+1.25rem)]"
+export const RESULTS_ALIGN_WITH_COST_ITEMS_CLASS = "md:pt-[calc(1rem+2.5rem+1.25rem)]"
 
 /**
  * Ongoing Analysis (md+): three shared grid rows. Sticky timeline and simulation
@@ -66,10 +64,8 @@ export const ONGOING_TIMELINE_CELL_CLASS = cn(
   STICKY_CONTROL_STRIP_CLASSNAME,
   "min-w-0 md:col-start-1 md:row-start-1 md:self-stretch",
 )
-export const ONGOING_PROJECT_PROFILE_CELL_CLASS =
-  "min-w-0 md:col-start-1 md:row-start-2"
-export const ONGOING_COST_CELL_CLASS =
-  "min-w-0 pb-7 md:col-start-1 md:row-start-3"
+export const ONGOING_PROJECT_PROFILE_CELL_CLASS = "min-w-0 md:col-start-1 md:row-start-2"
+export const ONGOING_COST_CELL_CLASS = "min-w-0 pb-7 md:col-start-1 md:row-start-3"
 /** Sticky simulation cell — same stretch so both controls share row height. */
 export const ONGOING_SIMULATION_CELL_CLASS = cn(
   STICKY_CONTROL_STRIP_CLASSNAME,
@@ -85,8 +81,7 @@ export const SIMULATION_NOTICE_ZONE_CLASS = cn(
   "mt-[0.1125rem] flex min-h-[calc(0.6375rem+4.25rem)] shrink-0 flex-col gap-1",
 )
 
-export const SIMULATION_NOTICE_TEXT_CLASS =
-  "font-sans text-xs leading-snug text-muted-foreground"
+export const SIMULATION_NOTICE_TEXT_CLASS = "font-sans text-xs leading-snug text-muted-foreground"
 
 /** Text tint for the color word in validation notices (aligned with invalid cell highlights). */
 export const NOTICE_WORD_RED_CLASS = "text-[#c24141]"

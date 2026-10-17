@@ -5,10 +5,7 @@ import {
   type DriverImpactsByRowId,
   type Project,
 } from "@/domain/analysis/project"
-import {
-  assumptionsFromShareTexts,
-  assumptionsToShareTexts,
-} from "@/domain/analysis/assumptions"
+import { assumptionsFromShareTexts, assumptionsToShareTexts } from "@/domain/analysis/assumptions"
 import {
   projectProfileFromShare,
   projectProfileToShare,
@@ -19,10 +16,7 @@ import {
   clampCorrelationCoefficient,
   parseCorrelationCoefficient,
 } from "@/domain/simulation/costCorrelation"
-import {
-  parseCostDescription,
-  parseDriverDescription,
-} from "@/domain/results/rowDefinitions"
+import { parseCostDescription, parseDriverDescription } from "@/domain/results/rowDefinitions"
 import {
   newId,
   parseDriverImpactPercent,
@@ -58,13 +52,10 @@ export type ShareInputState = {
 }
 
 export type BuildShareUrlResult =
-  | { ok: true; url: string }
-  | { ok: false; reason: "oversized" | "unavailable" }
+  { ok: true; url: string } | { ok: false; reason: "oversized" | "unavailable" }
 
 /** Cost tuple: name, opt, likely, pes, optional description. */
-type CostShareTuple =
-  | [string, string, string, string]
-  | [string, string, string, string, string]
+type CostShareTuple = [string, string, string, string] | [string, string, string, string, string]
 
 /** Driver tuple: name, opt, likely, pes, optional description (+ legacy ignored 6th). */
 type DriverShareTuple =
@@ -113,12 +104,7 @@ export type ShareCompactV3 = {
 export type ShareCompactPayload = ShareCompactV2 | ShareCompactV3
 
 function rowIsEmptyContent(r: ScenarioRow): boolean {
-  return (
-    !r.name.trim() &&
-    !r.optimistic.trim() &&
-    !r.likely.trim() &&
-    !r.pessimistic.trim()
-  )
+  return !r.name.trim() && !r.optimistic.trim() && !r.likely.trim() && !r.pessimistic.trim()
 }
 
 function trimRowsForShare<T extends ScenarioRow>(rows: readonly T[]): T[] {
@@ -130,23 +116,13 @@ function trimRowsForShare<T extends ScenarioRow>(rows: readonly T[]): T[] {
 }
 
 function costRowToTuple(r: CostElementRow): CostShareTuple {
-  const base: [string, string, string, string] = [
-    r.name,
-    r.optimistic,
-    r.likely,
-    r.pessimistic,
-  ]
+  const base: [string, string, string, string] = [r.name, r.optimistic, r.likely, r.pessimistic]
   const description = parseCostDescription(r.description ?? "")
   return description ? [...base, description] : base
 }
 
 function driverRowToTuple(r: DriverRow): DriverShareTuple {
-  const base: [string, string, string, string] = [
-    r.name,
-    r.optimistic,
-    r.likely,
-    r.pessimistic,
-  ]
+  const base: [string, string, string, string] = [r.name, r.optimistic, r.likely, r.pessimistic]
   const description = parseDriverDescription(r.description ?? "")
   return description ? [...base, description] : base
 }
@@ -203,12 +179,7 @@ function tupleToDriverRow(t: unknown): DriverRow | null {
 }
 
 function isValidShareIndex(n: unknown, length: number): n is number {
-  return (
-    typeof n === "number" &&
-    Number.isInteger(n) &&
-    n >= 0 &&
-    n < length
-  )
+  return typeof n === "number" && Number.isInteger(n) && n >= 0 && n < length
 }
 
 /** Encode sparse non-default impacts by row index in the serialized arrays. */
@@ -222,9 +193,7 @@ export function encodeDriverImpactTriples(
     const driverId = driverRows[di]!.id
     for (let ci = 0; ci < costRows.length; ci++) {
       const costId = costRows[ci]!.id
-      const pct = resolveDriverImpactPercent(
-        driverImpacts?.[driverId]?.[costId],
-      )
+      const pct = resolveDriverImpactPercent(driverImpacts?.[driverId]?.[costId])
       if (pct === 100) continue
       triples.push([di, ci, pct])
     }
@@ -242,8 +211,7 @@ export function encodeCorrelationTriples(
     for (let j = i + 1; j < costRows.length; j++) {
       const idA = costRows[i]!.id
       const idB = costRows[j]!.id
-      const raw =
-        costCorrelations?.[idA]?.[idB] ?? costCorrelations?.[idB]?.[idA]
+      const raw = costCorrelations?.[idA]?.[idB] ?? costCorrelations?.[idB]?.[idA]
       const rho = parseCorrelationCoefficient(raw)
       if (rho === 0) continue
       triples.push([i, j, rho])
@@ -319,9 +287,7 @@ export function decodeCorrelationTriples(
 }
 
 /** Build the current (v3) compact share payload. Exported for tests. */
-export function buildShareCompactPayload(
-  state: ShareInputState,
-): ShareCompactV3 {
+export function buildShareCompactPayload(state: ShareInputState): ShareCompactV3 {
   const projects = state.projects.slice(0, appFeatures.maxProjects)
   const activeIndex = Math.max(
     0,
@@ -335,11 +301,7 @@ export function buildShareCompactPayload(
       const driverRows = trimRowsForShare(proj.driverRows)
       const assumptionTexts = assumptionsToShareTexts(proj.assumptions)
       const profileShare = projectProfileToShare(proj.profile)
-      const di = encodeDriverImpactTriples(
-        costRows,
-        driverRows,
-        proj.driverImpacts,
-      )
+      const di = encodeDriverImpactTriples(costRows, driverRows, proj.driverImpacts)
       const cr = encodeCorrelationTriples(costRows, proj.costCorrelations)
       return {
         n: proj.name,
@@ -360,9 +322,7 @@ function compactFromProjects(state: ShareInputState): ShareCompactV3 {
   return buildShareCompactPayload(state)
 }
 
-export function compactPayloadToProjects(
-  payload: ShareCompactPayload,
-): Project[] | null {
+export function compactPayloadToProjects(payload: ShareCompactPayload): Project[] | null {
   if (
     (payload.v !== 2 && payload.v !== 3) ||
     !Number.isInteger(payload.ai) ||
@@ -414,9 +374,7 @@ export function compactPayloadToProjects(
   return projects
 }
 
-export function decodeShareCompactPayload(
-  parsed: unknown,
-): ShareInputState | null {
+export function decodeShareCompactPayload(parsed: unknown): ShareInputState | null {
   if (typeof parsed !== "object" || parsed === null) return null
   const payload = parsed as ShareCompactPayload
   const projects = compactPayloadToProjects(payload)
@@ -519,9 +477,7 @@ export function decodeShareV1FromHash(hash: string): ShareInputState | null {
   return { projects, activeProjectId: rawActive }
 }
 
-export async function decodeShareV2FromHash(
-  hash: string,
-): Promise<ShareInputState | null> {
+export async function decodeShareV2FromHash(hash: string): Promise<ShareInputState | null> {
   if (!hash.startsWith(SHARE_V2_PREFIX)) return null
   const encoded = hash.slice(SHARE_V2_PREFIX.length)
   if (!encoded) return null
@@ -539,9 +495,7 @@ export async function decodeShareV2FromHash(
 }
 
 /** Decode compact v2/v3 payloads from `?s=` (LZ-String). */
-export async function decodeShareV2FromSearch(
-  search: string,
-): Promise<ShareInputState | null> {
+export async function decodeShareV2FromSearch(search: string): Promise<ShareInputState | null> {
   const params = new URLSearchParams(search)
   const encoded = params.get(SHARE_QUERY_PARAM)
   if (!encoded) return null
@@ -572,9 +526,7 @@ export async function encodeSharePayload(state: ShareInputState): Promise<string
  * Canonical share URL builder used by Copy Share Link and PDF export.
  * Emits v3 compact state in `?s=`. Fails closed when over SHARE_URL_MAX_LENGTH.
  */
-export async function buildShareUrl(
-  state: ShareInputState,
-): Promise<BuildShareUrlResult> {
+export async function buildShareUrl(state: ShareInputState): Promise<BuildShareUrlResult> {
   const compact = compactFromProjects(state)
   const json = JSON.stringify(compact)
   const encoded = LZString.compressToEncodedURIComponent(json)

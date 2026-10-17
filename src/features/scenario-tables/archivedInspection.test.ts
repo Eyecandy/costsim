@@ -3,9 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
@@ -13,7 +11,6 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
-
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -27,16 +24,12 @@ describe("archived analysis inspection (read-only)", () => {
 
     // Selection for Define is allowed even when archived/read-only.
     expect(table).toContain("defineMode.onSelectRow(dataRow.id)")
-    expect(table).toMatch(
-      /if \(defineMode\?\.active\) \{[\s\S]*?defineMode\.onSelectRow/,
-    )
+    expect(table).toMatch(/if \(defineMode\?\.active\) \{[\s\S]*?defineMode\.onSelectRow/)
     expect(table).not.toMatch(
       /onCellClicked = useCallback\(\s*\(cell: Item\) => \{\s*if \(readOnly\) return/,
     )
     expect(app).toContain("if (!defineModeActive) return")
-    expect(app).not.toContain(
-      "if (!defineModeActive || analysisReadOnly) return",
-    )
+    expect(app).not.toContain("if (!defineModeActive || analysisReadOnly) return")
 
     expect(editor).toContain("readOnly = props.readOnly === true")
     expect(editor).toContain('data-readonly={readOnly ? "" : undefined}')
@@ -65,24 +58,18 @@ describe("archived analysis inspection (read-only)", () => {
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
     const app = readAppSource()
     expect(app).toContain("if (!impactModeActive) return")
-    expect(app).not.toContain(
-      "if (!impactModeActive || analysisReadOnly) return",
-    )
+    expect(app).not.toContain("if (!impactModeActive || analysisReadOnly) return")
     expect(table).toContain("driverImpactMode.onSelectDriver(dataRow.id)")
     expect(table).toContain("if (readOnly) return")
     expect(table).toContain("disabled={readOnly}")
-    expect(app).toMatch(
-      /onImpactChange:[\s\S]*?if \(analysisReadOnly\) return/,
-    )
+    expect(app).toMatch(/onImpactChange:[\s\S]*?if \(analysisReadOnly\) return/)
   })
 
   it("D: Correlation remains inspectable; Apply hidden when read-only", () => {
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
     expect(table).toContain("costCorrelationMode.onToggleCostSelection")
     expect(table).toContain("{!readOnly ? (")
-    expect(table).toMatch(
-      /\{!readOnly \? \([\s\S]*?costCorrelationApply[\s\S]*?\) : null\}/,
-    )
+    expect(table).toMatch(/\{!readOnly \? \([\s\S]*?costCorrelationApply[\s\S]*?\) : null\}/)
     expect(table).toContain("if (readOnly) return")
   })
 
@@ -105,9 +92,7 @@ describe("archived analysis inspection (read-only)", () => {
       name: "Bygg",
       description: "Inkl. riving",
     }
-    blank.projects[0]!.assumptions = [
-      { id: "a1", text: "Campus i bruk" },
-    ]
+    blank.projects[0]!.assumptions = [{ id: "a1", text: "Campus i bruk" }]
     const doc = await repo.create({
       name: "Inspect archive",
       folderId: null,
@@ -155,11 +140,7 @@ describe("archived analysis inspection (read-only)", () => {
 
     const still = await repo.get(archived.id)
     expect(still).toEqual(before)
-    expect(still?.workspace.projects[0]!.costRows[0]!.description).toBe(
-      "Inkl. riving",
-    )
-    expect(still?.workspace.projects[0]!.assumptions?.[0]?.text).toBe(
-      "Campus i bruk",
-    )
+    expect(still?.workspace.projects[0]!.costRows[0]!.description).toBe("Inkl. riving")
+    expect(still?.workspace.projects[0]!.assumptions?.[0]?.text).toBe("Campus i bruk")
   })
 })

@@ -6,7 +6,6 @@ import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -15,13 +14,11 @@ describe("Focus presentation refinements", () => {
   it("A/B: Input and Results Focus share dimmed-app backdrop (not opaque white)", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    expect(shell).toContain('data-focus-backdrop={')
+    expect(shell).toContain("data-focus-backdrop={")
     expect(shell).toContain('"dimmed"')
     expect(shell).toContain("bg-black/40 p-3 sm:p-6")
     // Opaque white is reserved for browser fullscreen only.
-    expect(shell).toMatch(
-      /browserFullscreen\s*\n?\s*\? "h-full min-h-full w-full bg-background/,
-    )
+    expect(shell).toMatch(/browserFullscreen\s*\n?\s*\? "h-full min-h-full w-full bg-background/)
     expect(guided).toContain('data-guided-backdrop="dimmed"')
     expect(guided).toContain("bg-black/40")
   })
@@ -55,9 +52,7 @@ describe("Focus presentation refinements", () => {
     // Embedded portal fills height only on Simulation — not a global alignment style.
     expect(guided).toContain('step?.phase === "simulation" && "min-h-full"')
     // Shared shell / frame tokens remain untouched by this layout.
-    expect(readSrc("src/domain/guided/focusSessionFrame.ts")).toContain(
-      "FOCUS_SESSION_CARD_CLASS",
-    )
+    expect(readSrc("src/domain/guided/focusSessionFrame.ts")).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(readSrc("src/features/focus-mode/FocusModeShell.tsx")).toContain(
       "FOCUS_SESSION_CONTENT_CLASS",
     )
@@ -68,24 +63,20 @@ describe("Focus presentation refinements", () => {
     expect(editor).toContain("handleAddBlur")
     expect(editor).toContain("cancelAdd")
     expect(editor).toContain("onBlur={handleAddBlur}")
-    expect(editor).toContain(
-      "guidedDriverUncertaintyNotePlaceholderLower",
-    )
-    expect(editor).toContain(
-      "guidedDriverUncertaintyNotePlaceholderHigher",
-    )
+    expect(editor).toContain("guidedDriverUncertaintyNotePlaceholderLower")
+    expect(editor).toContain("guidedDriverUncertaintyNotePlaceholderHigher")
     expect(messages.no.inputs.guidedDriverUncertaintyNotePlaceholderLower).toBe(
       "Beskriv et forhold som kan gi lavere kostnadsutfall",
     )
     expect(messages.en.inputs.guidedDriverUncertaintyNotePlaceholderLower).toBe(
       "Describe a factor that could lead to a lower cost outcome",
     )
-    expect(
-      messages.no.inputs.guidedDriverUncertaintyNotePlaceholderHigher,
-    ).toBe("Beskriv et forhold som kan gi høyere kostnadsutfall")
-    expect(
-      messages.en.inputs.guidedDriverUncertaintyNotePlaceholderHigher,
-    ).toBe("Describe a factor that could lead to a higher cost outcome")
+    expect(messages.no.inputs.guidedDriverUncertaintyNotePlaceholderHigher).toBe(
+      "Beskriv et forhold som kan gi høyere kostnadsutfall",
+    )
+    expect(messages.en.inputs.guidedDriverUncertaintyNotePlaceholderHigher).toBe(
+      "Describe a factor that could lead to a higher cost outcome",
+    )
   })
 
   it("H/I/J: Next Steps footer uses Avslutt/Close via exitFocusMode; Previous remains", () => {
@@ -96,9 +87,7 @@ describe("Focus presentation refinements", () => {
     expect(app).toContain('t("inputs.focusSessionExit")')
     expect(app).toContain("data-focus-results-previous")
     expect(app).toContain("navigateFocusPrevious")
-    expect(app).toContain(
-      "focusResultStepIndex >= focusResultSteps.length - 1",
-    )
+    expect(app).toContain("focusResultStepIndex >= focusResultSteps.length - 1")
     expect(messages.no.inputs.focusSessionExit).toBe("Avslutt")
     expect(messages.en.inputs.focusSessionExit).toBe("Close")
   })
@@ -124,8 +113,6 @@ describe("Focus presentation refinements", () => {
     expect(shell).toContain("paddingRight")
     // Shared frame still uses one contained class (no Input/Results offsets).
     expect(shell).toContain("FOCUS_SESSION_CARD_CLASS")
-    expect(shell).not.toMatch(
-      /focusView === "results"[\s\S]{0,40}top-|hostOnly[\s\S]{0,40}right-/,
-    )
+    expect(shell).not.toMatch(/focusView === "results"[\s\S]{0,40}top-|hostOnly[\s\S]{0,40}right-/)
   })
 })

@@ -9,7 +9,6 @@ import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulati
 import { createProject } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function sampleProject() {
   const base = createProject({ id: "p1", name: "Project A" })
   return {
@@ -45,13 +44,13 @@ function sectionExpanderSource() {
 
 function resultsLayoutSource() {
   const src = resultsPanelSource()
-  const start = src.indexOf('space-y-6 [&>div:not(:first-child)]:pt-3')
+  const start = src.indexOf("space-y-6 [&>div:not(:first-child)]:pt-3")
   return src.slice(start)
 }
 
 function contributionBlockSource() {
   const layout = resultsLayoutSource()
-  const start = layout.indexOf('charts.attributionTitle')
+  const start = layout.indexOf("charts.attributionTitle")
   const end = layout.indexOf("appFeatures.allowShareLink", start)
   return layout.slice(start, end)
 }
@@ -67,8 +66,7 @@ function preCalculationBranchSource() {
 function afterCalculationBranchSource() {
   const src = contributionBlockSource()
   const readyMarker = src.indexOf("attributionUi.states.map")
-  const branchStart =
-    src.lastIndexOf(") : (", readyMarker) + ") : (".length
+  const branchStart = src.lastIndexOf(") : (", readyMarker) + ") : (".length
   return src.slice(branchStart)
 }
 
@@ -83,15 +81,9 @@ describe("attribution waterfall presentation", () => {
       "Shows how cost items and drivers contribute to the expected addition and uncertainty reserve. Larger contributions mean greater impact on the relevant result.",
     )
     expect(messages.no.charts.waterfallTitle).toBe("BIDRAG TIL FORVENTET TILLEGG")
-    expect(messages.en.charts.waterfallTitle).toBe(
-      "CONTRIBUTIONS TO EXPECTED ADDITION",
-    )
-    expect(messages.no.charts.reserveWaterfallTitle).toBe(
-      "BIDRAG TIL USIKKERHETSAVSETNING",
-    )
-    expect(messages.en.charts.reserveWaterfallTitle).toBe(
-      "CONTRIBUTIONS TO UNCERTAINTY RESERVE",
-    )
+    expect(messages.en.charts.waterfallTitle).toBe("CONTRIBUTIONS TO EXPECTED ADDITION")
+    expect(messages.no.charts.reserveWaterfallTitle).toBe("BIDRAG TIL USIKKERHETSAVSETNING")
+    expect(messages.en.charts.reserveWaterfallTitle).toBe("CONTRIBUTIONS TO UNCERTAINTY RESERVE")
     expect(messages.no.charts.waterfallTitle).not.toBe("FORVENTET TILLEGG")
     expect(messages.no.charts.reserveWaterfallTitle).not.toBe("USIKKERHETSAVSETNING")
     expect(messages.en.charts.waterfallTitle).not.toBe("EXPECTED ADDITION")
@@ -131,10 +123,7 @@ describe("attribution waterfall presentation", () => {
     const preCalc = preCalculationBranchSource()
     const ready = afterCalculationBranchSource()
     const css = readFileSync(join(repoRoot, "src/index.css"), "utf8")
-    const component = readFileSync(
-      join(repoRoot, "src/shared/SpotlightLoadingText.tsx"),
-      "utf8",
-    )
+    const component = readFileSync(join(repoRoot, "src/shared/SpotlightLoadingText.tsx"), "utf8")
     expect(preCalc).toContain("SpotlightLoadingText")
     expect(preCalc).not.toContain("contribution-loading-pulse")
     expect(ready).not.toContain("SpotlightLoadingText")
@@ -162,9 +151,7 @@ describe("attribution waterfall presentation", () => {
       css.indexOf("@media (prefers-reduced-motion: reduce)"),
     )
     expect(highlightBlock).toContain("color: transparent")
-    expect(highlightBlock).toContain(
-      "animation: spotlight-loading-text 1.1s linear infinite",
-    )
+    expect(highlightBlock).toContain("animation: spotlight-loading-text 1.1s linear infinite")
     expect(css).toContain("prefers-reduced-motion: reduce")
     const reduced = css.slice(css.indexOf("prefers-reduced-motion: reduce"))
     expect(reduced).toContain(".spotlight-loading-text-highlight")
@@ -242,9 +229,7 @@ describe("attribution waterfall presentation", () => {
     expect(block).toContain("onOpenChange={setContributionOpen}")
     expect(block).not.toContain("onOpenChange={requestCalculation")
     expect(block).toContain("results.tryAgain")
-    expect(block).toMatch(
-      /onClick=\{\(\) => \{[\s\S]*requestCalculation\(project\.id\)/,
-    )
+    expect(block).toMatch(/onClick=\{\(\) => \{[\s\S]*requestCalculation\(project\.id\)/)
     const openHandler = block.slice(
       block.indexOf("onOpenChange={setContributionOpen}"),
       block.indexOf("onOpenChange={setContributionOpen}") +
@@ -283,9 +268,7 @@ describe("attribution waterfall presentation", () => {
 
     expect(result.expectedAdditionDecomposition.endValue).toBe(result.estimatedP50)
     expect(result.uncertaintyReserveDecomposition.endValue).toBe(result.estimatedP85)
-    expect(result.uncertaintyReserveDecomposition.contributions.length).toBeGreaterThan(
-      0,
-    )
+    expect(result.uncertaintyReserveDecomposition.contributions.length).toBeGreaterThan(0)
   })
 
   it("does not add nested expanders inside Contribution Analysis", () => {

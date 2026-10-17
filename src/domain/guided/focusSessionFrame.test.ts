@@ -14,19 +14,14 @@ import {
 } from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
 
 describe("focusSessionFrame", () => {
   it("A: exports one contained Focus card contract", () => {
-    expect(FOCUS_SESSION_CARD_CLASS).toBe(
-      "h-[min(92vh,48rem)] w-[min(96vw,60rem)]",
-    )
-    expect(FOCUS_SESSION_CARD_FULLSCREEN_CLASS).toBe(
-      "h-[min(100%,56rem)] w-[min(100%,80rem)]",
-    )
+    expect(FOCUS_SESSION_CARD_CLASS).toBe("h-[min(92vh,48rem)] w-[min(96vw,60rem)]")
+    expect(FOCUS_SESSION_CARD_FULLSCREEN_CLASS).toBe("h-[min(100%,56rem)] w-[min(100%,80rem)]")
   })
 
   it("B/G: Shell and Guided both import the shared contract — no Results-only size", () => {
@@ -54,9 +49,7 @@ describe("focusSessionFrame", () => {
 
   it("exports shared Focus footer chrome contracts", () => {
     expect(FOCUS_SESSION_FOOTER_CLASS).toContain("sm:px-8")
-    expect(FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS).toContain(
-      "text-muted-foreground",
-    )
+    expect(FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS).toContain("text-muted-foreground")
   })
 
   it("exports shared header and content frame contracts", () => {

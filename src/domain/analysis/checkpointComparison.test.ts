@@ -38,7 +38,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
 }
@@ -171,9 +170,7 @@ describe("compareCheckpoints domain helper", () => {
     expect(vsCp2.currentCheckpointId).toBe(cp2.newCheckpoint.id)
     expect(vsCp2.previousName).toBeTruthy()
     expect(vsCp2.currentName).toBe("CP2")
-    expect(
-      vsCp2.extensions?.sCurve?.previous?.values?.length,
-    ).toBeGreaterThan(0)
+    expect(vsCp2.extensions?.sCurve?.previous?.values?.length).toBeGreaterThan(0)
 
     const vsCp3 = compareCheckpoints({
       checkpoints: cp3.ongoing.checkpoints,
@@ -219,9 +216,7 @@ describe("compareCheckpoints domain helper", () => {
     expect(comparison?.kind).toBe("comparison")
     if (comparison?.kind !== "comparison" || !comparison.keyFigures) return
 
-    const byId = Object.fromEntries(
-      comparison.keyFigures.map((r) => [r.metric, r]),
-    )
+    const byId = Object.fromEntries(comparison.keyFigures.map((r) => [r.metric, r]))
     expect(byId.baseCost!.previous).toBe(90)
     expect(byId.baseCost!.current).toBe(95)
     expect(byId.baseCost!.change).toBe(5)
@@ -300,9 +295,7 @@ describe("compareCheckpoints domain helper", () => {
           likely: "40",
           pessimistic: "15",
         },
-        ...earlierProject.costRows.filter(
-          (r) => r.id !== costKeepId && r.id !== costRemoveId,
-        ),
+        ...earlierProject.costRows.filter((r) => r.id !== costKeepId && r.id !== costRemoveId),
       ],
       driverRows: [
         {
@@ -450,12 +443,7 @@ describe("compareCheckpoints domain helper", () => {
     ongoing = archiveCheckpoint(
       next.ongoing,
       next.newCheckpoint.id,
-      snapshotFor(
-        next.newCheckpoint.workspace.projects,
-        pid,
-        [100, 110, 120, 130, 140],
-        90,
-      ),
+      snapshotFor(next.newCheckpoint.workspace.projects, pid, [100, 110, 120, 130, 140], 90),
     )
 
     const viewingCp2 = compareCheckpoints({
@@ -474,8 +462,7 @@ describe("compareCheckpoints domain helper", () => {
     const prevExtracted = extractKeyFiguresFromResultSource(
       {
         projectResults: previousSnapshot.projectResults,
-        simulatedBaseCostByProjectId:
-          previousSnapshot.simulatedBaseCostByProjectId,
+        simulatedBaseCostByProjectId: previousSnapshot.simulatedBaseCostByProjectId,
       },
       pid,
     )
@@ -491,12 +478,8 @@ describe("compareCheckpoints domain helper", () => {
 describe("checkpoint comparison presentation helpers", () => {
   it("formats context labels with optional custom names", () => {
     const tpl = "Checkpoint {n}"
-    expect(formatCheckpointContextLabel(3, "Checkpoint 3", tpl)).toBe(
-      "Checkpoint 3",
-    )
-    expect(formatCheckpointContextLabel(3, "After tender", tpl)).toBe(
-      "Checkpoint 3 · After tender",
-    )
+    expect(formatCheckpointContextLabel(3, "Checkpoint 3", tpl)).toBe("Checkpoint 3")
+    expect(formatCheckpointContextLabel(3, "After tender", tpl)).toBe("Checkpoint 3 · After tender")
     expect(formatCheckpointLegendLabel(2, tpl)).toBe("Checkpoint 2")
 
     expect(costDeltaTone(8, "p50")).toBe("increase")
@@ -506,16 +489,12 @@ describe("checkpoint comparison presentation helpers", () => {
     // Higher cost → red; Uncertainty Reserve / Expected Addition reduction → green
     expect(costDeltaTone(-4, "uncertaintyReserve")).toBe("decrease")
     expect(costDeltaTone(-5, "expectedAddition")).toBe("decrease")
-    expect(getCostDeltaClass(-4, "uncertaintyReserve")).toBe(
-      costDeltaClassName("decrease"),
-    )
+    expect(getCostDeltaClass(-4, "uncertaintyReserve")).toBe(costDeltaClassName("decrease"))
     expect(getCostDeltaClass(-5, "expectedAddition")).toContain("#3f7d4e")
     expect(getCostDeltaClass(-4, "uncertaintyReserve")).not.toContain("bg-")
     expect(getCostDeltaClass(4, "uncertaintyReserve")).toContain("#c24141")
     expect(getCostDeltaClass(5, "expectedAddition")).toContain("#c24141")
-    expect(getCostDeltaClass(5, "expectedAddition")).not.toMatch(
-      /bg-|rounded-sm|px-1/,
-    )
+    expect(getCostDeltaClass(5, "expectedAddition")).not.toMatch(/bg-|rounded-sm|px-1/)
     expect(costDeltaTone(8, "expectedAddition")).toBe("increase")
     expect(costDeltaClassName(costDeltaTone(8, "p50"))).toContain("#c24141")
     expect(costDeltaClassName("increase")).toContain("#c24141")
@@ -533,24 +512,13 @@ describe("checkpoint comparison presentation helpers", () => {
       currentPercent: 9.8,
       changePercent: -2.6,
     }
-    expect(formatComparisonAbsolute(urRow, "en", "previous", "Locked")).toBe(
-      "17 (12.4 %)",
-    )
-    expect(formatComparisonAbsolute(urRow, "en", "current", "Locked")).toBe(
-      "13 (9.8 %)",
-    )
+    expect(formatComparisonAbsolute(urRow, "en", "previous", "Locked")).toBe("17 (12.4 %)")
+    expect(formatComparisonAbsolute(urRow, "en", "current", "Locked")).toBe("13 (9.8 %)")
     expect(formatComparisonDelta(urRow, "en")).toBe("−4 (−2.6 pp)")
-    expect(formatComparisonAbsolute(urRow, "no", "previous", "Locked")).toBe(
-      "17 (12,4 %)",
-    )
+    expect(formatComparisonAbsolute(urRow, "no", "previous", "Locked")).toBe("17 (12,4 %)")
     expect(formatComparisonDelta(urRow, "no")).toBe("−4 (−2,6 pp)")
 
-    const prevParts = comparisonAbsoluteCellParts(
-      urRow,
-      "previous",
-      "en",
-      "Locked",
-    )
+    const prevParts = comparisonAbsoluteCellParts(urRow, "previous", "en", "Locked")
     expect(prevParts.absoluteText).toBe("17")
     expect(prevParts.percentText).toBe("(12.4 %)")
     expect(prevParts.reservePercentSlot).toBe(true)
@@ -574,9 +542,7 @@ describe("checkpoint comparison presentation helpers", () => {
     expect(getPercentageDeltaClass(0)).toContain("text-foreground")
     expect(getPercentageDeltaClass(null)).toContain("text-foreground")
 
-    const ordered = listVisibleComparableKeyFigureRowIds(
-      DEFAULT_RESULT_PREFERENCES.keyFigures,
-    )
+    const ordered = listVisibleComparableKeyFigureRowIds(DEFAULT_RESULT_PREFERENCES.keyFigures)
     expect(ordered).not.toContain("uncertaintyReservePct")
     const rows = ordered.map((metric) => ({
       metric,
@@ -686,9 +652,7 @@ describe("checkpoint comparison UI wiring", () => {
     expect(panel).toContain("resultPreferences={resultPreferences}")
     expect(panel).toContain('emphasis: "reference"')
     expect(panel).toContain("formatCheckpointLegendLabel")
-    const layoutStart = panel.indexOf(
-      'space-y-6 [&>div:not(:first-child)]:pt-3',
-    )
+    const layoutStart = panel.indexOf("space-y-6 [&>div:not(:first-child)]:pt-3")
     const layout = panel.slice(layoutStart)
     const comparisonContext = layout.indexOf('slot="context"')
     const keyFigures = layout.indexOf("results.keyMetricsTitle")
@@ -701,9 +665,7 @@ describe("checkpoint comparison UI wiring", () => {
 
     const app = readAppSource()
     expect(app).toContain("ongoingCheckpoints={")
-    expect(app).toMatch(
-      /isOngoingAnalysis\s*\?\s*librarySession\.ongoing\?\.checkpoints/,
-    )
+    expect(app).toMatch(/isOngoingAnalysis\s*\?\s*librarySession\.ongoing\?\.checkpoints/)
     expect(app).toContain("checkpointComparisonResultSource")
   })
 
@@ -746,7 +708,7 @@ describe("checkpoint comparison UI wiring", () => {
 
     const scurve = read("src/features/results/ResultsSCurve.tsx")
     expect(scurve).toContain('emphasis?: "primary" | "reference"')
-    expect(scurve).toContain('data-scurve-emphasis={c.emphasis}')
+    expect(scurve).toContain("data-scurve-emphasis={c.emphasis}")
     expect(scurve).toContain("strokeDasharray={isReference")
     expect(scurve).toContain('data-scurve-legend-emphasis="reference"')
   })
@@ -755,12 +717,8 @@ describe("checkpoint comparison UI wiring", () => {
     const messages = read("src/i18n/messages.ts")
     expect(messages).toContain('comparisonBaselineTitle: "Første checkpoint"')
     expect(messages).toContain('comparisonBaselineTitle: "First checkpoint"')
-    expect(messages).toContain(
-      'comparisonHeading: "Endring siden forrige checkpoint"',
-    )
-    expect(messages).toContain(
-      'comparisonHeading: "Change since previous checkpoint"',
-    )
+    expect(messages).toContain('comparisonHeading: "Endring siden forrige checkpoint"')
+    expect(messages).toContain('comparisonHeading: "Change since previous checkpoint"')
     expect(messages).toContain("comparisonBaselineContext")
     expect(messages).toContain("comparisonComparedWith")
   })

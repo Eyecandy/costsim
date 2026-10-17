@@ -32,18 +32,8 @@ export function computeMonteCarloConditionalTornadoRows(
     const p10 = percentile(s.values, 10)
     const p90 = percentile(s.values, 90)
     if (p10 === null || p90 === null) continue
-    const p10Totals = collectTotalsForBand(
-      s.values,
-      totals,
-      Number.NEGATIVE_INFINITY,
-      p10,
-    )
-    const p90Totals = collectTotalsForBand(
-      s.values,
-      totals,
-      p90,
-      Number.POSITIVE_INFINITY,
-    )
+    const p10Totals = collectTotalsForBand(s.values, totals, Number.NEGATIVE_INFINITY, p10)
+    const p90Totals = collectTotalsForBand(s.values, totals, p90, Number.POSITIVE_INFINITY)
     const p10Total = percentile(p10Totals, 50)
     const p90Total = percentile(p90Totals, 50)
     if (p10Total === null || p90Total === null) continue

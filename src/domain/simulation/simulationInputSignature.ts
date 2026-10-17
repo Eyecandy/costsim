@@ -25,34 +25,22 @@ function projectHasMeaningfulTableInput(project: Project): boolean {
  * Analytical projection of projects for signature / stale comparison.
  * Stable ordering: preserves project array order; strips presentation-only fields.
  */
-export function simulationComparableProjects(
-  projects: readonly Project[],
-): unknown[] {
-  return projects
-    .filter(projectHasMeaningfulTableInput)
-    .map((project) => {
-      const { assumptions: _a, profile: _p, name: _n, ...rest } = project
-      return {
-        id: rest.id,
-        incurredCosts: rest.incurredCosts,
-        costRows: project.costRows
-          .filter(isMeaningfullyFilledRow)
-          .map(stripRowDefinitions),
-        driverRows: project.driverRows
-          .filter(isMeaningfullyFilledRow)
-          .map(stripRowDefinitions),
-        ...(rest.driverImpacts ? { driverImpacts: rest.driverImpacts } : {}),
-        ...(rest.costCorrelations
-          ? { costCorrelations: rest.costCorrelations }
-          : {}),
-      }
-    })
+export function simulationComparableProjects(projects: readonly Project[]): unknown[] {
+  return projects.filter(projectHasMeaningfulTableInput).map((project) => {
+    const { assumptions: _a, profile: _p, name: _n, ...rest } = project
+    return {
+      id: rest.id,
+      incurredCosts: rest.incurredCosts,
+      costRows: project.costRows.filter(isMeaningfullyFilledRow).map(stripRowDefinitions),
+      driverRows: project.driverRows.filter(isMeaningfullyFilledRow).map(stripRowDefinitions),
+      ...(rest.driverImpacts ? { driverImpacts: rest.driverImpacts } : {}),
+      ...(rest.costCorrelations ? { costCorrelations: rest.costCorrelations } : {}),
+    }
+  })
 }
 
 /** Canonical input signature for simulation / validity. */
-export function buildSimulationInputSignature(
-  projects: readonly Project[],
-): string {
+export function buildSimulationInputSignature(projects: readonly Project[]): string {
   return JSON.stringify(simulationComparableProjects(projects))
 }
 
@@ -60,8 +48,6 @@ export function buildSimulationInputSignature(
  * @deprecated Prefer {@link simulationComparableProjects} — kept as alias for
  * App UI that still names the concept "staleComparable".
  */
-export function staleComparableProjects(
-  projects: readonly Project[],
-): unknown[] {
+export function staleComparableProjects(projects: readonly Project[]): unknown[] {
   return simulationComparableProjects(projects)
 }

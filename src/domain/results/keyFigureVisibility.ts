@@ -43,19 +43,12 @@ export function listVisibleKeyFigureRowIds(
   for (const pLevel of keyFigures.percentiles) {
     ids.push(`p${pLevel}`)
 
-    if (
-      pLevel === 50 &&
-      keyFigures.showUncertaintyReserve &&
-      !ids.includes("uncertaintyReserve")
-    ) {
+    if (pLevel === 50 && keyFigures.showUncertaintyReserve && !ids.includes("uncertaintyReserve")) {
       ids.push("uncertaintyReserve")
     }
   }
 
-  if (
-    keyFigures.showUncertaintyReserve &&
-    !ids.includes("uncertaintyReserve")
-  ) {
+  if (keyFigures.showUncertaintyReserve && !ids.includes("uncertaintyReserve")) {
     ids.push("uncertaintyReserve")
   }
 
@@ -111,9 +104,7 @@ export function listVisibleComparableKeyFigureRowIds(
  * Internal companion id used to extract the % that the main Key Figures table
  * shows inline for this absolute metric. Not a separate visible row.
  */
-export function keyFigureInlinePercentCompanionId(
-  id: KeyFigureRowId,
-): KeyFigureRowId | null {
+export function keyFigureInlinePercentCompanionId(id: KeyFigureRowId): KeyFigureRowId | null {
   switch (id) {
     case "expectedAddition":
       return "expectedAdditionPct"

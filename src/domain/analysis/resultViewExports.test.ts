@@ -14,7 +14,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
 }
@@ -150,16 +149,13 @@ describe("resolveResultView + export consumers", () => {
       resultView: resolveResultView(active),
     })
 
-    expect(brief.currentResultView.keyFigures.percentiles).toEqual([
-      15, 50, 85,
-    ])
+    expect(brief.currentResultView.keyFigures.percentiles).toEqual([15, 50, 85])
     expect(brief.currentResultView.sCurve.percentiles).toEqual([15, 50, 85])
+    expect(brief.currentResultView.keyFigures.probabilityBelowCostLevel.amount).toBe(8_181_000_000)
     expect(
-      brief.currentResultView.keyFigures.probabilityBelowCostLevel.amount,
-    ).toBe(8_181_000_000)
-    expect(
-      brief.currentResultView.keyFigures.probabilityBelowCostLevel
-        .probabilityPercentByProjectId?.["proj-a"],
+      brief.currentResultView.keyFigures.probabilityBelowCostLevel.probabilityPercentByProjectId?.[
+        "proj-a"
+      ],
     ).not.toBeNull()
     // Full analysis still present (not filtered to visible KF only)
     expect(brief.projects[0]!.metrics.p50).not.toBeNull()
@@ -169,7 +165,9 @@ describe("resolveResultView + export consumers", () => {
   })
 
   it("PDF/AI generation paths snapshot active prefs and do not read localStorage", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
+    const panel =
+      readSrc("src/features/results/ResultsPanel.tsx") +
+      readSrc("src/features/results/pdfExport.tsx")
     const pdfDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
     const aiBrief = readSrc("src/domain/results/aiBrief.ts")
     const kfRows = readSrc("src/domain/results/keyFiguresMetricRows.ts")
@@ -178,20 +176,12 @@ describe("resolveResultView + export consumers", () => {
     expect(panel).toContain("resultViewSnapshot")
     expect(panel).toContain("buildKeyFigureMetricTableRows")
     // The snapshot is taken in ResultsPanel and handed to pdfExport as sCurvePercentiles.
-    expect(panel).toContain(
-      "sCurvePercentiles: resultViewSnapshot.sCurve.percentiles",
-    )
+    expect(panel).toContain("sCurvePercentiles: resultViewSnapshot.sCurve.percentiles")
     expect(panel).toContain("sCurveMarkerPercentiles={sCurvePercentiles}")
     expect(panel).toContain("resultView: resultViewSnapshot")
-    expect(panel).not.toMatch(
-      /handleDownloadPdf[\s\S]{0,2500}loadResultPreferences/,
-    )
-    expect(panel).not.toMatch(
-      /handleCopyAiBriefPackage[\s\S]{0,1200}loadResultPreferences/,
-    )
-    expect(panel).not.toMatch(
-      /handleDownloadPdf[\s\S]{0,2500}RESULT_PREFERENCES_STORAGE_KEY/,
-    )
+    expect(panel).not.toMatch(/handleDownloadPdf[\s\S]{0,2500}loadResultPreferences/)
+    expect(panel).not.toMatch(/handleCopyAiBriefPackage[\s\S]{0,1200}loadResultPreferences/)
+    expect(panel).not.toMatch(/handleDownloadPdf[\s\S]{0,2500}RESULT_PREFERENCES_STORAGE_KEY/)
     expect(panel).not.toMatch(
       /handleCopyAiBriefPackage[\s\S]{0,1200}RESULT_PREFERENCES_STORAGE_KEY/,
     )
@@ -213,11 +203,7 @@ describe("resolveResultView + export consumers", () => {
 
     expect(messages.no.results.pdfSCurveFootnote).toContain("{percentiles}")
     expect(messages.en.results.pdfSCurveFootnote).toContain("{percentiles}")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
-      "currentResultView",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
-      "currentResultView",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("currentResultView")
+    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("currentResultView")
   })
 })

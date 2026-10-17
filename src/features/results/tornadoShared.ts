@@ -38,8 +38,7 @@ export function buildTornadoSharedLayout(
   for (let i = 0; i < rowsGroups.length; i++) {
     const rows = rowsGroups[i]!
     const scale =
-      displayScales?.[i] ??
-      resolveTornadoDisplayScale(collectTornadoDisplayValues(rows))
+      displayScales?.[i] ?? resolveTornadoDisplayScale(collectTornadoDisplayValues(rows))
     for (const r of rows) {
       longestValueLabelLen = Math.max(
         longestValueLabelLen,

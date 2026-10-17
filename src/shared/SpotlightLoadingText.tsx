@@ -16,11 +16,7 @@ export function SpotlightLoadingText({
   ...props
 }: SpotlightLoadingTextProps) {
   return (
-    <p
-      className={cn("spotlight-loading-text", className)}
-      data-tone={tone}
-      {...props}
-    >
+    <p className={cn("spotlight-loading-text", className)} data-tone={tone} {...props}>
       <span className="spotlight-loading-text-base">{text}</span>
       <span className="spotlight-loading-text-highlight" aria-hidden="true">
         {text}

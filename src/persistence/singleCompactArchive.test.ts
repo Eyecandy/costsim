@@ -3,10 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { assertNoHeavyValuesInCompact } from "@/domain/analysis/compactAnalysisResult"
-import {
-  createNextCheckpoint,
-  getActiveCheckpoint,
-} from "@/domain/analysis/analysisCheckpoint"
+import { createNextCheckpoint, getActiveCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
@@ -72,9 +69,7 @@ function fixture(projectCount = 1) {
     id: `project-${index + 1}`,
     name: `Project ${index + 1}`,
   }))
-  const projectResults = projects.map((project, index) =>
-    result(project.id, index * 10_000),
-  )
+  const projectResults = projects.map((project, index) => result(project.id, index * 10_000))
   const inputSignature = buildSimulationInputSignature(projects)
   return {
     projects,
@@ -123,11 +118,10 @@ describe("compact Single Analysis archives", () => {
 
   it("B: freezes every alternative independently", () => {
     const { projects, snapshot } = compactFixture(2)
-    expect(Object.keys(snapshot.byProjectId)).toEqual(
-      projects.map((project) => project.id),
+    expect(Object.keys(snapshot.byProjectId)).toEqual(projects.map((project) => project.id))
+    expect(snapshot.byProjectId[projects[0]!.id]?.keyFigures.expectedValue).not.toBe(
+      snapshot.byProjectId[projects[1]!.id]?.keyFigures.expectedValue,
     )
-    expect(snapshot.byProjectId[projects[0]!.id]?.keyFigures.expectedValue)
-      .not.toBe(snapshot.byProjectId[projects[1]!.id]?.keyFigures.expectedValue)
   })
 
   it("C: shares the same analytical freeze math as Ongoing", () => {
@@ -178,10 +172,8 @@ describe("compact Single Analysis archives", () => {
       simulationCount: 20_000,
       resultPreferences: DEFAULT_RESULT_PREFERENCES,
     })
-    expect(JSON.stringify(compact).length).toBeLessThan(
-      JSON.stringify(heavy).length / 5,
-    )
-    // eslint-disable-next-line no-console
+    expect(JSON.stringify(compact).length).toBeLessThan(JSON.stringify(heavy).length / 5)
+     
     console.log("single archive bytes", {
       compact: JSON.stringify(compact).length,
       heavy: JSON.stringify(heavy).length,
@@ -206,8 +198,7 @@ describe("compact Single Analysis archives", () => {
     })
     expect(archived.status).toBe("archived")
     expect(isSingleArchivedResultSnapshot(archived.archivedSnapshot)).toBe(true)
-    expect(JSON.stringify((await repo.get(draft.id))?.archivedSnapshot))
-      .not.toContain('"values"')
+    expect(JSON.stringify((await repo.get(draft.id))?.archivedSnapshot)).not.toContain('"values"')
   })
 
   it("G: legacy heavy snapshots remain readable", async () => {
@@ -254,8 +245,7 @@ describe("compact Single Analysis archives", () => {
     })
     expect(next.status).toBe("draft")
     expect(next.draftResultSeed?.projectResults).toEqual([])
-    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {}))
-      .toHaveLength(2)
+    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {})).toHaveLength(2)
     expect(JSON.stringify(next.draftResultSeed)).not.toContain('"values"')
   })
 
@@ -286,8 +276,7 @@ describe("compact Single Analysis archives", () => {
       name: "Legacy version next",
     })
     expect(next.draftResultSeed?.projectResults).toEqual([])
-    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {}))
-      .toHaveLength(2)
+    expect(Object.keys(next.draftResultSeed?.compactByProjectId ?? {})).toHaveLength(2)
     expect(JSON.stringify(next.draftResultSeed)).not.toContain('"values"')
   })
 

@@ -16,12 +16,8 @@ describe("tornado k-scale formatting", () => {
   const kScale = { kind: "thousands" as const, unitSuffix: "k" as const }
 
   it("A: 3,202.22 in a k-scale chart → 3.2 k", () => {
-    expect(formatTornadoSignedDeltaWithScale(3_202.22, kScale, "en")).toBe(
-      "+3.2 k",
-    )
-    expect(formatTornadoSignedDeltaWithScale(3_202.22, kScale, "no")).toBe(
-      "+3,2 k",
-    )
+    expect(formatTornadoSignedDeltaWithScale(3_202.22, kScale, "en")).toBe("+3.2 k")
+    expect(formatTornadoSignedDeltaWithScale(3_202.22, kScale, "no")).toBe("+3,2 k")
   })
 
   it("B: 850 in a k-scale chart → 0.9 k", () => {
@@ -45,15 +41,9 @@ describe("tornado k-scale formatting", () => {
   })
 
   it("F: whole values do not get unnecessary trailing decimals", () => {
-    expect(formatTornadoSignedDeltaWithScale(620_000, kScale, "en")).toBe(
-      "+620 k",
-    )
-    expect(formatTornadoSignedDeltaWithScale(75_000, kScale, "en")).toBe(
-      "+75 k",
-    )
-    expect(formatTornadoSignedDeltaWithScale(75_000, kScale, "no")).toBe(
-      "+75 k",
-    )
+    expect(formatTornadoSignedDeltaWithScale(620_000, kScale, "en")).toBe("+620 k")
+    expect(formatTornadoSignedDeltaWithScale(75_000, kScale, "en")).toBe("+75 k")
+    expect(formatTornadoSignedDeltaWithScale(75_000, kScale, "no")).toBe("+75 k")
   })
 
   it("G: NO/EN decimal separators work correctly", () => {
@@ -92,18 +82,10 @@ describe("tornado adaptive value formatting", () => {
     const scale = resolveTornadoDisplayScale(values)
 
     expect(scale.kind).toBe("millions")
-    expect(formatTornadoSignedDeltaWithScale(12_400_000, scale, "en")).toBe(
-      "+12.4 M",
-    )
-    expect(formatTornadoSignedDeltaWithScale(620_000, scale, "en")).toBe(
-      "+0.6 M",
-    )
-    expect(formatTornadoSignedDeltaWithScale(3_000_000, scale, "en")).toBe(
-      "+3 M",
-    )
-    expect(formatTornadoSignedDeltaWithScale(12_400_000, scale, "no")).toBe(
-      "+12,4 M",
-    )
+    expect(formatTornadoSignedDeltaWithScale(12_400_000, scale, "en")).toBe("+12.4 M")
+    expect(formatTornadoSignedDeltaWithScale(620_000, scale, "en")).toBe("+0.6 M")
+    expect(formatTornadoSignedDeltaWithScale(3_000_000, scale, "en")).toBe("+3 M")
+    expect(formatTornadoSignedDeltaWithScale(12_400_000, scale, "no")).toBe("+12,4 M")
   })
 
   it("shares one unit across comparable projects, but keeps per-chart units when magnitudes diverge", () => {
@@ -120,9 +102,7 @@ describe("tornado adaptive value formatting", () => {
     expect(similar[0]?.kind).toBe("millions")
     expect(similar[1]?.kind).toBe("millions")
     expect(similar[0]).toEqual(similar[1])
-    expect(formatTornadoSignedDeltaWithScale(800_000, similar[1]!, "en")).toBe(
-      "+0.8 M",
-    )
+    expect(formatTornadoSignedDeltaWithScale(800_000, similar[1]!, "en")).toBe("+0.8 M")
 
     const divergent = resolveTornadoDisplayScales([
       [
@@ -136,9 +116,7 @@ describe("tornado adaptive value formatting", () => {
     ])
     expect(divergent[0]?.kind).toBe("millions")
     expect(divergent[1]?.kind).toBe("thousands")
-    expect(formatTornadoSignedDeltaWithScale(700, divergent[1]!, "en")).toBe(
-      "+0.7 k",
-    )
+    expect(formatTornadoSignedDeltaWithScale(700, divergent[1]!, "en")).toBe("+0.7 k")
   })
 
   it("I: Tornado calculations remain unchanged by display formatting", () => {
@@ -175,17 +153,11 @@ describe("tornado adaptive value formatting", () => {
 describe("existing waterfall formatting remains unchanged", () => {
   it("keeps previous waterfall chart-level formatting", () => {
     const scale = resolveWaterfallDisplayScale([
-      202_000_000,
-      202_834_534,
-      620_000,
-      1_260_000,
-      12_440_000,
+      202_000_000, 202_834_534, 620_000, 1_260_000, 12_440_000,
     ])
     expect(scale.kind).toBe("millions")
     expect(formatWaterfallValueWithScale(620_000, scale, "en")).toBe("0.6 M")
-    expect(formatWaterfallSignedDeltaWithScale(620_000, scale, "en")).toBe(
-      "+0.6 M",
-    )
+    expect(formatWaterfallSignedDeltaWithScale(620_000, scale, "en")).toBe("+0.6 M")
 
     const values = collectWaterfallDisplayValues({
       startValue: 420_000,
@@ -194,8 +166,6 @@ describe("existing waterfall formatting remains unchanged", () => {
     })
     const thousandScale = resolveWaterfallDisplayScale(values)
     expect(thousandScale.kind).toBe("thousands")
-    expect(formatWaterfallValueWithScale(420_000, thousandScale, "en")).toBe(
-      "420.0 k",
-    )
+    expect(formatWaterfallValueWithScale(420_000, thousandScale, "en")).toBe("420.0 k")
   })
 })

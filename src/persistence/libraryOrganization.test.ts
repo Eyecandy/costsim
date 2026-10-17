@@ -1,8 +1,6 @@
 import { describe, expect, it, beforeEach } from "vitest"
 
-import {
-  clearLocalAnalysisLibraryStorageForTests,
-} from "@/persistence/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
@@ -68,9 +66,7 @@ describe("Library organization — folders", () => {
 
     const sorted = (await repo.listFolders())
       .slice()
-      .sort((a, b) =>
-        a.name.localeCompare(b.name, "nb", { sensitivity: "base" }),
-      )
+      .sort((a, b) => a.name.localeCompare(b.name, "nb", { sensitivity: "base" }))
     expect(sorted.map((f) => f.name)).toEqual(["Alpha", "Beta"])
     expect(sorted.map((f) => f.id)).toEqual([alpha.id, zebra.id])
   })
@@ -107,9 +103,7 @@ describe("Library organization — folders", () => {
     await archiveDoc(draft)
     // Authoritative emptiness ignores UI status filters — archived still counts.
     const summaries = await repo.listSummaries()
-    const draftsOnly = summaries.filter(
-      (s) => s.folderId === folder.id && s.status === "draft",
-    )
+    const draftsOnly = summaries.filter((s) => s.folderId === folder.id && s.status === "draft")
     expect(draftsOnly).toHaveLength(0)
     await expect(repo.deleteFolder(folder.id)).rejects.toThrow(/not empty/i)
   })

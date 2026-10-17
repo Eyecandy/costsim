@@ -8,14 +8,10 @@ import {
 } from "@/domain/analysis/checkpointComparison"
 import { getPrecedingCheckpointPair } from "@/domain/analysis/checkpointDiff"
 import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisResult"
-import {
-  parseCorrelationCoefficient,
-} from "@/domain/simulation/costCorrelation"
+import { parseCorrelationCoefficient } from "@/domain/simulation/costCorrelation"
 import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
-import {
-  buildOngoingDevelopmentSeries,
-} from "@/domain/analysis/ongoingDevelopmentSeries"
+import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   computeUncertainDeltaWithPct,
   normalizeIncurredCosts,
@@ -261,15 +257,9 @@ export type AiBriefLabelSemantics = {
 }
 
 export type AiBriefInterpretationHints = {
-  primarySignals: ReadonlyArray<
-    "metrics" | "distribution" | "tornado" | "contributionAnalysis"
-  >
+  primarySignals: ReadonlyArray<"metrics" | "distribution" | "tornado" | "contributionAnalysis">
   contextualInputsForRobustness: ReadonlyArray<
-    | "assumptions"
-    | "costItems"
-    | "drivers"
-    | "driverImpacts"
-    | "correlations"
+    "assumptions" | "costItems" | "drivers" | "driverImpacts" | "correlations"
   >
   tornadoMeansSensitivityNotAttribution: true
   contributionMeansAttributionOfExpectedAdditionAndReserve: true
@@ -422,9 +412,7 @@ function optionalTrimmedText(raw: string | undefined): string | null {
  * in `projects[]` order. Unique names are left unchanged. Does not mutate
  * stored project names.
  */
-export function buildProjectDisplayNames(
-  projects: readonly { name: string }[],
-): string[] {
+export function buildProjectDisplayNames(projects: readonly { name: string }[]): string[] {
   const counts = new Map<string, number>()
   for (const p of projects) {
     counts.set(p.name, (counts.get(p.name) ?? 0) + 1)
@@ -442,9 +430,7 @@ function deriveDriverConcentration(
   rankedFactors: readonly { spread: number }[],
 ): AiBriefDriverConcentration | null {
   if (rankedFactors.length === 0) return null
-  const spreads = rankedFactors
-    .map((f) => f.spread)
-    .filter((s) => Number.isFinite(s) && s > 0)
+  const spreads = rankedFactors.map((f) => f.spread).filter((s) => Number.isFinite(s) && s > 0)
   if (spreads.length === 0) return null
   const total = spreads.reduce((sum, s) => sum + s, 0)
   if (total <= 0) return null
@@ -508,8 +494,7 @@ function resolvePairRho(
   idB: string,
 ): number {
   if (idA === idB) return 1
-  const direct =
-    costCorrelations?.[idA]?.[idB] ?? costCorrelations?.[idB]?.[idA]
+  const direct = costCorrelations?.[idA]?.[idB] ?? costCorrelations?.[idB]?.[idA]
   return parseCorrelationCoefficient(direct)
 }
 
@@ -548,9 +533,7 @@ export function buildDriverImpactEntries(
   return drivers.map((driver) => {
     const overrides: AiBriefDriverImpactOverride[] = []
     for (const cost of costs) {
-      const impactPct = resolveDriverImpactPercent(
-        driverImpacts?.[driver.id]?.[cost.id],
-      )
+      const impactPct = resolveDriverImpactPercent(driverImpacts?.[driver.id]?.[cost.id])
       if (impactPct === AI_BRIEF_DRIVER_IMPACT_DEFAULT_PCT) continue
       overrides.push({
         costItemId: cost.id,
@@ -567,9 +550,7 @@ export function buildDriverImpactEntries(
   })
 }
 
-function mapShapleyType(
-  type: "cost" | "driver",
-): "costItem" | "driver" {
+function mapShapleyType(type: "cost" | "driver"): "costItem" | "driver" {
   return type === "cost" ? "costItem" : "driver"
 }
 
@@ -645,10 +626,7 @@ export function mapContributionAnalysis(
 }
 
 function projectHasNonZeroCorrelations(project: Project): boolean {
-  return (
-    collectNonZeroCostCorrelations(project.costRows, project.costCorrelations)
-      .length > 0
-  )
+  return collectNonZeroCostCorrelations(project.costRows, project.costCorrelations).length > 0
 }
 
 export function buildAiBriefCurrentResultView(opts: {
@@ -658,13 +636,7 @@ export function buildAiBriefCurrentResultView(opts: {
   ongoingCompactResult?: OngoingCheckpointResultSnapshotV1 | null
   compactByProjectId?: Readonly<Record<string, CompactProjectResultV1>>
 }): AiBriefCurrentResultView {
-  const {
-    resultView,
-    projects,
-    projectResults,
-    ongoingCompactResult,
-    compactByProjectId,
-  } = opts
+  const { resultView, projects, projectResults, ongoingCompactResult, compactByProjectId } = opts
   const kf = resultView.keyFigures
   const primaryVisibleLabels: string[] = []
   if (kf.showBaseCost) primaryVisibleLabels.push("baseCost")
@@ -679,24 +651,19 @@ export function buildAiBriefCurrentResultView(opts: {
     primaryVisibleLabels.push("probabilityAtBaseCost")
   }
 
-  let probabilityPercentByProjectId: Record<string, number | null> | null =
-    null
+  let probabilityPercentByProjectId: Record<string, number | null> | null = null
   if (shouldShowProbabilityBelowCostLevel(kf.probabilityBelowCostLevel)) {
     const amount = kf.probabilityBelowCostLevel.amount!
     primaryVisibleLabels.push("probabilityBelowCostLevel")
     probabilityPercentByProjectId = {}
     for (const project of projects) {
-      const values =
-        projectResults.find((r) => r.projectId === project.id)?.values ?? []
+      const values = projectResults.find((r) => r.projectId === project.id)?.values ?? []
       const compact =
         compactByProjectId?.[project.id] ??
-        (ongoingCompactResult?.activeProjectId === project.id
-          ? ongoingCompactResult
-          : null)
-      probabilityPercentByProjectId[project.id] =
-        compact
-          ? compact.keyFigures.probBelowCostLevel
-          : probabilityAtOrBelowPercent(values, amount)
+        (ongoingCompactResult?.activeProjectId === project.id ? ongoingCompactResult : null)
+      probabilityPercentByProjectId[project.id] = compact
+        ? compact.keyFigures.probBelowCostLevel
+        : probabilityAtOrBelowPercent(values, amount)
     }
   }
 
@@ -774,20 +741,13 @@ export function buildAiBriefV3(opts: {
     const pr = projectResults.find((r) => r.projectId === project.id)
     const compact =
       compactByProjectId?.[project.id] ??
-      (ongoingCompactResult?.activeProjectId === project.id
-        ? ongoingCompactResult
-        : null)
+      (ongoingCompactResult?.activeProjectId === project.id ? ongoingCompactResult : null)
     const values = pr?.values ?? []
     const summary = summarizeSamples(values)
-    const base =
-      compact?.keyFigures.baseCost ??
-      simulatedBaseCostByProjectId[project.id] ??
-      null
+    const base = compact?.keyFigures.baseCost ?? simulatedBaseCostByProjectId[project.id] ?? null
     const p50 = compact?.keyFigures.percentiles["50"] ?? summary.median
     const p85 = compact?.keyFigures.percentiles["85"] ?? summary.p85
-    const incurred = normalizeIncurredCosts(
-      compact?.incurredCosts ?? project.incurredCosts,
-    )
+    const incurred = normalizeIncurredCosts(compact?.incurredCosts ?? project.incurredCosts)
     const expected = compact
       ? {
           absolute: compact.keyFigures.expectedAddition,
@@ -801,17 +761,14 @@ export function buildAiBriefV3(opts: {
         }
       : computeUncertainDeltaWithPct(p85, p50, incurred)
     const p10 =
-      compact?.keyFigures.percentiles["10"] ??
-      (values.length > 0 ? percentile(values, 10) : null)
+      compact?.keyFigures.percentiles["10"] ?? (values.length > 0 ? percentile(values, 10) : null)
     const spreadP50ToP85 =
       p50 !== null && p85 !== null && Number.isFinite(p50) && Number.isFinite(p85)
         ? p85 - p50
         : null
     const uncertainBase = base !== null ? base - incurred : null
     const spreadP50ToP85PctOfBase =
-      spreadP50ToP85 !== null &&
-      uncertainBase !== null &&
-      uncertainBase !== 0
+      spreadP50ToP85 !== null && uncertainBase !== null && uncertainBase !== 0
         ? (spreadP50ToP85 / uncertainBase) * 100
         : null
     const tornado = compact
@@ -819,10 +776,7 @@ export function buildAiBriefV3(opts: {
           rankingMetric: AI_BRIEF_TORNADO_RANKING_METRIC,
           rankedFactors: (compact.tornado ?? []).map((row, rank) => ({
             name: row.name,
-            type:
-              row.type === "driver"
-                ? ("driver" as const)
-                : ("costItem" as const),
+            type: row.type === "driver" ? ("driver" as const) : ("costItem" as const),
             p10Impact: row.lowImpact,
             p90Impact: row.highImpact,
             spread: row.spread,
@@ -830,10 +784,7 @@ export function buildAiBriefV3(opts: {
           })),
         }
       : buildTornadoForProject(project, pr)
-    const correlations = collectNonZeroCostCorrelations(
-      project.costRows,
-      project.costCorrelations,
-    )
+    const correlations = collectNonZeroCostCorrelations(project.costRows, project.costCorrelations)
 
     return {
       id: project.id,
@@ -928,12 +879,7 @@ export function buildAiBriefV3(opts: {
       missingDefinitionMeansNameIsLabelOnly: true,
     },
     interpretationHints: {
-      primarySignals: [
-        "metrics",
-        "distribution",
-        "tornado",
-        "contributionAnalysis",
-      ],
+      primarySignals: ["metrics", "distribution", "tornado", "contributionAnalysis"],
       contextualInputsForRobustness: [
         "assumptions",
         "costItems",
@@ -959,10 +905,7 @@ export function buildAiBriefV3(opts: {
   }
 }
 
-function finiteDelta(
-  current: number | null,
-  previous: number | null,
-): number | null {
+function finiteDelta(current: number | null, previous: number | null): number | null {
   if (
     current === null ||
     previous === null ||
@@ -974,17 +917,11 @@ function finiteDelta(
   return current - previous
 }
 
-function spanP85MinusBase(
-  baseCost: number | null,
-  p85: number | null,
-): number | null {
+function spanP85MinusBase(baseCost: number | null, p85: number | null): number | null {
   return finiteDelta(p85, baseCost)
 }
 
-function spanP85MinusP50(
-  p50: number | null,
-  p85: number | null,
-): number | null {
+function spanP85MinusP50(p50: number | null, p85: number | null): number | null {
   return finiteDelta(p85, p50)
 }
 
@@ -1032,10 +969,7 @@ function resultSourceForCheckpointPoint(
   return null
 }
 
-function expectedValueFromSource(
-  source: CheckpointResultSource,
-  projectId: string,
-): number | null {
+function expectedValueFromSource(source: CheckpointResultSource, projectId: string): number | null {
   return extractKeyFigureValue(source, projectId, "expectedValue")
 }
 
@@ -1052,56 +986,43 @@ export function buildAiBriefOngoingDevelopment(args: {
   const viewed = args.checkpoints.find((c) => c.id === args.viewedCheckpointId)
   if (!viewed) return null
 
-  const scoped = filterCheckpointsUpToViewed(
-    args.checkpoints,
-    args.viewedCheckpointId,
-  )
+  const scoped = filterCheckpointsUpToViewed(args.checkpoints, args.viewedCheckpointId)
   if (scoped.length === 0) return null
 
   const viewedIsDraft = viewed.status === "draft"
   const seriesBase = buildOngoingDevelopmentSeries({
     checkpoints: scoped,
     viewedCheckpointId: viewedIsDraft ? viewed.id : null,
-    viewedResultSource: viewedIsDraft ? args.viewedResultSource ?? null : null,
+    viewedResultSource: viewedIsDraft ? (args.viewedResultSource ?? null) : null,
   })
 
-  const series: AiBriefOngoingDevelopmentPoint[] = seriesBase.points.map(
-    (point) => {
-      const checkpoint = scoped.find((c) => c.id === point.checkpointId)
-      const projectId =
-        checkpoint?.workspace.projects[0]?.id ??
-        (checkpoint?.status === "archived"
-          ? resultSourceFromArchivedSnapshot(checkpoint)?.compact
-              ?.activeProjectId
-          : null) ??
-        args.viewedResultSource?.compact?.activeProjectId ??
-        args.viewedResultSource?.projectResults[0]?.projectId ??
-        null
-      const source = checkpoint
-        ? resultSourceForCheckpointPoint(
-            checkpoint,
-            args.viewedCheckpointId,
-            args.viewedResultSource,
-          )
-        : null
-      const expectedValue =
-        source && projectId
-          ? expectedValueFromSource(source, projectId)
-          : null
-      return {
-        checkpointId: point.checkpointId,
-        sequence: point.sequence,
-        name: point.name,
-        baseCost: point.baseCost,
-        expectedValue,
-        p50: point.p50,
-        p85: point.p85,
-        uncertaintySpanP85MinusBase: spanP85MinusBase(point.baseCost, point.p85),
-        spreadP85MinusP50: spanP85MinusP50(point.p50, point.p85),
-        source: point.source,
-      }
-    },
-  )
+  const series: AiBriefOngoingDevelopmentPoint[] = seriesBase.points.map((point) => {
+    const checkpoint = scoped.find((c) => c.id === point.checkpointId)
+    const projectId =
+      checkpoint?.workspace.projects[0]?.id ??
+      (checkpoint?.status === "archived"
+        ? resultSourceFromArchivedSnapshot(checkpoint)?.compact?.activeProjectId
+        : null) ??
+      args.viewedResultSource?.compact?.activeProjectId ??
+      args.viewedResultSource?.projectResults[0]?.projectId ??
+      null
+    const source = checkpoint
+      ? resultSourceForCheckpointPoint(checkpoint, args.viewedCheckpointId, args.viewedResultSource)
+      : null
+    const expectedValue = source && projectId ? expectedValueFromSource(source, projectId) : null
+    return {
+      checkpointId: point.checkpointId,
+      sequence: point.sequence,
+      name: point.name,
+      baseCost: point.baseCost,
+      expectedValue,
+      p50: point.p50,
+      p85: point.p85,
+      uncertaintySpanP85MinusBase: spanP85MinusBase(point.baseCost, point.p85),
+      spreadP85MinusP50: spanP85MinusP50(point.p50, point.p85),
+      source: point.source,
+    }
+  })
 
   const pair = getPrecedingCheckpointPair(scoped, args.viewedCheckpointId)
   let previousComparison: AiBriefOngoingPreviousComparison | null = null
@@ -1118,10 +1039,7 @@ export function buildAiBriefOngoingDevelopment(args: {
         previousName: pair.earlier.name,
         deltas: {
           baseCost: finiteDelta(currentPoint.baseCost, previousPoint.baseCost),
-          expectedValue: finiteDelta(
-            currentPoint.expectedValue,
-            previousPoint.expectedValue,
-          ),
+          expectedValue: finiteDelta(currentPoint.expectedValue, previousPoint.expectedValue),
           p50: finiteDelta(currentPoint.p50, previousPoint.p50),
           p85: finiteDelta(currentPoint.p85, previousPoint.p85),
           uncertaintySpanP85MinusBase: finiteDelta(
@@ -1133,9 +1051,7 @@ export function buildAiBriefOngoingDevelopment(args: {
             previousPoint.spreadP85MinusP50,
           ),
         },
-        structural: mapStructuralForBrief(
-          compareStructuralInputs(pair.earlier, pair.later),
-        ),
+        structural: mapStructuralForBrief(compareStructuralInputs(pair.earlier, pair.later)),
       }
     }
   }

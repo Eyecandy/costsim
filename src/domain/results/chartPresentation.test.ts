@@ -28,7 +28,6 @@ import {
 import { SCURVE_PROJECT_DIM_OPACITY } from "@/domain/results/sCurveProjectEmphasis"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
 }
@@ -38,9 +37,7 @@ describe("chartPresentation", () => {
     expect(CHART_PRIMARY_STROKE_WIDTH).toBe(SCURVE_CURVE_STROKE_WIDTH)
     expect(CHART_PRIMARY_STROKE_WIDTH).toBeLessThanOrEqual(1.3)
     expect(CHART_SECONDARY_STROKE_WIDTH).toBeLessThan(CHART_PRIMARY_STROKE_WIDTH)
-    expect(CHART_GRID_STROKE_WIDTH).toBeLessThanOrEqual(
-      CHART_SECONDARY_STROKE_WIDTH,
-    )
+    expect(CHART_GRID_STROKE_WIDTH).toBeLessThanOrEqual(CHART_SECONDARY_STROKE_WIDTH)
     expect(CHART_AXIS_STROKE_WIDTH).toBeGreaterThan(CHART_GRID_STROKE_WIDTH)
     // Restrained middle ground — not near-invisible, not dominant
     expect(CHART_CLASSIC_GUIDE_STROKE_OPACITY).toBeGreaterThanOrEqual(0.35)
@@ -48,12 +45,8 @@ describe("chartPresentation", () => {
   })
 
   it("keeps P50 prominence at least equal to P85", () => {
-    expect(chartPercentileGuideOpacity(50)).toBe(
-      chartPercentileGuideOpacity(85),
-    )
-    expect(chartPercentileGuideOpacity(50)).toBe(
-      CHART_CLASSIC_GUIDE_STROKE_OPACITY,
-    )
+    expect(chartPercentileGuideOpacity(50)).toBe(chartPercentileGuideOpacity(85))
+    expect(chartPercentileGuideOpacity(50)).toBe(CHART_CLASSIC_GUIDE_STROKE_OPACITY)
   })
 
   it("keeps highlighted y-axis percentiles the same size as P25/P75 ticks", () => {
@@ -99,7 +92,7 @@ describe("chartPresentation", () => {
     expect(scurve).not.toContain("aspectRatio:")
     expect(scurve).not.toContain("data-scurve-h-scroll")
     // Breathing room around the larger plot
-    expect(scurve).toContain('bg-muted/20 p-3')
+    expect(scurve).toContain("bg-muted/20 p-3")
     expect(scurve).toContain("p-4 sm:p-5")
   })
 
@@ -129,9 +122,9 @@ describe("chartPresentation", () => {
   it("does not dim non-emphasized projects below guide readability floor", () => {
     expect(SCURVE_PROJECT_DIM_OPACITY).toBeGreaterThanOrEqual(0.4)
     expect(SCURVE_PROJECT_DIM_OPACITY).toBeLessThan(1)
-    expect(
-      SCURVE_PROJECT_DIM_OPACITY * CHART_CLASSIC_GUIDE_STROKE_OPACITY,
-    ).toBeLessThan(SCURVE_PROJECT_DIM_OPACITY)
+    expect(SCURVE_PROJECT_DIM_OPACITY * CHART_CLASSIC_GUIDE_STROKE_OPACITY).toBeLessThan(
+      SCURVE_PROJECT_DIM_OPACITY,
+    )
   })
 
   it("leaves PDF on the shared display stroke constant", () => {
@@ -142,12 +135,8 @@ describe("chartPresentation", () => {
   })
 
   it("does not alter Tornado / waterfall / development bar presentation", () => {
-    expect(readSrc("src/features/results/ResultsTornado.tsx")).toContain(
-      "fillOpacity={0.58}",
-    )
-    expect(readSrc("src/features/results/AttributionWaterfall.tsx")).toContain(
-      "fillOpacity={0.62}",
-    )
+    expect(readSrc("src/features/results/ResultsTornado.tsx")).toContain("fillOpacity={0.58}")
+    expect(readSrc("src/features/results/AttributionWaterfall.tsx")).toContain("fillOpacity={0.62}")
     const development = readSrc("src/features/results/ResultsDevelopmentChart.tsx")
     expect(development).not.toContain("chartPresentation")
   })

@@ -20,9 +20,7 @@ export type PdfReportExportMode = AnalysisMode
 export function buildPdfReportModelForMode(
   mode: PdfReportExportMode,
   ongoingInput: BuildOngoingPdfReportModelInput,
-):
-  | { mode: "ongoing"; result: BuildOngoingPdfReportModelResult }
-  | { mode: "single" } {
+): { mode: "ongoing"; result: BuildOngoingPdfReportModelResult } | { mode: "single" } {
   if (mode === "ongoing") {
     return {
       mode: "ongoing",

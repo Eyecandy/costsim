@@ -1,18 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
-import type {
-  ProjectResult,
-} from "@/domain/simulation/simulationTypes"
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
-import {
-  AnalysisSidebar,
-} from "@/features/analysis-library/AnalysisSidebar"
+import { AnalysisSidebar } from "@/features/analysis-library/AnalysisSidebar"
 import { CheckpointNav } from "@/features/checkpoints/CheckpointNav"
 import { ProjectProfileSection } from "@/features/workspace/ProjectProfileSection"
 import { ResultsPanel } from "@/features/results/ResultsPanel"
@@ -35,10 +24,7 @@ import {
   PROJECT_SLOT_NAMES,
   type Project,
 } from "@/domain/analysis/project"
-import {
-  duplicateProject,
-  nextCopiedProjectName,
-} from "@/domain/analysis/cloneAnalysisWorkspace"
+import { duplicateProject, nextCopiedProjectName } from "@/domain/analysis/cloneAnalysisWorkspace"
 import {
   decodeShareV1FromHash,
   decodeShareV2FromSearch,
@@ -48,28 +34,15 @@ import {
   isShareV2Hash,
   SHARE_QUERY_PARAM,
 } from "@/persistence/shareLink"
-import {
-  loadAppInputStateFromStorage,
-  saveToStorage,
-  STORAGE_KEYS,
-} from "@/persistence/storage"
-import {
-  PROJECT_PROFILE_FOCUS_ROW_CLASS,
-} from "@/domain/results/columnHeaderLayout"
+import { loadAppInputStateFromStorage, saveToStorage, STORAGE_KEYS } from "@/persistence/storage"
+import { PROJECT_PROFILE_FOCUS_ROW_CLASS } from "@/domain/results/columnHeaderLayout"
 import { cn } from "@/shared/utils"
 import { useI18n } from "@/i18n/useI18n"
 import { appFeatures } from "@/config/appVariant"
-import {
-  PRODUCT_NAME,
-} from "@/shared/brand"
-import {
-  getInitialRestoredSimulationState,
-} from "@/persistence/lastSimulationSnapshot"
+import { PRODUCT_NAME } from "@/shared/brand"
+import { getInitialRestoredSimulationState } from "@/persistence/lastSimulationSnapshot"
 import { navigateTo } from "@/shared/auth/auth"
-import {
-  LIBRARY_PATH,
-  readAnalysisIdFromLocation,
-} from "@/persistence/analysisLibraryRoutes"
+import { LIBRARY_PATH, readAnalysisIdFromLocation } from "@/persistence/analysisLibraryRoutes"
 import { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
 import { useResultPreferences } from "@/features/results/useResultPreferences"
 import {
@@ -158,39 +131,34 @@ export default function App() {
 
   const runs = simulationConfig.mainRuns
 
-  const [projectResults, setProjectResults] = useState<ProjectResult[]>(() =>
-    getInitialRestoredSimulationState().projectResults,
+  const [projectResults, setProjectResults] = useState<ProjectResult[]>(
+    () => getInitialRestoredSimulationState().projectResults,
   )
   const [ongoingCompactResult, setOngoingCompactResult] =
     useState<OngoingCheckpointResultSnapshotV1 | null>(null)
   const [singleArchivedCompact, setSingleArchivedCompact] =
     useState<SingleArchivedResultSnapshotV1 | null>(null)
-  const [singleDraftCompact, setSingleDraftCompact] =
-    useState<SingleDraftResultSnapshotV1 | null>(null)
+  const [singleDraftCompact, setSingleDraftCompact] = useState<SingleDraftResultSnapshotV1 | null>(
+    null,
+  )
   const [simulatedBaseCostByProjectId, setSimulatedBaseCostByProjectId] = useState<
     Record<string, number | null>
   >(() => getInitialRestoredSimulationState().simulatedBaseCostByProjectId)
   const [lastSimulatedInputSignature, setLastSimulatedInputSignature] = useState(
     () => getInitialRestoredSimulationState().lastSimulatedInputSignature,
   )
-  const [lastSimulatedProjects, setLastSimulatedProjects] = useState<Project[]>(
-    () => {
-      const sig = getInitialRestoredSimulationState().lastSimulatedInputSignature
-      if (!sig) return []
-      try {
-        return parseProjectsPayload(JSON.parse(sig)) ?? []
-      } catch {
-        return []
-      }
-    },
-  )
+  const [lastSimulatedProjects, setLastSimulatedProjects] = useState<Project[]>(() => {
+    const sig = getInitialRestoredSimulationState().lastSimulatedInputSignature
+    if (!sig) return []
+    try {
+      return parseProjectsPayload(JSON.parse(sig)) ?? []
+    } catch {
+      return []
+    }
+  })
   /** Ownership of the live result set (captured at run/seed apply). */
-  const [liveSimAnalysisId, setLiveSimAnalysisId] = useState<string | null>(
-    null,
-  )
-  const [liveSimCheckpointId, setLiveSimCheckpointId] = useState<string | null>(
-    null,
-  )
+  const [liveSimAnalysisId, setLiveSimAnalysisId] = useState<string | null>(null)
+  const [liveSimCheckpointId, setLiveSimCheckpointId] = useState<string | null>(null)
   const [simulationRunIdByProjectId, setSimulationRunIdByProjectId] = useState<
     Record<string, string>
   >({})
@@ -199,9 +167,7 @@ export default function App() {
   const [validationFeedbackActive, setValidationFeedbackActive] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [, setRunProgress] = useState(0)
-  const [, setSimulationStartTime] = useState<number | null>(
-    null,
-  )
+  const [, setSimulationStartTime] = useState<number | null>(null)
   const [deleteProjectConfirmOpen, setDeleteProjectConfirmOpen] = useState(false)
   const deleteProjectConfirmTargetRef = useRef<string | null>(null)
   const [addAlternativeOpen, setAddAlternativeOpen] = useState(false)
@@ -212,17 +178,9 @@ export default function App() {
     showFinishOngoingNotice,
   } = useActionNotices()
   const dialogs = useAnalysisDialogs()
-  const {
-    setArchiveConfirmOpen,
-    setFinishOngoingConfirmOpen,
-    setNextCheckpointOpen,
-  } = dialogs
-  const {
-    sidebarOpenRequest,
-    setSidebarOpenRequest,
-    sidebarPinned,
-    setSidebarPinned,
-  } = useSidebarState()
+  const { setArchiveConfirmOpen, setFinishOngoingConfirmOpen, setNextCheckpointOpen } = dialogs
+  const { sidebarOpenRequest, setSidebarOpenRequest, sidebarPinned, setSidebarPinned } =
+    useSidebarState()
   const {
     preferences: resultPreferences,
     replacePreferences,
@@ -235,101 +193,98 @@ export default function App() {
   } = useResultPreferences()
   const applyArchivedResults = useCallback(
     (source: { archivedSnapshot?: SingleAnalysisArchivedSnapshot }) => {
-    const snap = source.archivedSnapshot
-    if (!snap) {
-      setProjectResults([])
+      const snap = source.archivedSnapshot
+      if (!snap) {
+        setProjectResults([])
+        setOngoingCompactResult(null)
+        setSingleArchivedCompact(null)
+        setSingleDraftCompact(null)
+        setSimulatedBaseCostByProjectId({})
+        setLastSimulatedInputSignature("")
+        setLastSimulatedProjects([])
+        setLiveSimAnalysisId(null)
+        setLiveSimCheckpointId(null)
+        setSimulationRunIdByProjectId({})
+        return
+      }
+      if (isSingleArchivedResultSnapshot(snap)) {
+        setProjectResults([])
+        setOngoingCompactResult(null)
+        setSingleDraftCompact(null)
+        setSingleArchivedCompact(snap)
+        setSimulatedBaseCostByProjectId(
+          Object.fromEntries(
+            Object.entries(snap.byProjectId).map(([id, result]) => [id, result.simulatedBaseCost]),
+          ),
+        )
+        setLastSimulatedInputSignature(snap.inputSignature)
+        setLastSimulatedProjects(snap.projectsAtArchive)
+        setLiveSimAnalysisId(null)
+        setLiveSimCheckpointId(null)
+        setSimulationRunIdByProjectId(snap.simulationRunIdByProjectId ?? {})
+        replacePreferences(snap.resultPreferences)
+        return
+      }
+      setProjectResults(snap.projectResults)
       setOngoingCompactResult(null)
       setSingleArchivedCompact(null)
       setSingleDraftCompact(null)
-      setSimulatedBaseCostByProjectId({})
-      setLastSimulatedInputSignature("")
-      setLastSimulatedProjects([])
-      setLiveSimAnalysisId(null)
-      setLiveSimCheckpointId(null)
-      setSimulationRunIdByProjectId({})
-      return
-    }
-    if (isSingleArchivedResultSnapshot(snap)) {
-      setProjectResults([])
-      setOngoingCompactResult(null)
-      setSingleDraftCompact(null)
-      setSingleArchivedCompact(snap)
-      setSimulatedBaseCostByProjectId(
-        Object.fromEntries(
-          Object.entries(snap.byProjectId).map(([id, result]) => [
-            id,
-            result.simulatedBaseCost,
-          ]),
-        ),
-      )
-      setLastSimulatedInputSignature(snap.inputSignature)
+      setSimulatedBaseCostByProjectId(snap.simulatedBaseCostByProjectId)
+      setLastSimulatedInputSignature(buildSimulationInputSignature(snap.projectsAtArchive))
       setLastSimulatedProjects(snap.projectsAtArchive)
       setLiveSimAnalysisId(null)
       setLiveSimCheckpointId(null)
-      setSimulationRunIdByProjectId(snap.simulationRunIdByProjectId ?? {})
-      replacePreferences(snap.resultPreferences)
-      return
-    }
-    setProjectResults(snap.projectResults)
-    setOngoingCompactResult(null)
-    setSingleArchivedCompact(null)
-    setSingleDraftCompact(null)
-    setSimulatedBaseCostByProjectId(snap.simulatedBaseCostByProjectId)
-    setLastSimulatedInputSignature(
-      buildSimulationInputSignature(snap.projectsAtArchive),
-    )
-    setLastSimulatedProjects(snap.projectsAtArchive)
-    setLiveSimAnalysisId(null)
-    setLiveSimCheckpointId(null)
-    setSimulationRunIdByProjectId(
-      createSimulationRunIdsForProjects(
-        snap.projectsAtArchive.map((p) => p.id),
-        Date.now(),
-      ),
-    )
+      setSimulationRunIdByProjectId(
+        createSimulationRunIdsForProjects(
+          snap.projectsAtArchive.map((p) => p.id),
+          Date.now(),
+        ),
+      )
     },
     [replacePreferences],
   )
-  const applyDraftResultSeed = useCallback((seed: DraftResultSeedV1) => {
-    setProjectResults(seed.projectResults)
-    setOngoingCompactResult(null)
-    setSingleDraftCompact(null)
-    setSingleArchivedCompact(
-      seed.compactByProjectId
-        ? {
-            kind: SINGLE_ARCHIVED_RESULT_KIND,
-            schemaVersion: SINGLE_ARCHIVED_RESULT_SCHEMA_VERSION,
-            modelVersion: "single-draft-compact-seed-v1",
-            archivedAt: "",
-            analysisId: "",
-            simulationCount: seed.simulationCount,
-            inputSignature: seed.inputSignature,
-            projectsAtArchive: [],
-            activeProjectIdAtRun:
-              Object.keys(seed.compactByProjectId)[0] ?? "",
-            resultPreferences: seed.resultPreferences,
-            resultView: seed.resultView,
-            byProjectId: seed.compactByProjectId,
-          }
-        : null,
-    )
-    setSimulatedBaseCostByProjectId(seed.simulatedBaseCostByProjectId)
-    setLastSimulatedInputSignature(seed.inputSignature)
-    setLastSimulatedProjects([])
-    // Clear ownership so the session association effect binds to the active checkpoint.
-    setLiveSimAnalysisId(null)
-    setLiveSimCheckpointId(null)
-    setSimulationRunIdByProjectId(
-      createSimulationRunIdsForProjects(
-        seed.projectResults.length > 0
-          ? seed.projectResults.map((r) => r.projectId)
-          : Object.keys(seed.compactByProjectId ?? {}),
-        Date.now(),
-      ),
-    )
-    // Session active view only — does not write device saved defaults.
-    replacePreferences(seed.resultPreferences)
-  }, [replacePreferences])
+  const applyDraftResultSeed = useCallback(
+    (seed: DraftResultSeedV1) => {
+      setProjectResults(seed.projectResults)
+      setOngoingCompactResult(null)
+      setSingleDraftCompact(null)
+      setSingleArchivedCompact(
+        seed.compactByProjectId
+          ? {
+              kind: SINGLE_ARCHIVED_RESULT_KIND,
+              schemaVersion: SINGLE_ARCHIVED_RESULT_SCHEMA_VERSION,
+              modelVersion: "single-draft-compact-seed-v1",
+              archivedAt: "",
+              analysisId: "",
+              simulationCount: seed.simulationCount,
+              inputSignature: seed.inputSignature,
+              projectsAtArchive: [],
+              activeProjectIdAtRun: Object.keys(seed.compactByProjectId)[0] ?? "",
+              resultPreferences: seed.resultPreferences,
+              resultView: seed.resultView,
+              byProjectId: seed.compactByProjectId,
+            }
+          : null,
+      )
+      setSimulatedBaseCostByProjectId(seed.simulatedBaseCostByProjectId)
+      setLastSimulatedInputSignature(seed.inputSignature)
+      setLastSimulatedProjects([])
+      // Clear ownership so the session association effect binds to the active checkpoint.
+      setLiveSimAnalysisId(null)
+      setLiveSimCheckpointId(null)
+      setSimulationRunIdByProjectId(
+        createSimulationRunIdsForProjects(
+          seed.projectResults.length > 0
+            ? seed.projectResults.map((r) => r.projectId)
+            : Object.keys(seed.compactByProjectId ?? {}),
+          Date.now(),
+        ),
+      )
+      // Session active view only — does not write device saved defaults.
+      replacePreferences(seed.resultPreferences)
+    },
+    [replacePreferences],
+  )
   const applyOngoingCompactResult = useCallback(
     (snapshot: OngoingCheckpointResultSnapshotV1) => {
       setOngoingCompactResult(snapshot)
@@ -341,15 +296,11 @@ export default function App() {
       })
       setLastSimulatedInputSignature(snapshot.inputSignature)
       setLastSimulatedProjects(
-        snapshot.projectsAtRun
-          ? (structuredClone(snapshot.projectsAtRun) as Project[])
-          : [],
+        snapshot.projectsAtRun ? (structuredClone(snapshot.projectsAtRun) as Project[]) : [],
       )
       setLiveSimAnalysisId(snapshot.analysisId)
       setLiveSimCheckpointId(snapshot.checkpointId)
-      setSimulationRunIdByProjectId(
-        snapshot.simulationRunIdByProjectId ?? {},
-      )
+      setSimulationRunIdByProjectId(snapshot.simulationRunIdByProjectId ?? {})
       replacePreferences(snapshot.resultPreferences)
     },
     [replacePreferences],
@@ -370,9 +321,7 @@ export default function App() {
       )
       setLastSimulatedInputSignature(snapshot.inputSignature)
       setLastSimulatedProjects(
-        snapshot.projectsAtRun
-          ? (structuredClone(snapshot.projectsAtRun) as Project[])
-          : [],
+        snapshot.projectsAtRun ? (structuredClone(snapshot.projectsAtRun) as Project[]) : [],
       )
       setLiveSimAnalysisId(snapshot.analysisId)
       setLiveSimCheckpointId(null)
@@ -394,14 +343,16 @@ export default function App() {
     setSimulationRunIdByProjectId({})
   }, [])
   const commitOngoingDraftResultRef = useRef<
-    ((
-      input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitOngoingDraftResultInput,
-    ) => Promise<{ ok: true } | { ok: false }>) | null
+    | ((
+        input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitOngoingDraftResultInput,
+      ) => Promise<{ ok: true } | { ok: false }>)
+    | null
   >(null)
   const commitSingleDraftResultRef = useRef<
-    ((
-      input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitSingleDraftResultInput,
-    ) => Promise<{ ok: true } | { ok: false }>) | null
+    | ((
+        input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitSingleDraftResultInput,
+      ) => Promise<{ ok: true } | { ok: false }>)
+    | null
   >(null)
   const librarySession = useLibraryAnalysisSession({
     projects,
@@ -481,10 +432,7 @@ export default function App() {
   const requestFinishOngoingAnalysis = useCallback(() => {
     if (!librarySession.canCompleteOngoingAnalysis) return
     const reason = librarySession.getCompleteOngoingAnalysisBlockReason()
-    if (
-      reason === "has_draft" ||
-      reason === "latest_not_archived"
-    ) {
+    if (reason === "has_draft" || reason === "latest_not_archived") {
       showFinishOngoingNotice("need_archive_checkpoint")
       return
     }
@@ -536,22 +484,14 @@ export default function App() {
       url.searchParams.delete(SHARE_QUERY_PARAM)
       url.hash = ""
       const nextSearch = url.searchParams.toString()
-      window.history.replaceState(
-        null,
-        "",
-        `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}`,
-      )
+      window.history.replaceState(null, "", `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}`)
     })()
     return () => {
       cancelled = true
     }
   }, [])
 
-  const {
-    handleBeforeSignOut,
-    handleRun,
-    runningRef,
-  } = useSimulationRun({
+  const { handleBeforeSignOut, handleRun, runningRef } = useSimulationRun({
     activeProjectId,
     analysisReadOnly,
     clearDraftResultSeedRef,
@@ -609,8 +549,7 @@ export default function App() {
     "{max}",
     String(appFeatures.maxProjects),
   )
-  const activeProject =
-    projects.find((p) => p.id === activeProjectId) ?? projects[0] ?? null
+  const activeProject = projects.find((p) => p.id === activeProjectId) ?? projects[0] ?? null
 
   const liveSimulationState: LiveSimulationState = {
     analysisId: liveSimAnalysisId,
@@ -622,19 +561,15 @@ export default function App() {
     simulationCount: runs,
     projectsAtRun: lastSimulatedProjects,
   }
-  const authoritativeOngoingCompact =
-    isOngoingAnalysis
-      ? (ongoingCompactResult ?? librarySession.ongoingDraftResult)
-      : null
-  const authoritativeSingleDraft =
-    !isOngoingAnalysis
-      ? (singleDraftCompact ?? librarySession.singleDraftResult)
-      : null
+  const authoritativeOngoingCompact = isOngoingAnalysis
+    ? (ongoingCompactResult ?? librarySession.ongoingDraftResult)
+    : null
+  const authoritativeSingleDraft = !isOngoingAnalysis
+    ? (singleDraftCompact ?? librarySession.singleDraftResult)
+    : null
   const liveResultValidity = getLiveResultValidity({
     analysisId: librarySession.docMeta?.id ?? null,
-    checkpointId: isOngoingAnalysis
-      ? librarySession.activeCheckpoint?.id ?? null
-      : null,
+    checkpointId: isOngoingAnalysis ? (librarySession.activeCheckpoint?.id ?? null) : null,
     currentProjects: projects,
     simulationState: liveSimulationState,
     ongoingCompactResult: authoritativeOngoingCompact,
@@ -656,11 +591,9 @@ export default function App() {
     }
   }, [runErrorKey, currentValidationError])
 
-  const showValidationFeedback =
-    validationFeedbackActive && currentValidationError !== null
+  const showValidationFeedback = validationFeedbackActive && currentValidationError !== null
 
-  const hasMeaningfulStaleComparableInput =
-    staleComparableProjects(projects).length > 0
+  const hasMeaningfulStaleComparableInput = staleComparableProjects(projects).length > 0
 
   const showStaleInputNotice =
     liveResultValidity.kind === "stale" && hasMeaningfulStaleComparableInput
@@ -669,10 +602,7 @@ export default function App() {
     liveResultValidity.kind === "valid" || liveResultValidity.kind === "stale"
 
   const checkpointComparisonResultSource = useMemo(() => {
-    if (
-      !isOngoingAnalysis ||
-      (projectResults.length === 0 && !ongoingCompactResult)
-    ) {
+    if (!isOngoingAnalysis || (projectResults.length === 0 && !ongoingCompactResult)) {
       return null
     }
     return {
@@ -682,8 +612,7 @@ export default function App() {
       resultsComparable:
         analysisReadOnly ||
         (ongoingCompactResult
-          ? buildSimulationInputSignature(projects) ===
-            ongoingCompactResult.inputSignature
+          ? buildSimulationInputSignature(projects) === ongoingCompactResult.inputSignature
           : !showStaleInputNotice),
     }
   }, [
@@ -708,21 +637,15 @@ export default function App() {
     setProjects,
     showStaleInputNotice,
   })
-  const {
-    openFocusModePrimary,
-    openFocusResults,
-  } = guidedFocusSession
-  const {
-    staleProjectNameTabIds,
-    visibleStaleChangedCellKeys,
-    validationInvalidCellKeys,
-  } = useStaleInputDiffs({
-    projects,
-    activeProjectId,
-    lastSimulatedProjects,
-    liveResultValidity,
-    showStaleInputChanges,
-  })
+  const { openFocusModePrimary, openFocusResults } = guidedFocusSession
+  const { staleProjectNameTabIds, visibleStaleChangedCellKeys, validationInvalidCellKeys } =
+    useStaleInputDiffs({
+      projects,
+      activeProjectId,
+      lastSimulatedProjects,
+      liveResultValidity,
+      showStaleInputChanges,
+    })
 
   const handleRevertInputsToLastSimulation = () => {
     if (analysisReadOnly) return
@@ -730,9 +653,7 @@ export default function App() {
     const restored = structuredClone(lastSimulatedProjects) as Project[]
     setEditingProjectId(null)
     setProjects(restored)
-    setActiveProjectId((prev) =>
-      restored.some((p) => p.id === prev) ? prev : restored[0]!.id,
-    )
+    setActiveProjectId((prev) => (restored.some((p) => p.id === prev) ? prev : restored[0]!.id))
   }
 
   const handleSelectProject = (projectId: string) => {
@@ -765,8 +686,7 @@ export default function App() {
       const template = prev[0]
       if (!template) return prev
       const slotName = PROJECT_SLOT_NAMES[prev.length]
-      const name =
-        slotName ?? `Alternativ ${String.fromCharCode(65 + (prev.length % 26))}`
+      const name = slotName ?? `Alternativ ${String.fromCharCode(65 + (prev.length % 26))}`
       const next = projectFromTemplateEmptyRows(template, name)
       const out = addProjectIfAllowed(prev, next, appFeatures.maxProjects)
       if (out.length > prev.length) createdId = next.id
@@ -873,302 +793,267 @@ export default function App() {
         }}
       />
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-      <div
-        className={cn(
-          "mx-auto flex w-full max-w-[90rem] flex-1 flex-col px-3 pb-4 md:pb-6 lg:pb-8",
-          // Pinned: normal content inset. Unpinned: clear fixed rail (w-9) + gap before logo.
-          sidebarPinned
-            ? "md:px-5 lg:px-6"
-            : "md:pl-14 md:pr-5 lg:pl-14 lg:pr-6",
-        )}
-      >
-        <WorkspaceDialogs
-          dialogs={dialogs}
-          addAlternativeOpen={addAlternativeOpen}
-          confirmDeleteProject={confirmDeleteProject}
-          deleteProjectConfirmOpen={deleteProjectConfirmOpen}
-          deleteProjectConfirmTargetRef={deleteProjectConfirmTargetRef}
-          handleCopyExistingAlternative={handleCopyExistingAlternative}
-          handleCreateBlankAlternative={handleCreateBlankAlternative}
-          isOngoingAnalysis={isOngoingAnalysis}
-          librarySession={librarySession}
-          projects={projects}
-          setAddAlternativeOpen={setAddAlternativeOpen}
-          setDeleteProjectConfirmOpen={setDeleteProjectConfirmOpen}
-          showArchiveBlockedNotice={showArchiveBlockedNotice}
-          showFinishOngoingNotice={showFinishOngoingNotice}
-        />
-        <GuidedInputHost
-          activeProject={activeProject}
-          analysisReadOnly={analysisReadOnly}
-          guidedFocusSession={guidedFocusSession}
-          guidedFocusState={guidedFocusState}
-          handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
-          handleRun={handleRun}
-          isRunning={isRunning}
-          liveResultValidity={liveResultValidity}
-          projects={projects}
-          runningRef={runningRef}
-          setProjects={setProjects}
-        />
-        <AnalysisHeader
-          dialogs={dialogs}
-          analysisReadOnly={analysisReadOnly}
-          archiveBlockedNotice={archiveBlockedNotice}
-          finishOngoingNotice={finishOngoingNotice}
-          handleBeforeSignOut={handleBeforeSignOut}
-          isOngoingAnalysis={isOngoingAnalysis}
-          librarySession={librarySession}
-          requestArchiveCheckpoint={requestArchiveCheckpoint}
-          requestFinishOngoingAnalysis={requestFinishOngoingAnalysis}
-          setSidebarOpenRequest={setSidebarOpenRequest}
-        />
         <div
-          data-analysis-workspace-layout={
-            isOngoingAnalysis ? "ongoing" : "single"
-          }
-          className={
-            isOngoingAnalysis
-              ? ONGOING_WORKSPACE_LAYOUT_CLASS
-              : "grid grid-cols-1 gap-8 md:grid-cols-2 md:items-start"
-          }
+          className={cn(
+            "mx-auto flex w-full max-w-[90rem] flex-1 flex-col px-3 pb-4 md:pb-6 lg:pb-8",
+            // Pinned: normal content inset. Unpinned: clear fixed rail (w-9) + gap before logo.
+            sidebarPinned ? "md:px-5 lg:px-6" : "md:pl-14 md:pr-5 lg:pl-14 lg:pr-6",
+          )}
         >
+          <WorkspaceDialogs
+            dialogs={dialogs}
+            addAlternativeOpen={addAlternativeOpen}
+            confirmDeleteProject={confirmDeleteProject}
+            deleteProjectConfirmOpen={deleteProjectConfirmOpen}
+            deleteProjectConfirmTargetRef={deleteProjectConfirmTargetRef}
+            handleCopyExistingAlternative={handleCopyExistingAlternative}
+            handleCreateBlankAlternative={handleCreateBlankAlternative}
+            isOngoingAnalysis={isOngoingAnalysis}
+            librarySession={librarySession}
+            projects={projects}
+            setAddAlternativeOpen={setAddAlternativeOpen}
+            setDeleteProjectConfirmOpen={setDeleteProjectConfirmOpen}
+            showArchiveBlockedNotice={showArchiveBlockedNotice}
+            showFinishOngoingNotice={showFinishOngoingNotice}
+          />
+          <GuidedInputHost
+            activeProject={activeProject}
+            analysisReadOnly={analysisReadOnly}
+            guidedFocusSession={guidedFocusSession}
+            guidedFocusState={guidedFocusState}
+            handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
+            handleRun={handleRun}
+            isRunning={isRunning}
+            liveResultValidity={liveResultValidity}
+            projects={projects}
+            runningRef={runningRef}
+            setProjects={setProjects}
+          />
+          <AnalysisHeader
+            dialogs={dialogs}
+            analysisReadOnly={analysisReadOnly}
+            archiveBlockedNotice={archiveBlockedNotice}
+            finishOngoingNotice={finishOngoingNotice}
+            handleBeforeSignOut={handleBeforeSignOut}
+            isOngoingAnalysis={isOngoingAnalysis}
+            librarySession={librarySession}
+            requestArchiveCheckpoint={requestArchiveCheckpoint}
+            requestFinishOngoingAnalysis={requestFinishOngoingAnalysis}
+            setSidebarOpenRequest={setSidebarOpenRequest}
+          />
           <div
+            data-analysis-workspace-layout={isOngoingAnalysis ? "ongoing" : "single"}
             className={
               isOngoingAnalysis
-                ? ONGOING_WORKSPACE_LEFT_CLASS
-                : "flex min-w-0 flex-col gap-0"
+                ? ONGOING_WORKSPACE_LAYOUT_CLASS
+                : "grid grid-cols-1 gap-8 md:grid-cols-2 md:items-start"
             }
           >
-            {isOngoingAnalysis ? (
-              <>
-                <div className={ONGOING_TIMELINE_CELL_CLASS}>
-                  <CheckpointNav
-                    checkpoints={librarySession.checkpoints}
-                    activeCheckpointId={
-                      librarySession.activeCheckpoint?.id ??
-                      librarySession.checkpoints[0]?.id ??
-                      ""
-                    }
-                    onSelect={(id) => {
-                      void librarySession.selectCheckpoint(id)
-                    }}
-                    canCreateNext={librarySession.canCreateNextCheckpoint}
-                    atCheckpointLimit={
-                      librarySession.atCheckpointLimit &&
-                      !librarySession.canCreateNextCheckpoint
-                    }
-                    onCreateNext={() => setNextCheckpointOpen(true)}
-                  />
-                </div>
-                {activeProject ? (
-                  <div
-                    className={cn(
-                      ONGOING_PROJECT_PROFILE_CELL_CLASS,
-                      PROJECT_PROFILE_FOCUS_ROW_CLASS,
-                    )}
-                    data-project-profile-focus-row=""
-                  >
-                    <div className="min-w-0">
-                      <ProjectProfileSection
-                        profile={activeProject.profile}
-                        readOnly={analysisReadOnly}
-                        onChange={
-                          analysisReadOnly
-                            ? undefined
-                            : (next) =>
-                                setProjects((prev) =>
-                                  patchProjectProfile(
-                                    prev,
-                                    activeProject.id,
-                                    next,
-                                  ),
-                                )
-                        }
-                      />
-                    </div>
-                    {!analysisReadOnly ? (
-                      <PrimaryFocusModeEntry onClick={openFocusModePrimary} />
-                    ) : null}
-                  </div>
-                ) : null}
-              </>
-            ) : (
-            <ProjectTabs
-              activeProjectId={activeProjectId}
-              analysisReadOnly={analysisReadOnly}
-              atMaxProjects={atMaxProjects}
-              commitProjectName={commitProjectName}
-              editingProjectId={editingProjectId}
-              handleAddProject={handleAddProject}
-              handleDeleteProject={handleDeleteProject}
-              handleSelectProject={handleSelectProject}
-              maxProjectsTooltip={maxProjectsTooltip}
-              projects={projects}
-              setEditingProjectId={setEditingProjectId}
-              showStaleInputChanges={showStaleInputChanges}
-              skipNameCommitRef={skipNameCommitRef}
-              staleProjectNameTabIds={staleProjectNameTabIds}
-            />
-            )}
-
-            <InputPanels
-              activeProject={activeProject}
-              analysisReadOnly={analysisReadOnly}
-              guidedFocusSession={guidedFocusSession}
-              guidedFocusState={guidedFocusState}
-              isOngoingAnalysis={isOngoingAnalysis}
-              librarySession={librarySession}
-              setProjects={setProjects}
-              showValidationFeedback={showValidationFeedback}
-              validationInvalidCellKeys={validationInvalidCellKeys}
-              visibleStaleChangedCellKeys={visibleStaleChangedCellKeys}
-            />
-          </div>
-
-          <div
-            className={
-              isOngoingAnalysis
-                ? ONGOING_WORKSPACE_RIGHT_CLASS
-                : RESULTS_COLUMN_CLASS
-            }
-          >
-            <SimulationStrip
-              analysisReadOnly={analysisReadOnly}
-              currentValidationError={currentValidationError}
-              handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
-              handleRun={handleRun}
-              isOngoingAnalysis={isOngoingAnalysis}
-              isRunning={isRunning}
-              runErrorKey={runErrorKey}
-              setShowStaleInputChanges={setShowStaleInputChanges}
-              showStaleInputChanges={showStaleInputChanges}
-              showStaleInputNotice={showStaleInputNotice}
-              showValidationFeedback={showValidationFeedback}
-            />
             <div
               className={
-                isOngoingAnalysis
-                  ? ONGOING_RESULTS_CELL_CLASS
-                  : cn(
-                      "min-w-0 pb-7 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-reduce:animate-none",
-                      RESULTS_ALIGN_WITH_COST_ITEMS_CLASS,
-                    )
+                isOngoingAnalysis ? ONGOING_WORKSPACE_LEFT_CLASS : "flex min-w-0 flex-col gap-0"
               }
             >
-              <div className="flex min-h-0 min-w-0 flex-col gap-6">
-                {focusView !== "results" &&
-                (projectResults.length > 0 ||
-                ongoingCompactResult ||
-                (isOngoingAnalysis &&
-                  librarySession.ongoingDraftResult &&
-                  librarySession.docMeta?.id ===
-                    librarySession.ongoingDraftResult.analysisId &&
-                  librarySession.activeCheckpoint?.id ===
-                    librarySession.ongoingDraftResult.checkpointId) ||
-                singleArchivedCompact ||
-                singleDraftCompact ||
-                librarySession.singleDraftResult) ? (
-                  <ResultsPanel
-                    projects={projects}
-                    activeProjectId={activeProjectId}
-                    projectResults={projectResults}
-                    simulatedBaseCostByProjectId={simulatedBaseCostByProjectId}
-                    lastSimulatedInputSignature={lastSimulatedInputSignature}
-                    lastSimulatedProjects={lastSimulatedProjects}
-                    simulationRunIdByProjectId={simulationRunIdByProjectId}
-                    simulationCount={runs}
-                    pdfExportBlockedStaleInputs={showStaleInputNotice}
-                    analysisArchivedView={analysisReadOnly}
-                    archivedSnapshot={
-                      librarySession.archivedSnapshot &&
-                      !isOngoingCheckpointResultSnapshot(
-                        librarySession.archivedSnapshot,
-                      ) &&
-                      !isSingleArchivedResultSnapshot(
-                        librarySession.archivedSnapshot,
+              {isOngoingAnalysis ? (
+                <>
+                  <div className={ONGOING_TIMELINE_CELL_CLASS}>
+                    <CheckpointNav
+                      checkpoints={librarySession.checkpoints}
+                      activeCheckpointId={
+                        librarySession.activeCheckpoint?.id ??
+                        librarySession.checkpoints[0]?.id ??
+                        ""
+                      }
+                      onSelect={(id) => {
+                        void librarySession.selectCheckpoint(id)
+                      }}
+                      canCreateNext={librarySession.canCreateNextCheckpoint}
+                      atCheckpointLimit={
+                        librarySession.atCheckpointLimit && !librarySession.canCreateNextCheckpoint
+                      }
+                      onCreateNext={() => setNextCheckpointOpen(true)}
+                    />
+                  </div>
+                  {activeProject ? (
+                    <div
+                      className={cn(
+                        ONGOING_PROJECT_PROFILE_CELL_CLASS,
+                        PROJECT_PROFILE_FOCUS_ROW_CLASS,
+                      )}
+                      data-project-profile-focus-row=""
+                    >
+                      <div className="min-w-0">
+                        <ProjectProfileSection
+                          profile={activeProject.profile}
+                          readOnly={analysisReadOnly}
+                          onChange={
+                            analysisReadOnly
+                              ? undefined
+                              : (next) =>
+                                  setProjects((prev) =>
+                                    patchProjectProfile(prev, activeProject.id, next),
+                                  )
+                          }
+                        />
+                      </div>
+                      {!analysisReadOnly ? (
+                        <PrimaryFocusModeEntry onClick={openFocusModePrimary} />
+                      ) : null}
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <ProjectTabs
+                  activeProjectId={activeProjectId}
+                  analysisReadOnly={analysisReadOnly}
+                  atMaxProjects={atMaxProjects}
+                  commitProjectName={commitProjectName}
+                  editingProjectId={editingProjectId}
+                  handleAddProject={handleAddProject}
+                  handleDeleteProject={handleDeleteProject}
+                  handleSelectProject={handleSelectProject}
+                  maxProjectsTooltip={maxProjectsTooltip}
+                  projects={projects}
+                  setEditingProjectId={setEditingProjectId}
+                  showStaleInputChanges={showStaleInputChanges}
+                  skipNameCommitRef={skipNameCommitRef}
+                  staleProjectNameTabIds={staleProjectNameTabIds}
+                />
+              )}
+
+              <InputPanels
+                activeProject={activeProject}
+                analysisReadOnly={analysisReadOnly}
+                guidedFocusSession={guidedFocusSession}
+                guidedFocusState={guidedFocusState}
+                isOngoingAnalysis={isOngoingAnalysis}
+                librarySession={librarySession}
+                setProjects={setProjects}
+                showValidationFeedback={showValidationFeedback}
+                validationInvalidCellKeys={validationInvalidCellKeys}
+                visibleStaleChangedCellKeys={visibleStaleChangedCellKeys}
+              />
+            </div>
+
+            <div
+              className={isOngoingAnalysis ? ONGOING_WORKSPACE_RIGHT_CLASS : RESULTS_COLUMN_CLASS}
+            >
+              <SimulationStrip
+                analysisReadOnly={analysisReadOnly}
+                currentValidationError={currentValidationError}
+                handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
+                handleRun={handleRun}
+                isOngoingAnalysis={isOngoingAnalysis}
+                isRunning={isRunning}
+                runErrorKey={runErrorKey}
+                setShowStaleInputChanges={setShowStaleInputChanges}
+                showStaleInputChanges={showStaleInputChanges}
+                showStaleInputNotice={showStaleInputNotice}
+                showValidationFeedback={showValidationFeedback}
+              />
+              <div
+                className={
+                  isOngoingAnalysis
+                    ? ONGOING_RESULTS_CELL_CLASS
+                    : cn(
+                        "min-w-0 pb-7 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-reduce:animate-none",
+                        RESULTS_ALIGN_WITH_COST_ITEMS_CLASS,
                       )
-                        ? librarySession.archivedSnapshot
-                        : null
-                    }
-                    ongoingCompactResult={
-                      ongoingCompactResult ??
-                      (isOngoingAnalysis &&
+                }
+              >
+                <div className="flex min-h-0 min-w-0 flex-col gap-6">
+                  {focusView !== "results" &&
+                  (projectResults.length > 0 ||
+                    ongoingCompactResult ||
+                    (isOngoingAnalysis &&
                       librarySession.ongoingDraftResult &&
-                      librarySession.docMeta?.id ===
-                        librarySession.ongoingDraftResult.analysisId &&
+                      librarySession.docMeta?.id === librarySession.ongoingDraftResult.analysisId &&
                       librarySession.activeCheckpoint?.id ===
-                        librarySession.ongoingDraftResult.checkpointId
-                        ? librarySession.ongoingDraftResult
-                        : null)
-                    }
-                    singleArchivedCompact={singleArchivedCompact}
-                    singleDraftResult={
-                      singleDraftCompact ?? librarySession.singleDraftResult
-                    }
-                    draftResultSeed={librarySession.draftResultSeed}
-                    onContributionReady={
-                      isOngoingAnalysis
-                        ? librarySession.attachOngoingDraftContribution
-                        : librarySession.attachSingleDraftContribution
-                    }
-                    liveResultPreferences={resultPreferences}
-                    replacePreferences={replacePreferences}
-                    saveAsDefault={saveAsDefault}
-                    resetToDefaults={resetToDefaults}
-                    addKeyFigurePercentile={addKeyFigurePercentile}
-                    removeKeyFigurePercentile={removeKeyFigurePercentile}
-                    addSCurvePercentile={addSCurvePercentile}
-                    removeSCurvePercentile={removeSCurvePercentile}
-                    onRequestArchiveAndCreateNext={
-                      isOngoingAnalysis && librarySession.canArchive
-                        ? requestArchiveCheckpoint
-                        : undefined
-                    }
-                    onRequestFinishOngoingAnalysis={
-                      librarySession.canCompleteOngoingAnalysis
-                        ? requestFinishOngoingAnalysis
-                        : undefined
-                    }
-                    analysisMode={librarySession.analysisMode}
-                    ongoingCheckpoints={
-                      isOngoingAnalysis
-                        ? librarySession.ongoing?.checkpoints
-                        : undefined
-                    }
-                    viewedCheckpointId={
-                      isOngoingAnalysis
-                        ? librarySession.ongoing?.activeCheckpointId
-                        : undefined
-                    }
-                    analysisName={librarySession.docMeta?.name}
-                    ongoingLifecycle={
-                      isOngoingAnalysis
-                        ? librarySession.ongoing?.lifecycle
-                        : undefined
-                    }
-                    checkpointComparisonResultSource={
-                      checkpointComparisonResultSource
-                    }
-                    onOpenFocusResults={
-                      hasViewableResults ? openFocusResults : undefined
-                    }
-                    focusResultsActive={false}
-                  />
-                ) : null}
+                        librarySession.ongoingDraftResult.checkpointId) ||
+                    singleArchivedCompact ||
+                    singleDraftCompact ||
+                    librarySession.singleDraftResult) ? (
+                    <ResultsPanel
+                      projects={projects}
+                      activeProjectId={activeProjectId}
+                      projectResults={projectResults}
+                      simulatedBaseCostByProjectId={simulatedBaseCostByProjectId}
+                      lastSimulatedInputSignature={lastSimulatedInputSignature}
+                      lastSimulatedProjects={lastSimulatedProjects}
+                      simulationRunIdByProjectId={simulationRunIdByProjectId}
+                      simulationCount={runs}
+                      pdfExportBlockedStaleInputs={showStaleInputNotice}
+                      analysisArchivedView={analysisReadOnly}
+                      archivedSnapshot={
+                        librarySession.archivedSnapshot &&
+                        !isOngoingCheckpointResultSnapshot(librarySession.archivedSnapshot) &&
+                        !isSingleArchivedResultSnapshot(librarySession.archivedSnapshot)
+                          ? librarySession.archivedSnapshot
+                          : null
+                      }
+                      ongoingCompactResult={
+                        ongoingCompactResult ??
+                        (isOngoingAnalysis &&
+                        librarySession.ongoingDraftResult &&
+                        librarySession.docMeta?.id ===
+                          librarySession.ongoingDraftResult.analysisId &&
+                        librarySession.activeCheckpoint?.id ===
+                          librarySession.ongoingDraftResult.checkpointId
+                          ? librarySession.ongoingDraftResult
+                          : null)
+                      }
+                      singleArchivedCompact={singleArchivedCompact}
+                      singleDraftResult={singleDraftCompact ?? librarySession.singleDraftResult}
+                      draftResultSeed={librarySession.draftResultSeed}
+                      onContributionReady={
+                        isOngoingAnalysis
+                          ? librarySession.attachOngoingDraftContribution
+                          : librarySession.attachSingleDraftContribution
+                      }
+                      liveResultPreferences={resultPreferences}
+                      replacePreferences={replacePreferences}
+                      saveAsDefault={saveAsDefault}
+                      resetToDefaults={resetToDefaults}
+                      addKeyFigurePercentile={addKeyFigurePercentile}
+                      removeKeyFigurePercentile={removeKeyFigurePercentile}
+                      addSCurvePercentile={addSCurvePercentile}
+                      removeSCurvePercentile={removeSCurvePercentile}
+                      onRequestArchiveAndCreateNext={
+                        isOngoingAnalysis && librarySession.canArchive
+                          ? requestArchiveCheckpoint
+                          : undefined
+                      }
+                      onRequestFinishOngoingAnalysis={
+                        librarySession.canCompleteOngoingAnalysis
+                          ? requestFinishOngoingAnalysis
+                          : undefined
+                      }
+                      analysisMode={librarySession.analysisMode}
+                      ongoingCheckpoints={
+                        isOngoingAnalysis ? librarySession.ongoing?.checkpoints : undefined
+                      }
+                      viewedCheckpointId={
+                        isOngoingAnalysis ? librarySession.ongoing?.activeCheckpointId : undefined
+                      }
+                      analysisName={librarySession.docMeta?.name}
+                      ongoingLifecycle={
+                        isOngoingAnalysis ? librarySession.ongoing?.lifecycle : undefined
+                      }
+                      checkpointComparisonResultSource={checkpointComparisonResultSource}
+                      onOpenFocusResults={hasViewableResults ? openFocusResults : undefined}
+                      focusResultsActive={false}
+                    />
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
+          <div className="mt-auto flex justify-center pt-10 pb-8 text-center" role="contentinfo">
+            <span className="block font-sans text-[10px] leading-none text-muted-foreground/70">
+              © 2026 {PRODUCT_NAME}
+            </span>
+          </div>
         </div>
-        <div
-          className="mt-auto flex justify-center pt-10 pb-8 text-center"
-          role="contentinfo"
-        >
-          <span className="block font-sans text-[10px] leading-none text-muted-foreground/70">
-            © 2026 {PRODUCT_NAME}
-          </span>
-        </div>
-      </div>
       </div>
       <FocusSession
         activeProject={activeProject}

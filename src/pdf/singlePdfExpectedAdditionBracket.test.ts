@@ -14,9 +14,12 @@ import {
   collectWaterfallDisplayValues,
 } from "@/domain/results/formatWaterfallValue"
 import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
-import { preparePdfWaterfallPresentation, pdfWaterfallTotalSpanBar, pdfWaterfallValueToX } from "@/pdf/pdfWaterfallLayout"
+import {
+  preparePdfWaterfallPresentation,
+  pdfWaterfallTotalSpanBar,
+  pdfWaterfallValueToX,
+} from "@/pdf/pdfWaterfallLayout"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -63,10 +66,7 @@ function sampleShapley(args: {
 function singleExpectedWaterfallCallSite(): string {
   const src = readSrc("src/pdf/ProjectReportDocument.tsx")
   const start = src.indexOf("<Text style={styles.contribSubtitle}>{expectedLabel}</Text>")
-  const end = src.indexOf(
-    "<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>",
-    start,
-  )
+  const end = src.indexOf("<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>", start)
   expect(start).toBeGreaterThan(-1)
   expect(end).toBeGreaterThan(start)
   return src.slice(start, end)
@@ -74,9 +74,7 @@ function singleExpectedWaterfallCallSite(): string {
 
 function singleReserveWaterfallCallSite(): string {
   const src = readSrc("src/pdf/ProjectReportDocument.tsx")
-  const start = src.indexOf(
-    "<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>",
-  )
+  const start = src.indexOf("<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>")
   const end = src.indexOf("</View>", start)
   expect(start).toBeGreaterThan(-1)
   expect(end).toBeGreaterThan(start)
@@ -117,12 +115,8 @@ describe("Single PDF contribution total-span brackets", () => {
     expect(prepared.layout.spanTotal).toBe(22.5)
 
     const bar = pdfWaterfallTotalSpanBar(prepared.layout)
-    expect(bar.xStart).toBe(
-      pdfWaterfallValueToX(prepared.layout.startValue, prepared.layout),
-    )
-    expect(bar.xEnd).toBe(
-      pdfWaterfallValueToX(prepared.layout.endValue, prepared.layout),
-    )
+    expect(bar.xStart).toBe(pdfWaterfallValueToX(prepared.layout.startValue, prepared.layout))
+    expect(bar.xEnd).toBe(pdfWaterfallValueToX(prepared.layout.endValue, prepared.layout))
     expect(bar.width).toBeGreaterThan(0)
   })
 
@@ -150,12 +144,8 @@ describe("Single PDF contribution total-span brackets", () => {
     expect(prepared.layout.spanTotal).toBe(selectedTarget - 122.5)
 
     const bar = pdfWaterfallTotalSpanBar(prepared.layout)
-    expect(bar.xStart).toBe(
-      pdfWaterfallValueToX(prepared.layout.startValue, prepared.layout),
-    )
-    expect(bar.xEnd).toBe(
-      pdfWaterfallValueToX(prepared.layout.endValue, prepared.layout),
-    )
+    expect(bar.xStart).toBe(pdfWaterfallValueToX(prepared.layout.startValue, prepared.layout))
+    expect(bar.xEnd).toBe(pdfWaterfallValueToX(prepared.layout.endValue, prepared.layout))
 
     // Mapper passes through decomposition endpoints — no P85 literal in path.
     const mapper = readSrc("src/pdf/buildPdfReportModel.ts")
@@ -163,12 +153,8 @@ describe("Single PDF contribution total-span brackets", () => {
       mapper.indexOf("uncertaintyReserve: {"),
       mapper.indexOf("uncertaintyReserve: {") + 280,
     )
-    expect(reserveMap).toContain(
-      "result.uncertaintyReserveDecomposition.startValue",
-    )
-    expect(reserveMap).toContain(
-      "result.uncertaintyReserveDecomposition.endValue",
-    )
+    expect(reserveMap).toContain("result.uncertaintyReserveDecomposition.startValue")
+    expect(reserveMap).toContain("result.uncertaintyReserveDecomposition.endValue")
     expect(reserveMap).not.toContain("estimatedP85")
   })
 
@@ -200,9 +186,7 @@ describe("Single PDF contribution total-span brackets", () => {
     expect(expectedPrep.formatted.span).toBe(
       expectedPrep.formatDelta(expectedPrep.layout.spanTotal),
     )
-    expect(reservePrep.formatted.span).toBe(
-      reservePrep.formatDelta(reservePrep.layout.spanTotal),
-    )
+    expect(reservePrep.formatted.span).toBe(reservePrep.formatDelta(reservePrep.layout.spanTotal))
   })
 
   it("NO/EN chart-scale formatting unchanged for Single PDF span amounts", () => {
@@ -246,12 +230,8 @@ describe("Single PDF contribution total-span brackets", () => {
       formatWaterfallValueWithScale(waterfall.startValue, scale, "no"),
     )
     // Single PDF Contribution keeps chart formatting (not Ongoing adaptive).
-    expect(singleExpectedWaterfallCallSite()).not.toContain(
-      'valueFormat="adaptive"',
-    )
-    expect(singleReserveWaterfallCallSite()).not.toContain(
-      'valueFormat="adaptive"',
-    )
+    expect(singleExpectedWaterfallCallSite()).not.toContain('valueFormat="adaptive"')
+    expect(singleReserveWaterfallCallSite()).not.toContain('valueFormat="adaptive"')
   })
 
   it("Ongoing PDF contribution bracket wiring remains unchanged", () => {

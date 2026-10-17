@@ -1,8 +1,5 @@
 import { SCENARIO_COLUMN_KEYS } from "@/domain/results/excelLikeTable"
-import {
-  normalizeIncurredCosts,
-  type DriverImpactsByRowId,
-} from "@/domain/analysis/project"
+import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/domain/analysis/project"
 import {
   parseCostForSimulation,
   parseDriverForSimulation,
@@ -62,8 +59,7 @@ export function changedCostTableCellKeySet(
       out.add(INCURRED_COSTS_CELL_KEY)
     }
   } else if (
-    normalizeIncurredCosts(current.incurredCosts) !==
-    normalizeIncurredCosts(baseline.incurredCosts)
+    normalizeIncurredCosts(current.incurredCosts) !== normalizeIncurredCosts(baseline.incurredCosts)
   ) {
     out.add(INCURRED_COSTS_CELL_KEY)
   }
@@ -71,10 +67,7 @@ export function changedCostTableCellKeySet(
 }
 
 /** Stable key for a driver × cost-item impact cell. */
-export function driverImpactCellKey(
-  driverRowId: string,
-  costRowId: string,
-): string {
+export function driverImpactCellKey(driverRowId: string, costRowId: string): string {
   return `${driverRowId}:${costRowId}`
 }
 
@@ -83,9 +76,7 @@ function resolvedImpactLabel(
   driverRowId: string,
   costRowId: string,
 ): string {
-  return String(
-    resolveDriverImpactPercent(driverImpacts?.[driverRowId]?.[costRowId]),
-  )
+  return String(resolveDriverImpactPercent(driverImpacts?.[driverRowId]?.[costRowId]))
 }
 
 /** Impact cells that differ from the baseline snapshot (resolved 100% default). */
@@ -104,22 +95,14 @@ export function changedDriverImpactCellKeySet(
     | undefined,
 ): Set<string> {
   const out = new Set<string>()
-  const validCosts = current.costRows.filter(
-    (row) => parseCostForSimulation(row) !== null,
-  )
-  const validDrivers = current.driverRows.filter(
-    (row) => parseDriverForSimulation(row) !== null,
-  )
+  const validCosts = current.costRows.filter((row) => parseCostForSimulation(row) !== null)
+  const validDrivers = current.driverRows.filter((row) => parseDriverForSimulation(row) !== null)
   if (validCosts.length === 0 || validDrivers.length === 0) return out
 
   for (const driver of validDrivers) {
     for (const cost of validCosts) {
       const key = driverImpactCellKey(driver.id, cost.id)
-      const curLabel = resolvedImpactLabel(
-        current.driverImpacts,
-        driver.id,
-        cost.id,
-      )
+      const curLabel = resolvedImpactLabel(current.driverImpacts, driver.id, cost.id)
       if (baseline === undefined) {
         const explicit = current.driverImpacts?.[driver.id]?.[cost.id]
         if (explicit !== undefined && explicit.trim() !== "" && curLabel !== "100") {
@@ -127,11 +110,7 @@ export function changedDriverImpactCellKeySet(
         }
         continue
       }
-      const baseLabel = resolvedImpactLabel(
-        baseline.driverImpacts,
-        driver.id,
-        cost.id,
-      )
+      const baseLabel = resolvedImpactLabel(baseline.driverImpacts, driver.id, cost.id)
       if (curLabel !== baseLabel) out.add(key)
     }
   }

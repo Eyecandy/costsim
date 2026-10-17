@@ -37,13 +37,9 @@ import {
 } from "@/domain/analysis/project"
 import { duplicateProject } from "@/domain/analysis/cloneAnalysisWorkspace"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
-import {
-  buildShareCompactPayload,
-  compactPayloadToProjects,
-} from "@/persistence/shareLink"
+import { buildShareCompactPayload, compactPayloadToProjects } from "@/persistence/shareLink"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
-
 
 describe("ProjectProfile taxonomy v1", () => {
   it("exposes exactly five top-level categories with expected selection modes", () => {
@@ -54,19 +50,11 @@ describe("ProjectProfile taxonomy v1", () => {
       "phase",
       "deliveryModel",
     ])
-    expect(
-      PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "interventionTypes")
-        ?.selection,
-    ).toBe("multi")
-    for (const id of [
-      "projectArea",
-      "projectType",
-      "phase",
-      "deliveryModel",
-    ] as const) {
-      expect(
-        PROJECT_PROFILE_CATEGORIES.find((c) => c.id === id)?.selection,
-      ).toBe("single")
+    expect(PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "interventionTypes")?.selection).toBe(
+      "multi",
+    )
+    for (const id of ["projectArea", "projectType", "phase", "deliveryModel"] as const) {
+      expect(PROJECT_PROFILE_CATEGORIES.find((c) => c.id === id)?.selection).toBe("single")
     }
   })
 
@@ -90,9 +78,7 @@ describe("ProjectProfile taxonomy v1", () => {
     }
     // early_phase is a legacy alias, not an active option id
     expect(isKnownProfileOptionId("early_phase")).toBe(false)
-    expect(
-      PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "phase")?.optionIds,
-    ).toEqual([
+    expect(PROJECT_PROFILE_CATEGORIES.find((c) => c.id === "phase")?.optionIds).toEqual([
       "study",
       "concept",
       "preliminary_design",
@@ -100,9 +86,9 @@ describe("ProjectProfile taxonomy v1", () => {
       "execution",
       "handover",
     ])
-    expect(
-      PROJECT_PROFILE_CATEGORIES.some((c) => c.id === ("projectEnvironment" as string)),
-    ).toBe(false)
+    expect(PROJECT_PROFILE_CATEGORIES.some((c) => c.id === ("projectEnvironment" as string))).toBe(
+      false,
+    )
     const section = readFileSync(
       join(repoRoot, "src/features/workspace/ProjectProfileSection.tsx"),
       "utf8",
@@ -113,9 +99,7 @@ describe("ProjectProfile taxonomy v1", () => {
   })
 
   it("maps Project Area → Project Type options", () => {
-    expect(getProjectTypeOptionIds("transport")).toEqual(
-      PROJECT_TYPES_BY_AREA.transport,
-    )
+    expect(getProjectTypeOptionIds("transport")).toEqual(PROJECT_TYPES_BY_AREA.transport)
     expect(getProjectTypeOptionIds("buildings")).toContain("education")
     expect(getProjectTypeOptionIds("buildings")).not.toContain("tunnel")
     expect(getProjectTypeOptionIds(undefined)).toEqual([])
@@ -127,15 +111,14 @@ describe("ProjectProfile taxonomy v1", () => {
 describe("ProjectProfile progressive adaptive flow", () => {
   it("empty profile shows only the first step", () => {
     expect(visibleProjectProfileFlowSteps(undefined)).toEqual(["projectArea"])
-    expect(visibleProjectProfileCategories(undefined).map((c) => c.id)).toEqual(
-      ["projectArea"],
-    )
+    expect(visibleProjectProfileCategories(undefined).map((c) => c.id)).toEqual(["projectArea"])
   })
 
   it("selecting Project Area reveals Project Type only", () => {
-    expect(
-      visibleProjectProfileFlowSteps({ projectArea: "transport" }),
-    ).toEqual(["projectArea", "projectType"])
+    expect(visibleProjectProfileFlowSteps({ projectArea: "transport" })).toEqual([
+      "projectArea",
+      "projectType",
+    ])
     expect(
       visibleProjectProfileCategories({ projectArea: "transport" }).find(
         (c) => c.id === "projectType",
@@ -149,12 +132,7 @@ describe("ProjectProfile progressive adaptive flow", () => {
         projectArea: "buildings",
         projectType: "healthcare",
       }),
-    ).toEqual([
-      "projectArea",
-      "projectType",
-      "primaryQuantity",
-      "interventionTypes",
-    ])
+    ).toEqual(["projectArea", "projectType", "primaryQuantity", "interventionTypes"])
     expect(
       isPrimaryQuantityVisible({
         projectArea: "buildings",
@@ -185,13 +163,7 @@ describe("ProjectProfile progressive adaptive flow", () => {
         projectType: "healthcare",
         interventionTypes: ["rehabilitation_renewal"],
       }),
-    ).toEqual([
-      "projectArea",
-      "projectType",
-      "primaryQuantity",
-      "interventionTypes",
-      "phase",
-    ])
+    ).toEqual(["projectArea", "projectType", "primaryQuantity", "interventionTypes", "phase"])
   })
 
   it("hides Project Phase when Intervention Type is empty", () => {
@@ -202,12 +174,7 @@ describe("ProjectProfile progressive adaptive flow", () => {
         interventionTypes: [],
         phase: "preliminary_design",
       }),
-    ).toEqual([
-      "projectArea",
-      "projectType",
-      "primaryQuantity",
-      "interventionTypes",
-    ])
+    ).toEqual(["projectArea", "projectType", "primaryQuantity", "interventionTypes"])
   })
 
   it("selecting Phase reveals Delivery Model", () => {
@@ -294,9 +261,7 @@ describe("ProjectProfile primary quantity mapping", () => {
       type: "bridge_length",
       unit: "m",
     })
-    expect(
-      getPrimaryQuantityDefinition("transport_hub", "transport"),
-    ).toBeUndefined()
+    expect(getPrimaryQuantityDefinition("transport_hub", "transport")).toBeUndefined()
     expect(getPrimaryQuantityDefinition("other", "transport")).toBeUndefined()
   })
 
@@ -305,15 +270,9 @@ describe("ProjectProfile primary quantity mapping", () => {
       type: "capacity",
       unit: "mw",
     })
-    expect(
-      getPrimaryQuantityDefinition("grid_transmission", "energy"),
-    ).toBeUndefined()
-    expect(
-      getPrimaryQuantityDefinition("water_supply", "water_wastewater"),
-    ).toBeUndefined()
-    expect(
-      getPrimaryQuantityDefinition("production_facility", "industry"),
-    ).toBeUndefined()
+    expect(getPrimaryQuantityDefinition("grid_transmission", "energy")).toBeUndefined()
+    expect(getPrimaryQuantityDefinition("water_supply", "water_wastewater")).toBeUndefined()
+    expect(getPrimaryQuantityDefinition("production_facility", "industry")).toBeUndefined()
   })
 
   it("stores numeric quantity structurally and formats locale input", () => {
@@ -404,11 +363,7 @@ describe("ProjectProfile sequential reset", () => {
   })
 
   it("changing middle multi-select step clears only later steps", () => {
-    const plan = planMultiSelectChange(
-      fullProfile,
-      "interventionTypes",
-      "new_facility",
-    )
+    const plan = planMultiSelectChange(fullProfile, "interventionTypes", "new_facility")
     expect(plan.needsConfirmation).toBe(true)
     expect(plan.laterSelectionCount).toBe(2)
     expect(plan.next).toEqual({
@@ -439,11 +394,7 @@ describe("ProjectProfile sequential reset", () => {
   })
 
   it("deselects area immediately when no later selections exist", () => {
-    const plan = planSingleSelectChange(
-      { projectArea: "buildings" },
-      "projectArea",
-      "buildings",
-    )
+    const plan = planSingleSelectChange({ projectArea: "buildings" }, "projectArea", "buildings")
     expect(plan.needsConfirmation).toBe(false)
     expect(plan.laterSelectionCount).toBe(0)
     expect(plan.next).toBeUndefined()
@@ -470,11 +421,7 @@ describe("ProjectProfile sequential reset", () => {
       interventionTypes: ["rehabilitation_renewal", "expansion"],
       phase: "preliminary_design",
     }
-    const plan = planMultiSelectChange(
-      start,
-      "interventionTypes",
-      "expansion",
-    )
+    const plan = planMultiSelectChange(start, "interventionTypes", "expansion")
     expect(plan.needsConfirmation).toBe(true)
     expect(plan.laterSelectionCount).toBe(1)
     expect(plan.next).toEqual({
@@ -495,10 +442,7 @@ describe("ProjectProfile sequential reset", () => {
       "expansion",
     )
     expect(plan.needsConfirmation).toBe(false)
-    expect(plan.next?.interventionTypes).toEqual([
-      "expansion",
-      "rehabilitation_renewal",
-    ])
+    expect(plan.next?.interventionTypes).toEqual(["expansion", "rehabilitation_renewal"])
   })
 })
 
@@ -511,21 +455,10 @@ describe("ProjectProfile single-select toggle-off and multi-select", () => {
   })
 
   it("multi-select adds and removes", () => {
-    let profile = toggleMultiOption(
-      undefined,
-      "interventionTypes",
-      "rehabilitation_renewal",
-    )
+    let profile = toggleMultiOption(undefined, "interventionTypes", "rehabilitation_renewal")
     profile = toggleMultiOption(profile, "interventionTypes", "new_facility")
-    expect(profile?.interventionTypes).toEqual([
-      "new_facility",
-      "rehabilitation_renewal",
-    ])
-    profile = toggleMultiOption(
-      profile,
-      "interventionTypes",
-      "rehabilitation_renewal",
-    )
+    expect(profile?.interventionTypes).toEqual(["new_facility", "rehabilitation_renewal"])
+    profile = toggleMultiOption(profile, "interventionTypes", "rehabilitation_renewal")
     expect(profile?.interventionTypes).toEqual(["new_facility"])
   })
 })
@@ -544,11 +477,7 @@ describe("ProjectProfile model", () => {
     expect(
       normalizeProjectProfile({
         phase: "study",
-        interventionTypes: [
-          "rehabilitation_renewal",
-          "bogus",
-          "expansion",
-        ],
+        interventionTypes: ["rehabilitation_renewal", "bogus", "expansion"],
       }),
     ).toEqual({
       phase: "study",
@@ -557,12 +486,8 @@ describe("ProjectProfile model", () => {
   })
 
   it("aliases legacy option IDs and ignores unsupported legacy categories", () => {
-    expect(PROJECT_PROFILE_LEGACY_MAPPINGS.rehabilitation).toBe(
-      "rehabilitation_renewal",
-    )
-    expect(PROJECT_PROFILE_LEGACY_MAPPINGS.main_contract).toBe(
-      "design_bid_build",
-    )
+    expect(PROJECT_PROFILE_LEGACY_MAPPINGS.rehabilitation).toBe("rehabilitation_renewal")
+    expect(PROJECT_PROFILE_LEGACY_MAPPINGS.main_contract).toBe("design_bid_build")
     expect(PROJECT_PROFILE_LEGACY_MAPPINGS.early_phase).toBe("study")
     expect(
       normalizeProjectProfile({
@@ -626,16 +551,9 @@ describe("ProjectProfile model", () => {
     profile = toggleSingleOption(profile, "projectArea", "transport")
     expect(profile?.projectArea).toBeUndefined()
 
-    profile = toggleMultiOption(
-      undefined,
-      "interventionTypes",
-      "rehabilitation_renewal",
-    )
+    profile = toggleMultiOption(undefined, "interventionTypes", "rehabilitation_renewal")
     profile = toggleMultiOption(profile, "interventionTypes", "new_facility")
-    expect(profile?.interventionTypes).toEqual([
-      "new_facility",
-      "rehabilitation_renewal",
-    ])
+    expect(profile?.interventionTypes).toEqual(["new_facility", "rehabilitation_renewal"])
   })
 
   it("parseProjectsPayload restores profile and defaults old data", () => {
@@ -777,9 +695,7 @@ describe("ProjectProfile collapsed summary", () => {
       "preliminary_design",
       "design_build",
     ])
-    expect(formatProjectProfileSummaryText(["A", "B", "C", "D", "E"])).toBe(
-      "A · B · C · +2",
-    )
+    expect(formatProjectProfileSummaryText(["A", "B", "C", "D", "E"])).toBe("A · B · C · +2")
   })
 })
 
@@ -815,16 +731,11 @@ describe("ProjectProfile UI disclosure wiring", () => {
     // The tab strip is rendered by <ProjectTabs> (role="tablist" lives in that file).
     expect(app).toContain('role="tablist"')
     const tablistIdx = app.indexOf("<ProjectTabs")
-    const singleProfileIdx = app.indexOf(
-      "data-project-profile-focus-row=\"\"",
-      tablistIdx,
-    )
+    const singleProfileIdx = app.indexOf('data-project-profile-focus-row=""', tablistIdx)
     const costIdx = app.indexOf('title={t("expanders.costElements")}')
     expect(singleProfileIdx).toBeGreaterThan(tablistIdx)
     expect(costIdx).toBeGreaterThan(singleProfileIdx)
-    expect(app).toContain(
-      'PROJECT_PROFILE_SECTION_SPACING_CLASS = "mt-4 mb-5"',
-    )
+    expect(app).toContain('PROJECT_PROFILE_SECTION_SPACING_CLASS = "mt-4 mb-5"')
     expect(app).toContain("PROJECT_PROFILE_FOCUS_ROW_CLASS")
     expect(app).toContain("RESULTS_ALIGN_WITH_COST_ITEMS_CLASS")
     // Ongoing: profile is shared row 2; Cost Items / Results share row 3.

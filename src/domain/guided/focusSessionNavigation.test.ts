@@ -10,7 +10,6 @@ import {
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -100,13 +99,9 @@ describe("unified Focus session ownership", () => {
     expect(shell).toContain("ArrowLeft")
     expect(shell).toContain("onNavigatePrevious")
     // No longer gated on variant === \"results\".
-    expect(shell).not.toMatch(
-      /if \(!open \|\| variant !== "results"\) return/,
-    )
+    expect(shell).not.toMatch(/if \(!open \|\| variant !== "results"\) return/)
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    expect(guided).toContain(
-      "if (!open || suspend || focusMode || ensureFocusMode) return",
-    )
+    expect(guided).toContain("if (!open || suspend || focusMode || ensureFocusMode) return")
     expect(guided).toContain("GuidedInputDialogHandle")
   })
 
@@ -130,9 +125,7 @@ describe("unified Focus session ownership", () => {
       }),
     ).toEqual({ kind: "enterInputFromResults" })
     const app = readAppSource()
-    const back = app.match(
-      /const backToFocusInput = useCallback\(\(\) => \{([\s\S]*?)\}, \[/,
-    )
+    const back = app.match(/const backToFocusInput = useCallback\(\(\) => \{([\s\S]*?)\}, \[/)
     expect(back?.[1] ?? "").toContain('setGuidedResumePhase("simulation")')
     expect(back?.[1] ?? "").toContain("goToSimulation")
     expect(back?.[1] ?? "").not.toContain("openingFresh")
@@ -140,9 +133,7 @@ describe("unified Focus session ownership", () => {
 
   it("C: After Results → Input, Guided does not own competing window arrows", () => {
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    expect(guided).toContain(
-      "if (!open || suspend || focusMode || ensureFocusMode) return",
-    )
+    expect(guided).toContain("if (!open || suspend || focusMode || ensureFocusMode) return")
     // Results suspend must not clear focusMode (keeps session sizing + arrow owner).
     expect(guided).toContain("if (suspend) return")
     expect(guided).toContain("Results suspends Guided UI but the Focus session is still active")
@@ -160,9 +151,7 @@ describe("unified Focus session ownership", () => {
     expect(guided).toContain("data-guided-embedded-in-focus-host")
     expect(guided).toContain("Embedded Focus path: body-only")
     // Normal Focus size is not inferred from focusView === \"results\".
-    expect(shell).not.toMatch(
-      /focusView[\s\S]{0,40}76rem|variant === "results"[\s\S]{0,80}76rem/,
-    )
+    expect(shell).not.toMatch(/focusView[\s\S]{0,40}76rem|variant === "results"[\s\S]{0,80}76rem/)
     expect(shell).not.toContain("h-[min(96vh,56rem)] w-[min(96vw,76rem)]")
   })
 
@@ -183,7 +172,7 @@ describe("unified Focus session ownership", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(shell).toContain('window.addEventListener("keydown", onKeyDown)')
     expect(shell).toContain("target === document.body")
-    expect(shell).not.toContain("root.addEventListener(\"keydown\"")
+    expect(shell).not.toContain('root.addEventListener("keydown"')
   })
 
   it("H: Focus arrow ignore helper covers editables and overlays", () => {

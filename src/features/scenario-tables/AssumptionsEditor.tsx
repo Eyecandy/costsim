@@ -117,8 +117,7 @@ export function AssumptionsEditor({
   }
 
   const count = assumptions.length
-  const statusText =
-    count === 0 ? t("inputs.assumptionsNoneDefined") : String(count)
+  const statusText = count === 0 ? t("inputs.assumptionsNoneDefined") : String(count)
   const actionLabel = open
     ? t("inputs.assumptionsHide")
     : count === 0
@@ -128,11 +127,7 @@ export function AssumptionsEditor({
       : t("inputs.assumptionsShow")
 
   return (
-    <div
-      className="mb-2.5"
-      data-assumptions-editor=""
-      data-readonly={readOnly ? "" : undefined}
-    >
+    <div className="mb-2.5" data-assumptions-editor="" data-readonly={readOnly ? "" : undefined}>
       <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
         <p
           className={cn(
@@ -258,11 +253,7 @@ export function AssumptionsEditor({
                               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
                             )}
                           >
-                            <X
-                              className="size-2.5"
-                              strokeWidth={2.25}
-                              aria-hidden
-                            />
+                            <X className="size-2.5" strokeWidth={2.25} aria-hidden />
                           </button>
                         ) : null}
                       </>

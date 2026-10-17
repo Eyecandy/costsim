@@ -7,19 +7,12 @@ import { FOCUS_SESSION_FOOTER_CLASS } from "@/domain/guided/focusSessionFrame"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function infoSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedPhaseInfo.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedPhaseInfo.tsx"), "utf8")
 }
 
 function appSource() {
@@ -40,10 +33,7 @@ describe("Guided Input dialog stability and exit", () => {
     // Embedded Focus path also must not wire overlay dismiss.
     expect(src).toContain("data-guided-embedded-in-focus-host")
     const embedStart = src.indexOf("Embedded Focus path: body-only")
-    const embedBlock = src.slice(
-      embedStart,
-      src.indexOf("Non-embedded suspend", embedStart),
-    )
+    const embedBlock = src.slice(embedStart, src.indexOf("Non-embedded suspend", embedStart))
     expect(embedBlock).not.toContain("onClick={onClose}")
     expect(embedBlock).toContain("renderBody()")
   })
@@ -105,10 +95,7 @@ describe("Guided Input dialog stability and exit", () => {
     const src = dialogSource()
     expect(src).toContain('data-guided-dialog-frame="stable"')
     expect(src).toContain("FOCUS_SESSION_CARD_CLASS")
-    const frame = readFileSync(
-      join(repoRoot, "src/domain/guided/focusSessionFrame.ts"),
-      "utf8",
-    )
+    const frame = readFileSync(join(repoRoot, "src/domain/guided/focusSessionFrame.ts"), "utf8")
     expect(frame).toContain("h-[min(92vh,48rem)]")
     expect(frame).toContain("w-[min(96vw,60rem)]")
     // No per-phase outer height classes on the dialog surface.
@@ -133,9 +120,7 @@ describe("Guided Input dialog stability and exit", () => {
     const info = infoSource()
     expect(info).toContain("useOverlayPortalContainer")
     expect(info).toContain("portalContainer")
-    expect(info).not.toMatch(
-      /createPortal\([\s\S]*?,\s*document\.body\s*\)/,
-    )
+    expect(info).not.toMatch(/createPortal\([\s\S]*?,\s*document\.body\s*\)/)
   })
 
   it("I: focus/click inside controls remains local to the surface", () => {
@@ -158,9 +143,7 @@ describe("Guided Input dialog stability and exit", () => {
     // Prefer shared Focus host when embedded; fall back to Guided's own root.
     expect(escapeBlock).toContain("focusPortalTarget?.closest")
     expect(escapeBlock).toContain("focusRootRef.current")
-    expect(escapeBlock).toContain(
-      "isElementFullscreen(host instanceof Element ? host : null)",
-    )
+    expect(escapeBlock).toContain("isElementFullscreen(host instanceof Element ? host : null)")
     expect(escapeBlock).toContain("focusMode")
     expect(escapeBlock).toContain("setFocusMode(false)")
     expect(escapeBlock).toContain("onClose()")
@@ -172,9 +155,7 @@ describe("Guided Input dialog stability and exit", () => {
   it("header stays shrink-0 above the scroll body", () => {
     const src = dialogSource()
     expect(src).toContain('data-guided-dialog-header=""')
-    expect(src).toMatch(
-      /flex shrink-0 items-start[\s\S]*?data-guided-dialog-header=""/,
-    )
+    expect(src).toMatch(/flex shrink-0 items-start[\s\S]*?data-guided-dialog-header=""/)
     expect(src).toContain('data-guided-dialog-body=""')
     expect(src).toContain("min-h-0 flex-1 overflow-auto")
   })
@@ -188,16 +169,11 @@ describe("Guided Input dialog stability and exit", () => {
     expect(src).toContain("project.name")
     // Project context precedes phase title in the standalone header block.
     const headerIdx = src.indexOf('data-guided-dialog-header=""')
-    const header = src.slice(
-      headerIdx,
-      src.indexOf('data-guided-dialog-body=""', headerIdx),
-    )
+    const header = src.slice(headerIdx, src.indexOf('data-guided-dialog-body=""', headerIdx))
     expect(header.indexOf("data-guided-project-context")).toBeLessThan(
       header.indexOf("id={titleId}"),
     )
-    expect(header.indexOf("id={titleId}")).toBeLessThan(
-      header.indexOf("data-guided-progress"),
-    )
+    expect(header.indexOf("id={titleId}")).toBeLessThan(header.indexOf("data-guided-progress"))
     // Embedded Focus Input renders project identity in the shared shell header.
     expect(app).toContain('data-guided-project-context=""')
     expect(app).toContain("guidedFocusChromeMeta.projectIndex")
@@ -222,10 +198,7 @@ describe("Guided Input dialog stability and exit", () => {
     expect(src).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(src).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")
     // Contained Focus card matches Guided modal — fullscreen is explicit.
-    const frame = readFileSync(
-      join(repoRoot, "src/domain/guided/focusSessionFrame.ts"),
-      "utf8",
-    )
+    const frame = readFileSync(join(repoRoot, "src/domain/guided/focusSessionFrame.ts"), "utf8")
     expect(frame).toContain("h-[min(92vh,48rem)]")
     expect(frame).toContain("w-[min(96vw,60rem)]")
     // Dimmed app backdrop in Focus (parity with Results Focus shell).
@@ -244,7 +217,7 @@ describe("Guided Input dialog stability and exit", () => {
 
   it("ArrowLeft/ArrowRight reuse Next/Previous with editable ignore + repeat guard", () => {
     const src = dialogSource()
-    expect(src).toContain('shouldIgnoreGuidedArrowNavigation')
+    expect(src).toContain("shouldIgnoreGuidedArrowNavigation")
     expect(src).toContain('event.key !== "ArrowLeft" && event.key !== "ArrowRight"')
     expect(src).toContain("event.repeat")
     expect(src).toContain("performGuidedNext")

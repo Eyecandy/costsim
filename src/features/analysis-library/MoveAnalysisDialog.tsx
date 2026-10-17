@@ -81,25 +81,20 @@ export function MoveAnalysisDialog({
 
   const foldersSorted = useMemo(
     () =>
-      folders
-        .slice()
-        .sort((a, b) =>
-          a.name.localeCompare(b.name, language === "en" ? "en" : "nb", {
-            sensitivity: "base",
-          }),
-        ),
+      folders.slice().sort((a, b) =>
+        a.name.localeCompare(b.name, language === "en" ? "en" : "nb", {
+          sensitivity: "base",
+        }),
+      ),
     [folders, language],
   )
 
   const selectedLabel =
     selected == null
       ? t("library.noFolder")
-      : (foldersSorted.find((f) => f.id === selected)?.name ??
-        t("library.noFolder"))
+      : (foldersSorted.find((f) => f.id === selected)?.name ?? t("library.noFolder"))
 
-  const unchanged =
-    (selected == null && currentFolderId == null) ||
-    selected === currentFolderId
+  const unchanged = (selected == null && currentFolderId == null) || selected === currentFolderId
 
   const handleCreateFolder = async () => {
     const name = newFolderName.trim()
@@ -114,8 +109,7 @@ export function MoveAnalysisDialog({
       await onMoved(folder.id)
     } catch (error) {
       setLocalError(
-        isAnalysisNameConflictOnMoveError(error) ||
-          isAnalysisNameConflictError(error)
+        isAnalysisNameConflictOnMoveError(error) || isAnalysisNameConflictError(error)
           ? t("library.duplicateNameOnMove")
           : t("library.saveError"),
       )
@@ -132,8 +126,7 @@ export function MoveAnalysisDialog({
       await onMoved(selected)
     } catch (error) {
       setLocalError(
-        isAnalysisNameConflictOnMoveError(error) ||
-          isAnalysisNameConflictError(error)
+        isAnalysisNameConflictOnMoveError(error) || isAnalysisNameConflictError(error)
           ? t("library.duplicateNameOnMove")
           : t("library.saveError"),
       )
@@ -157,10 +150,7 @@ export function MoveAnalysisDialog({
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
-          id="move-analysis-title"
-          className="m-0 mb-1 font-sans text-[15px] font-medium"
-        >
+        <h2 id="move-analysis-title" className="m-0 mb-1 font-sans text-[15px] font-medium">
           {t("library.moveTitle")}
         </h2>
         <p className="m-0 mb-3 truncate font-sans text-[12px] text-muted-foreground">
@@ -235,10 +225,7 @@ export function MoveAnalysisDialog({
                   onClick={() => setPickerOpen((v) => !v)}
                 >
                   <span className="min-w-0 truncate">{selectedLabel}</span>
-                  <ChevronDown
-                    className="size-3.5 shrink-0 text-muted-foreground"
-                    aria-hidden
-                  />
+                  <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
                 </button>
                 {pickerOpen ? (
                   <div
@@ -252,9 +239,7 @@ export function MoveAnalysisDialog({
                       aria-selected={selected == null}
                       className={cn(
                         "flex w-full px-3 py-1.5 text-left font-sans text-[12px] hover:bg-muted/60",
-                        selected == null
-                          ? "font-medium text-foreground"
-                          : "text-foreground/90",
+                        selected == null ? "font-medium text-foreground" : "text-foreground/90",
                       )}
                       onClick={() => {
                         setSelected(null)

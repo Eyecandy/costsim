@@ -1,6 +1,4 @@
-import {
-  ARCHIVE_MODEL_VERSION,
-} from "@/domain/analysis/archivedAnalysisSnapshot"
+import { ARCHIVE_MODEL_VERSION } from "@/domain/analysis/archivedAnalysisSnapshot"
 import {
   assertNoHeavyValuesInCompact,
   buildCompactProjectResult,
@@ -59,18 +57,14 @@ export type BuildSingleDraftResultSnapshotInput = {
   simulationCount: number
   resultPreferences: ResultPreferencesV1
   resultView?: ResolvedResultView
-  shapleyByProjectId?: Readonly<
-    Record<string, ShapleyAttributionResult | null>
-  >
+  shapleyByProjectId?: Readonly<Record<string, ShapleyAttributionResult | null>>
   computedAt?: string
   simulationRunIdByProjectId?: Readonly<Record<string, string>>
   /** Defaults to a clone of `projects` (the run that produced the result). */
   projectsAtRun?: readonly Project[]
 }
 
-export function isSingleDraftResultSnapshot(
-  value: unknown,
-): value is SingleDraftResultSnapshotV1 {
+export function isSingleDraftResultSnapshot(value: unknown): value is SingleDraftResultSnapshotV1 {
   if (!value || typeof value !== "object") return false
   const o = value as Record<string, unknown>
   return (
@@ -88,8 +82,7 @@ export function buildSingleDraftResultSnapshot(
   input: BuildSingleDraftResultSnapshotInput,
 ): SingleDraftResultSnapshotV1 {
   const resultPreferences = structuredClone(input.resultPreferences)
-  const resultView =
-    structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
+  const resultView = structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
   const byProjectId: Record<string, CompactProjectResultV1> = {}
 
   for (const project of input.projects) {
@@ -98,8 +91,7 @@ export function buildSingleDraftResultSnapshot(
     byProjectId[project.id] = buildCompactProjectResult({
       project,
       result,
-      simulatedBaseCost:
-        input.simulatedBaseCostByProjectId[project.id] ?? null,
+      simulatedBaseCost: input.simulatedBaseCostByProjectId[project.id] ?? null,
       resultView,
       contribution: input.shapleyByProjectId?.[project.id] ?? null,
     })
@@ -114,9 +106,7 @@ export function buildSingleDraftResultSnapshot(
     simulationCount: input.simulationCount,
     inputSignature: input.inputSignature,
     activeProjectIdAtRun: input.activeProjectId,
-    projectsAtRun: structuredClone(
-      input.projectsAtRun ?? input.projects,
-    ) as Project[],
+    projectsAtRun: structuredClone(input.projectsAtRun ?? input.projects) as Project[],
     resultPreferences,
     resultView,
     byProjectId,
@@ -140,9 +130,7 @@ export function freezeSingleDraftForArchive(args: {
   /** Current editable prefs when analytics are already supported by the draft. */
   resultPreferences?: ResultPreferencesV1
 }): SingleArchivedResultSnapshotV1 {
-  const resultPreferences = structuredClone(
-    args.resultPreferences ?? args.draft.resultPreferences,
-  )
+  const resultPreferences = structuredClone(args.resultPreferences ?? args.draft.resultPreferences)
   const resultView = args.resultPreferences
     ? resolveResultView(resultPreferences)
     : structuredClone(args.draft.resultView)
@@ -227,8 +215,7 @@ export function singleDraftResultIdentityMatches(args: {
   if (snapshot.analysisId !== args.analysisId) return false
   if (snapshot.activeProjectIdAtRun !== args.activeProjectId) return false
   if (snapshot.inputSignature !== args.inputSignature) return false
-  const runId =
-    snapshot.simulationRunIdByProjectId?.[args.activeProjectId] ?? ""
+  const runId = snapshot.simulationRunIdByProjectId?.[args.activeProjectId] ?? ""
   if (!args.simulationRunId || !runId) return false
   return runId === args.simulationRunId
 }

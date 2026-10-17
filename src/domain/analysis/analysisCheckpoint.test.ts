@@ -20,10 +20,7 @@ describe("analysisCheckpoint", () => {
   it("creates Checkpoint 1 with exactly one project", () => {
     const blank = createBlankWorkspaceRuntimeState()
     const multi = {
-      projects: [
-        blank.projects[0]!,
-        { ...blank.projects[0]!, id: "p2", name: "B" },
-      ],
+      projects: [blank.projects[0]!, { ...blank.projects[0]!, id: "p2", name: "B" }],
       activeProjectId: blank.activeProjectId,
     }
     const ongoing = createInitialOngoingState(multi, {
@@ -76,12 +73,8 @@ describe("analysisCheckpoint", () => {
       activeProjectId: blank.activeProjectId,
     }
     const ongoing = createInitialOngoingState(withPhase)
-    expect(checkpointPrimaryStageId(ongoing.checkpoints[0]!)).toBe(
-      "preliminary_design",
-    )
-    expect(
-      "phase" in (ongoing.checkpoints[0]! as Record<string, unknown>),
-    ).toBe(false)
+    expect(checkpointPrimaryStageId(ongoing.checkpoints[0]!)).toBe("preliminary_design")
+    expect("phase" in (ongoing.checkpoints[0]! as Record<string, unknown>)).toBe(false)
   })
 
   it("selectCheckpoint switches active id; archive freezes snapshot", () => {
@@ -127,9 +120,7 @@ describe("analysisCheckpoint", () => {
     }
     const selected = selectCheckpoint(ongoing, "cp-2")
     expect(selected?.activeCheckpointId).toBe("cp-2")
-    expect(checkpointPrimaryStageId(selected!.checkpoints[1]!)).toBe(
-      "execution",
-    )
+    expect(checkpointPrimaryStageId(selected!.checkpoints[1]!)).toBe("execution")
 
     const fakeResults: ProjectResult[] = [
       {

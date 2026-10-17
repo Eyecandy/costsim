@@ -15,10 +15,7 @@ export function isShapleyCacheEntryValid(
 ): entry is ShapleyCacheEntry {
   if (!entry) return false
   if (simulationRunId === "") return false
-  return (
-    entry.inputSignature === inputSignature &&
-    entry.simulationRunId === simulationRunId
-  )
+  return entry.inputSignature === inputSignature && entry.simulationRunId === simulationRunId
 }
 
 export function resolveShapleyProjectStatus(
@@ -32,13 +29,7 @@ export function resolveShapleyProjectStatus(
 ): ShapleyProjectStatus {
   if (errorProjectIds[projectId]) return "error"
   if (calculatingProjectId === projectId) return "calculating"
-  if (
-    isShapleyCacheEntryValid(
-      cache[projectId],
-      inputSignature,
-      simulationRunId,
-    )
-  ) {
+  if (isShapleyCacheEntryValid(cache[projectId], inputSignature, simulationRunId)) {
     return "ready"
   }
   // Stale live inputs: keep showing a ready cache above; otherwise idle (no recalc).
@@ -59,13 +50,7 @@ export function shouldAutoRequestShapleyCalculation(input: {
   if (!input.hasSimulationValues) return false
   if (!input.simulationRunId) return false
   if (input.hasError) return false
-  if (
-    isShapleyCacheEntryValid(
-      input.cacheEntry,
-      input.inputSignature,
-      input.simulationRunId,
-    )
-  ) {
+  if (isShapleyCacheEntryValid(input.cacheEntry, input.inputSignature, input.simulationRunId)) {
     return false
   }
   return true
@@ -103,8 +88,6 @@ export class ShapleyRequestQueue {
   }
 
   isQueued(projectId: string): boolean {
-    return (
-      this.active === projectId || this.pending.includes(projectId)
-    )
+    return this.active === projectId || this.pending.includes(projectId)
   }
 }

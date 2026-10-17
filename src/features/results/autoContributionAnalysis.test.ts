@@ -12,19 +12,12 @@ import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttrib
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function hookSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/useLazyShapleyAttribution.ts"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/useLazyShapleyAttribution.ts"), "utf8")
 }
 
 function panelSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 function appSource() {
@@ -35,9 +28,7 @@ const emptyResult = {
   contributions: [],
 } as unknown as ShapleyAttributionResult
 
-function cacheEntry(
-  partial: Partial<ShapleyCacheEntry> = {},
-): ShapleyCacheEntry {
+function cacheEntry(partial: Partial<ShapleyCacheEntry> = {}): ShapleyCacheEntry {
   return {
     result: emptyResult,
     inputSignature: "sig",
@@ -114,10 +105,7 @@ describe("automatic Contribution Analysis after simulation", () => {
     expect(hook).toContain("[simulationRunKey]")
     expect(hook).toContain("workerRef.current?.terminate()")
 
-    const worker = readFileSync(
-      join(repoRoot, "src/workers/shapley.worker.ts"),
-      "utf8",
-    )
+    const worker = readFileSync(join(repoRoot, "src/workers/shapley.worker.ts"), "utf8")
     expect(worker).toContain("simulationRunId: msg.simulationRunId")
 
     const messages = readFileSync(
@@ -161,12 +149,8 @@ describe("automatic Contribution Analysis after simulation", () => {
     expect(panel).toContain('status === "error" || status === "idle"')
     expect(messages.no.results.tryAgain).toBe("Prøv igjen")
     expect(messages.en.results.tryAgain).toBe("Try again")
-    expect(messages.en.results.calculatingContributions).toBe(
-      "Calculating contribution…",
-    )
-    expect(messages.no.results.calculatingContributions).toBe(
-      "Beregner bidrag…",
-    )
+    expect(messages.en.results.calculatingContributions).toBe("Calculating contribution…")
+    expect(messages.no.results.calculatingContributions).toBe("Beregner bidrag…")
 
     expect(
       shouldAutoRequestShapleyCalculation({

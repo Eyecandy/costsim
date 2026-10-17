@@ -55,19 +55,14 @@ export type PersistenceFailureKind = "quota" | "generic"
 export class AnalysisPersistenceError extends Error {
   readonly failureKind: PersistenceFailureKind
 
-  constructor(
-    message: string,
-    failureKind: PersistenceFailureKind = "generic",
-  ) {
+  constructor(message: string, failureKind: PersistenceFailureKind = "generic") {
     super(message)
     this.name = "AnalysisPersistenceError"
     this.failureKind = failureKind
   }
 }
 
-export function isAnalysisPersistenceError(
-  error: unknown,
-): error is AnalysisPersistenceError {
+export function isAnalysisPersistenceError(error: unknown): error is AnalysisPersistenceError {
   return error instanceof AnalysisPersistenceError
 }
 
@@ -81,13 +76,8 @@ export function isQuotaExceededStorageError(error: unknown): boolean {
   return code === 22
 }
 
-export function librarySaveStatusFromError(
-  error: unknown,
-): "error_quota" | "error" {
-  if (
-    isAnalysisPersistenceError(error) &&
-    error.failureKind === "quota"
-  ) {
+export function librarySaveStatusFromError(error: unknown): "error_quota" | "error" {
+  if (isAnalysisPersistenceError(error) && error.failureKind === "quota") {
     return "error_quota"
   }
   if (isQuotaExceededStorageError(error)) {
@@ -144,9 +134,7 @@ export function writeJson(key: string, value: unknown): boolean {
         memoryStore.delete(key)
         return true
       } catch (error) {
-        lastWriteFailureKind = isQuotaExceededStorageError(error)
-          ? "quota"
-          : "generic"
+        lastWriteFailureKind = isQuotaExceededStorageError(error) ? "quota" : "generic"
         // Optional same-tab emergency copy; never report it as durable success.
         memoryStore.set(key, serialized)
         return false
@@ -259,15 +247,10 @@ function loadDoc(id: string): AnalysisDocument | null {
   if (raw.schemaVersion !== ANALYSIS_DOCUMENT_SCHEMA_VERSION) return null
   if (raw.status !== "draft" && raw.status !== "archived") return null
   if (!raw.workspace?.projects || !raw.workspace.activeProjectId) return null
-  if (
-    !Array.isArray(raw.workspace.projects) ||
-    raw.workspace.projects.length === 0
-  ) {
+  if (!Array.isArray(raw.workspace.projects) || raw.workspace.projects.length === 0) {
     return null
   }
-  const analysisMode = normalizeAnalysisMode(
-    (raw as { analysisMode?: unknown }).analysisMode,
-  )
+  const analysisMode = normalizeAnalysisMode((raw as { analysisMode?: unknown }).analysisMode)
   const ongoing =
     analysisMode === "ongoing"
       ? normalizeOngoingState((raw as { ongoing?: unknown }).ongoing)
@@ -348,9 +331,7 @@ function assertUniqueAnalysisName(args: {
     })
   ) {
     throwAnalysisNameConflict(
-      args.onMove
-        ? ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR
-        : ANALYSIS_NAME_CONFLICT_ERROR,
+      args.onMove ? ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR : ANALYSIS_NAME_CONFLICT_ERROR,
     )
   }
 }
@@ -374,11 +355,7 @@ function purgeExpiredTrash(): void {
       dirty = true
       continue
     }
-    if (
-      isAnalysisTrashed(summary) &&
-      summary.deletedAt &&
-      isTrashExpired(summary.deletedAt)
-    ) {
+    if (isAnalysisTrashed(summary) && summary.deletedAt && isTrashExpired(summary.deletedAt)) {
       removeKey(analysisKey(id))
       removeSummary(index, id)
       dirty = true
@@ -417,11 +394,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
       if (!summary || !isAnalysisTrashed(summary)) continue
       out.push({ ...summary })
     }
-    out.sort(
-      (a, b) =>
-        new Date(b.deletedAt ?? 0).getTime() -
-        new Date(a.deletedAt ?? 0).getTime(),
-    )
+    out.sort((a, b) => new Date(b.deletedAt ?? 0).getTime() - new Date(a.deletedAt ?? 0).getTime())
     return out
   }
 
@@ -435,9 +408,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
 
   async create(input: CreateAnalysisInput): Promise<AnalysisDocument> {
     const ts = nowIso()
-    const analysisMode = normalizeAnalysisMode(
-      input.analysisMode ?? DEFAULT_ANALYSIS_MODE,
-    )
+    const analysisMode = normalizeAnalysisMode(input.analysisMode ?? DEFAULT_ANALYSIS_MODE)
     let workspace = {
       projects: input.workspace.projects,
       activeProjectId: input.workspace.activeProjectId,
@@ -550,10 +521,8 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
     patch: Partial<Pick<AnalysisDocument, "lastOpenedAt" | "name" | "folderId">>,
     options?: { knownDocument?: AnalysisDocument },
   ): Promise<void> {
-    const nameOrFolderTouched =
-      patch.name !== undefined || patch.folderId !== undefined
-    const lastOpenedOnly =
-      patch.lastOpenedAt !== undefined && !nameOrFolderTouched
+    const nameOrFolderTouched = patch.name !== undefined || patch.folderId !== undefined
+    const lastOpenedOnly = patch.lastOpenedAt !== undefined && !nameOrFolderTouched
 
     const existing =
       options?.knownDocument && options.knownDocument.id === id
@@ -562,15 +531,12 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
     if (!existing) throw new Error("Analysis not found")
     assertNotTrashed(existing)
 
-    const nextName =
-      patch.name !== undefined ? patch.name.trim() || existing.name : existing.name
-    const nextFolderId =
-      patch.folderId !== undefined ? patch.folderId : (existing.folderId ?? null)
+    const nextName = patch.name !== undefined ? patch.name.trim() || existing.name : existing.name
+    const nextFolderId = patch.folderId !== undefined ? patch.folderId : (existing.folderId ?? null)
 
     if (nameOrFolderTouched) {
       const folderChanging =
-        patch.folderId !== undefined &&
-        (patch.folderId ?? null) !== (existing.folderId ?? null)
+        patch.folderId !== undefined && (patch.folderId ?? null) !== (existing.folderId ?? null)
       const nameChanging =
         patch.name !== undefined &&
         nextName.trim().toLowerCase() !== existing.name.trim().toLowerCase()
@@ -586,9 +552,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
       ...existing,
       ...(patch.name !== undefined ? { name: nextName } : {}),
       ...(patch.folderId !== undefined ? { folderId: patch.folderId } : {}),
-      ...(patch.lastOpenedAt !== undefined
-        ? { lastOpenedAt: patch.lastOpenedAt }
-        : {}),
+      ...(patch.lastOpenedAt !== undefined ? { lastOpenedAt: patch.lastOpenedAt } : {}),
       updatedAt: nameOrFolderTouched ? nowIso() : existing.updatedAt,
     }
 
@@ -693,9 +657,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
       ongoing: completedOngoing,
       updatedAt: ts,
       // Document-level freeze mirrors the tip; checkpoint snapshots stay authoritative.
-      archivedSnapshot: isLegacyHeavyArchivedSnapshot(snapshot)
-        ? snapshot
-        : undefined,
+      archivedSnapshot: isLegacyHeavyArchivedSnapshot(snapshot) ? snapshot : undefined,
       workspace: isLegacyHeavyArchivedSnapshot(snapshot)
         ? ensureSingleProjectWorkspace({
             projects: snapshot.projectsAtArchive,
@@ -729,9 +691,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
     return verified
   }
 
-  async createDraftFromArchived(
-    args: CreateDraftFromArchivedArgs,
-  ): Promise<AnalysisDocument> {
+  async createDraftFromArchived(args: CreateDraftFromArchivedArgs): Promise<AnalysisDocument> {
     const archived = loadDoc(args.archivedId)
     if (!archived) throw new Error("Analysis not found")
     if (archived.status !== "archived") {
@@ -744,8 +704,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
       0,
       sourceProjects.findIndex((p) => p.id === archived.workspace.activeProjectId),
     )
-    const { projects: cloned, projectIdMap, rowIdMap } =
-      cloneProjectsWithMaps(sourceProjects)
+    const { projects: cloned, projectIdMap, rowIdMap } = cloneProjectsWithMaps(sourceProjects)
     const active = cloned[activeIndex]?.id ?? cloned[0]?.id
     if (!active) throw new Error("Empty workspace")
 
@@ -879,9 +838,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
       deletedAt: null,
       sourceAnalysisId: plan.sourceAnalysisId,
       sourceProjectId: plan.sourceProjectId,
-      workspace: ensureSingleProjectWorkspace(
-        structuredClone(plan.workspace),
-      ),
+      workspace: ensureSingleProjectWorkspace(structuredClone(plan.workspace)),
     }
     if (doc.id === source.id) {
       throw new Error("New ongoing analysis must use a distinct id")
@@ -932,8 +889,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
     if (!isAnalysisTrashed(existing)) return
     const index = loadIndex()
     const folderStillExists =
-      existing.folderId == null ||
-      index.folders.some((f) => f.id === existing.folderId)
+      existing.folderId == null || index.folders.some((f) => f.id === existing.folderId)
     const next = {
       ...existing,
       deletedAt: null,
@@ -1003,11 +959,7 @@ class LocalAnalysisLibraryRepository implements AnalysisLibraryRepository {
     // reference the folder; restore falls back to ungrouped if the folder is gone.
     for (const analysisId of index.analysisIds) {
       const summary = index.summaries?.[analysisId]
-      if (
-        summary &&
-        summary.folderId === id &&
-        !isAnalysisTrashed(summary)
-      ) {
+      if (summary && summary.folderId === id && !isAnalysisTrashed(summary)) {
         throw new Error("Folder is not empty")
       }
     }
@@ -1036,10 +988,7 @@ export function clearLocalAnalysisLibraryStorageForTests(): void {
 }
 
 /** Test helper — write a raw body (e.g. legacy without analysisMode). */
-export function __seedRawAnalysisDocForTests(
-  id: string,
-  raw: unknown,
-): void {
+export function __seedRawAnalysisDocForTests(id: string, raw: unknown): void {
   writeJson(analysisKey(id), raw)
   const index = loadIndex()
   if (!index.analysisIds.includes(id)) {

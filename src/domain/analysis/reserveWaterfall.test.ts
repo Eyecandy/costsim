@@ -114,8 +114,7 @@ describe("uncertainty reserve waterfall", () => {
       grouped,
     )
 
-    const displayedSum =
-      layout.startValue + sumWaterfallDisplayContributions(grouped)
+    const displayedSum = layout.startValue + sumWaterfallDisplayContributions(grouped)
     expect(displayedSum).toBeCloseTo(mainP85, 9)
     expect(layout.spanTotal).toBeCloseTo(mainP85 - mainP50, 9)
     expect(result.uncertaintyReserve).toBeCloseTo(mainP85 - mainP50, 9)
@@ -128,14 +127,10 @@ describe("uncertainty reserve waterfall", () => {
     const mainP85 = 145_678
     const result = runShapleyAttributionForPayload(payload, mainP50, mainP85)
 
-    expect(result.expectedAdditionDecomposition.contributions).toBe(
-      result.contributions,
-    )
+    expect(result.expectedAdditionDecomposition.contributions).toBe(result.contributions)
     expect(result.uncertaintyReserveDecomposition.startValue).toBe(mainP50)
     expect(result.uncertaintyReserveDecomposition.endValue).toBe(mainP85)
-    expect(result.uncertaintyReserveDecomposition.contributions).not.toBe(
-      result.contributions,
-    )
+    expect(result.uncertaintyReserveDecomposition.contributions).not.toBe(result.contributions)
   })
 
   it("F/G: reserve grouping does not require a second attribution run", () => {
@@ -150,14 +145,14 @@ describe("uncertainty reserve waterfall", () => {
 
     expect(expectedGrouped.length).toBeGreaterThan(0)
     expect(reserveGrouped.length).toBeGreaterThan(0)
-    expect(
-      result.baseCost +
-        sumWaterfallDisplayContributions(expectedGrouped),
-    ).toBeCloseTo(result.estimatedP50, 9)
-    expect(
-      result.estimatedP50 +
-        sumWaterfallDisplayContributions(reserveGrouped),
-    ).toBeCloseTo(result.estimatedP85, 9)
+    expect(result.baseCost + sumWaterfallDisplayContributions(expectedGrouped)).toBeCloseTo(
+      result.estimatedP50,
+      9,
+    )
+    expect(result.estimatedP50 + sumWaterfallDisplayContributions(reserveGrouped)).toBeCloseTo(
+      result.estimatedP85,
+      9,
+    )
   })
 
   it("J: negative reserve contributions remain in grouping and layout", () => {
@@ -184,9 +179,7 @@ describe("uncertainty reserve waterfall", () => {
       },
     })
 
-    const grouped = groupWaterfallContributors(
-      result.uncertaintyReserveDecomposition.contributions,
-    )
+    const grouped = groupWaterfallContributors(result.uncertaintyReserveDecomposition.contributions)
     expect(grouped.some((row) => row.contribution < 0)).toBe(true)
 
     const layout = buildWaterfallChartLayout(
@@ -197,10 +190,7 @@ describe("uncertainty reserve waterfall", () => {
     const negative = layout.contributionRows.find((row) => row.contribution < 0)
     expect(negative).toBeDefined()
     expect(negative!.cumulativeAfter).toBeLessThan(negative!.cumulativeBefore)
-    expect(layout.contributionRows.at(-1)?.cumulativeAfter).toBeCloseTo(
-      result.estimatedP85,
-      9,
-    )
+    expect(layout.contributionRows.at(-1)?.cumulativeAfter).toBeCloseTo(result.estimatedP85, 9)
   })
 
   it("K: top-6 plus Other reserve grouping remains exact", () => {
@@ -221,24 +211,11 @@ describe("uncertainty reserve waterfall", () => {
   })
 
   it("L: reserve waterfall uses one chart-level millions scale", () => {
-    const scale = resolveWaterfallDisplayScale([
-      202_800_000,
-      219_400_000,
-      5_200_000,
-      -400_000,
-    ])
-    expect(formatWaterfallValueWithScale(202_800_000, scale, "en")).toBe(
-      "202.8 M",
-    )
-    expect(formatWaterfallValueWithScale(219_400_000, scale, "en")).toBe(
-      "219.4 M",
-    )
-    expect(formatWaterfallSignedDeltaWithScale(16_600_000, scale, "en")).toBe(
-      "+16.6 M",
-    )
-    expect(formatWaterfallSignedDeltaWithScale(-400_000, scale, "no")).toBe(
-      "-0,4 M",
-    )
+    const scale = resolveWaterfallDisplayScale([202_800_000, 219_400_000, 5_200_000, -400_000])
+    expect(formatWaterfallValueWithScale(202_800_000, scale, "en")).toBe("202.8 M")
+    expect(formatWaterfallValueWithScale(219_400_000, scale, "en")).toBe("219.4 M")
+    expect(formatWaterfallSignedDeltaWithScale(16_600_000, scale, "en")).toBe("+16.6 M")
+    expect(formatWaterfallSignedDeltaWithScale(-400_000, scale, "no")).toBe("-0,4 M")
   })
 
   it("I: cached attribution carries both decompositions and invalidates together", () => {
@@ -251,12 +228,8 @@ describe("uncertainty reserve waterfall", () => {
       result,
     }
 
-    expect(
-      entry.result.expectedAdditionDecomposition.endValue,
-    ).toBe(entry.result.estimatedP50)
-    expect(
-      entry.result.uncertaintyReserveDecomposition.endValue,
-    ).toBe(entry.result.estimatedP85)
+    expect(entry.result.expectedAdditionDecomposition.endValue).toBe(entry.result.estimatedP50)
+    expect(entry.result.uncertaintyReserveDecomposition.endValue).toBe(entry.result.estimatedP85)
 
     expect(isShapleyCacheEntryValid(entry, "sig", "run-1")).toBe(true)
     expect(isShapleyCacheEntryValid(entry, "sig", "run-2")).toBe(false)

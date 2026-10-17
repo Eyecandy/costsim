@@ -44,10 +44,7 @@ export function LabelHelpTooltip({
 
     let top = triggerRect.top - tooltipHeight - gap
     if (top < viewportPad) {
-      top = Math.min(
-        triggerRect.bottom + gap,
-        window.innerHeight - tooltipHeight - viewportPad,
-      )
+      top = Math.min(triggerRect.bottom + gap, window.innerHeight - tooltipHeight - viewportPad)
     }
 
     setPosition({ top, left })
@@ -82,9 +79,7 @@ export function LabelHelpTooltip({
         }
       }}
     >
-      {!iconOnly ? (
-        <span className={cn("truncate", labelClassName)}>{label}</span>
-      ) : null}
+      {!iconOnly ? <span className={cn("truncate", labelClassName)}>{label}</span> : null}
       <button
         ref={triggerRef}
         type="button"

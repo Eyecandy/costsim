@@ -147,10 +147,7 @@ export type GuidedInputDialogProps = {
   /** Called after resumeSemanticStep has been applied. */
   onResumeSemanticStepApplied?: () => void
   onClose: () => void
-  onPatchRow: (
-    rowId: string,
-    patch: Partial<CostElementRow & DriverRow>,
-  ) => void
+  onPatchRow: (rowId: string, patch: Partial<CostElementRow & DriverRow>) => void
   onAddAssumption: (text: string) => void
   onUpdateAssumption: (assumptionId: string, text: string) => void
   onRemoveAssumption: (assumptionId: string) => void
@@ -254,8 +251,7 @@ const modeCardClassName = cn(
   "rounded-md border border-[#1d868c]/35 bg-[#1d868c]/5 px-3 py-3 text-center",
 )
 
-const rangeGridClassName =
-  "grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-stretch sm:gap-4"
+const rangeGridClassName = "grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-stretch sm:gap-4"
 
 const assumptionInputClassName = cn(
   "h-8 min-w-0 flex-1 rounded-md border border-border/70 bg-background px-2.5",
@@ -289,10 +285,7 @@ function GuidedRangeSlider({
 
   return (
     <div className="relative h-5 w-full">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-[6px] right-[6px]"
-      >
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-[6px] right-[6px]">
         <div className="absolute top-1/2 h-[3px] w-full -translate-y-1/2 rounded-full bg-[color-mix(in_oklab,var(--border)_70%,var(--muted-foreground)_18%)]" />
         {!blank && fillWidthPct > 0 ? (
           <div
@@ -364,20 +357,14 @@ function GuidedDefinitionTextarea({
       maxLength,
     })
     if (synced.pendingCommit) {
-      onCommitRef.current(
-        synced.pendingCommit.rowId,
-        synced.pendingCommit.description,
-      )
+      onCommitRef.current(synced.pendingCommit.rowId, synced.pendingCommit.description)
     }
     stateRef.current = synced.state
     setState(synced.state)
   }, [rowId, sourceDescription, maxLength])
 
   const commitCurrent = () => {
-    const result = commitGuidedDefinitionDraft(
-      stateRef.current,
-      maxLengthRef.current,
-    )
+    const result = commitGuidedDefinitionDraft(stateRef.current, maxLengthRef.current)
     stateRef.current = result.state
     setState(result.state)
     if (result.commit) {
@@ -846,14 +833,10 @@ function GuidedIncurredPhase({
   const { t, language } = useI18n()
   const safe = normalizeIncurredCosts(incurredCosts)
   const rawValue = safe === 0 ? "" : String(safe)
-  const displayText =
-    safe === 0 ? "—" : formatGuidedCostAbsolute(safe, language)
+  const displayText = safe === 0 ? "—" : formatGuidedCostAbsolute(safe, language)
 
   return (
-    <div
-      className="mx-auto flex max-w-3xl flex-col gap-5"
-      data-guided-phase="incurred"
-    >
+    <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="incurred">
       <div className="space-y-4">
         <p className="m-0 font-sans text-[13px] leading-relaxed text-muted-foreground">
           {t("inputs.guidedIncurredGuidance")}
@@ -896,10 +879,7 @@ function GuidedIncurredPhase({
   )
 }
 
-function phaseTitle(
-  step: GuidedWorkflowStep,
-  t: (key: string) => string,
-): string {
+function phaseTitle(step: GuidedWorkflowStep, t: (key: string) => string): string {
   switch (step.phase) {
     case "focusIntro":
       return t("inputs.guidedPhaseFocusIntro")
@@ -942,9 +922,7 @@ function GuidedConceptIntro(args: {
           key={`${args.phase}-${index}`}
           className={cn(
             "m-0 font-sans text-[13px] leading-relaxed",
-            index === args.paragraphs.length - 1
-              ? "text-muted-foreground"
-              : "text-foreground/90",
+            index === args.paragraphs.length - 1 ? "text-muted-foreground" : "text-foreground/90",
           )}
         >
           {text}
@@ -981,10 +959,7 @@ function GuidedFocusIntroPhase({ projectName }: { projectName: string }) {
           {projectName}
         </p>
       ) : null}
-      <ol
-        className="m-0 flex list-none flex-col gap-2 p-0"
-        data-focus-intro-overview=""
-      >
+      <ol className="m-0 flex list-none flex-col gap-2 p-0" data-focus-intro-overview="">
         {overview.map((label, index) => (
           <li
             key={label}
@@ -1008,1472 +983,1397 @@ function GuidedFocusIntroPhase({ projectName }: { projectName: string }) {
   )
 }
 
-export const GuidedInputDialog = forwardRef<
-  GuidedInputDialogHandle,
-  GuidedInputDialogProps
->(function GuidedInputDialog(
-  {
-  open,
-  entry,
-  project,
-  projectIndex,
-  startIndex = 0,
-  startPhase = null,
-  resumePhase = null,
-  onResumeApplied,
-  resumeFocusUserPhase = null,
-  onResumeFocusUserPhaseApplied,
-  resumeSemanticStep = null,
-  onResumeSemanticStepApplied,
-  onClose,
-  onPatchRow,
-  onAddAssumption,
-  onUpdateAssumption,
-  onRemoveAssumption,
-  onIncurredCostsChange,
-  onPatchProfile,
-  onAddCostItems,
-  onAddDrivers,
-  onAdjustCorrelation,
-  onAdjustImpact,
-  onFocusModeChange,
-  suspend = false,
-  focusShellRef: _focusShellRef,
-  focusPortalTarget = null,
-  onFocusChromeMetaChange,
-  onRequestFocusFullscreen,
-  onExitFocusFullscreen,
-  onRunSimulation,
-  runSimulationDisabled = false,
-  runSimulationBusy = false,
-  simulationResultStatus = "none",
-  onContinueToResults,
-  onShowStaleChanges,
-  onRevertStaleChanges,
-  ensureFocusMode = false,
-}: GuidedInputDialogProps,
-  ref,
-) {
-  const { t, language } = useI18n()
-  const titleId = useId()
-  const closeBtnRef = useRef<HTMLButtonElement | null>(null)
-  const focusToggleRef = useRef<HTMLButtonElement | null>(null)
-  const focusRootRef = useRef<HTMLDivElement | null>(null)
-  const [stepIndex, setStepIndex] = useState(0)
-  /** Presentation-only: larger, isolated Guided workspace (not persisted). */
-  const [focusMode, setFocusMode] = useState(false)
-  /** True when our Focus root currently owns browser fullscreen. */
-  const [browserFullscreen, setBrowserFullscreen] = useState(false)
-  /** Prevents falling back to the entry default after resumePhase is cleared. */
-  const resumeAppliedForOpenRef = useRef(false)
+export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInputDialogProps>(
+  function GuidedInputDialog(
+    {
+      open,
+      entry,
+      project,
+      projectIndex,
+      startIndex = 0,
+      startPhase = null,
+      resumePhase = null,
+      onResumeApplied,
+      resumeFocusUserPhase = null,
+      onResumeFocusUserPhaseApplied,
+      resumeSemanticStep = null,
+      onResumeSemanticStepApplied,
+      onClose,
+      onPatchRow,
+      onAddAssumption,
+      onUpdateAssumption,
+      onRemoveAssumption,
+      onIncurredCostsChange,
+      onPatchProfile,
+      onAddCostItems,
+      onAddDrivers,
+      onAdjustCorrelation,
+      onAdjustImpact,
+      onFocusModeChange,
+      suspend = false,
+      focusShellRef: _focusShellRef,
+      focusPortalTarget = null,
+      onFocusChromeMetaChange,
+      onRequestFocusFullscreen,
+      onExitFocusFullscreen,
+      onRunSimulation,
+      runSimulationDisabled = false,
+      runSimulationBusy = false,
+      simulationResultStatus = "none",
+      onContinueToResults,
+      onShowStaleChanges,
+      onRevertStaleChanges,
+      ensureFocusMode = false,
+    }: GuidedInputDialogProps,
+    ref,
+  ) {
+    const { t, language } = useI18n()
+    const titleId = useId()
+    const closeBtnRef = useRef<HTMLButtonElement | null>(null)
+    const focusToggleRef = useRef<HTMLButtonElement | null>(null)
+    const focusRootRef = useRef<HTMLDivElement | null>(null)
+    const [stepIndex, setStepIndex] = useState(0)
+    /** Presentation-only: larger, isolated Guided workspace (not persisted). */
+    const [focusMode, setFocusMode] = useState(false)
+    /** True when our Focus root currently owns browser fullscreen. */
+    const [browserFullscreen, setBrowserFullscreen] = useState(false)
+    /** Prevents falling back to the entry default after resumePhase is cleared. */
+    const resumeAppliedForOpenRef = useRef(false)
 
-  const steps = useMemo(
-    () =>
-      buildGuidedWorkflowSteps({
+    const steps = useMemo(
+      () =>
+        buildGuidedWorkflowSteps({
+          entry,
+          costRows: project.costRows,
+          driverRows: project.driverRows,
+        }),
+      [entry, project.costRows, project.driverRows],
+    )
+
+    const total = steps.length
+    const safeIndex = clampGuidedWorkflowStepIndex(stepIndex, total)
+    const step: GuidedWorkflowStep | null = total > 0 ? steps[safeIndex]! : null
+
+    const costRow =
+      step?.phase === "cost" ? (project.costRows.find((r) => r.id === step.rowId) ?? null) : null
+    const driverRow =
+      step?.phase === "driver"
+        ? (project.driverRows.find((r) => r.id === step.rowId) ?? null)
+        : null
+
+    const driverEffects = useMemo(() => {
+      if (step?.phase !== "driver" || !driverRow) {
+        return { p10Effect: null, modeEffect: null, p90Effect: null }
+      }
+      return computeGuidedDriverEndpointEffects(project, driverRow.id)
+    }, [step, project, driverRow])
+
+    const correlationSummaries = useMemo(() => {
+      if (step?.phase !== "correlation") return []
+      return deriveSavedCorrelationSummaries(project.costRows, project.costCorrelations)
+    }, [step, project.costRows, project.costCorrelations])
+
+    const correlationNameById = useMemo(() => {
+      const map = new Map<string, string>()
+      for (const row of project.costRows) {
+        map.set(row.id, row.name)
+      }
+      return map
+    }, [project.costRows])
+
+    const impactOverrides = useMemo(() => {
+      if (step?.phase !== "impact") return []
+      return buildPdfImpactOverrides(project)
+    }, [step, project])
+
+    useEffect(() => {
+      if (ensureFocusMode) return
+      // Results suspends Guided UI but the Focus session is still active —
+      // do not drop focusMode (that re-enables modal sizing + window arrows).
+      if (suspend) return
+      if (!focusMode) return
+      // Shared Focus session ended.
+      setFocusMode(false)
+      setBrowserFullscreen(false)
+    }, [ensureFocusMode, focusMode, suspend])
+
+    useEffect(() => {
+      if (!open || suspend) return
+      if (!ensureFocusMode || focusMode) return
+      setFocusMode(true)
+      onFocusModeChange?.(true)
+    }, [open, suspend, ensureFocusMode, focusMode, onFocusModeChange])
+
+    useEffect(() => {
+      if (!open) {
+        resumeAppliedForOpenRef.current = false
+        setFocusMode(false)
+        setBrowserFullscreen(false)
+        onFocusModeChange?.(false)
+        // Shared Focus host owns fullscreen — do not exit it here on close of
+        // the modal-only surface. App / FocusModeShell cleanup handles FS exit.
+        return
+      }
+      const nextSteps = buildGuidedWorkflowSteps({
         entry,
         costRows: project.costRows,
         driverRows: project.driverRows,
-      }),
-    [entry, project.costRows, project.driverRows],
-  )
+      })
+      if (
+        resumePhase === "costItems" ||
+        resumePhase === "correlation" ||
+        resumePhase === "drivers" ||
+        resumePhase === "impact" ||
+        resumePhase === "simulation"
+      ) {
+        setStepIndex(findGuidedWorkflowPhaseIndex(nextSteps, resumePhase))
+        resumeAppliedForOpenRef.current = true
+        onResumeApplied?.()
+        return
+      }
+      if (
+        resumeFocusUserPhase === "project" ||
+        resumeFocusUserPhase === "costs" ||
+        resumeFocusUserPhase === "drivers" ||
+        resumeFocusUserPhase === "simulation"
+      ) {
+        setStepIndex(findGuidedStepIndexForFocusPhase(nextSteps, resumeFocusUserPhase))
+        resumeAppliedForOpenRef.current = true
+        onResumeFocusUserPhaseApplied?.()
+        return
+      }
+      if (resumeSemanticStep?.phase) {
+        setStepIndex(
+          resolveGuidedStepIndexForResume(
+            nextSteps,
+            resumeSemanticStep.phase,
+            resumeSemanticStep.rowId,
+          ),
+        )
+        resumeAppliedForOpenRef.current = true
+        onResumeSemanticStepApplied?.()
+        return
+      }
+      // After a successful resume, clearing resumePhase must not reset to page 1.
+      if (resumeAppliedForOpenRef.current) return
+      setStepIndex(
+        initialGuidedWorkflowStepIndex({
+          entry,
+          steps: nextSteps,
+          startRowIndex: startIndex,
+          startPhase,
+        }),
+      )
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- re-initialise only when these inputs change; the other values are read at that moment
+    }, [
+      open,
+      entry,
+      startIndex,
+      startPhase,
+      resumePhase,
+      onResumeApplied,
+      resumeFocusUserPhase,
+      onResumeFocusUserPhaseApplied,
+      resumeSemanticStep,
+      onResumeSemanticStepApplied,
+    ])
 
-  const total = steps.length
-  const safeIndex = clampGuidedWorkflowStepIndex(stepIndex, total)
-  const step: GuidedWorkflowStep | null = total > 0 ? steps[safeIndex]! : null
+    useEffect(() => {
+      if (!open) return
+      setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev, total))
+    }, [open, total])
 
-  const costRow =
-    step?.phase === "cost"
-      ? (project.costRows.find((r) => r.id === step.rowId) ?? null)
-      : null
-  const driverRow =
-    step?.phase === "driver"
-      ? (project.driverRows.find((r) => r.id === step.rowId) ?? null)
-      : null
+    useEffect(() => {
+      if (!open || suspend || focusPortalTarget) return
+      closeBtnRef.current?.focus()
+    }, [open, suspend, focusPortalTarget])
 
-  const driverEffects = useMemo(() => {
-    if (step?.phase !== "driver" || !driverRow) {
-      return { p10Effect: null, modeEffect: null, p90Effect: null }
+    useEffect(() => {
+      const sync = () => {
+        // Prefer shared host for FS detection when embedded in Focus.
+        const host = focusPortalTarget?.closest("[data-focus-session-host]") ?? focusRootRef.current
+        setBrowserFullscreen(isElementFullscreen(host instanceof Element ? host : null))
+      }
+      sync()
+      return subscribeFullscreenChange(sync)
+    }, [open, focusMode, focusPortalTarget])
+
+    useEffect(() => {
+      return () => {
+        // Only exit FS owned by Guided's own root (modal path). Shared host
+        // cleanup belongs to FocusModeShell.
+        void exitFullscreenIfNeeded(focusRootRef.current)
+      }
+    }, [])
+
+    useEffect(() => {
+      if (!open || suspend) return
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== "Escape") return
+        const active = document.activeElement
+        // Inline numeric edit and definition draft own Escape (cancel draft).
+        if (
+          active instanceof HTMLElement &&
+          (active.dataset.guidedInlineEdit != null || active.dataset.guidedDescription != null)
+        ) {
+          return
+        }
+        const host = focusPortalTarget?.closest("[data-focus-session-host]") ?? focusRootRef.current
+        // Browser fullscreen: let Escape exit FS; keep in-app Focus.
+        if (isElementFullscreen(host instanceof Element ? host : null)) {
+          return
+        }
+        event.preventDefault()
+        if (focusMode) {
+          setFocusMode(false)
+          onFocusModeChange?.(false)
+          window.requestAnimationFrame(() => {
+            focusToggleRef.current?.focus()
+          })
+          return
+        }
+        void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+        onClose()
+      }
+      window.addEventListener("keydown", onKeyDown)
+      return () => window.removeEventListener("keydown", onKeyDown)
+    }, [open, suspend, onClose, focusMode, onFocusModeChange, focusPortalTarget])
+
+    const enterFocusMode = () => {
+      setFocusMode(true)
+      onFocusModeChange?.(true)
+      // Prefer shared Focus host so Input → Results keeps the same FS element.
+      if (onRequestFocusFullscreen) {
+        onRequestFocusFullscreen()
+        return
+      }
+      const root = focusRootRef.current
+      if (!root || !canRequestFullscreen(root)) return
+      void requestElementFullscreen(root).catch(() => {})
     }
-    return computeGuidedDriverEndpointEffects(project, driverRow.id)
-  }, [step, project, driverRow])
 
-  const correlationSummaries = useMemo(() => {
-    if (step?.phase !== "correlation") return []
-    return deriveSavedCorrelationSummaries(
-      project.costRows,
-      project.costCorrelations,
-    )
-  }, [step, project.costRows, project.costCorrelations])
-
-  const correlationNameById = useMemo(() => {
-    const map = new Map<string, string>()
-    for (const row of project.costRows) {
-      map.set(row.id, row.name)
-    }
-    return map
-  }, [project.costRows])
-
-  const impactOverrides = useMemo(() => {
-    if (step?.phase !== "impact") return []
-    return buildPdfImpactOverrides(project)
-  }, [step, project])
-
-  useEffect(() => {
-    if (ensureFocusMode) return
-    // Results suspends Guided UI but the Focus session is still active —
-    // do not drop focusMode (that re-enables modal sizing + window arrows).
-    if (suspend) return
-    if (!focusMode) return
-    // Shared Focus session ended.
-    setFocusMode(false)
-    setBrowserFullscreen(false)
-  }, [ensureFocusMode, focusMode, suspend])
-
-  useEffect(() => {
-    if (!open || suspend) return
-    if (!ensureFocusMode || focusMode) return
-    setFocusMode(true)
-    onFocusModeChange?.(true)
-  }, [open, suspend, ensureFocusMode, focusMode, onFocusModeChange])
-
-  useEffect(() => {
-    if (!open) {
-      resumeAppliedForOpenRef.current = false
+    const handleCloseGuided = () => {
+      if (onExitFocusFullscreen) onExitFocusFullscreen()
+      else void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
       setFocusMode(false)
       setBrowserFullscreen(false)
       onFocusModeChange?.(false)
-      // Shared Focus host owns fullscreen — do not exit it here on close of
-      // the modal-only surface. App / FocusModeShell cleanup handles FS exit.
-      return
-    }
-    const nextSteps = buildGuidedWorkflowSteps({
-      entry,
-      costRows: project.costRows,
-      driverRows: project.driverRows,
-    })
-    if (
-      resumePhase === "costItems" ||
-      resumePhase === "correlation" ||
-      resumePhase === "drivers" ||
-      resumePhase === "impact" ||
-      resumePhase === "simulation"
-    ) {
-      setStepIndex(findGuidedWorkflowPhaseIndex(nextSteps, resumePhase))
-      resumeAppliedForOpenRef.current = true
-      onResumeApplied?.()
-      return
-    }
-    if (
-      resumeFocusUserPhase === "project" ||
-      resumeFocusUserPhase === "costs" ||
-      resumeFocusUserPhase === "drivers" ||
-      resumeFocusUserPhase === "simulation"
-    ) {
-      setStepIndex(
-        findGuidedStepIndexForFocusPhase(nextSteps, resumeFocusUserPhase),
-      )
-      resumeAppliedForOpenRef.current = true
-      onResumeFocusUserPhaseApplied?.()
-      return
-    }
-    if (resumeSemanticStep?.phase) {
-      setStepIndex(
-        resolveGuidedStepIndexForResume(
-          nextSteps,
-          resumeSemanticStep.phase,
-          resumeSemanticStep.rowId,
-        ),
-      )
-      resumeAppliedForOpenRef.current = true
-      onResumeSemanticStepApplied?.()
-      return
-    }
-    // After a successful resume, clearing resumePhase must not reset to page 1.
-    if (resumeAppliedForOpenRef.current) return
-    setStepIndex(
-      initialGuidedWorkflowStepIndex({
-        entry,
-        steps: nextSteps,
-        startRowIndex: startIndex,
-        startPhase,
-      }),
-    )
-  }, [open, entry, startIndex, startPhase, resumePhase, onResumeApplied, resumeFocusUserPhase, onResumeFocusUserPhaseApplied, resumeSemanticStep, onResumeSemanticStepApplied]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!open) return
-    setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev, total))
-  }, [open, total])
-
-  useEffect(() => {
-    if (!open || suspend || focusPortalTarget) return
-    closeBtnRef.current?.focus()
-  }, [open, suspend, focusPortalTarget])
-
-  useEffect(() => {
-    const sync = () => {
-      // Prefer shared host for FS detection when embedded in Focus.
-      const host =
-        focusPortalTarget?.closest("[data-focus-session-host]") ??
-        focusRootRef.current
-      setBrowserFullscreen(isElementFullscreen(host instanceof Element ? host : null))
-    }
-    sync()
-    return subscribeFullscreenChange(sync)
-  }, [open, focusMode, focusPortalTarget])
-
-  useEffect(() => {
-    return () => {
-      // Only exit FS owned by Guided's own root (modal path). Shared host
-      // cleanup belongs to FocusModeShell.
-      void exitFullscreenIfNeeded(focusRootRef.current)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!open || suspend) return
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return
-      const active = document.activeElement
-      // Inline numeric edit and definition draft own Escape (cancel draft).
-      if (
-        active instanceof HTMLElement &&
-        (active.dataset.guidedInlineEdit != null ||
-          active.dataset.guidedDescription != null)
-      ) {
-        return
-      }
-      const host =
-        focusPortalTarget?.closest("[data-focus-session-host]") ??
-        focusRootRef.current
-      // Browser fullscreen: let Escape exit FS; keep in-app Focus.
-      if (isElementFullscreen(host instanceof Element ? host : null)) {
-        return
-      }
-      event.preventDefault()
-      if (focusMode) {
-        setFocusMode(false)
-        onFocusModeChange?.(false)
-        window.requestAnimationFrame(() => {
-          focusToggleRef.current?.focus()
-        })
-        return
-      }
-      void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
       onClose()
     }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [open, suspend, onClose, focusMode, onFocusModeChange, focusPortalTarget])
 
-  const enterFocusMode = () => {
-    setFocusMode(true)
-    onFocusModeChange?.(true)
-    // Prefer shared Focus host so Input → Results keeps the same FS element.
-    if (onRequestFocusFullscreen) {
-      onRequestFocusFullscreen()
-      return
+    const goNext = () => {
+      if (total === 0 || safeIndex >= total - 1) {
+        if (step?.phase === "simulation") {
+          if (
+            (simulationResultStatus === "valid" || simulationResultStatus === "stale") &&
+            onContinueToResults
+          ) {
+            onContinueToResults()
+          }
+          return
+        }
+        handleCloseGuided()
+        return
+      }
+      setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev + 1, total))
     }
-    const root = focusRootRef.current
-    if (!root || !canRequestFullscreen(root)) return
-    void requestElementFullscreen(root).catch(() => {})
-  }
 
-  const handleCloseGuided = () => {
-    if (onExitFocusFullscreen) onExitFocusFullscreen()
-    else void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
-    setFocusMode(false)
-    setBrowserFullscreen(false)
-    onFocusModeChange?.(false)
-    onClose()
-  }
+    const goPrevious = () => {
+      setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev - 1, total))
+    }
 
-  const goNext = () => {
-    if (total === 0 || safeIndex >= total - 1) {
+    /** Same action as the primary Next / Continue control for the current phase. */
+    const performGuidedNext = () => {
+      if (total === 0) {
+        handleCloseGuided()
+        return
+      }
       if (step?.phase === "simulation") {
-        if (
-          (simulationResultStatus === "valid" ||
-            simulationResultStatus === "stale") &&
-          onContinueToResults
-        ) {
-          onContinueToResults()
-        }
+        goNext()
         return
       }
-      handleCloseGuided()
-      return
-    }
-    setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev + 1, total))
-  }
-
-  const goPrevious = () => {
-    setStepIndex((prev) => clampGuidedWorkflowStepIndex(prev - 1, total))
-  }
-
-  /** Same action as the primary Next / Continue control for the current phase. */
-  const performGuidedNext = () => {
-    if (total === 0) {
-      handleCloseGuided()
-      return
-    }
-    if (step?.phase === "simulation") {
+      if (step?.phase === "costsEmpty") {
+        onAddCostItems()
+        return
+      }
       goNext()
-      return
     }
-    if (step?.phase === "costsEmpty") {
-      onAddCostItems()
-      return
-    }
-    goNext()
-  }
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      goPrevious,
-      goNext: performGuidedNext,
-      goToSimulation: () => {
-        const idx = findGuidedWorkflowPhaseIndex(steps, "simulation")
-        setStepIndex(clampGuidedWorkflowStepIndex(idx, total))
-      },
-      goToFocusUserPhase: (phase: FocusUserPhaseInput) => {
-        const idx = findGuidedStepIndexForFocusPhase(steps, phase)
-        setStepIndex(clampGuidedWorkflowStepIndex(idx, total))
-      },
-      getStepIndex: () => safeIndex,
-      getStepCount: () => total,
-      isAtFirstStep: () => safeIndex <= 0,
-      isAtSimulation: () => step?.phase === "simulation",
-    }),
-    // Stable enough for Focus session navigation; recreated when step changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [safeIndex, total, step?.phase, simulationResultStatus, steps],
-  )
+    useImperativeHandle(
+      ref,
+      () => ({
+        goPrevious,
+        goNext: performGuidedNext,
+        goToSimulation: () => {
+          const idx = findGuidedWorkflowPhaseIndex(steps, "simulation")
+          setStepIndex(clampGuidedWorkflowStepIndex(idx, total))
+        },
+        goToFocusUserPhase: (phase: FocusUserPhaseInput) => {
+          const idx = findGuidedStepIndexForFocusPhase(steps, phase)
+          setStepIndex(clampGuidedWorkflowStepIndex(idx, total))
+        },
+        getStepIndex: () => safeIndex,
+        getStepCount: () => total,
+        isAtFirstStep: () => safeIndex <= 0,
+        isAtSimulation: () => step?.phase === "simulation",
+      }),
+      // Stable enough for Focus session navigation; recreated when step changes.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [safeIndex, total, step?.phase, simulationResultStatus, steps],
+    )
 
-  useEffect(() => {
-    // Focus session owns Left/Right via FocusModeShell for the whole
-    // Input ↔ Results session. Never attach a competing window listener
-    // while Focus chrome is active (focusMode), Results-suspended, or
-    // App is forcing Focus Input (ensureFocusMode).
-    if (!open || suspend || focusMode || ensureFocusMode) return
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
-      if (event.repeat) return
-      if (event.metaKey || event.ctrlKey || event.altKey) return
-      if (shouldIgnoreGuidedArrowNavigation(event.target)) return
+    useEffect(() => {
+      // Focus session owns Left/Right via FocusModeShell for the whole
+      // Input ↔ Results session. Never attach a competing window listener
+      // while Focus chrome is active (focusMode), Results-suspended, or
+      // App is forcing Focus Input (ensureFocusMode).
+      if (!open || suspend || focusMode || ensureFocusMode) return
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
+        if (event.repeat) return
+        if (event.metaKey || event.ctrlKey || event.altKey) return
+        if (shouldIgnoreGuidedArrowNavigation(event.target)) return
 
-      if (event.key === "ArrowLeft") {
-        if (safeIndex <= 0) return
+        if (event.key === "ArrowLeft") {
+          if (safeIndex <= 0) return
+          event.preventDefault()
+          goPrevious()
+          return
+        }
+
         event.preventDefault()
-        goPrevious()
-        return
+        performGuidedNext()
       }
+      window.addEventListener("keydown", onKeyDown)
+      return () => window.removeEventListener("keydown", onKeyDown)
+    }, [open, suspend, focusMode, ensureFocusMode, safeIndex, total, step?.phase, onAddCostItems]) // eslint-disable-line react-hooks/exhaustive-deps
 
-      event.preventDefault()
-      performGuidedNext()
-    }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [open, suspend, focusMode, ensureFocusMode, safeIndex, total, step?.phase, onAddCostItems]) // eslint-disable-line react-hooks/exhaustive-deps
+    const title = step !== null ? phaseTitle(step, t) : t("inputs.guidedEmpty")
+    const progressLabel =
+      step !== null
+        ? formatGuidedPhaseProgress({
+            step,
+            language,
+          })
+        : ""
 
-  const title =
-    step !== null ? phaseTitle(step, t) : t("inputs.guidedEmpty")
-  const progressLabel =
-    step !== null
-      ? formatGuidedPhaseProgress({
-          step,
-          language,
-        })
-      : ""
+    const phaseInfoTopic =
+      step?.phase === "assumptions"
+        ? "assumptions"
+        : step?.phase === "estimateUncertaintyIntro" || step?.phase === "cost"
+          ? "estimateUncertainty"
+          : step?.phase === "driversIntro" || step?.phase === "driver"
+            ? "drivers"
+            : step?.phase === "correlation"
+              ? "correlation"
+              : step?.phase === "impact"
+                ? "impact"
+                : null
 
-  const phaseInfoTopic =
-    step?.phase === "assumptions"
-      ? "assumptions"
-      : step?.phase === "estimateUncertaintyIntro" || step?.phase === "cost"
-        ? "estimateUncertainty"
-        : step?.phase === "driversIntro" || step?.phase === "driver"
-          ? "drivers"
-          : step?.phase === "correlation"
-            ? "correlation"
-            : step?.phase === "impact"
-              ? "impact"
-              : null
-
-  const phaseInfoContent: GuidedPhaseInfoContent | null =
-    phaseInfoTopic === "assumptions"
-      ? {
-          title: t("inputs.guidedAssumptionsHelpTitle"),
-          meaning: t("inputs.guidedAssumptionsHelpMeaning"),
-          discuss: t("inputs.guidedAssumptionsHelpDiscuss"),
-          avoid: t("inputs.guidedAssumptionsHelpAvoid"),
-          meaningLabel: t("inputs.guidedHelpMeaningLabel"),
-          discussLabel: t("inputs.guidedHelpDiscussLabel"),
-          avoidLabel: t("inputs.guidedHelpAvoidLabel"),
-        }
-      : phaseInfoTopic === "estimateUncertainty"
-      ? {
-          title: t("inputs.guidedEstimateUncertaintyHelpTitle"),
-          meaning: t("inputs.guidedEstimateUncertaintyHelpMeaning"),
-          discuss: t("inputs.guidedEstimateUncertaintyHelpDiscuss"),
-          avoid: t("inputs.guidedEstimateUncertaintyHelpAvoid"),
-          meaningLabel: t("inputs.guidedHelpMeaningLabel"),
-          discussLabel: t("inputs.guidedHelpDiscussLabel"),
-          avoidLabel: t("inputs.guidedHelpAvoidLabel"),
-        }
-      : phaseInfoTopic === "drivers"
+    const phaseInfoContent: GuidedPhaseInfoContent | null =
+      phaseInfoTopic === "assumptions"
         ? {
-            title: t("inputs.guidedDriverHelpTitle"),
-            meaning: t("inputs.guidedDriverHelpMeaning"),
-            discuss: t("inputs.guidedDriverHelpDiscuss"),
-            avoid: t("inputs.guidedDriverHelpAvoid"),
+            title: t("inputs.guidedAssumptionsHelpTitle"),
+            meaning: t("inputs.guidedAssumptionsHelpMeaning"),
+            discuss: t("inputs.guidedAssumptionsHelpDiscuss"),
+            avoid: t("inputs.guidedAssumptionsHelpAvoid"),
             meaningLabel: t("inputs.guidedHelpMeaningLabel"),
             discussLabel: t("inputs.guidedHelpDiscussLabel"),
             avoidLabel: t("inputs.guidedHelpAvoidLabel"),
           }
-        : phaseInfoTopic === "correlation"
+        : phaseInfoTopic === "estimateUncertainty"
           ? {
-              title: t("inputs.guidedCorrelationHelpTitle"),
-              meaning: t("inputs.guidedCorrelationHelpMeaning"),
-              discuss: t("inputs.guidedCorrelationHelpDiscuss"),
-              avoid: t("inputs.guidedCorrelationHelpAvoid"),
+              title: t("inputs.guidedEstimateUncertaintyHelpTitle"),
+              meaning: t("inputs.guidedEstimateUncertaintyHelpMeaning"),
+              discuss: t("inputs.guidedEstimateUncertaintyHelpDiscuss"),
+              avoid: t("inputs.guidedEstimateUncertaintyHelpAvoid"),
               meaningLabel: t("inputs.guidedHelpMeaningLabel"),
               discussLabel: t("inputs.guidedHelpDiscussLabel"),
               avoidLabel: t("inputs.guidedHelpAvoidLabel"),
             }
-          : phaseInfoTopic === "impact"
+          : phaseInfoTopic === "drivers"
             ? {
-                title: t("inputs.guidedImpactHelpTitle"),
-                meaning: t("inputs.guidedImpactHelpMeaning"),
-                discuss: t("inputs.guidedImpactHelpDiscuss"),
-                avoid: t("inputs.guidedImpactHelpAvoid"),
+                title: t("inputs.guidedDriverHelpTitle"),
+                meaning: t("inputs.guidedDriverHelpMeaning"),
+                discuss: t("inputs.guidedDriverHelpDiscuss"),
+                avoid: t("inputs.guidedDriverHelpAvoid"),
                 meaningLabel: t("inputs.guidedHelpMeaningLabel"),
                 discussLabel: t("inputs.guidedHelpDiscussLabel"),
                 avoidLabel: t("inputs.guidedHelpAvoidLabel"),
               }
-            : null
+            : phaseInfoTopic === "correlation"
+              ? {
+                  title: t("inputs.guidedCorrelationHelpTitle"),
+                  meaning: t("inputs.guidedCorrelationHelpMeaning"),
+                  discuss: t("inputs.guidedCorrelationHelpDiscuss"),
+                  avoid: t("inputs.guidedCorrelationHelpAvoid"),
+                  meaningLabel: t("inputs.guidedHelpMeaningLabel"),
+                  discussLabel: t("inputs.guidedHelpDiscussLabel"),
+                  avoidLabel: t("inputs.guidedHelpAvoidLabel"),
+                }
+              : phaseInfoTopic === "impact"
+                ? {
+                    title: t("inputs.guidedImpactHelpTitle"),
+                    meaning: t("inputs.guidedImpactHelpMeaning"),
+                    discuss: t("inputs.guidedImpactHelpDiscuss"),
+                    avoid: t("inputs.guidedImpactHelpAvoid"),
+                    meaningLabel: t("inputs.guidedHelpMeaningLabel"),
+                    discussLabel: t("inputs.guidedHelpDiscussLabel"),
+                    avoidLabel: t("inputs.guidedHelpAvoidLabel"),
+                  }
+                : null
 
-  const focusChromeMeta = useMemo((): GuidedFocusChromeMeta | null => {
-    // Only publish while actively embedded as Focus Input (shell owns chrome).
-    if (!open || !focusPortalTarget || suspend) return null
-    const phase = step?.phase
-    const canContinueFromSimulation =
-      simulationResultStatus === "valid" || simulationResultStatus === "stale"
-    let nextLabel = t("inputs.guidedNext")
-    let canGoNext = true
-    let secondaryFooter: GuidedFocusChromeMeta["secondaryFooter"] = null
-    if (total === 0) {
-      nextLabel = t("inputs.guidedClose")
-      canGoNext = true
-    } else if (phase === "simulation") {
-      canGoNext = canContinueFromSimulation
-    } else if (phase === "costsEmpty") {
-      nextLabel = t("inputs.guidedCostsEmptyAdd")
-    } else if (phase === "driversEmpty") {
-      nextLabel = t("inputs.guidedDriversEmptyContinue")
-      secondaryFooter = {
-        kind: "addDrivers",
-        label: t("inputs.guidedDriversEmptyAdd"),
+    const focusChromeMeta = useMemo((): GuidedFocusChromeMeta | null => {
+      // Only publish while actively embedded as Focus Input (shell owns chrome).
+      if (!open || !focusPortalTarget || suspend) return null
+      const phase = step?.phase
+      const canContinueFromSimulation =
+        simulationResultStatus === "valid" || simulationResultStatus === "stale"
+      let nextLabel = t("inputs.guidedNext")
+      let canGoNext = true
+      let secondaryFooter: GuidedFocusChromeMeta["secondaryFooter"] = null
+      if (total === 0) {
+        nextLabel = t("inputs.guidedClose")
+        canGoNext = true
+      } else if (phase === "simulation") {
+        canGoNext = canContinueFromSimulation
+      } else if (phase === "costsEmpty") {
+        nextLabel = t("inputs.guidedCostsEmptyAdd")
+      } else if (phase === "driversEmpty") {
+        nextLabel = t("inputs.guidedDriversEmptyContinue")
+        secondaryFooter = {
+          kind: "addDrivers",
+          label: t("inputs.guidedDriversEmptyAdd"),
+        }
+      } else if (phase === "correlation") {
+        nextLabel = t("inputs.guidedLooksRight")
+        secondaryFooter = {
+          kind: "adjustCorrelation",
+          label: t("inputs.guidedAdjustCorrelation"),
+        }
+      } else if (phase === "impact") {
+        nextLabel = t("inputs.guidedLooksRight")
+        secondaryFooter = {
+          kind: "adjustImpact",
+          label: t("inputs.guidedAdjustImpact"),
+        }
       }
-    } else if (phase === "correlation") {
-      nextLabel = t("inputs.guidedLooksRight")
-      secondaryFooter = {
-        kind: "adjustCorrelation",
-        label: t("inputs.guidedAdjustCorrelation"),
+      const workflowRowId =
+        step && (step.phase === "cost" || step.phase === "driver") ? step.rowId : null
+      return {
+        title,
+        progressLabel,
+        projectName: project.name,
+        projectIndex,
+        workflowPhase: phase ?? null,
+        workflowRowId,
+        helpTopic: phaseInfoTopic,
+        helpContent: phaseInfoContent,
+        canGoPrevious: safeIndex > 0,
+        canGoNext,
+        nextLabel,
+        secondaryFooter,
       }
-    } else if (phase === "impact") {
-      nextLabel = t("inputs.guidedLooksRight")
-      secondaryFooter = {
-        kind: "adjustImpact",
-        label: t("inputs.guidedAdjustImpact"),
-      }
-    }
-    const workflowRowId =
-      step && (step.phase === "cost" || step.phase === "driver")
-        ? step.rowId
-        : null
-    return {
+    }, [
+      open,
+      focusPortalTarget,
+      suspend,
+      step,
+      simulationResultStatus,
+      total,
       title,
       progressLabel,
-      projectName: project.name,
+      project.name,
       projectIndex,
-      workflowPhase: phase ?? null,
-      workflowRowId,
-      helpTopic: phaseInfoTopic,
-      helpContent: phaseInfoContent,
-      canGoPrevious: safeIndex > 0,
-      canGoNext,
-      nextLabel,
-      secondaryFooter,
-    }
-  }, [
-    open,
-    focusPortalTarget,
-    suspend,
-    step,
-    simulationResultStatus,
-    total,
-    title,
-    progressLabel,
-    project.name,
-    projectIndex,
-    phaseInfoTopic,
-    phaseInfoContent,
-    safeIndex,
-    t,
-  ])
+      phaseInfoTopic,
+      phaseInfoContent,
+      safeIndex,
+      t,
+    ])
 
-  useEffect(() => {
-    if (!onFocusChromeMetaChange) return
-    onFocusChromeMetaChange(focusChromeMeta)
-  }, [focusChromeMeta, onFocusChromeMetaChange])
+    useEffect(() => {
+      if (!onFocusChromeMetaChange) return
+      onFocusChromeMetaChange(focusChromeMeta)
+    }, [focusChromeMeta, onFocusChromeMetaChange])
 
-  useEffect(() => {
-    return () => {
-      onFocusChromeMetaChange?.(null)
-    }
-  }, [onFocusChromeMetaChange])
+    useEffect(() => {
+      return () => {
+        onFocusChromeMetaChange?.(null)
+      }
+    }, [onFocusChromeMetaChange])
 
-  if (!open) return null
-  if (typeof document === "undefined") return null
+    if (!open) return null
+    if (typeof document === "undefined") return null
 
-  const onDialogKeyDown = (event: ReactKeyboardEvent) => {
-    if (event.key !== "Enter" || event.metaKey || event.ctrlKey) return
-    const target = event.target
-    if (
-      target instanceof HTMLTextAreaElement ||
-      (target instanceof HTMLElement && target.isContentEditable)
-    ) {
-      return
-    }
-    if (target instanceof HTMLInputElement) {
-      const inputType = target.type
+    const onDialogKeyDown = (event: ReactKeyboardEvent) => {
+      if (event.key !== "Enter" || event.metaKey || event.ctrlKey) return
+      const target = event.target
       if (
-        inputType === "text" ||
-        inputType === "search" ||
-        inputType === "number" ||
-        target.dataset.guidedInlineEdit
+        target instanceof HTMLTextAreaElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
       ) {
         return
       }
-    }
-    if (
-      target instanceof HTMLElement &&
-      (target.closest("[data-guided-adjust-correlation]") ||
-        target.closest("[data-guided-adjust-impact]") ||
-        target.closest("[data-guided-add-cost-items]") ||
-        target.closest("[data-guided-add-drivers]") ||
-        target.closest("[data-guided-continue-without-drivers]"))
-    ) {
-      return
-    }
-    event.preventDefault()
-    performGuidedNext()
-  }
-
-  const renderCostPhase = (row: CostElementRow) => {
-    const costOptBlank = parseNumberField(row.optimistic) === null
-    const costPesBlank = parseNumberField(row.pessimistic) === null
-    const costLikelyBlank = parseNumberField(row.likely) === null
-    const costOptSlider = guidedSliderDisplayValue(
-      row.optimistic,
-      GUIDED_COST_P10_SLIDER.max,
-    )
-    const costPesSlider = guidedSliderDisplayValue(
-      row.pessimistic,
-      GUIDED_COST_P90_SLIDER.min,
-    )
-    const costP10Effect = deriveGuidedCostEffect(row.likely, row.optimistic)
-    const costP90Effect = deriveGuidedCostEffect(row.likely, row.pessimistic)
-    const costMAbs = parseNumberField(row.likely)
-
-    const patchNumeric = (field: GuidedNumericField, value: string) => {
-      const normalized = normalizeGuidedNumericField({
-        kind: "cost",
-        field,
-        value,
-        row,
-      })
-      onPatchRow(row.id, { [field]: normalized })
+      if (target instanceof HTMLInputElement) {
+        const inputType = target.type
+        if (
+          inputType === "text" ||
+          inputType === "search" ||
+          inputType === "number" ||
+          target.dataset.guidedInlineEdit
+        ) {
+          return
+        }
+      }
+      if (
+        target instanceof HTMLElement &&
+        (target.closest("[data-guided-adjust-correlation]") ||
+          target.closest("[data-guided-adjust-impact]") ||
+          target.closest("[data-guided-add-cost-items]") ||
+          target.closest("[data-guided-add-drivers]") ||
+          target.closest("[data-guided-continue-without-drivers]"))
+      ) {
+        return
+      }
+      event.preventDefault()
+      performGuidedNext()
     }
 
-    const commitPercentField = (field: GuidedNumericField, value: number) => {
-      patchNumeric(field, guidedPercentToStoredString(value))
-    }
+    const renderCostPhase = (row: CostElementRow) => {
+      const costOptBlank = parseNumberField(row.optimistic) === null
+      const costPesBlank = parseNumberField(row.pessimistic) === null
+      const costLikelyBlank = parseNumberField(row.likely) === null
+      const costOptSlider = guidedSliderDisplayValue(row.optimistic, GUIDED_COST_P10_SLIDER.max)
+      const costPesSlider = guidedSliderDisplayValue(row.pessimistic, GUIDED_COST_P90_SLIDER.min)
+      const costP10Effect = deriveGuidedCostEffect(row.likely, row.optimistic)
+      const costP90Effect = deriveGuidedCostEffect(row.likely, row.pessimistic)
+      const costMAbs = parseNumberField(row.likely)
 
-    return (
-      <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="cost">
-        <h3
-          className="m-0 font-sans text-[22px] font-medium leading-snug tracking-tight text-foreground sm:text-[26px]"
-          data-guided-factor-name=""
-        >
-          {row.name.trim() || t("inputs.guidedUnnamed")}
-        </h3>
+      const patchNumeric = (field: GuidedNumericField, value: string) => {
+        const normalized = normalizeGuidedNumericField({
+          kind: "cost",
+          field,
+          value,
+          row,
+        })
+        onPatchRow(row.id, { [field]: normalized })
+      }
 
-        <div className="space-y-1.5">
-          <label
-            htmlFor="guided-definition"
-            className="font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+      const commitPercentField = (field: GuidedNumericField, value: number) => {
+        patchNumeric(field, guidedPercentToStoredString(value))
+      }
+
+      return (
+        <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="cost">
+          <h3
+            className="m-0 font-sans text-[22px] font-medium leading-snug tracking-tight text-foreground sm:text-[26px]"
+            data-guided-factor-name=""
           >
-            {t("inputs.guidedDefinitionLabel")}
-          </label>
-          <GuidedDefinitionTextarea
-            rowId={row.id}
-            sourceDescription={String(row.description ?? "")}
-            maxLength={COST_DESCRIPTION_MAX_LENGTH}
-            placeholder={t("inputs.defineCostDescriptionPlaceholder")}
-            onCommit={(id, description) => {
-              onPatchRow(id, { description })
-            }}
-          />
-        </div>
+            {row.name.trim() || t("inputs.guidedUnnamed")}
+          </h3>
 
-        <div className="space-y-1.5" data-guided-cost-uncertainty="">
-          <p className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-            {t("inputs.guidedDriverUncertaintyNotesHeading")}
-          </p>
-          <ul className="m-0 list-disc space-y-1.5 pl-4 marker:text-muted-foreground">
-            <li className="font-sans text-[13px] leading-snug text-muted-foreground">
-              {t("inputs.guidedCostLikelyPrompt")}
-            </li>
-            <li className="font-sans text-[13px] leading-snug text-muted-foreground">
-              {t("inputs.guidedCostRangeSourcePrompt")}
-            </li>
-            <li className="font-sans text-[13px] leading-snug text-muted-foreground">
-              {t("inputs.guidedCostRangePrompt")}
-            </li>
-          </ul>
-          <p className="m-0 mt-2 font-sans text-[12px] leading-snug text-muted-foreground">
-            {t("inputs.guidedCostRangeReminder")}
-          </p>
-
-          <div
-            className={`${rangeGridClassName} pt-3`}
-            data-guided-cost-range=""
-            data-guided-omp-align="primary"
-          >
-          <div className={sideCardClassName} data-guided-side="p10">
-            <SideLabel>{t("inputs.guidedP10")}</SideLabel>
-            <GuidedInlineValue
+          <div className="space-y-1.5">
+            <label
+              htmlFor="guided-definition"
+              className="font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+            >
+              {t("inputs.guidedDefinitionLabel")}
+            </label>
+            <GuidedDefinitionTextarea
               rowId={row.id}
-              field="optimistic"
-              rawValue={row.optimistic}
-              displayText={
-                costOptBlank
-                  ? "—"
-                  : formatGuidedSignedPercent(costOptSlider, language)
-              }
-              ariaLabel={t("inputs.guidedP10")}
-              displayAttrs={{ "data-guided-cost-p10-pct": "" }}
-              commitMode="enter"
-              onCommit={(next) => patchNumeric("optimistic", next)}
-            />
-            <SecondaryEffect
-              text={formatGuidedApproxImpactLabel(costP10Effect, language)}
-              testAttr="data-guided-cost-p10-effect"
-            />
-            <GuidedRangeSlider
-              min={GUIDED_COST_P10_SLIDER.min}
-              max={GUIDED_COST_P10_SLIDER.max}
-              step={GUIDED_COST_P10_SLIDER.step}
-              value={Math.min(
-                GUIDED_COST_P10_SLIDER.max,
-                Math.max(GUIDED_COST_P10_SLIDER.min, costOptSlider),
-              )}
-              origin={0}
-              blank={costOptBlank}
-              ariaLabel={t("inputs.guidedP10")}
-              testId="cost-p10"
-              onCommit={(v) => commitPercentField("optimistic", v)}
-            />
-          </div>
-
-          <div className={modeCardClassName} data-guided-side="mode">
-            <SideLabel accent>{t("inputs.guidedMostLikely")}</SideLabel>
-            <GuidedInlineValue
-              rowId={row.id}
-              field="likely"
-              rawValue={row.likely}
-              displayText={
-                costLikelyBlank
-                  ? "—"
-                  : formatGuidedCostAbsolute(costMAbs, language)
-              }
-              ariaLabel={t("inputs.guidedMostLikely")}
-              displayAttrs={{ "data-guided-cost-m-abs": "" }}
-              commitMode="enter"
-              onCommit={(next) => patchNumeric("likely", next)}
-            />
-            <SecondarySpacer />
-            <div className="h-5" aria-hidden />
-          </div>
-
-          <div className={sideCardClassName} data-guided-side="p90">
-            <SideLabel>{t("inputs.guidedP90")}</SideLabel>
-            <GuidedInlineValue
-              rowId={row.id}
-              field="pessimistic"
-              rawValue={row.pessimistic}
-              displayText={
-                costPesBlank
-                  ? "—"
-                  : formatGuidedSignedPercent(costPesSlider, language)
-              }
-              ariaLabel={t("inputs.guidedP90")}
-              displayAttrs={{ "data-guided-cost-p90-pct": "" }}
-              commitMode="enter"
-              onCommit={(next) => patchNumeric("pessimistic", next)}
-            />
-            <SecondaryEffect
-              text={formatGuidedApproxImpactLabel(costP90Effect, language)}
-              testAttr="data-guided-cost-p90-effect"
-            />
-            <GuidedRangeSlider
-              min={GUIDED_COST_P90_SLIDER.min}
-              max={GUIDED_COST_P90_SLIDER.max}
-              step={GUIDED_COST_P90_SLIDER.step}
-              value={Math.min(
-                GUIDED_COST_P90_SLIDER.max,
-                Math.max(GUIDED_COST_P90_SLIDER.min, costPesSlider),
-              )}
-              origin={0}
-              blank={costPesBlank}
-              ariaLabel={t("inputs.guidedP90")}
-              testId="cost-p90"
-              onCommit={(v) => commitPercentField("pessimistic", v)}
-            />
-          </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const renderDriverPhase = (row: DriverRow) => {
-    const driverOptBlank = parseNumberField(row.optimistic) === null
-    const driverLikelyBlank = parseNumberField(row.likely) === null
-    const driverPesBlank = parseNumberField(row.pessimistic) === null
-    const driverOptSlider = guidedSliderDisplayValue(row.optimistic, 0)
-    const driverLikelySlider = guidedSliderDisplayValue(row.likely, 0)
-    const driverPesSlider = guidedSliderDisplayValue(row.pessimistic, 0)
-    const driverOptOutside = isGuidedDriverValueOutsideWorkingRange(
-      "optimistic",
-      row.optimistic,
-    )
-    const driverLikelyOutside = isGuidedDriverValueOutsideWorkingRange(
-      "likely",
-      row.likely,
-    )
-    const driverPesOutside = isGuidedDriverValueOutsideWorkingRange(
-      "pessimistic",
-      row.pessimistic,
-    )
-    const rangeIssue = getGuidedDriverRangeIssue(row)
-
-    const patchNumeric = (field: GuidedNumericField, value: string) => {
-      const normalized = normalizeGuidedNumericField({
-        kind: "driver",
-        field,
-        value,
-        row,
-      })
-      onPatchRow(row.id, { [field]: normalized })
-    }
-
-    const commitPercentField = (field: GuidedNumericField, value: number) => {
-      patchNumeric(field, guidedPercentToStoredString(value))
-    }
-
-    const outsideCue = (
-      <p
-        className="m-0 font-sans text-[10px] leading-snug text-muted-foreground/80"
-        data-guided-outside-working-range=""
-      >
-        {t("inputs.guidedDriverOutsideWorkingRange")}
-      </p>
-    )
-
-    return (
-      <div
-        className="mx-auto flex max-w-5xl flex-col gap-5"
-        data-guided-phase="driver"
-      >
-        <h3
-          className="m-0 font-sans text-[22px] font-medium leading-snug tracking-tight text-foreground sm:text-[26px]"
-          data-guided-factor-name=""
-        >
-          {row.name.trim() || t("inputs.guidedUnnamed")}
-        </h3>
-
-        <div className="space-y-1.5">
-          <label
-            htmlFor="guided-definition"
-            className="font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
-          >
-            {t("inputs.guidedDefinitionLabel")}
-          </label>
-          <GuidedDefinitionTextarea
-            rowId={row.id}
-            sourceDescription={String(row.description ?? "")}
-            maxLength={DRIVER_DESCRIPTION_MAX_LENGTH}
-            placeholder={t("inputs.defineDriverDescriptionPlaceholder")}
-            onCommit={(id, description) => {
-              onPatchRow(id, { description })
-            }}
-          />
-        </div>
-
-        <div className="space-y-1.5" data-guided-driver-uncertainty-notes="">
-          <p className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-            {t("inputs.guidedDriverUncertaintyNotesHeading")}
-          </p>
-          <p className="m-0 font-sans text-[12px] leading-snug text-muted-foreground">
-            {t("inputs.guidedDriverUncertaintyNotesHelper")}
-          </p>
-          <div className="pt-3" data-guided-driver-uncertainty-notes-body="">
-            <DriverUncertaintyNotesEditor
-              notes={row.uncertaintyNotes}
-              onChange={(next) => {
-                onPatchRow(row.id, { uncertaintyNotes: next })
+              sourceDescription={String(row.description ?? "")}
+              maxLength={COST_DESCRIPTION_MAX_LENGTH}
+              placeholder={t("inputs.defineCostDescriptionPlaceholder")}
+              onCommit={(id, description) => {
+                onPatchRow(id, { description })
               }}
             />
           </div>
 
-          <p className="m-0 pt-2 font-sans text-[12px] leading-snug text-muted-foreground">
-            {t("inputs.guidedDriverRangePrompt")}
-          </p>
-
-          <div className="space-y-2">
-          <div
-            className={rangeGridClassName}
-            data-guided-driver-range=""
-            data-guided-omp-align="primary"
-          >
-            <div className={sideCardClassName} data-guided-side="p10">
-              <SideLabel>{t("inputs.guidedP10")}</SideLabel>
-              <GuidedInlineValue
-                rowId={row.id}
-                field="optimistic"
-                rawValue={row.optimistic}
-                displayText={
-                  driverOptBlank
-                    ? "—"
-                    : formatGuidedSignedPercent(driverOptSlider, language)
-                }
-                ariaLabel={t("inputs.guidedP10")}
-                displayAttrs={{ "data-guided-driver-p10": "" }}
-                commitMode="enter"
-                onCommit={(next) => patchNumeric("optimistic", next)}
-              />
-              <SecondaryEffect
-                text={formatGuidedApproxImpactLabel(
-                  driverEffects.p10Effect,
-                  language,
-                )}
-                title={t("inputs.guidedDriverEffectHint")}
-                testAttr="data-guided-driver-p10-effect"
-              />
-              <GuidedRangeSlider
-                min={GUIDED_DRIVER_P10_SLIDER_RANGE.min}
-                max={GUIDED_DRIVER_P10_SLIDER_RANGE.max}
-                step={GUIDED_DRIVER_P10_SLIDER_RANGE.step}
-                value={pinGuidedSliderDisplayValue(
-                  driverOptSlider,
-                  GUIDED_DRIVER_P10_SLIDER_RANGE,
-                )}
-                origin={0}
-                blank={driverOptBlank}
-                ariaLabel={t("inputs.guidedP10")}
-                testId="driver-p10"
-                onCommit={(v) => commitPercentField("optimistic", v)}
-              />
-              {driverOptOutside ? outsideCue : null}
-            </div>
-
-            <div className={modeCardClassName} data-guided-side="mode">
-              <SideLabel accent>{t("inputs.guidedMostLikely")}</SideLabel>
-              <GuidedInlineValue
-                rowId={row.id}
-                field="likely"
-                rawValue={row.likely}
-                displayText={
-                  driverLikelyBlank
-                    ? "—"
-                    : formatGuidedSignedPercent(driverLikelySlider, language)
-                }
-                ariaLabel={t("inputs.guidedMostLikely")}
-                displayAttrs={{ "data-guided-driver-m": "" }}
-                commitMode="enter"
-                onCommit={(next) => patchNumeric("likely", next)}
-              />
-              <SecondaryEffect
-                text={formatGuidedApproxImpactLabel(
-                  driverEffects.modeEffect,
-                  language,
-                )}
-                title={t("inputs.guidedDriverEffectHint")}
-                testAttr="data-guided-driver-m-effect"
-              />
-              <GuidedRangeSlider
-                min={GUIDED_DRIVER_MODE_SLIDER_RANGE.min}
-                max={GUIDED_DRIVER_MODE_SLIDER_RANGE.max}
-                step={GUIDED_DRIVER_MODE_SLIDER_RANGE.step}
-                value={pinGuidedSliderDisplayValue(
-                  driverLikelySlider,
-                  GUIDED_DRIVER_MODE_SLIDER_RANGE,
-                )}
-                origin={0}
-                blank={driverLikelyBlank}
-                ariaLabel={t("inputs.guidedMostLikely")}
-                testId="driver-m"
-                onCommit={(v) => commitPercentField("likely", v)}
-              />
-              {driverLikelyOutside ? outsideCue : null}
-            </div>
-
-            <div className={sideCardClassName} data-guided-side="p90">
-              <SideLabel>{t("inputs.guidedP90")}</SideLabel>
-              <GuidedInlineValue
-                rowId={row.id}
-                field="pessimistic"
-                rawValue={row.pessimistic}
-                displayText={
-                  driverPesBlank
-                    ? "—"
-                    : formatGuidedSignedPercent(driverPesSlider, language)
-                }
-                ariaLabel={t("inputs.guidedP90")}
-                displayAttrs={{ "data-guided-driver-p90": "" }}
-                commitMode="enter"
-                onCommit={(next) => patchNumeric("pessimistic", next)}
-              />
-              <SecondaryEffect
-                text={formatGuidedApproxImpactLabel(
-                  driverEffects.p90Effect,
-                  language,
-                )}
-                title={t("inputs.guidedDriverEffectHint")}
-                testAttr="data-guided-driver-p90-effect"
-              />
-              <GuidedRangeSlider
-                min={GUIDED_DRIVER_P90_SLIDER_RANGE.min}
-                max={GUIDED_DRIVER_P90_SLIDER_RANGE.max}
-                step={GUIDED_DRIVER_P90_SLIDER_RANGE.step}
-                value={pinGuidedSliderDisplayValue(
-                  driverPesSlider,
-                  GUIDED_DRIVER_P90_SLIDER_RANGE,
-                )}
-                origin={0}
-                blank={driverPesBlank}
-                ariaLabel={t("inputs.guidedP90")}
-                testId="driver-p90"
-                onCommit={(v) => commitPercentField("pessimistic", v)}
-              />
-              {driverPesOutside ? outsideCue : null}
-            </div>
-          </div>
-
-          {rangeIssue !== null ? (
-            <p
-              role="status"
-              data-guided-driver-range-warning={rangeIssue}
-              className="m-0 font-sans text-[12px] leading-snug text-[#c24141]"
-            >
-              {rangeIssue === "support"
-                ? t("inputs.guidedDriverSupportInvalid")
-                : t("inputs.guidedDriverOrderInvalid")}
+          <div className="space-y-1.5" data-guided-cost-uncertainty="">
+            <p className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              {t("inputs.guidedDriverUncertaintyNotesHeading")}
             </p>
-          ) : null}
+            <ul className="m-0 list-disc space-y-1.5 pl-4 marker:text-muted-foreground">
+              <li className="font-sans text-[13px] leading-snug text-muted-foreground">
+                {t("inputs.guidedCostLikelyPrompt")}
+              </li>
+              <li className="font-sans text-[13px] leading-snug text-muted-foreground">
+                {t("inputs.guidedCostRangeSourcePrompt")}
+              </li>
+              <li className="font-sans text-[13px] leading-snug text-muted-foreground">
+                {t("inputs.guidedCostRangePrompt")}
+              </li>
+            </ul>
+            <p className="m-0 mt-2 font-sans text-[12px] leading-snug text-muted-foreground">
+              {t("inputs.guidedCostRangeReminder")}
+            </p>
+
+            <div
+              className={`${rangeGridClassName} pt-3`}
+              data-guided-cost-range=""
+              data-guided-omp-align="primary"
+            >
+              <div className={sideCardClassName} data-guided-side="p10">
+                <SideLabel>{t("inputs.guidedP10")}</SideLabel>
+                <GuidedInlineValue
+                  rowId={row.id}
+                  field="optimistic"
+                  rawValue={row.optimistic}
+                  displayText={
+                    costOptBlank ? "—" : formatGuidedSignedPercent(costOptSlider, language)
+                  }
+                  ariaLabel={t("inputs.guidedP10")}
+                  displayAttrs={{ "data-guided-cost-p10-pct": "" }}
+                  commitMode="enter"
+                  onCommit={(next) => patchNumeric("optimistic", next)}
+                />
+                <SecondaryEffect
+                  text={formatGuidedApproxImpactLabel(costP10Effect, language)}
+                  testAttr="data-guided-cost-p10-effect"
+                />
+                <GuidedRangeSlider
+                  min={GUIDED_COST_P10_SLIDER.min}
+                  max={GUIDED_COST_P10_SLIDER.max}
+                  step={GUIDED_COST_P10_SLIDER.step}
+                  value={Math.min(
+                    GUIDED_COST_P10_SLIDER.max,
+                    Math.max(GUIDED_COST_P10_SLIDER.min, costOptSlider),
+                  )}
+                  origin={0}
+                  blank={costOptBlank}
+                  ariaLabel={t("inputs.guidedP10")}
+                  testId="cost-p10"
+                  onCommit={(v) => commitPercentField("optimistic", v)}
+                />
+              </div>
+
+              <div className={modeCardClassName} data-guided-side="mode">
+                <SideLabel accent>{t("inputs.guidedMostLikely")}</SideLabel>
+                <GuidedInlineValue
+                  rowId={row.id}
+                  field="likely"
+                  rawValue={row.likely}
+                  displayText={costLikelyBlank ? "—" : formatGuidedCostAbsolute(costMAbs, language)}
+                  ariaLabel={t("inputs.guidedMostLikely")}
+                  displayAttrs={{ "data-guided-cost-m-abs": "" }}
+                  commitMode="enter"
+                  onCommit={(next) => patchNumeric("likely", next)}
+                />
+                <SecondarySpacer />
+                <div className="h-5" aria-hidden />
+              </div>
+
+              <div className={sideCardClassName} data-guided-side="p90">
+                <SideLabel>{t("inputs.guidedP90")}</SideLabel>
+                <GuidedInlineValue
+                  rowId={row.id}
+                  field="pessimistic"
+                  rawValue={row.pessimistic}
+                  displayText={
+                    costPesBlank ? "—" : formatGuidedSignedPercent(costPesSlider, language)
+                  }
+                  ariaLabel={t("inputs.guidedP90")}
+                  displayAttrs={{ "data-guided-cost-p90-pct": "" }}
+                  commitMode="enter"
+                  onCommit={(next) => patchNumeric("pessimistic", next)}
+                />
+                <SecondaryEffect
+                  text={formatGuidedApproxImpactLabel(costP90Effect, language)}
+                  testAttr="data-guided-cost-p90-effect"
+                />
+                <GuidedRangeSlider
+                  min={GUIDED_COST_P90_SLIDER.min}
+                  max={GUIDED_COST_P90_SLIDER.max}
+                  step={GUIDED_COST_P90_SLIDER.step}
+                  value={Math.min(
+                    GUIDED_COST_P90_SLIDER.max,
+                    Math.max(GUIDED_COST_P90_SLIDER.min, costPesSlider),
+                  )}
+                  origin={0}
+                  blank={costPesBlank}
+                  ariaLabel={t("inputs.guidedP90")}
+                  testId="cost-p90"
+                  onCommit={(v) => commitPercentField("pessimistic", v)}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    )
-  }
-
-  const renderBody = () => {
-    if (step === null) {
-      return (
-        <p className="font-sans text-[13px] text-muted-foreground">
-          {t("inputs.guidedEmpty")}
-        </p>
       )
     }
 
-    switch (step.phase) {
-      case "focusIntro":
-        return <GuidedFocusIntroPhase projectName={project.name} />
-      case "projectProfile":
-        return (
-          <div
-            className="mx-auto flex w-full max-w-3xl flex-col gap-5"
-            data-guided-phase="projectProfile"
+    const renderDriverPhase = (row: DriverRow) => {
+      const driverOptBlank = parseNumberField(row.optimistic) === null
+      const driverLikelyBlank = parseNumberField(row.likely) === null
+      const driverPesBlank = parseNumberField(row.pessimistic) === null
+      const driverOptSlider = guidedSliderDisplayValue(row.optimistic, 0)
+      const driverLikelySlider = guidedSliderDisplayValue(row.likely, 0)
+      const driverPesSlider = guidedSliderDisplayValue(row.pessimistic, 0)
+      const driverOptOutside = isGuidedDriverValueOutsideWorkingRange("optimistic", row.optimistic)
+      const driverLikelyOutside = isGuidedDriverValueOutsideWorkingRange("likely", row.likely)
+      const driverPesOutside = isGuidedDriverValueOutsideWorkingRange(
+        "pessimistic",
+        row.pessimistic,
+      )
+      const rangeIssue = getGuidedDriverRangeIssue(row)
+
+      const patchNumeric = (field: GuidedNumericField, value: string) => {
+        const normalized = normalizeGuidedNumericField({
+          kind: "driver",
+          field,
+          value,
+          row,
+        })
+        onPatchRow(row.id, { [field]: normalized })
+      }
+
+      const commitPercentField = (field: GuidedNumericField, value: number) => {
+        patchNumeric(field, guidedPercentToStoredString(value))
+      }
+
+      const outsideCue = (
+        <p
+          className="m-0 font-sans text-[10px] leading-snug text-muted-foreground/80"
+          data-guided-outside-working-range=""
+        >
+          {t("inputs.guidedDriverOutsideWorkingRange")}
+        </p>
+      )
+
+      return (
+        <div className="mx-auto flex max-w-5xl flex-col gap-5" data-guided-phase="driver">
+          <h3
+            className="m-0 font-sans text-[22px] font-medium leading-snug tracking-tight text-foreground sm:text-[26px]"
+            data-guided-factor-name=""
           >
-            <ProjectProfileSection
-              profile={project.profile}
-              embedded
-              readOnly={false}
-              onChange={onPatchProfile}
+            {row.name.trim() || t("inputs.guidedUnnamed")}
+          </h3>
+
+          <div className="space-y-1.5">
+            <label
+              htmlFor="guided-definition"
+              className="font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+            >
+              {t("inputs.guidedDefinitionLabel")}
+            </label>
+            <GuidedDefinitionTextarea
+              rowId={row.id}
+              sourceDescription={String(row.description ?? "")}
+              maxLength={DRIVER_DESCRIPTION_MAX_LENGTH}
+              placeholder={t("inputs.defineDriverDescriptionPlaceholder")}
+              onCommit={(id, description) => {
+                onPatchRow(id, { description })
+              }}
             />
           </div>
-        )
-      case "assumptions":
-        return (
-          <GuidedAssumptionsPhase
-            assumptions={project.assumptions ?? []}
-            onAdd={onAddAssumption}
-            onUpdate={onUpdateAssumption}
-            onRemove={onRemoveAssumption}
-          />
-        )
-      case "incurred":
-        return (
-          <GuidedIncurredPhase
-            incurredCosts={project.incurredCosts}
-            onIncurredCostsChange={onIncurredCostsChange}
-          />
-        )
-      case "estimateUncertaintyIntro":
-        return (
-          <GuidedConceptIntro
-            phase="estimateUncertaintyIntro"
-            paragraphs={[
-              t("inputs.guidedEstimateUncertaintyConceptBasis"),
-              t("inputs.guidedEstimateUncertaintyConceptGrouping"),
-              t("inputs.guidedEstimateUncertaintyConceptLikely"),
-              t("inputs.guidedEstimateUncertaintyConceptUncertainty"),
-              t("inputs.guidedEstimateUncertaintyConceptNext"),
-            ]}
-          />
-        )
-      case "costsEmpty":
-        return (
-          <div
-            className="mx-auto flex max-w-3xl flex-col gap-5"
-            data-guided-phase="costsEmpty"
-          >
-            <p className="m-0 font-sans text-[15px] font-medium leading-snug text-foreground">
-              {t("inputs.guidedCostsEmptyHeading")}
+
+          <div className="space-y-1.5" data-guided-driver-uncertainty-notes="">
+            <p className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              {t("inputs.guidedDriverUncertaintyNotesHeading")}
             </p>
-            <p className="m-0 font-sans text-[13px] leading-relaxed text-muted-foreground">
-              {t("inputs.guidedCostsEmptyGuidance")}
+            <p className="m-0 font-sans text-[12px] leading-snug text-muted-foreground">
+              {t("inputs.guidedDriverUncertaintyNotesHelper")}
             </p>
-          </div>
-        )
-      case "cost":
-        if (!costRow) {
-          return (
-            <p className="font-sans text-[13px] text-muted-foreground">
-              {t("inputs.guidedEmpty")}
-            </p>
-          )
-        }
-        return renderCostPhase(costRow)
-      case "correlation":
-        return (
-          <div
-            className="mx-auto flex max-w-3xl flex-col gap-5"
-            data-guided-phase="correlation"
-          >
-            <div className="space-y-2">
-              <p className="m-0 font-sans text-[13px] leading-relaxed text-foreground">
-                {t("inputs.guidedCorrelationGuidance")}
-              </p>
-              <p className="m-0 font-sans text-[12px] leading-relaxed text-muted-foreground">
-                {t("inputs.guidedCorrelationSecondaryGuidance")}
-              </p>
+            <div className="pt-3" data-guided-driver-uncertainty-notes-body="">
+              <DriverUncertaintyNotesEditor
+                notes={row.uncertaintyNotes}
+                onChange={(next) => {
+                  onPatchRow(row.id, { uncertaintyNotes: next })
+                }}
+              />
             </div>
+
+            <p className="m-0 pt-2 font-sans text-[12px] leading-snug text-muted-foreground">
+              {t("inputs.guidedDriverRangePrompt")}
+            </p>
+
             <div className="space-y-2">
-              <p
-                className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
-                data-guided-correlation-summary-heading=""
+              <div
+                className={rangeGridClassName}
+                data-guided-driver-range=""
+                data-guided-omp-align="primary"
               >
-                {t("inputs.guidedCorrelationSelectedHeading")}
-              </p>
-              {correlationSummaries.length === 0 ? (
-                <p
-                  className="m-0 font-sans text-[13px] text-muted-foreground"
-                  data-guided-correlation-none=""
-                >
-                  {t("inputs.guidedCorrelationNone")}
-                </p>
-              ) : (
-                <ul
-                  className="m-0 list-none space-y-2 p-0"
-                  data-guided-correlation-summaries=""
-                >
-                  {correlationSummaries.map((summary, index) => (
-                    <li
-                      key={`${summary.rho}-${summary.rowIds.join("-")}-${index}`}
-                      className="font-sans text-[13px] text-foreground"
-                      data-guided-correlation-summary=""
-                    >
-                      {formatSavedCorrelationSummaryLabel({
-                        summary,
-                        nameById: correlationNameById,
-                        language,
-                        costItemsWord: t("inputs.costCorrelationCostItemsWord"),
-                      })}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        )
-      case "driversIntro":
-        return (
-          <GuidedConceptIntro
-            phase="driversIntro"
-            paragraphs={[
-              t("inputs.guidedDriversIntroMeaning"),
-              t("inputs.guidedDriversIntroDistinction"),
-              t("inputs.guidedDriversIntroAvoidDouble"),
-              t("inputs.guidedDriversIntroNext"),
-            ]}
-          />
-        )
-      case "driversEmpty":
-        return (
-          <div
-            className="mx-auto flex max-w-3xl flex-col gap-5"
-            data-guided-phase="driversEmpty"
-          >
-            <p className="m-0 font-sans text-[15px] font-medium leading-snug text-foreground">
-              {t("inputs.guidedDriversEmptyHeading")}
-            </p>
-            <p className="m-0 font-sans text-[13px] leading-relaxed text-muted-foreground">
-              {t("inputs.guidedDriversEmptyGuidance")}
-            </p>
-          </div>
-        )
-      case "driver":
-        if (!driverRow) {
-          return (
-            <p className="font-sans text-[13px] text-muted-foreground">
-              {t("inputs.guidedEmpty")}
-            </p>
-          )
-        }
-        return renderDriverPhase(driverRow)
-      case "impact":
-        return (
-          <div
-            className="mx-auto flex max-w-3xl flex-col gap-5"
-            data-guided-phase="impact"
-          >
-            <div className="space-y-2">
-              <p className="m-0 font-sans text-[13px] leading-relaxed text-foreground">
-                {t("inputs.guidedImpactGuidance")}
-              </p>
-              <p className="m-0 font-sans text-[12px] leading-relaxed text-muted-foreground">
-                {t("inputs.guidedImpactSecondaryGuidance")}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <p
-                className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
-                data-guided-impact-summary-heading=""
-              >
-                {t("inputs.guidedImpactAdjustedHeading")}
-              </p>
-              {impactOverrides.length === 0 ? (
-                <p
-                  className="m-0 font-sans text-[13px] text-muted-foreground"
-                  data-guided-impact-default=""
-                >
-                  {t("inputs.guidedImpactDefaultAll")}
-                </p>
-              ) : (
-                <ul
-                  className="m-0 list-none space-y-2 p-0"
-                  data-guided-impact-overrides=""
-                >
-                  {impactOverrides.map((item, index) => (
-                    <li
-                      key={`${item.driverName}-${item.costItemName}-${index}`}
-                      className="font-sans text-[13px] text-foreground"
-                      data-guided-impact-override=""
-                    >
-                      {`${item.driverName} → ${item.costItemName}: ${item.impactPct} %`}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        )
-      case "simulation": {
-        const canContinue =
-          simulationResultStatus === "valid" ||
-          simulationResultStatus === "stale"
-        return (
-          <div
-            className="mx-auto flex min-h-full w-full max-w-sm flex-col items-center justify-center gap-5 text-center"
-            data-guided-phase="simulation"
-            data-guided-simulation-status={simulationResultStatus}
-            data-guided-simulation-centered=""
-          >
-            {simulationResultStatus === "stale" ? (
-              <div className="flex flex-col gap-2" data-guided-simulation-stale="">
-                <p className="m-0 font-sans text-[14px] font-medium text-foreground">
-                  {t("projects.staleInputsTitle")}
-                </p>
-                <p className="m-0 font-sans text-[14px] leading-relaxed text-foreground/90">
-                  {t("projects.staleInputsNotice")}
-                </p>
-                <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-                  {onShowStaleChanges ? (
-                    <button
-                      type="button"
-                      className="h-auto min-h-0 px-0 py-0 font-sans text-[13px] text-[#1d868c] underline-offset-2 hover:underline"
-                      onClick={onShowStaleChanges}
-                      data-guided-simulation-show-changes=""
-                    >
-                      {t("projects.showInputChanges")}
-                    </button>
-                  ) : null}
-                  {onRevertStaleChanges ? (
-                    <button
-                      type="button"
-                      className="h-auto min-h-0 px-0 py-0 font-sans text-[13px] text-[#1d868c] underline-offset-2 hover:underline"
-                      onClick={onRevertStaleChanges}
-                      data-guided-simulation-revert=""
-                    >
-                      {t("projects.revertInputChanges")}
-                    </button>
-                  ) : null}
+                <div className={sideCardClassName} data-guided-side="p10">
+                  <SideLabel>{t("inputs.guidedP10")}</SideLabel>
+                  <GuidedInlineValue
+                    rowId={row.id}
+                    field="optimistic"
+                    rawValue={row.optimistic}
+                    displayText={
+                      driverOptBlank ? "—" : formatGuidedSignedPercent(driverOptSlider, language)
+                    }
+                    ariaLabel={t("inputs.guidedP10")}
+                    displayAttrs={{ "data-guided-driver-p10": "" }}
+                    commitMode="enter"
+                    onCommit={(next) => patchNumeric("optimistic", next)}
+                  />
+                  <SecondaryEffect
+                    text={formatGuidedApproxImpactLabel(driverEffects.p10Effect, language)}
+                    title={t("inputs.guidedDriverEffectHint")}
+                    testAttr="data-guided-driver-p10-effect"
+                  />
+                  <GuidedRangeSlider
+                    min={GUIDED_DRIVER_P10_SLIDER_RANGE.min}
+                    max={GUIDED_DRIVER_P10_SLIDER_RANGE.max}
+                    step={GUIDED_DRIVER_P10_SLIDER_RANGE.step}
+                    value={pinGuidedSliderDisplayValue(
+                      driverOptSlider,
+                      GUIDED_DRIVER_P10_SLIDER_RANGE,
+                    )}
+                    origin={0}
+                    blank={driverOptBlank}
+                    ariaLabel={t("inputs.guidedP10")}
+                    testId="driver-p10"
+                    onCommit={(v) => commitPercentField("optimistic", v)}
+                  />
+                  {driverOptOutside ? outsideCue : null}
+                </div>
+
+                <div className={modeCardClassName} data-guided-side="mode">
+                  <SideLabel accent>{t("inputs.guidedMostLikely")}</SideLabel>
+                  <GuidedInlineValue
+                    rowId={row.id}
+                    field="likely"
+                    rawValue={row.likely}
+                    displayText={
+                      driverLikelyBlank
+                        ? "—"
+                        : formatGuidedSignedPercent(driverLikelySlider, language)
+                    }
+                    ariaLabel={t("inputs.guidedMostLikely")}
+                    displayAttrs={{ "data-guided-driver-m": "" }}
+                    commitMode="enter"
+                    onCommit={(next) => patchNumeric("likely", next)}
+                  />
+                  <SecondaryEffect
+                    text={formatGuidedApproxImpactLabel(driverEffects.modeEffect, language)}
+                    title={t("inputs.guidedDriverEffectHint")}
+                    testAttr="data-guided-driver-m-effect"
+                  />
+                  <GuidedRangeSlider
+                    min={GUIDED_DRIVER_MODE_SLIDER_RANGE.min}
+                    max={GUIDED_DRIVER_MODE_SLIDER_RANGE.max}
+                    step={GUIDED_DRIVER_MODE_SLIDER_RANGE.step}
+                    value={pinGuidedSliderDisplayValue(
+                      driverLikelySlider,
+                      GUIDED_DRIVER_MODE_SLIDER_RANGE,
+                    )}
+                    origin={0}
+                    blank={driverLikelyBlank}
+                    ariaLabel={t("inputs.guidedMostLikely")}
+                    testId="driver-m"
+                    onCommit={(v) => commitPercentField("likely", v)}
+                  />
+                  {driverLikelyOutside ? outsideCue : null}
+                </div>
+
+                <div className={sideCardClassName} data-guided-side="p90">
+                  <SideLabel>{t("inputs.guidedP90")}</SideLabel>
+                  <GuidedInlineValue
+                    rowId={row.id}
+                    field="pessimistic"
+                    rawValue={row.pessimistic}
+                    displayText={
+                      driverPesBlank ? "—" : formatGuidedSignedPercent(driverPesSlider, language)
+                    }
+                    ariaLabel={t("inputs.guidedP90")}
+                    displayAttrs={{ "data-guided-driver-p90": "" }}
+                    commitMode="enter"
+                    onCommit={(next) => patchNumeric("pessimistic", next)}
+                  />
+                  <SecondaryEffect
+                    text={formatGuidedApproxImpactLabel(driverEffects.p90Effect, language)}
+                    title={t("inputs.guidedDriverEffectHint")}
+                    testAttr="data-guided-driver-p90-effect"
+                  />
+                  <GuidedRangeSlider
+                    min={GUIDED_DRIVER_P90_SLIDER_RANGE.min}
+                    max={GUIDED_DRIVER_P90_SLIDER_RANGE.max}
+                    step={GUIDED_DRIVER_P90_SLIDER_RANGE.step}
+                    value={pinGuidedSliderDisplayValue(
+                      driverPesSlider,
+                      GUIDED_DRIVER_P90_SLIDER_RANGE,
+                    )}
+                    origin={0}
+                    blank={driverPesBlank}
+                    ariaLabel={t("inputs.guidedP90")}
+                    testId="driver-p90"
+                    onCommit={(v) => commitPercentField("pessimistic", v)}
+                  />
+                  {driverPesOutside ? outsideCue : null}
                 </div>
               </div>
-            ) : (
-              <p className="m-0 font-sans text-[14px] leading-relaxed text-foreground">
-                {simulationResultStatus === "valid"
-                  ? t("inputs.guidedSimulationBodyValid")
-                  : t("inputs.guidedSimulationBodyNoResults")}
+
+              {rangeIssue !== null ? (
+                <p
+                  role="status"
+                  data-guided-driver-range-warning={rangeIssue}
+                  className="m-0 font-sans text-[12px] leading-snug text-[#c24141]"
+                >
+                  {rangeIssue === "support"
+                    ? t("inputs.guidedDriverSupportInvalid")
+                    : t("inputs.guidedDriverOrderInvalid")}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    const renderBody = () => {
+      if (step === null) {
+        return (
+          <p className="font-sans text-[13px] text-muted-foreground">{t("inputs.guidedEmpty")}</p>
+        )
+      }
+
+      switch (step.phase) {
+        case "focusIntro":
+          return <GuidedFocusIntroPhase projectName={project.name} />
+        case "projectProfile":
+          return (
+            <div
+              className="mx-auto flex w-full max-w-3xl flex-col gap-5"
+              data-guided-phase="projectProfile"
+            >
+              <ProjectProfileSection
+                profile={project.profile}
+                embedded
+                readOnly={false}
+                onChange={onPatchProfile}
+              />
+            </div>
+          )
+        case "assumptions":
+          return (
+            <GuidedAssumptionsPhase
+              assumptions={project.assumptions ?? []}
+              onAdd={onAddAssumption}
+              onUpdate={onUpdateAssumption}
+              onRemove={onRemoveAssumption}
+            />
+          )
+        case "incurred":
+          return (
+            <GuidedIncurredPhase
+              incurredCosts={project.incurredCosts}
+              onIncurredCostsChange={onIncurredCostsChange}
+            />
+          )
+        case "estimateUncertaintyIntro":
+          return (
+            <GuidedConceptIntro
+              phase="estimateUncertaintyIntro"
+              paragraphs={[
+                t("inputs.guidedEstimateUncertaintyConceptBasis"),
+                t("inputs.guidedEstimateUncertaintyConceptGrouping"),
+                t("inputs.guidedEstimateUncertaintyConceptLikely"),
+                t("inputs.guidedEstimateUncertaintyConceptUncertainty"),
+                t("inputs.guidedEstimateUncertaintyConceptNext"),
+              ]}
+            />
+          )
+        case "costsEmpty":
+          return (
+            <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="costsEmpty">
+              <p className="m-0 font-sans text-[15px] font-medium leading-snug text-foreground">
+                {t("inputs.guidedCostsEmptyHeading")}
               </p>
-            )}
-            {onRunSimulation ? (
-              <div
-                className="flex h-8 w-full items-center justify-center"
-                data-guided-simulation-run-slot=""
-              >
-                {runSimulationBusy ? (
-                  <SpotlightLoadingText
-                    text={t("buttons.simulating")}
-                    tone="primary"
-                    className={cn(
-                      "font-sans text-xs font-semibold",
-                      brandPrimaryTextClass,
-                    )}
-                    data-simulation-loading=""
-                    data-guided-simulation-loading=""
-                    aria-live="polite"
-                    aria-busy="true"
-                  />
-                ) : (
-                  <Button
-                    type="button"
-                    disabled={runSimulationDisabled}
-                    onClick={onRunSimulation}
-                    className={cn(
-                      "h-8 w-full shrink-0 font-sans text-xs font-semibold uppercase tracking-wide",
-                      runSimulationDisabled && "opacity-40",
-                      brandPrimaryButtonClass,
-                    )}
-                    data-guided-simulation-run=""
+              <p className="m-0 font-sans text-[13px] leading-relaxed text-muted-foreground">
+                {t("inputs.guidedCostsEmptyGuidance")}
+              </p>
+            </div>
+          )
+        case "cost":
+          if (!costRow) {
+            return (
+              <p className="font-sans text-[13px] text-muted-foreground">
+                {t("inputs.guidedEmpty")}
+              </p>
+            )
+          }
+          return renderCostPhase(costRow)
+        case "correlation":
+          return (
+            <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="correlation">
+              <div className="space-y-2">
+                <p className="m-0 font-sans text-[13px] leading-relaxed text-foreground">
+                  {t("inputs.guidedCorrelationGuidance")}
+                </p>
+                <p className="m-0 font-sans text-[12px] leading-relaxed text-muted-foreground">
+                  {t("inputs.guidedCorrelationSecondaryGuidance")}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p
+                  className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+                  data-guided-correlation-summary-heading=""
+                >
+                  {t("inputs.guidedCorrelationSelectedHeading")}
+                </p>
+                {correlationSummaries.length === 0 ? (
+                  <p
+                    className="m-0 font-sans text-[13px] text-muted-foreground"
+                    data-guided-correlation-none=""
                   >
-                    {canContinue
-                      ? t("inputs.guidedSimulationRunAgain")
-                      : t("buttons.runSimulation")}
-                  </Button>
+                    {t("inputs.guidedCorrelationNone")}
+                  </p>
+                ) : (
+                  <ul className="m-0 list-none space-y-2 p-0" data-guided-correlation-summaries="">
+                    {correlationSummaries.map((summary, index) => (
+                      <li
+                        key={`${summary.rho}-${summary.rowIds.join("-")}-${index}`}
+                        className="font-sans text-[13px] text-foreground"
+                        data-guided-correlation-summary=""
+                      >
+                        {formatSavedCorrelationSummaryLabel({
+                          summary,
+                          nameById: correlationNameById,
+                          language,
+                          costItemsWord: t("inputs.costCorrelationCostItemsWord"),
+                        })}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
-            ) : null}
+            </div>
+          )
+        case "driversIntro":
+          return (
+            <GuidedConceptIntro
+              phase="driversIntro"
+              paragraphs={[
+                t("inputs.guidedDriversIntroMeaning"),
+                t("inputs.guidedDriversIntroDistinction"),
+                t("inputs.guidedDriversIntroAvoidDouble"),
+                t("inputs.guidedDriversIntroNext"),
+              ]}
+            />
+          )
+        case "driversEmpty":
+          return (
+            <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="driversEmpty">
+              <p className="m-0 font-sans text-[15px] font-medium leading-snug text-foreground">
+                {t("inputs.guidedDriversEmptyHeading")}
+              </p>
+              <p className="m-0 font-sans text-[13px] leading-relaxed text-muted-foreground">
+                {t("inputs.guidedDriversEmptyGuidance")}
+              </p>
+            </div>
+          )
+        case "driver":
+          if (!driverRow) {
+            return (
+              <p className="font-sans text-[13px] text-muted-foreground">
+                {t("inputs.guidedEmpty")}
+              </p>
+            )
+          }
+          return renderDriverPhase(driverRow)
+        case "impact":
+          return (
+            <div className="mx-auto flex max-w-3xl flex-col gap-5" data-guided-phase="impact">
+              <div className="space-y-2">
+                <p className="m-0 font-sans text-[13px] leading-relaxed text-foreground">
+                  {t("inputs.guidedImpactGuidance")}
+                </p>
+                <p className="m-0 font-sans text-[12px] leading-relaxed text-muted-foreground">
+                  {t("inputs.guidedImpactSecondaryGuidance")}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p
+                  className="m-0 font-sans text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+                  data-guided-impact-summary-heading=""
+                >
+                  {t("inputs.guidedImpactAdjustedHeading")}
+                </p>
+                {impactOverrides.length === 0 ? (
+                  <p
+                    className="m-0 font-sans text-[13px] text-muted-foreground"
+                    data-guided-impact-default=""
+                  >
+                    {t("inputs.guidedImpactDefaultAll")}
+                  </p>
+                ) : (
+                  <ul className="m-0 list-none space-y-2 p-0" data-guided-impact-overrides="">
+                    {impactOverrides.map((item, index) => (
+                      <li
+                        key={`${item.driverName}-${item.costItemName}-${index}`}
+                        className="font-sans text-[13px] text-foreground"
+                        data-guided-impact-override=""
+                      >
+                        {`${item.driverName} → ${item.costItemName}: ${item.impactPct} %`}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )
+        case "simulation": {
+          const canContinue =
+            simulationResultStatus === "valid" || simulationResultStatus === "stale"
+          return (
+            <div
+              className="mx-auto flex min-h-full w-full max-w-sm flex-col items-center justify-center gap-5 text-center"
+              data-guided-phase="simulation"
+              data-guided-simulation-status={simulationResultStatus}
+              data-guided-simulation-centered=""
+            >
+              {simulationResultStatus === "stale" ? (
+                <div className="flex flex-col gap-2" data-guided-simulation-stale="">
+                  <p className="m-0 font-sans text-[14px] font-medium text-foreground">
+                    {t("projects.staleInputsTitle")}
+                  </p>
+                  <p className="m-0 font-sans text-[14px] leading-relaxed text-foreground/90">
+                    {t("projects.staleInputsNotice")}
+                  </p>
+                  <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
+                    {onShowStaleChanges ? (
+                      <button
+                        type="button"
+                        className="h-auto min-h-0 px-0 py-0 font-sans text-[13px] text-[#1d868c] underline-offset-2 hover:underline"
+                        onClick={onShowStaleChanges}
+                        data-guided-simulation-show-changes=""
+                      >
+                        {t("projects.showInputChanges")}
+                      </button>
+                    ) : null}
+                    {onRevertStaleChanges ? (
+                      <button
+                        type="button"
+                        className="h-auto min-h-0 px-0 py-0 font-sans text-[13px] text-[#1d868c] underline-offset-2 hover:underline"
+                        onClick={onRevertStaleChanges}
+                        data-guided-simulation-revert=""
+                      >
+                        {t("projects.revertInputChanges")}
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <p className="m-0 font-sans text-[14px] leading-relaxed text-foreground">
+                  {simulationResultStatus === "valid"
+                    ? t("inputs.guidedSimulationBodyValid")
+                    : t("inputs.guidedSimulationBodyNoResults")}
+                </p>
+              )}
+              {onRunSimulation ? (
+                <div
+                  className="flex h-8 w-full items-center justify-center"
+                  data-guided-simulation-run-slot=""
+                >
+                  {runSimulationBusy ? (
+                    <SpotlightLoadingText
+                      text={t("buttons.simulating")}
+                      tone="primary"
+                      className={cn("font-sans text-xs font-semibold", brandPrimaryTextClass)}
+                      data-simulation-loading=""
+                      data-guided-simulation-loading=""
+                      aria-live="polite"
+                      aria-busy="true"
+                    />
+                  ) : (
+                    <Button
+                      type="button"
+                      disabled={runSimulationDisabled}
+                      onClick={onRunSimulation}
+                      className={cn(
+                        "h-8 w-full shrink-0 font-sans text-xs font-semibold uppercase tracking-wide",
+                        runSimulationDisabled && "opacity-40",
+                        brandPrimaryButtonClass,
+                      )}
+                      data-guided-simulation-run=""
+                    >
+                      {canContinue
+                        ? t("inputs.guidedSimulationRunAgain")
+                        : t("buttons.runSimulation")}
+                    </Button>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          )
+        }
+      }
+    }
+
+    const renderFooter = () => {
+      // Shared Focus shell owns the footer when embedded.
+      if (focusPortalTarget) return null
+
+      const inFocusSession = Boolean(focusMode || ensureFocusMode)
+      const footerChromeClass = inFocusSession
+        ? FOCUS_SESSION_FOOTER_CLASS
+        : "flex shrink-0 items-center justify-between gap-3 border-t border-border/50 px-4 py-3 sm:px-5"
+      const footerNavClass = buttonVariants({
+        variant: "ghost",
+        className: FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
+      })
+      // Focus chrome: Next matches Previous (lightweight). Modal Guided may still
+      // use a filled primary CTA on the right for empty-state add actions.
+      const footerNextClass = inFocusSession
+        ? footerNavClass
+        : buttonVariants({
+            variant: "default",
+            className:
+              "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90 disabled:opacity-40",
+          })
+
+      if (total === 0) {
+        return (
+          <div className={footerChromeClass} data-guided-dialog-footer="">
+            <span />
+            <button
+              type="button"
+              onClick={handleCloseGuided}
+              className={footerNextClass}
+              data-guided-next=""
+            >
+              {t("inputs.guidedClose")}
+            </button>
           </div>
         )
       }
-    }
-  }
 
-  const renderFooter = () => {
-    // Shared Focus shell owns the footer when embedded.
-    if (focusPortalTarget) return null
+      const phase = step!.phase
+      const isReview = phase === "correlation" || phase === "impact"
+      const isSimulation = phase === "simulation"
+      const isCostsEmpty = phase === "costsEmpty"
+      const isDriversEmpty = phase === "driversEmpty"
+      const canContinueFromSimulation =
+        simulationResultStatus === "valid" || simulationResultStatus === "stale"
 
-    const inFocusSession = Boolean(focusMode || ensureFocusMode)
-    const footerChromeClass = inFocusSession
-      ? FOCUS_SESSION_FOOTER_CLASS
-      : "flex shrink-0 items-center justify-between gap-3 border-t border-border/50 px-4 py-3 sm:px-5"
-    const footerNavClass = buttonVariants({
-      variant: "ghost",
-      className: FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
-    })
-    // Focus chrome: Next matches Previous (lightweight). Modal Guided may still
-    // use a filled primary CTA on the right for empty-state add actions.
-    const footerNextClass = inFocusSession
-      ? footerNavClass
-      : buttonVariants({
-          variant: "default",
-          className:
-            "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90 disabled:opacity-40",
-        })
-
-    if (total === 0) {
       return (
         <div className={footerChromeClass} data-guided-dialog-footer="">
-          <span />
-          <button
-            type="button"
-            onClick={handleCloseGuided}
-            className={footerNextClass}
-            data-guided-next=""
-          >
-            {t("inputs.guidedClose")}
-          </button>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <button
+              type="button"
+              disabled={safeIndex <= 0}
+              onClick={goPrevious}
+              className={footerNavClass}
+              data-guided-previous=""
+            >
+              {t("inputs.guidedPrevious")}
+            </button>
+          </div>
+
+          {isSimulation ? (
+            <button
+              type="button"
+              disabled={!canContinueFromSimulation}
+              onClick={() => {
+                if (canContinueFromSimulation) onContinueToResults?.()
+              }}
+              className={footerNextClass}
+              data-guided-next=""
+              data-guided-simulation-next=""
+            >
+              {t("inputs.guidedNext")}
+            </button>
+          ) : isCostsEmpty ? (
+            <button
+              type="button"
+              onClick={onAddCostItems}
+              className={buttonVariants({
+                variant: "default",
+                className: "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90",
+              })}
+              data-guided-add-cost-items=""
+            >
+              {t("inputs.guidedCostsEmptyAdd")}
+            </button>
+          ) : isDriversEmpty ? (
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={goNext}
+                className={footerNavClass}
+                data-guided-continue-without-drivers=""
+                data-guided-next=""
+              >
+                {t("inputs.guidedDriversEmptyContinue")}
+              </button>
+              <button
+                type="button"
+                onClick={onAddDrivers}
+                className={buttonVariants({
+                  variant: "default",
+                  className: "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90",
+                })}
+                data-guided-add-drivers=""
+              >
+                {t("inputs.guidedDriversEmptyAdd")}
+              </button>
+            </div>
+          ) : isReview ? (
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={phase === "correlation" ? onAdjustCorrelation : onAdjustImpact}
+                className={footerNavClass}
+                {...(phase === "correlation"
+                  ? { "data-guided-adjust-correlation": "" }
+                  : { "data-guided-adjust-impact": "" })}
+              >
+                {phase === "correlation"
+                  ? t("inputs.guidedAdjustCorrelation")
+                  : t("inputs.guidedAdjustImpact")}
+              </button>
+              <button
+                type="button"
+                onClick={goNext}
+                className={footerNextClass}
+                data-guided-looks-right=""
+                data-guided-next=""
+              >
+                {t("inputs.guidedLooksRight")}
+              </button>
+            </div>
+          ) : (
+            <button type="button" onClick={goNext} className={footerNextClass} data-guided-next="">
+              {t("inputs.guidedNext")}
+            </button>
+          )}
         </div>
       )
     }
 
-    const phase = step!.phase
-    const isReview = phase === "correlation" || phase === "impact"
-    const isSimulation = phase === "simulation"
-    const isCostsEmpty = phase === "costsEmpty"
-    const isDriversEmpty = phase === "driversEmpty"
-    const canContinueFromSimulation =
-      simulationResultStatus === "valid" || simulationResultStatus === "stale"
+    // Embedded Focus path: body-only into the shared shell (no Guided chrome).
+    // Soft-suspend keeps the subtree mounted while Results is shown.
+    if (focusPortalTarget && (focusMode || ensureFocusMode || suspend)) {
+      return createPortal(
+        <div
+          className={cn(
+            "min-h-0 w-full",
+            // Fill the Focus content region so Simulation can vertically center.
+            step?.phase === "simulation" && "min-h-full",
+            suspend && "hidden",
+          )}
+          data-guided-input-dialog=""
+          data-guided-kind={entry}
+          data-guided-entry={entry}
+          data-guided-focus-mode="true"
+          data-guided-embedded-in-focus-host=""
+          data-guided-soft-suspend={suspend ? "true" : undefined}
+          data-guided-dialog-body=""
+          aria-hidden={suspend ? true : undefined}
+          // Soft-suspend: not focusable / not pointer-interactive / a11y-hidden.
+          {...(suspend ? { inert: true } : {})}
+          onKeyDown={suspend ? undefined : onDialogKeyDown}
+        >
+          {renderBody()}
+        </div>,
+        focusPortalTarget,
+      )
+    }
 
-    return (
-      <div className={footerChromeClass} data-guided-dialog-footer="">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <button
-            type="button"
-            disabled={safeIndex <= 0}
-            onClick={goPrevious}
-            className={footerNavClass}
-            data-guided-previous=""
-          >
-            {t("inputs.guidedPrevious")}
-          </button>
-        </div>
-
-        {isSimulation ? (
-          <button
-            type="button"
-            disabled={!canContinueFromSimulation}
-            onClick={() => {
-              if (canContinueFromSimulation) onContinueToResults?.()
-            }}
-            className={footerNextClass}
-            data-guided-next=""
-            data-guided-simulation-next=""
-          >
-            {t("inputs.guidedNext")}
-          </button>
-        ) : isCostsEmpty ? (
-          <button
-            type="button"
-            onClick={onAddCostItems}
-            className={buttonVariants({
-              variant: "default",
-              className:
-                "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90",
-            })}
-            data-guided-add-cost-items=""
-          >
-            {t("inputs.guidedCostsEmptyAdd")}
-          </button>
-        ) : isDriversEmpty ? (
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={goNext}
-              className={footerNavClass}
-              data-guided-continue-without-drivers=""
-              data-guided-next=""
-            >
-              {t("inputs.guidedDriversEmptyContinue")}
-            </button>
-            <button
-              type="button"
-              onClick={onAddDrivers}
-              className={buttonVariants({
-                variant: "default",
-                className:
-                  "h-9 bg-[#1d868c] px-4 text-[13px] hover:bg-[#1d868c]/90",
-              })}
-              data-guided-add-drivers=""
-            >
-              {t("inputs.guidedDriversEmptyAdd")}
-            </button>
-          </div>
-        ) : isReview ? (
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={
-                phase === "correlation" ? onAdjustCorrelation : onAdjustImpact
-              }
-              className={footerNavClass}
-              {...(phase === "correlation"
-                ? { "data-guided-adjust-correlation": "" }
-                : { "data-guided-adjust-impact": "" })}
-            >
-              {phase === "correlation"
-                ? t("inputs.guidedAdjustCorrelation")
-                : t("inputs.guidedAdjustImpact")}
-            </button>
-            <button
-              type="button"
-              onClick={goNext}
-              className={footerNextClass}
-              data-guided-looks-right=""
-              data-guided-next=""
-            >
-              {t("inputs.guidedLooksRight")}
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={goNext}
-            className={footerNextClass}
-            data-guided-next=""
-          >
-            {t("inputs.guidedNext")}
-          </button>
-        )}
-      </div>
-    )
-  }
-
-  // Embedded Focus path: body-only into the shared shell (no Guided chrome).
-  // Soft-suspend keeps the subtree mounted while Results is shown.
-  if (focusPortalTarget && (focusMode || ensureFocusMode || suspend)) {
-    return createPortal(
-      <div
-        className={cn(
-          "min-h-0 w-full",
-          // Fill the Focus content region so Simulation can vertically center.
-          step?.phase === "simulation" && "min-h-full",
-          suspend && "hidden",
-        )}
-        data-guided-input-dialog=""
-        data-guided-kind={entry}
-        data-guided-entry={entry}
-        data-guided-focus-mode="true"
-        data-guided-embedded-in-focus-host=""
-        data-guided-soft-suspend={suspend ? "true" : undefined}
-        data-guided-dialog-body=""
-        aria-hidden={suspend ? true : undefined}
-        // Soft-suspend: not focusable / not pointer-interactive / a11y-hidden.
-        {...(suspend ? { inert: true } : {})}
-        onKeyDown={suspend ? undefined : onDialogKeyDown}
-      >
-        {renderBody()}
-      </div>,
-      focusPortalTarget,
-    )
-  }
-
-  // Non-embedded suspend: standalone Guided returns null before portal (embedded stays mounted).
-  const dialogSurface = (
+    // Non-embedded suspend: standalone Guided returns null before portal (embedded stays mounted).
+    const dialogSurface = (
       <div
         role="dialog"
         aria-modal="true"
@@ -2498,9 +2398,7 @@ export const GuidedInputDialog = forwardRef<
         <div
           className={cn(
             "flex shrink-0 items-start justify-between gap-3 border-b border-border/50",
-            focusMode || browserFullscreen
-              ? "px-5 py-4 sm:px-8"
-              : "px-4 py-3 sm:px-5",
+            focusMode || browserFullscreen ? "px-5 py-4 sm:px-8" : "px-4 py-3 sm:px-5",
           )}
           data-guided-dialog-header=""
         >
@@ -2522,10 +2420,7 @@ export const GuidedInputDialog = forwardRef<
                 {title}
               </h2>
               {phaseInfoTopic && phaseInfoContent ? (
-                <GuidedPhaseInfo
-                  topic={phaseInfoTopic}
-                  content={phaseInfoContent}
-                />
+                <GuidedPhaseInfo topic={phaseInfoTopic} content={phaseInfoContent} />
               ) : null}
             </div>
             {progressLabel ? (
@@ -2538,78 +2433,69 @@ export const GuidedInputDialog = forwardRef<
             ) : null}
           </div>
           <div className="flex shrink-0 items-center gap-0.5">
-              <button
-                ref={focusToggleRef}
-                type="button"
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "icon-sm",
-                  className:
-                    "text-muted-foreground hover:text-foreground",
-                })}
-                aria-label={
-                  browserFullscreen
-                    ? t("inputs.guidedExitFocusMode")
-                    : t("inputs.guidedFocusMode")
-                }
-                title={
-                  browserFullscreen
-                    ? t("inputs.guidedExitFocusMode")
-                    : t("inputs.guidedFocusMode")
-                }
-                aria-pressed={browserFullscreen}
-                onClick={() => {
-                  // Icon follows REAL browser fullscreen of the Focus host —
-                  // never focusMode. Contained Focus shows Maximize; native
-                  // fullscreen shows Minimize. Independent of Input vs Results.
-                  if (browserFullscreen) {
-                    if (onExitFocusFullscreen) onExitFocusFullscreen()
-                    else {
-                      void exitFullscreenIfNeeded(focusRootRef.current).catch(
-                        () => {},
-                      )
-                      setBrowserFullscreen(false)
-                    }
-                    return
+            <button
+              ref={focusToggleRef}
+              type="button"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "icon-sm",
+                className: "text-muted-foreground hover:text-foreground",
+              })}
+              aria-label={
+                browserFullscreen ? t("inputs.guidedExitFocusMode") : t("inputs.guidedFocusMode")
+              }
+              title={
+                browserFullscreen ? t("inputs.guidedExitFocusMode") : t("inputs.guidedFocusMode")
+              }
+              aria-pressed={browserFullscreen}
+              onClick={() => {
+                // Icon follows REAL browser fullscreen of the Focus host —
+                // never focusMode. Contained Focus shows Maximize; native
+                // fullscreen shows Minimize. Independent of Input vs Results.
+                if (browserFullscreen) {
+                  if (onExitFocusFullscreen) onExitFocusFullscreen()
+                  else {
+                    void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+                    setBrowserFullscreen(false)
                   }
-                  if (focusMode) {
-                    if (onRequestFocusFullscreen) onRequestFocusFullscreen()
-                    else {
-                      const root = focusRootRef.current
-                      if (root && canRequestFullscreen(root)) {
-                        void requestElementFullscreen(root).catch(() => {})
-                      }
-                    }
-                    return
-                  }
-                  enterFocusMode()
-                }}
-                data-guided-focus-toggle=""
-                data-guided-fullscreen-pressed={
-                  browserFullscreen ? "true" : undefined
+                  return
                 }
-              >
-                {browserFullscreen ? (
-                  <Minimize2 className="size-4" strokeWidth={2} aria-hidden />
-                ) : (
-                  <Maximize2 className="size-4" strokeWidth={2} aria-hidden />
-                )}
-              </button>
-              <button
-                ref={closeBtnRef}
-                type="button"
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "icon-sm",
-                  className: "text-muted-foreground hover:text-foreground",
-                })}
-                aria-label={t("inputs.guidedClose")}
-                onClick={handleCloseGuided}
-                data-guided-input-close=""
-              >
-                <X className="size-4" strokeWidth={2} aria-hidden />
-              </button>
-            </div>
+                if (focusMode) {
+                  if (onRequestFocusFullscreen) onRequestFocusFullscreen()
+                  else {
+                    const root = focusRootRef.current
+                    if (root && canRequestFullscreen(root)) {
+                      void requestElementFullscreen(root).catch(() => {})
+                    }
+                  }
+                  return
+                }
+                enterFocusMode()
+              }}
+              data-guided-focus-toggle=""
+              data-guided-fullscreen-pressed={browserFullscreen ? "true" : undefined}
+            >
+              {browserFullscreen ? (
+                <Minimize2 className="size-4" strokeWidth={2} aria-hidden />
+              ) : (
+                <Maximize2 className="size-4" strokeWidth={2} aria-hidden />
+              )}
+            </button>
+            <button
+              ref={closeBtnRef}
+              type="button"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "icon-sm",
+                className: "text-muted-foreground hover:text-foreground",
+              })}
+              aria-label={t("inputs.guidedClose")}
+              onClick={handleCloseGuided}
+              data-guided-input-close=""
+            >
+              <X className="size-4" strokeWidth={2} aria-hidden />
+            </button>
+          </div>
         </div>
 
         <div
@@ -2626,33 +2512,34 @@ export const GuidedInputDialog = forwardRef<
 
         {renderFooter()}
       </div>
-  )
+    )
 
-  if (suspend) return null
+    if (suspend) return null
 
-  return createPortal(
-    <div
-      ref={focusRootRef}
-      className={cn(
-        "flex items-center justify-center",
-        browserFullscreen
-          ? "h-full min-h-full w-full bg-background p-4 sm:p-8"
-          : cn(
-              "fixed inset-0 z-[200]",
-              // Focus and modal share the dimmed-app backdrop; fullscreen is solid.
-              "bg-black/40 p-3 sm:p-5",
-            ),
-      )}
-      role="presentation"
-      data-guided-input-dialog=""
-      data-guided-kind={entry}
-      data-guided-entry={entry}
-      data-guided-focus-mode={focusMode ? "true" : undefined}
-      data-guided-browser-fullscreen={browserFullscreen ? "true" : undefined}
-      data-guided-backdrop="dimmed"
-    >
-      {dialogSurface}
-    </div>,
-    document.body,
-  )
-})
+    return createPortal(
+      <div
+        ref={focusRootRef}
+        className={cn(
+          "flex items-center justify-center",
+          browserFullscreen
+            ? "h-full min-h-full w-full bg-background p-4 sm:p-8"
+            : cn(
+                "fixed inset-0 z-[200]",
+                // Focus and modal share the dimmed-app backdrop; fullscreen is solid.
+                "bg-black/40 p-3 sm:p-5",
+              ),
+        )}
+        role="presentation"
+        data-guided-input-dialog=""
+        data-guided-kind={entry}
+        data-guided-entry={entry}
+        data-guided-focus-mode={focusMode ? "true" : undefined}
+        data-guided-browser-fullscreen={browserFullscreen ? "true" : undefined}
+        data-guided-backdrop="dimmed"
+      >
+        {dialogSurface}
+      </div>,
+      document.body,
+    )
+  },
+)

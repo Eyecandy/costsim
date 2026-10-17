@@ -63,10 +63,9 @@ describe("costCorrelation linear algebra", () => {
   })
 
   it("buildSimulationCostCorrelationMatrix defaults omitted pairs to 0", () => {
-    const matrix = buildSimulationCostCorrelationMatrix(
-      [{ id: "a" }, { id: "b" }],
-      { a: { b: "0.6" } },
-    )
+    const matrix = buildSimulationCostCorrelationMatrix([{ id: "a" }, { id: "b" }], {
+      a: { b: "0.6" },
+    })
     expect(matrix).toEqual([
       [1, 0.6],
       [0.6, 1],
@@ -88,12 +87,8 @@ describe("costCorrelation linear algebra", () => {
       a: { b: "0.9", c: "0.9" },
       b: { c: "0.9" },
     }
-    expect(
-      isCostCorrelationPatchValid(rows, base, "a", "c", "-0.9"),
-    ).toBe(false)
-    expect(
-      isCostCorrelationPatchValid(rows, undefined, "a", "b", "0.5"),
-    ).toBe(true)
+    expect(isCostCorrelationPatchValid(rows, base, "a", "c", "-0.9")).toBe(false)
+    expect(isCostCorrelationPatchValid(rows, undefined, "a", "b", "0.5")).toBe(true)
   })
 })
 

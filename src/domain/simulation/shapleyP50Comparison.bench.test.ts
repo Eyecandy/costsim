@@ -28,14 +28,10 @@ function makeDriver(index: number): TriangularParams {
 }
 
 function buildInput(spec: ProjectSpec, runsPerSubset: number) {
-  const costTriangles = Array.from({ length: spec.nCosts }, (_, i) =>
-    makeCost(spec.costMode(i)),
-  )
-  const drivers = Array.from({ length: spec.nDrivers }, (_, i) =>
-    makeDriver(i),
-  )
+  const costTriangles = Array.from({ length: spec.nCosts }, (_, i) => makeCost(spec.costMode(i)))
+  const drivers = Array.from({ length: spec.nDrivers }, (_, i) => makeDriver(i))
   const driverImpacts = costTriangles.map((_, c) =>
-    drivers.map((_, d) => (c + d) % 3 === 0 ? 50 : 100),
+    drivers.map((_, d) => ((c + d) % 3 === 0 ? 50 : 100)),
   )
   const n = spec.nCosts
   const corr =
@@ -43,7 +39,7 @@ function buildInput(spec: ProjectSpec, runsPerSubset: number) {
       ? Array.from({ length: n }, (_, i) =>
           Array.from({ length: n }, (_, j) => {
             if (i === j) return 1
-            return 0.15 + (0.03 * Math.abs(i - j)) % 0.5
+            return 0.15 + ((0.03 * Math.abs(i - j)) % 0.5)
           }),
         )
       : undefined
@@ -102,10 +98,7 @@ type ComparisonRow = {
   mainRuntimeMs: number
 }
 
-function runComparison(
-  spec: ProjectSpec,
-  drawsPerSubset: number,
-): ComparisonRow {
+function runComparison(spec: ProjectSpec, drawsPerSubset: number): ComparisonRow {
   const input = buildInput(spec, drawsPerSubset)
   const mainStarted = performance.now()
   const { values } = simulateAggregateCostWithDriversValuesAndSeries({
@@ -147,7 +140,7 @@ describe("Shapley P50 vs main simulation comparison", () => {
       }
     }
 
-    // eslint-disable-next-line no-console
+     
     console.table(
       rows.map((row) => ({
         project: row.project,

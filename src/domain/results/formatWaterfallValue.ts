@@ -1,7 +1,4 @@
-import {
-  formatNumber,
-  type AppLanguage,
-} from "@/domain/results/formatNumber"
+import { formatNumber, type AppLanguage } from "@/domain/results/formatNumber"
 
 export type WaterfallDisplayScale =
   | { kind: "millions"; unitSuffix: "M" }
@@ -9,9 +6,7 @@ export type WaterfallDisplayScale =
   | { kind: "absolute"; unitSuffix: "" }
 
 /** Choose one display unit for an entire waterfall chart. */
-export function resolveWaterfallDisplayScale(
-  values: readonly number[],
-): WaterfallDisplayScale {
+export function resolveWaterfallDisplayScale(values: readonly number[]): WaterfallDisplayScale {
   const maxAbs = values.reduce((max, value) => {
     if (!Number.isFinite(value)) return max
     return Math.max(max, Math.abs(value))
@@ -33,14 +28,10 @@ function scaledMagnitude(value: number, scale: WaterfallDisplayScale): number {
   }
 }
 
-function fractionDigitsForScaledMagnitude(
-  scaledAbs: number,
-  defaultDigits: number,
-): number {
+function fractionDigitsForScaledMagnitude(scaledAbs: number, defaultDigits: number): number {
   if (scaledAbs === 0) return defaultDigits
 
-  const roundedDefault =
-    Math.round(scaledAbs * 10 ** defaultDigits) / 10 ** defaultDigits
+  const roundedDefault = Math.round(scaledAbs * 10 ** defaultDigits) / 10 ** defaultDigits
   if (roundedDefault === 0) {
     if (scaledAbs >= 0.01) return 2
     if (scaledAbs >= 0.001) return 3
@@ -68,18 +59,10 @@ function formatScaledValue(
   options?: { stripTrailingZeroFraction?: boolean },
 ): string {
   const defaultDigits = defaultFractionDigits(scale)
-  const digits = fractionDigitsForScaledMagnitude(
-    Math.abs(scaledValue),
-    defaultDigits,
-  )
-  const rounded =
-    Math.round(scaledValue * 10 ** digits) / 10 ** digits
+  const digits = fractionDigitsForScaledMagnitude(Math.abs(scaledValue), defaultDigits)
+  const rounded = Math.round(scaledValue * 10 ** digits) / 10 ** digits
   let displayDigits = digits
-  if (
-    options?.stripTrailingZeroFraction &&
-    digits === 1 &&
-    Number.isInteger(rounded)
-  ) {
+  if (options?.stripTrailingZeroFraction && digits === 1 && Number.isInteger(rounded)) {
     displayDigits = 0
   }
   const body = formatNumber(rounded, displayDigits, language)
@@ -134,27 +117,13 @@ export function formatTornadoSignedDeltaWithScale(
 }
 
 /** @deprecated Use chart-level scale via resolveWaterfallDisplayScale. */
-export function formatWaterfallValue(
-  value: number,
-  language: AppLanguage,
-): string {
-  return formatWaterfallValueWithScale(
-    value,
-    resolveWaterfallDisplayScale([value]),
-    language,
-  )
+export function formatWaterfallValue(value: number, language: AppLanguage): string {
+  return formatWaterfallValueWithScale(value, resolveWaterfallDisplayScale([value]), language)
 }
 
 /** @deprecated Use chart-level scale via resolveWaterfallDisplayScale. */
-export function formatWaterfallSignedDelta(
-  value: number,
-  language: AppLanguage,
-): string {
-  return formatWaterfallSignedDeltaWithScale(
-    value,
-    resolveWaterfallDisplayScale([value]),
-    language,
-  )
+export function formatWaterfallSignedDelta(value: number, language: AppLanguage): string {
+  return formatWaterfallSignedDeltaWithScale(value, resolveWaterfallDisplayScale([value]), language)
 }
 
 export function collectWaterfallDisplayValues(input: {
@@ -180,9 +149,7 @@ export function collectTornadoDisplayValues(
  * Tornado prefers `k` for small/medium charts so values like 3,202 are shown as
  * 3.2 k instead of noisy absolute currency. Millions threshold matches waterfall.
  */
-export function resolveTornadoDisplayScale(
-  values: readonly number[],
-): WaterfallDisplayScale {
+export function resolveTornadoDisplayScale(values: readonly number[]): WaterfallDisplayScale {
   const maxAbs = values.reduce((max, value) => {
     if (!Number.isFinite(value)) return max
     return Math.max(max, Math.abs(value))
@@ -197,9 +164,7 @@ export function resolveTornadoDisplayScale(
  * Per-value adaptive unit for Contribution Analysis labels.
  * Same magnitude bands as Tornado for M vs k, with absolute below 1k.
  */
-export function resolveAdaptiveMonetaryScale(
-  value: number,
-): WaterfallDisplayScale {
+export function resolveAdaptiveMonetaryScale(value: number): WaterfallDisplayScale {
   const abs = Math.abs(value)
   if (!Number.isFinite(abs) || abs === 0) {
     return { kind: "absolute", unitSuffix: "" }
@@ -220,10 +185,7 @@ function adaptiveFractionDigits(scale: WaterfallDisplayScale): number {
   }
 }
 
-export function formatAdaptiveMonetaryValue(
-  value: number,
-  language: AppLanguage,
-): string {
+export function formatAdaptiveMonetaryValue(value: number, language: AppLanguage): string {
   if (!Number.isFinite(value)) return "—"
   if (value === 0) return formatNumber(0, 0, language)
 
@@ -242,10 +204,7 @@ export function formatAdaptiveMonetaryValue(
   return scale.unitSuffix ? `${body} ${scale.unitSuffix}` : body
 }
 
-export function formatAdaptiveMonetarySignedDelta(
-  value: number,
-  language: AppLanguage,
-): string {
+export function formatAdaptiveMonetarySignedDelta(value: number, language: AppLanguage): string {
   if (!Number.isFinite(value)) return "—"
   if (value === 0) return formatAdaptiveMonetaryValue(0, language)
   const sign = value > 0 ? "+" : "-"
@@ -275,9 +234,7 @@ export function resolveTornadoDisplayScales(
   const kinds = new Set(perChart.map((scale) => scale.kind))
   const magnitudesSimilar =
     globalMaxAbs === 0 ||
-    chartMaxAbs.every(
-      (maxAbs) => maxAbs === 0 || globalMaxAbs / maxAbs <= 100,
-    )
+    chartMaxAbs.every((maxAbs) => maxAbs === 0 || globalMaxAbs / maxAbs <= 100)
 
   if (kinds.size <= 1 || magnitudesSimilar) {
     const shared = resolveTornadoDisplayScale(valueGroups.flat())

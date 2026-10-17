@@ -1,8 +1,6 @@
 import { AddAlternativeDialog } from "@/features/workspace/AddAlternativeDialog"
 import { CreateNextCheckpointDialog } from "@/features/checkpoints/CreateNextCheckpointDialog"
-import {
-  StartOngoingFromArchiveDialog,
-} from "@/features/analysis-library/StartOngoingFromArchiveDialog"
+import { StartOngoingFromArchiveDialog } from "@/features/analysis-library/StartOngoingFromArchiveDialog"
 import { SaveAndContinueLaterDialog } from "@/features/analysis-library/SaveAndContinueLaterDialog"
 import type { Project } from "@/domain/analysis/project"
 import { useI18n } from "@/i18n/useI18n"
@@ -50,7 +48,7 @@ export function WorkspaceDialogs({
   setAddAlternativeOpen: Dispatch<SetStateAction<boolean>>
   setDeleteProjectConfirmOpen: Dispatch<SetStateAction<boolean>>
   showArchiveBlockedNotice: (reason: ArchiveBlockReason) => void
-  showFinishOngoingNotice: (kind: 'need_archive_checkpoint' | 'failed') => void
+  showFinishOngoingNotice: (kind: "need_archive_checkpoint" | "failed") => void
 }) {
   const { t } = useI18n()
   const {
@@ -143,10 +141,7 @@ export function WorkspaceDialogs({
           setFinishOngoingConfirmOpen(false)
           void librarySession.completeOngoingAnalysis().then((result) => {
             if (result.ok) return
-            if (
-              result.reason === "has_draft" ||
-              result.reason === "latest_not_archived"
-            ) {
+            if (result.reason === "has_draft" || result.reason === "latest_not_archived") {
               showFinishOngoingNotice("need_archive_checkpoint")
               return
             }
@@ -156,9 +151,7 @@ export function WorkspaceDialogs({
       />
       <CreateNextCheckpointDialog
         open={nextCheckpointOpen}
-        nextSequence={
-          (librarySession.latestCheckpoint?.sequence ?? 0) + 1
-        }
+        nextSequence={(librarySession.latestCheckpoint?.sequence ?? 0) + 1}
         sourceSequence={librarySession.latestCheckpoint?.sequence ?? 1}
         sourceName={
           librarySession.latestCheckpoint?.name ??
@@ -180,11 +173,7 @@ export function WorkspaceDialogs({
         }}
         onConfirm={async (selectedProjectId, name) => {
           setStartOngoingError(null)
-          const result =
-            await librarySession.beginStartOngoingFromArchived(
-              selectedProjectId,
-              name,
-            )
+          const result = await librarySession.beginStartOngoingFromArchived(selectedProjectId, name)
           if (result.ok) {
             setStartOngoingDialogOpen(false)
             setStartOngoingAlternatives([])
@@ -238,10 +227,7 @@ export function WorkspaceDialogs({
             setSaveContinueError(null)
             navigateTo(LIBRARY_PATH)
           } catch (error) {
-            if (
-              isAnalysisNameConflictOnMoveError(error) ||
-              isAnalysisNameConflictError(error)
-            ) {
+            if (isAnalysisNameConflictOnMoveError(error) || isAnalysisNameConflictError(error)) {
               setSaveContinueError(t("library.duplicateNameOnMove"))
             } else {
               setSaveContinueError(t("library.saveError"))

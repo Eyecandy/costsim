@@ -3,14 +3,10 @@ import type { ReactElement, ReactNode } from "react"
 import { cn } from "@/shared/utils"
 
 /** Shared metric grid: absolute value | reserved percent slot. */
-export const KEY_FIGURES_METRIC_GRID_INLINE =
-  "grid-cols-[minmax(0,1fr)_8ch] gap-3"
-export const KEY_FIGURES_METRIC_GRID_EXPANDED =
-  "grid-cols-[minmax(0,1fr)_8ch] gap-3"
-export const KEY_FIGURES_METRIC_GRID_INLINE_TIGHT =
-  "grid-cols-[minmax(0,1fr)_8ch] gap-2"
-export const KEY_FIGURES_METRIC_GRID_EXPANDED_TIGHT =
-  "grid-cols-[minmax(0,1fr)_8ch] gap-2.5"
+export const KEY_FIGURES_METRIC_GRID_INLINE = "grid-cols-[minmax(0,1fr)_8ch] gap-3"
+export const KEY_FIGURES_METRIC_GRID_EXPANDED = "grid-cols-[minmax(0,1fr)_8ch] gap-3"
+export const KEY_FIGURES_METRIC_GRID_INLINE_TIGHT = "grid-cols-[minmax(0,1fr)_8ch] gap-2"
+export const KEY_FIGURES_METRIC_GRID_EXPANDED_TIGHT = "grid-cols-[minmax(0,1fr)_8ch] gap-2.5"
 
 export type KeyFigureMetricValueProps = {
   absoluteText: string
@@ -71,19 +67,12 @@ export function KeyFigureMetricValue({
       data-key-figure-metric-inherit-color={inheritColor ? "true" : undefined}
     >
       <span
-        className={cn(
-          "justify-self-end",
-          inheritColor && "text-inherit",
-          absoluteClassName,
-        )}
+        className={cn("justify-self-end", inheritColor && "text-inherit", absoluteClassName)}
         data-key-figure-metric-absolute=""
       >
         {absoluteText}
       </span>
-      <span
-        className={percentClassName}
-        data-key-figure-metric-percent=""
-      >
+      <span className={percentClassName} data-key-figure-metric-percent="">
         {percentText ?? (inheritColor ? "\u00a0" : "(0,0 %)")}
       </span>
     </span>
@@ -103,11 +92,7 @@ export function KeyFigureMetricColumnHeader({
 }): ReactElement {
   return (
     <span
-      className={cn(
-        "inline-grid w-full items-end",
-        KEY_FIGURES_METRIC_GRID_INLINE,
-        className,
-      )}
+      className={cn("inline-grid w-full items-end", KEY_FIGURES_METRIC_GRID_INLINE, className)}
       data-key-figure-metric-column-header=""
     >
       <span className="justify-self-end text-right font-normal">{children}</span>

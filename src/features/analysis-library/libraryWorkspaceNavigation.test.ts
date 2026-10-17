@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { buildLibraryPath, readLibraryFilterFromLocation, runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
+import {
+  buildLibraryPath,
+  readLibraryFilterFromLocation,
+  runBeforeLeaveWithoutBlocking,
+} from "@/features/analysis-library/libraryNavigation"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
-
 
 describe("Library direct destinations (URL-authoritative)", () => {
   it("buildLibraryPath encodes Home / All / Deleted / folder canonically", () => {
@@ -15,9 +18,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
     expect(buildLibraryPath({ kind: "folder", folderId: "campus-1" })).toBe(
       "/library?view=folder&folderId=campus-1",
     )
-    expect(buildLibraryPath({ kind: "folder", folderId: null })).toBe(
-      "/library?view=folder",
-    )
+    expect(buildLibraryPath({ kind: "folder", folderId: null })).toBe("/library?view=folder")
   })
 
   it("readLibraryFilterFromLocation is the inverse of buildLibraryPath", () => {
@@ -26,9 +27,10 @@ describe("Library direct destinations (URL-authoritative)", () => {
     expect(readLibraryFilterFromLocation("?view=trash")).toEqual({
       kind: "trash",
     })
-    expect(
-      readLibraryFilterFromLocation("?view=folder&folderId=campus-1"),
-    ).toEqual({ kind: "folder", folderId: "campus-1" })
+    expect(readLibraryFilterFromLocation("?view=folder&folderId=campus-1")).toEqual({
+      kind: "folder",
+      folderId: "campus-1",
+    })
     expect(readLibraryFilterFromLocation("?view=folder")).toEqual({
       kind: "folder",
       folderId: null,
@@ -80,9 +82,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
       join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
       "utf8",
     )
-    expect(nav).toContain(
-      "await runBeforeLeaveWithoutBlocking(beforeLeaveWorkspace)",
-    )
+    expect(nav).toContain("await runBeforeLeaveWithoutBlocking(beforeLeaveWorkspace)")
   })
 
   it("autosave race guard remains ID-bound", () => {

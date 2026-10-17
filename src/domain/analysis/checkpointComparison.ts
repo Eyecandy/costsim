@@ -10,10 +10,7 @@
  */
 
 import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
-import {
-  diffRowIds,
-  getPrecedingCheckpointPair,
-} from "@/domain/analysis/checkpointDiff"
+import { diffRowIds, getPrecedingCheckpointPair } from "@/domain/analysis/checkpointDiff"
 import type { KeyFigureRowId } from "@/domain/results/keyFigureVisibility"
 import { keyFigureInlinePercentCompanionId } from "@/domain/results/keyFigureVisibility"
 import { computeUncertainDeltaWithPct } from "@/domain/analysis/project"
@@ -71,9 +68,7 @@ export type CheckpointStructuralChangeCounts = {
 }
 
 export type CheckpointKeyFiguresUnavailableReason =
-  | "missing_previous_results"
-  | "missing_current_results"
-  | "stale_current_results"
+  "missing_previous_results" | "missing_current_results" | "stale_current_results"
 
 /** Frozen previous distribution for S-curve reference (no Monte Carlo rerun). */
 export type CheckpointSCurveReference = {
@@ -117,9 +112,7 @@ export type CheckpointComparisonPair = {
   }
 }
 
-export type CheckpointComparison =
-  | CheckpointComparisonBaseline
-  | CheckpointComparisonPair
+export type CheckpointComparison = CheckpointComparisonBaseline | CheckpointComparisonPair
 
 export type CheckpointResultSource = {
   projectResults: readonly ProjectResult[]
@@ -186,12 +179,10 @@ export function extractKeyFigureValue(
 
   if (metricId === "baseCost") return baseCost
   if (metricId === "expectedAddition") {
-    return computeUncertainDeltaWithPct(p50, baseCost, pr.incurredCosts)
-      .absolute
+    return computeUncertainDeltaWithPct(p50, baseCost, pr.incurredCosts).absolute
   }
   if (metricId === "expectedAdditionPct") {
-    return computeUncertainDeltaWithPct(p50, baseCost, pr.incurredCosts)
-      .percent
+    return computeUncertainDeltaWithPct(p50, baseCost, pr.incurredCosts).percent
   }
   if (metricId === "uncertaintyReserve") {
     return computeUncertainDeltaWithPct(p85, p50, pr.incurredCosts).absolute
@@ -202,10 +193,7 @@ export function extractKeyFigureValue(
   if (metricId === "expectedValue") return mean(values)
   if (metricId === "stdDev") return standardDeviation(values)
   if (metricId === "stdDevPct") {
-    return relativeStandardDeviationPercent(
-      standardDeviation(values),
-      mean(values),
-    )
+    return relativeStandardDeviationPercent(standardDeviation(values), mean(values))
   }
   if (metricId === "probAtBase") {
     if (baseCost === null) return null
@@ -244,18 +232,10 @@ export function extractKeyFiguresFromResultSource(
   if ((!pr || pr.values.length === 0) && !source.compact) return null
   return {
     baseCost: extractKeyFigureValue(source, projectId, "baseCost"),
-    expectedAddition: extractKeyFigureValue(
-      source,
-      projectId,
-      "expectedAddition",
-    ),
+    expectedAddition: extractKeyFigureValue(source, projectId, "expectedAddition"),
     p50: extractKeyFigureValue(source, projectId, "p50"),
     p85: extractKeyFigureValue(source, projectId, "p85"),
-    uncertaintyReserve: extractKeyFigureValue(
-      source,
-      projectId,
-      "uncertaintyReserve",
-    ),
+    uncertaintyReserve: extractKeyFigureValue(source, projectId, "uncertaintyReserve"),
     expectedValue: extractKeyFigureValue(source, projectId, "expectedValue"),
   }
 }
@@ -337,10 +317,7 @@ export function buildKeyFigureDeltas(args: {
       ? extractKeyFigureValue(current, projectId, pctCompanion, options)
       : undefined
     const change =
-      prev === null ||
-      cur === null ||
-      !Number.isFinite(prev) ||
-      !Number.isFinite(cur)
+      prev === null || cur === null || !Number.isFinite(prev) || !Number.isFinite(cur)
         ? null
         : cur - prev
     const changePercent =
@@ -390,38 +367,22 @@ export function compareStructuralInputs(
     laterDrivers.map((r) => r.id),
   )
 
-  const earlierCostById = Object.fromEntries(
-    earlierCosts.map((r) => [r.id, r]),
-  )
+  const earlierCostById = Object.fromEntries(earlierCosts.map((r) => [r.id, r]))
   const laterCostById = Object.fromEntries(laterCosts.map((r) => [r.id, r]))
-  const earlierDriverById = Object.fromEntries(
-    earlierDrivers.map((r) => [r.id, r]),
-  )
-  const laterDriverById = Object.fromEntries(
-    laterDrivers.map((r) => [r.id, r]),
-  )
+  const earlierDriverById = Object.fromEntries(earlierDrivers.map((r) => [r.id, r]))
+  const laterDriverById = Object.fromEntries(laterDrivers.map((r) => [r.id, r]))
 
   return {
     costItemsAdded: costDiff.onlyLater.length,
     costItemsRemoved: costDiff.onlyEarlier.length,
-    costRangesChanged: countRangeChanges(
-      costDiff.shared,
-      earlierCostById,
-      laterCostById,
-    ),
+    costRangesChanged: countRangeChanges(costDiff.shared, earlierCostById, laterCostById),
     driversAdded: driverDiff.onlyLater.length,
     driversRemoved: driverDiff.onlyEarlier.length,
-    driverRangesChanged: countRangeChanges(
-      driverDiff.shared,
-      earlierDriverById,
-      laterDriverById,
-    ),
+    driverRangesChanged: countRangeChanges(driverDiff.shared, earlierDriverById, laterDriverById),
   }
 }
 
-export function hasStructuralChanges(
-  structural: CheckpointStructuralChangeCounts,
-): boolean {
+export function hasStructuralChanges(structural: CheckpointStructuralChangeCounts): boolean {
   return (
     structural.costItemsAdded > 0 ||
     structural.costItemsRemoved > 0 ||
@@ -437,13 +398,8 @@ function pairBase(
   later: AnalysisCheckpoint,
   structural: CheckpointStructuralChangeCounts,
   projectId: string | undefined,
-): Omit<
-  CheckpointComparisonPair,
-  "keyFigures" | "keyFiguresUnavailableReason"
-> {
-  const sCurvePrev = projectId
-    ? sCurveReferenceFromCheckpoint(earlier, projectId)
-    : undefined
+): Omit<CheckpointComparisonPair, "keyFigures" | "keyFiguresUnavailableReason"> {
+  const sCurvePrev = projectId ? sCurveReferenceFromCheckpoint(earlier, projectId) : undefined
   return {
     kind: "comparison",
     currentCheckpointId: later.id,
@@ -453,9 +409,7 @@ function pairBase(
     previousSequence: earlier.sequence,
     previousName: earlier.name,
     structural,
-    ...(sCurvePrev
-      ? { extensions: { sCurve: { previous: sCurvePrev } } }
-      : {}),
+    ...(sCurvePrev ? { extensions: { sCurve: { previous: sCurvePrev } } } : {}),
   }
 }
 
@@ -499,8 +453,8 @@ export function compareCheckpoints(args: {
   const projectId =
     later.workspace.projects[0]?.id ??
     earlier.workspace.projects[0]?.id ??
-    viewedResultSource?.projectResults[0]?.projectId
-    ?? viewedResultSource?.compact?.activeProjectId
+    viewedResultSource?.projectResults[0]?.projectId ??
+    viewedResultSource?.compact?.activeProjectId
 
   const base = pairBase(earlier, later, structural, projectId)
   const extractOpts: CheckpointKeyFigureExtractOptions = {
@@ -518,8 +472,7 @@ export function compareCheckpoints(args: {
 
   if (
     !viewedResultSource ||
-    (viewedResultSource.projectResults.length === 0 &&
-      !viewedResultSource.compact)
+    (viewedResultSource.projectResults.length === 0 && !viewedResultSource.compact)
   ) {
     return {
       ...base,

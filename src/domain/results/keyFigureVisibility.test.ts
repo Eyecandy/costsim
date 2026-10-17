@@ -13,7 +13,6 @@ import {
 import { selectComparisonKeyFigures } from "@/domain/analysis/checkpointComparisonPresentation"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
 }
@@ -42,9 +41,7 @@ describe("shared Key Figure visibility", () => {
       language: "en",
       labels,
     })
-    expect(listVisibleKeyFigureRowIds(prefs.keyFigures)).toEqual(
-      rows.map((r) => r.id),
-    )
+    expect(listVisibleKeyFigureRowIds(prefs.keyFigures)).toEqual(rows.map((r) => r.id))
   })
 
   it("hides P85 and Expected Value when toggled off; keeps shared order", () => {

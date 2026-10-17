@@ -12,9 +12,7 @@ export type AppFeatureConfig = {
 const rawVariant = import.meta.env.VITE_APP_VARIANT
 
 export const appVariant: AppVariant =
-  rawVariant === "pilot" || rawVariant === "public_mvp"
-    ? rawVariant
-    : "public_mvp"
+  rawVariant === "pilot" || rawVariant === "public_mvp" ? rawVariant : "public_mvp"
 
 export const featureConfigByVariant: Record<AppVariant, AppFeatureConfig> = {
   pilot: {
@@ -38,6 +36,6 @@ export const featureConfigByVariant: Record<AppVariant, AppFeatureConfig> = {
 export const appFeatures = featureConfigByVariant[appVariant]
 
 if (import.meta.env.DEV) {
-  // eslint-disable-next-line no-console -- useful dev visibility only
+   
   console.info("[appVariant]", appVariant)
 }

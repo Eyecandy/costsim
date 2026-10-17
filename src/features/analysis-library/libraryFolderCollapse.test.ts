@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 describe("library user-folder collapse vs nav sections", () => {
   it("user folders use empty expandedUserFolderIds; Recent/Archived are not sidebar sections", () => {
     const nav = readFileSync(
@@ -39,13 +38,9 @@ describe("library user-folder collapse vs nav sections", () => {
     expect(page).toContain('className="flex min-h-screen flex-col bg-background"')
     expect(page).toContain('role="contentinfo"')
     expect(page).toContain("© 2026 {PRODUCT_NAME}")
-    expect(page).toContain(
-      'className="mt-auto flex justify-center pt-10 pb-8 text-center"',
-    )
+    expect(page).toContain('className="mt-auto flex justify-center pt-10 pb-8 text-center"')
     // Same markup as analysis workspace footer
-    expect(app).toContain(
-      'className="mt-auto flex justify-center pt-10 pb-8 text-center"',
-    )
+    expect(app).toContain('className="mt-auto flex justify-center pt-10 pb-8 text-center"')
     expect(app).toContain("© 2026 {PRODUCT_NAME}")
     // No fixed overlay footer on Library
     const footerIdx = page.indexOf('role="contentinfo"')
@@ -55,10 +50,7 @@ describe("library user-folder collapse vs nav sections", () => {
   })
 
   it("does not couple folder disclosure to auth", () => {
-    const auth = readFileSync(
-      join(repoRoot, "src/shared/auth/AuthProvider.tsx"),
-      "utf8",
-    )
+    const auth = readFileSync(join(repoRoot, "src/shared/auth/AuthProvider.tsx"), "utf8")
     expect(auth).not.toContain("expandedUserFolder")
     expect(auth).not.toContain("libraryFolderDisclosure")
   })

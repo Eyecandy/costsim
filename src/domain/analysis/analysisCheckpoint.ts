@@ -52,9 +52,7 @@ export type AnalysisCheckpoint = {
   /** Analytical inputs for this point in time (exactly one Project). */
   workspace: AnalysisWorkspacePayload
   /** Frozen results when the checkpoint is archived. */
-  archivedSnapshot?:
-    | ArchivedAnalysisSnapshotV1
-    | OngoingCheckpointResultSnapshotV1
+  archivedSnapshot?: ArchivedAnalysisSnapshotV1 | OngoingCheckpointResultSnapshotV1
 }
 
 export type OngoingAnalysisState = {
@@ -96,18 +94,12 @@ export function cloneProjectPreservingIds(source: Project): Project {
     driverRows: source.driverRows.map((r) => ({ ...r })),
     driverImpacts: source.driverImpacts
       ? Object.fromEntries(
-          Object.entries(source.driverImpacts).map(([d, byCost]) => [
-            d,
-            { ...byCost },
-          ]),
+          Object.entries(source.driverImpacts).map(([d, byCost]) => [d, { ...byCost }]),
         )
       : undefined,
     costCorrelations: source.costCorrelations
       ? Object.fromEntries(
-          Object.entries(source.costCorrelations).map(([a, byB]) => [
-            a,
-            { ...byB },
-          ]),
+          Object.entries(source.costCorrelations).map(([a, byB]) => [a, { ...byB }]),
         )
       : undefined,
     assumptions: source.assumptions?.map((a) => ({ ...a })),
@@ -147,10 +139,7 @@ export function createInitialCheckpoint(
   return {
     id: newId(),
     sequence,
-    name: (options?.name?.trim() || defaultCheckpointName(sequence)).slice(
-      0,
-      80,
-    ),
+    name: (options?.name?.trim() || defaultCheckpointName(sequence)).slice(0, 80),
     status: "draft",
     createdAt,
     archivedAt: null,
@@ -185,18 +174,13 @@ export function getActiveCheckpoint(
  * Load/recovery only: when activeCheckpointId is corrupt, use first checkpoint.
  * Do not call during normal editing/autosave.
  */
-export function resolveActiveCheckpointOnLoad(
-  ongoing: OngoingAnalysisState,
-): AnalysisCheckpoint {
+export function resolveActiveCheckpointOnLoad(ongoing: OngoingAnalysisState): AnalysisCheckpoint {
   return (
-    ongoing.checkpoints.find((c) => c.id === ongoing.activeCheckpointId) ??
-    ongoing.checkpoints[0]!
+    ongoing.checkpoints.find((c) => c.id === ongoing.activeCheckpointId) ?? ongoing.checkpoints[0]!
   )
 }
 
-export function getDraftCheckpoints(
-  ongoing: OngoingAnalysisState,
-): AnalysisCheckpoint[] {
+export function getDraftCheckpoints(ongoing: OngoingAnalysisState): AnalysisCheckpoint[] {
   return ongoing.checkpoints.filter((c) => c.status === "draft")
 }
 
@@ -205,13 +189,9 @@ export function hasDraftCheckpoint(ongoing: OngoingAnalysisState): boolean {
 }
 
 /** Highest-sequence checkpoint (linear tip of the history). */
-export function getLatestCheckpoint(
-  ongoing: OngoingAnalysisState,
-): AnalysisCheckpoint | undefined {
+export function getLatestCheckpoint(ongoing: OngoingAnalysisState): AnalysisCheckpoint | undefined {
   if (ongoing.checkpoints.length === 0) return undefined
-  return [...ongoing.checkpoints].sort((a, b) => a.sequence - b.sequence).at(
-    -1,
-  )
+  return [...ongoing.checkpoints].sort((a, b) => a.sequence - b.sequence).at(-1)
 }
 
 /** Write current workspace back into the active draft checkpoint. */
@@ -277,9 +257,7 @@ export function selectCheckpoint(
 }
 
 /** Primary stage option id from the checkpoint's single project profile. */
-export function checkpointPrimaryStageId(
-  checkpoint: AnalysisCheckpoint,
-): string | undefined {
+export function checkpointPrimaryStageId(checkpoint: AnalysisCheckpoint): string | undefined {
   return checkpoint.workspace.projects[0]?.profile?.phase
 }
 
@@ -296,9 +274,7 @@ export function getCreateNextCheckpointBlockReason(
   return null
 }
 
-export function canCreateNextCheckpoint(
-  ongoing: OngoingAnalysisState | undefined,
-): boolean {
+export function canCreateNextCheckpoint(ongoing: OngoingAnalysisState | undefined): boolean {
   return getCreateNextCheckpointBlockReason(ongoing) === null
 }
 
@@ -333,9 +309,7 @@ export function getDeleteActiveDraftCheckpointBlockReason(
   return null
 }
 
-export function canDeleteActiveDraftCheckpoint(
-  ongoing: OngoingAnalysisState | undefined,
-): boolean {
+export function canDeleteActiveDraftCheckpoint(ongoing: OngoingAnalysisState | undefined): boolean {
   return getDeleteActiveDraftCheckpointBlockReason(ongoing) === null
 }
 
@@ -361,9 +335,7 @@ export function deleteActiveDraftCheckpoint(
 
   const tip = getLatestCheckpoint(ongoing)!
   const remaining = ongoing.checkpoints.filter((c) => c.id !== tip.id)
-  const restored = [...remaining].sort((a, b) => a.sequence - b.sequence).at(
-    -1,
-  )
+  const restored = [...remaining].sort((a, b) => a.sequence - b.sequence).at(-1)
   if (!restored || restored.status !== "archived") {
     return { ok: false, reason: "no_archived_predecessor" }
   }
@@ -398,11 +370,16 @@ export type CompleteOngoingAnalysisBlockReason =
  * Preconditions for finishing an Ongoing Analysis (not archiving a checkpoint).
  * Latest tip must already be archived; never auto-archives.
  */
-export function getCompleteOngoingAnalysisBlockReason(args: {
-  status?: string | null
-  analysisMode?: string | null
-  ongoing?: OngoingAnalysisState | null
-} | null | undefined): CompleteOngoingAnalysisBlockReason | null {
+export function getCompleteOngoingAnalysisBlockReason(
+  args:
+    | {
+        status?: string | null
+        analysisMode?: string | null
+        ongoing?: OngoingAnalysisState | null
+      }
+    | null
+    | undefined,
+): CompleteOngoingAnalysisBlockReason | null {
   if (!args) return "not_found"
   if (args.status !== "draft") return "not_draft"
   if (args.analysisMode !== "ongoing") return "not_ongoing"
@@ -422,9 +399,7 @@ export function getCompleteOngoingAnalysisBlockReason(args: {
  * Mark the Ongoing Analysis lifecycle completed. Does not mutate checkpoints,
  * snapshots, or activeCheckpointId. Caller sets AnalysisDocument.status.
  */
-export function completeOngoingAnalysis(
-  ongoing: OngoingAnalysisState,
-): OngoingAnalysisState {
+export function completeOngoingAnalysis(ongoing: OngoingAnalysisState): OngoingAnalysisState {
   if (ongoing.lifecycle === "completed") return ongoing
   return {
     ...ongoing,
@@ -432,18 +407,11 @@ export function completeOngoingAnalysis(
   }
 }
 
-function frozenWorkspaceFromCheckpoint(
-  checkpoint: AnalysisCheckpoint,
-): AnalysisWorkspacePayload {
-  if (
-    checkpoint.workspace.projects.length > 0
-  ) {
+function frozenWorkspaceFromCheckpoint(checkpoint: AnalysisCheckpoint): AnalysisWorkspacePayload {
+  if (checkpoint.workspace.projects.length > 0) {
     return ensureSingleProjectWorkspace(checkpoint.workspace)
   }
-  if (
-    checkpoint.archivedSnapshot &&
-    isLegacyHeavyArchivedSnapshot(checkpoint.archivedSnapshot)
-  ) {
+  if (checkpoint.archivedSnapshot && isLegacyHeavyArchivedSnapshot(checkpoint.archivedSnapshot)) {
     return ensureSingleProjectWorkspace({
       projects: checkpoint.archivedSnapshot.projectsAtArchive,
       activeProjectId: checkpoint.archivedSnapshot.activeProjectIdAtRun,
@@ -453,9 +421,7 @@ function frozenWorkspaceFromCheckpoint(
 }
 
 /** Identity maps — IDs are intentionally unchanged across checkpoints. */
-export function buildPreservedIdMaps(
-  workspace: AnalysisWorkspacePayload,
-): {
+export function buildPreservedIdMaps(workspace: AnalysisWorkspacePayload): {
   projectIdMap: Map<string, string>
   rowIdMap: Map<string, string>
 } {
@@ -491,9 +457,7 @@ export function applyOngoingAnalysisNameToWorkspace(
   if (!name) return workspace
   return {
     activeProjectId: workspace.activeProjectId,
-    projects: workspace.projects.map((p, index) =>
-      index === 0 ? { ...p, name } : p,
-    ),
+    projects: workspace.projects.map((p, index) => (index === 0 ? { ...p, name } : p)),
   }
 }
 
@@ -527,18 +491,14 @@ export function createNextCheckpoint(
   const newCheckpoint: AnalysisCheckpoint = {
     id: newId(),
     sequence,
-    name: (options?.name?.trim() || defaultCheckpointName(sequence)).slice(
-      0,
-      80,
-    ),
+    name: (options?.name?.trim() || defaultCheckpointName(sequence)).slice(0, 80),
     status: "draft",
     createdAt,
     archivedAt: null,
     workspace,
   }
   const analysisId =
-    options?.analysisId ??
-    (isOngoingCheckpointResultSnapshot(snapshot) ? snapshot.analysisId : "")
+    options?.analysisId ?? (isOngoingCheckpointResultSnapshot(snapshot) ? snapshot.analysisId : "")
   const inheritedResult = isOngoingCheckpointResultSnapshot(snapshot)
     ? cloneOngoingCheckpointResultSnapshotForNextCheckpoint(snapshot, {
         analysisId,
@@ -593,9 +553,7 @@ export function planOngoingFromSingleArchiveProjects(
   }
 }
 
-export function normalizeOngoingState(
-  raw: unknown,
-): OngoingAnalysisState | undefined {
+export function normalizeOngoingState(raw: unknown): OngoingAnalysisState | undefined {
   if (!raw || typeof raw !== "object") return undefined
   const o = raw as Record<string, unknown>
   if (!Array.isArray(o.checkpoints) || o.checkpoints.length === 0) {
@@ -624,17 +582,13 @@ export function normalizeOngoingState(
       name: c.name.trim() || defaultCheckpointName(Math.floor(c.sequence)),
       status: c.status,
       createdAt: c.createdAt,
-      archivedAt:
-        typeof c.archivedAt === "string" ? c.archivedAt : null,
-      ...(typeof c.checkpointType === "string"
-        ? { checkpointType: c.checkpointType }
-        : {}),
+      archivedAt: typeof c.archivedAt === "string" ? c.archivedAt : null,
+      ...(typeof c.checkpointType === "string" ? { checkpointType: c.checkpointType } : {}),
       workspace: single,
       ...(c.archivedSnapshot && typeof c.archivedSnapshot === "object"
         ? {
             archivedSnapshot: c.archivedSnapshot as
-              | ArchivedAnalysisSnapshotV1
-              | OngoingCheckpointResultSnapshotV1,
+              ArchivedAnalysisSnapshotV1 | OngoingCheckpointResultSnapshotV1,
           }
         : {}),
     })
@@ -644,11 +598,9 @@ export function normalizeOngoingState(
   // Soft-cap: keep first MAX_CHECKPOINTS if corrupt data exceeds the limit.
   const capped = checkpoints.slice(0, MAX_CHECKPOINTS)
   const activeCheckpointId =
-    typeof o.activeCheckpointId === "string" &&
-    capped.some((c) => c.id === o.activeCheckpointId)
+    typeof o.activeCheckpointId === "string" && capped.some((c) => c.id === o.activeCheckpointId)
       ? o.activeCheckpointId
       : capped[0]!.id
-  const lifecycle: OngoingAnalysisLifecycle =
-    o.lifecycle === "completed" ? "completed" : "active"
+  const lifecycle: OngoingAnalysisLifecycle = o.lifecycle === "completed" ? "completed" : "active"
   return { lifecycle, activeCheckpointId, checkpoints: capped }
 }

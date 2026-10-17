@@ -34,9 +34,7 @@ export function createAssumption(text: string): ProjectAssumption | null {
  * Normalize unknown JSON into ordered assumptions.
  * Invalid entries are skipped. Empty → undefined (omit from project).
  */
-export function normalizeAssumptions(
-  raw: unknown,
-): ProjectAssumption[] | undefined {
+export function normalizeAssumptions(raw: unknown): ProjectAssumption[] | undefined {
   if (!Array.isArray(raw)) return undefined
   const out: ProjectAssumption[] = []
   const seen = new Set<string>()
@@ -46,10 +44,7 @@ export function normalizeAssumptions(
     if (typeof o.text !== "string") continue
     const text = parseAssumptionText(o.text)
     if (text === null) continue
-    const id =
-      typeof o.id === "string" && o.id.trim() !== "" && !seen.has(o.id)
-        ? o.id
-        : newId()
+    const id = typeof o.id === "string" && o.id.trim() !== "" && !seen.has(o.id) ? o.id : newId()
     if (seen.has(id)) continue
     seen.add(id)
     out.push({ id, text })
@@ -65,9 +60,7 @@ export function assumptionsToShareTexts(
   return assumptions.map((a) => a.text)
 }
 
-export function assumptionsFromShareTexts(
-  texts: unknown,
-): ProjectAssumption[] | undefined {
+export function assumptionsFromShareTexts(texts: unknown): ProjectAssumption[] | undefined {
   if (!Array.isArray(texts)) return undefined
   const out: ProjectAssumption[] = []
   for (const t of texts) {

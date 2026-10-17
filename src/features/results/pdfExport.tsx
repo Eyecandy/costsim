@@ -46,9 +46,9 @@ export async function downloadOngoingReportPdf({
   t: Translate
 }) {
   await ensurePdfFonts()
-  const generatedAtDisplay = new Date(
-    model.metadata.generatedAtIso,
-  ).toLocaleDateString(language === "no" ? "nb-NO" : "en-GB")
+  const generatedAtDisplay = new Date(model.metadata.generatedAtIso).toLocaleDateString(
+    language === "no" ? "nb-NO" : "en-GB",
+  )
   const blob = await pdf(
     <OngoingReportDocument
       model={model}
@@ -100,9 +100,7 @@ export async function downloadOngoingReportPdf({
 
   downloadBlob(
     blob,
-    language === "no"
-      ? "lopende-analyse-rapport.pdf"
-      : "ongoing-analysis-report.pdf",
+    language === "no" ? "lopende-analyse-rapport.pdf" : "ongoing-analysis-report.pdf",
   )
 }
 
@@ -152,9 +150,7 @@ export async function downloadProjectReportPdf({
       sCurveTitle={t("charts.sCurveTitle")}
       sCurveFootnote={t("results.pdfSCurveFootnote").replace(
         "{percentiles}",
-        sCurvePercentiles
-          .map((p) => `P${p}`)
-          .join(language === "no" ? ", " : ", "),
+        sCurvePercentiles.map((p) => `P${p}`).join(language === "no" ? ", " : ", "),
       )}
       sCurveSeries={sCurveSeries}
       sCurveMarkerPercentiles={sCurvePercentiles}
@@ -209,8 +205,5 @@ export async function downloadProjectReportPdf({
     />,
   ).toBlob()
 
-  downloadBlob(
-    blob,
-    language === "no" ? "usikkerhetsrapport.pdf" : "uncertainty-report.pdf",
-  )
+  downloadBlob(blob, language === "no" ? "usikkerhetsrapport.pdf" : "uncertainty-report.pdf")
 }

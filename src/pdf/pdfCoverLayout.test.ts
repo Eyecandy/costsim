@@ -21,18 +21,14 @@ describe("pdfCoverLayout", () => {
     expect(formatPdfCoverProjectContext(["A"], "no")).toBe("A")
     expect(formatPdfCoverProjectContext(["A", "B"], "no")).toBe("A · B")
     expect(formatPdfCoverProjectContext(["A", "B", "C"], "en")).toBe("A · B · C")
-    expect(formatPdfCoverProjectContext(["A", "B", "C", "D"], "no")).toBe(
-      "4 alternativer",
-    )
+    expect(formatPdfCoverProjectContext(["A", "B", "C", "D"], "no")).toBe("4 alternativer")
   })
 
   it("always keeps one shared Key Figures table and TOC subsections", () => {
     for (const n of [1, 2, 3, 4]) {
       const layout = resolvePdfCoverLayout(n)
       expect(layout.showTocSubsections).toBe(true)
-      expect(layout.metricFontSize).toBeGreaterThanOrEqual(
-        PDF_KEY_FIGURES_MIN_FONT_SIZE,
-      )
+      expect(layout.metricFontSize).toBeGreaterThanOrEqual(PDF_KEY_FIGURES_MIN_FONT_SIZE)
     }
   })
 
@@ -69,13 +65,8 @@ describe("pdfCoverLayout", () => {
     })
     expect(chapters).toHaveLength(6)
     expect(chapters[0]?.id).toBe(PDF_CHAPTER_IDS.results)
-    expect(chapters[0]?.subsections?.map((s) => s.id)).toEqual([
-      PDF_SECTION_IDS.sCurve,
-    ])
-    expect(chapters[1]?.subsections?.map((s) => s.label)).toEqual([
-      "TORNADO",
-      "Bidragsanalyse",
-    ])
+    expect(chapters[0]?.subsections?.map((s) => s.id)).toEqual([PDF_SECTION_IDS.sCurve])
+    expect(chapters[1]?.subsections?.map((s) => s.label)).toEqual(["TORNADO", "Bidragsanalyse"])
     expect(chapters[2]?.id).toBe(PDF_CHAPTER_IDS.assumptions)
     expect(chapters[2]?.label).toBe("03 Forutsetninger")
     expect(chapters[2]?.subsections).toBeUndefined()

@@ -73,9 +73,7 @@ export function GuidedInputHost({
           open
           suspend={focusView === "results"}
           ensureFocusMode={focusView === "input"}
-          focusPortalTarget={
-            focusView !== null ? focusPortalTarget : null
-          }
+          focusPortalTarget={focusView !== null ? focusPortalTarget : null}
           onFocusChromeMetaChange={handleGuidedFocusChromeMeta}
           onRequestFocusFullscreen={() => {
             focusShellRef.current?.requestFullscreen()
@@ -127,9 +125,7 @@ export function GuidedInputHost({
             if (inCost) {
               setProjects((prev) =>
                 patchProjectCostRows(prev, activeProject.id, (rows) =>
-                  rows.map((row) =>
-                    row.id === rowId ? { ...row, ...patch } : row,
-                  ),
+                  rows.map((row) => (row.id === rowId ? { ...row, ...patch } : row)),
                 ),
               )
               return
@@ -140,10 +136,7 @@ export function GuidedInputHost({
                   if (row.id !== rowId) return row
                   const next = { ...row, ...patch }
                   if (
-                    Object.prototype.hasOwnProperty.call(
-                      patch,
-                      "uncertaintyNotes",
-                    ) &&
+                    Object.prototype.hasOwnProperty.call(patch, "uncertaintyNotes") &&
                     patch.uncertaintyNotes === undefined
                   ) {
                     delete next.uncertaintyNotes
@@ -155,42 +148,27 @@ export function GuidedInputHost({
           }}
           onAddAssumption={(text) => {
             if (analysisReadOnly) return
-            setProjects((prev) =>
-              patchProjectAddAssumption(prev, activeProject.id, text),
-            )
+            setProjects((prev) => patchProjectAddAssumption(prev, activeProject.id, text))
           }}
           onUpdateAssumption={(assumptionId, text) => {
             if (analysisReadOnly) return
             setProjects((prev) =>
-              patchProjectUpdateAssumption(
-                prev,
-                activeProject.id,
-                assumptionId,
-                text,
-              ),
+              patchProjectUpdateAssumption(prev, activeProject.id, assumptionId, text),
             )
           }}
           onRemoveAssumption={(assumptionId) => {
             if (analysisReadOnly) return
             setProjects((prev) =>
-              patchProjectRemoveAssumption(
-                prev,
-                activeProject.id,
-                assumptionId,
-              ),
+              patchProjectRemoveAssumption(prev, activeProject.id, assumptionId),
             )
           }}
           onIncurredCostsChange={(value) => {
             if (analysisReadOnly) return
-            setProjects((prev) =>
-              patchProjectIncurredCosts(prev, activeProject.id, value),
-            )
+            setProjects((prev) => patchProjectIncurredCosts(prev, activeProject.id, value))
           }}
           onPatchProfile={(next) => {
             if (analysisReadOnly) return
-            setProjects((prev) =>
-              patchProjectProfile(prev, activeProject.id, next),
-            )
+            setProjects((prev) => patchProjectProfile(prev, activeProject.id, next))
           }}
           onAddCostItems={handoffGuidedToAddCostItems}
           onAddDrivers={handoffGuidedToAddDrivers}

@@ -314,17 +314,9 @@ function distributeScenarioColumnWidths(total: number): readonly [number, number
 }
 
 function getCostColumnWidths(total: number): readonly [number, number, number, number] {
-  const fixed =
-    COST_OPT_COL_WIDTH +
-    COST_LIKELY_COL_WIDTH +
-    COST_PESS_COL_WIDTH
+  const fixed = COST_OPT_COL_WIDTH + COST_LIKELY_COL_WIDTH + COST_PESS_COL_WIDTH
   const name = Math.max(160, Math.floor(total) - fixed)
-  return [
-    name,
-    COST_OPT_COL_WIDTH,
-    COST_LIKELY_COL_WIDTH,
-    COST_PESS_COL_WIDTH,
-  ]
+  return [name, COST_OPT_COL_WIDTH, COST_LIKELY_COL_WIDTH, COST_PESS_COL_WIDTH]
 }
 
 function normalizePastedRow(r: ScenarioRow): ScenarioRow {
@@ -393,8 +385,7 @@ export function ScenarioPercentTable({
   const hostRef = useRef<HTMLDivElement>(null)
   const [hostWidth, setHostWidth] = useState(0)
   const [selectedRow, setSelectedRow] = useState<number | null>(null)
-  const [gridSelection, setGridSelection] =
-    useState<GridSelection>(emptyGridSelection)
+  const [gridSelection, setGridSelection] = useState<GridSelection>(emptyGridSelection)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [confirmMessage, setConfirmMessage] = useState("")
   const confirmActionRef = useRef<(() => void) | null>(null)
@@ -406,15 +397,9 @@ export function ScenarioPercentTable({
   const defineIconRefs = useRef(new Map<string, HTMLButtonElement>())
   const defineFallbackAnchorRef = useRef<HTMLSpanElement>(null)
   const definePreviewAnchorRef = useRef<HTMLButtonElement | null>(null)
-  const [definePreviewRowId, setDefinePreviewRowId] = useState<string | null>(
-    null,
-  )
-  const definePreviewOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-  const definePreviewCloseTimerRef = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null)
+  const [definePreviewRowId, setDefinePreviewRowId] = useState<string | null>(null)
+  const definePreviewOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const definePreviewCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useLayoutEffect(() => {
     const el = hostRef.current
@@ -432,8 +417,7 @@ export function ScenarioPercentTable({
     () => new Set(costCorrelationMode?.selectedCostRowIds ?? []),
     [costCorrelationMode?.selectedCostRowIds],
   )
-  const correlationSelectedCount =
-    costCorrelationMode?.selectedCostRowIds.length ?? 0
+  const correlationSelectedCount = costCorrelationMode?.selectedCostRowIds.length ?? 0
   const showCorrelationSelectInstruction = shouldShowCorrelationSelectInstruction({
     correlationActive: costCorrelationMode?.active,
     selectedCount: correlationSelectedCount,
@@ -493,10 +477,7 @@ export function ScenarioPercentTable({
     if (description !== "") return description
     if (variant === "driverMixed") {
       const notes = (row as DriverRow).uncertaintyNotes
-      const bits = [
-        ...(notes?.lowerOutcome ?? []),
-        ...(notes?.higherOutcome ?? []),
-      ]
+      const bits = [...(notes?.lowerOutcome ?? []), ...(notes?.higherOutcome ?? [])]
         .map((item) => item.trim())
         .filter((item) => item !== "")
       return bits.slice(0, 4).join(" · ")
@@ -550,10 +531,7 @@ export function ScenarioPercentTable({
 
   useEffect(() => {
     // Hide preview when the editor opens for the hovered row.
-    if (
-      definePreviewRowId !== null &&
-      defineMode?.selectedRowId === definePreviewRowId
-    ) {
+    if (definePreviewRowId !== null && defineMode?.selectedRowId === definePreviewRowId) {
       clearDefinePreviewTimers()
       setDefinePreviewRowId(null)
     }
@@ -562,8 +540,7 @@ export function ScenarioPercentTable({
   const gridWidth = hostWidth > 0 ? hostWidth : 560
   const tableTheme = useMemo<Partial<Theme>>(
     () => ({
-      fontFamily:
-        "Geist Variable, Inter, Roboto, -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: "Geist Variable, Inter, Roboto, -apple-system, BlinkMacSystemFont, sans-serif",
       baseFontStyle: "12px",
       headerFontStyle: "12px",
       textHeader: "rgba(115, 116, 131, 0.95)",
@@ -584,8 +561,7 @@ export function ScenarioPercentTable({
     [],
   )
 
-  const usesCostTableLayout =
-    variant === "costMixed" || variant === "driverMixed"
+  const usesCostTableLayout = variant === "costMixed" || variant === "driverMixed"
 
   const columns = useMemo((): GridColumn[] => {
     if (usesCostTableLayout) {
@@ -595,9 +571,7 @@ export function ScenarioPercentTable({
         { title: t("inputs.optimisticHeader"), width: w1, id: "optimistic" },
         {
           title:
-            variant === "costMixed"
-              ? t("inputs.likelyHeader")
-              : t("inputs.likelyPercentHeader"),
+            variant === "costMixed" ? t("inputs.likelyHeader") : t("inputs.likelyPercentHeader"),
           width: w2,
           id: "likely",
         },
@@ -622,11 +596,7 @@ export function ScenarioPercentTable({
     if (variant !== "driverMixed" || invalidCellKeys === undefined) return []
     return rows
       .map((row, rowIndex) => ({ row, rowIndex }))
-      .filter(
-        ({ row }) =>
-          driverLikelyOutsideSpan(row) &&
-          invalidCellKeys.has(`${row.id}:likely`),
-      )
+      .filter(({ row }) => driverLikelyOutsideSpan(row) && invalidCellKeys.has(`${row.id}:likely`))
       .sort((a, b) => a.rowIndex - b.rowIndex)
   }, [variant, rows, invalidCellKeys])
 
@@ -643,12 +613,10 @@ export function ScenarioPercentTable({
       .sort((a, b) => a.rowIndex - b.rowIndex)
   }, [variant, rows, invalidCellKeys])
 
-  const showIncurredRow =
-    variant === "costMixed" && onIncurredCostsChange !== undefined
+  const showIncurredRow = variant === "costMixed" && onIncurredCostsChange !== undefined
   const dataRowCount = rows.length
   const gridRowCount = showIncurredRow ? dataRowCount + 1 : dataRowCount
-  const isIncurredRowIndex = (rowIndex: number) =>
-    showIncurredRow && rowIndex === dataRowCount
+  const isIncurredRowIndex = (rowIndex: number) => showIncurredRow && rowIndex === dataRowCount
 
   const costBaseSum = useMemo(() => {
     if (variant !== "costMixed") return null
@@ -743,16 +711,14 @@ export function ScenarioPercentTable({
         col === 0 &&
         costCorrelationMode?.active === true &&
         parseCostForSimulation(dataRow) !== null
-      const blockCellEditing =
-        readOnly || relationshipEditingActive || hideNameForImpactSlider
+      const blockCellEditing = readOnly || relationshipEditingActive || hideNameForImpactSlider
       const showAsPercent =
         usesCostTableLayout &&
         (variant === "driverMixed"
           ? key === "optimistic" || key === "likely" || key === "pessimistic"
           : key === "optimistic" || key === "pessimistic")
       const showAsAbsolute = variant === "costMixed" && key === "likely"
-      const percentDisplay =
-        showAsPercent && value !== "" ? `${value.replace(/%$/, "")} %` : value
+      const percentDisplay = showAsPercent && value !== "" ? `${value.replace(/%$/, "")} %` : value
       const baseDisplay = hideNameForImpactSlider
         ? ""
         : showAsAbsolute
@@ -765,11 +731,7 @@ export function ScenarioPercentTable({
             ? "\u2003"
             : baseDisplay
       const contentAlign =
-        col === 0
-          ? "left"
-          : variant === "costMixed" && col === 2
-            ? "right"
-            : "center"
+        col === 0 ? "left" : variant === "costMixed" && col === 2 ? "right" : "center"
       const fieldKey = SCENARIO_COLUMN_KEYS[col]
       return {
         kind: GridCellKind.Text,
@@ -821,27 +783,19 @@ export function ScenarioPercentTable({
       if (key === undefined) return
       const raw = newValue.data
       const nextVal =
-        key === "name"
-          ? raw.slice(0, NAME_MAX_LENGTH)
-          : sanitizeScenarioNumericInput(raw)
+        key === "name" ? raw.slice(0, NAME_MAX_LENGTH) : sanitizeScenarioNumericInput(raw)
       let normalizedVal = nextVal
       if (variant === "costMixed") {
         if (key === "optimistic") normalizedVal = clampCostOptimisticPercent(nextVal)
         else if (key === "likely") normalizedVal = clampCostLikelyAbs(nextVal)
-        else if (key === "pessimistic")
-          normalizedVal = clampCostPessimisticPercent(nextVal)
+        else if (key === "pessimistic") normalizedVal = clampCostPessimisticPercent(nextVal)
       } else if (variant === "driverMixed") {
         const dataRow = rows[row]
         if (dataRow === undefined) return
         if (key === "optimistic") normalizedVal = clampCostOptimisticPercent(nextVal)
         else if (key === "likely")
-          normalizedVal = clampDriverLikelyPercent(
-            nextVal,
-            dataRow.optimistic,
-            dataRow.pessimistic,
-          )
-        else if (key === "pessimistic")
-          normalizedVal = clampCostPessimisticPercent(nextVal)
+          normalizedVal = clampDriverLikelyPercent(nextVal, dataRow.optimistic, dataRow.pessimistic)
+        else if (key === "pessimistic") normalizedVal = clampCostPessimisticPercent(nextVal)
       }
       onRowsChange(patchScenarioRow(rows, row, { [key]: normalizedVal }))
     },
@@ -863,9 +817,7 @@ export function ScenarioPercentTable({
       const [startCol, startRow] = target
       if (startCol >= SCENARIO_COLUMN_KEYS.length) return false
       if (showIncurredRow && startRow >= dataRowCount) return false
-      const matrix = valueMatrix.map((line) =>
-        [...line].map((c) => c ?? ""),
-      )
+      const matrix = valueMatrix.map((line) => [...line].map((c) => c ?? ""))
       let next = applyPastedGrid(
         rows,
         [...SCENARIO_COLUMN_KEYS],
@@ -980,15 +932,7 @@ export function ScenarioPercentTable({
 
       if (readOnly) return
     },
-    [
-      costCorrelationMode,
-      defineMode,
-      driverImpactMode,
-      variant,
-      dataRowCount,
-      rows,
-      readOnly,
-    ],
+    [costCorrelationMode, defineMode, driverImpactMode, variant, dataRowCount, rows, readOnly],
   )
 
   const getRowThemeOverride = useCallback(
@@ -1027,14 +971,7 @@ export function ScenarioPercentTable({
         bgCellMedium: CHANGED_VS_SIM_CELL_BG,
       }
     },
-    [
-      costCorrelationMode,
-      correlationSelectedIdSet,
-      defineMode,
-      driverImpactMode,
-      variant,
-      rows,
-    ],
+    [costCorrelationMode, correlationSelectedIdSet, defineMode, driverImpactMode, variant, rows],
   )
 
   useEffect(() => {
@@ -1066,10 +1003,7 @@ export function ScenarioPercentTable({
 
     let top = triggerRect.top - tooltipHeight - gap
     if (top < viewportPad) {
-      top = Math.min(
-        triggerRect.bottom + gap,
-        window.innerHeight - tooltipHeight - viewportPad,
-      )
+      top = Math.min(triggerRect.bottom + gap, window.innerHeight - tooltipHeight - viewportPad)
     }
 
     setHelpTooltipPosition({ top, left })
@@ -1092,44 +1026,39 @@ export function ScenarioPercentTable({
   }, [helpTooltipOpen, updateHelpTooltipPosition])
 
   const drawCostHeader: DrawHeaderCallback = useCallback((args, draw) => {
-      draw()
-      const idx = args.columnIndex
-      if (idx !== 1 && idx !== 2 && idx !== 3) return
+    draw()
+    const idx = args.columnIndex
+    if (idx !== 1 && idx !== 2 && idx !== 3) return
 
-      const { ctx, rect, column, theme, isSelected, hasSelectedCell, hoverAmount } =
-        args
-      const { x, y, width, height } = rect
-      const xOffset = 1
-      const headerFont = `${theme.headerFontStyle} ${theme.fontFamily}`
+    const { ctx, rect, column, theme, isSelected, hasSelectedCell, hoverAmount } = args
+    const { x, y, width, height } = rect
+    const xOffset = 1
+    const headerFont = `${theme.headerFontStyle} ${theme.fontFamily}`
 
-      ctx.save()
-      if (isSelected) {
-        ctx.fillStyle = theme.accentColor
-      } else if (hasSelectedCell) {
-        ctx.fillStyle = theme.bgHeaderHasFocus
-      } else {
-        ctx.fillStyle = theme.bgHeader
-      }
+    ctx.save()
+    if (isSelected) {
+      ctx.fillStyle = theme.accentColor
+    } else if (hasSelectedCell) {
+      ctx.fillStyle = theme.bgHeaderHasFocus
+    } else {
+      ctx.fillStyle = theme.bgHeader
+    }
+    ctx.fillRect(x + xOffset, y, width - xOffset, height)
+
+    if (!isSelected && hoverAmount > 0) {
+      ctx.globalAlpha = hoverAmount
+      ctx.fillStyle = theme.bgHeaderHovered
       ctx.fillRect(x + xOffset, y, width - xOffset, height)
+      ctx.globalAlpha = 1
+    }
 
-      if (!isSelected && hoverAmount > 0) {
-        ctx.globalAlpha = hoverAmount
-        ctx.fillStyle = theme.bgHeaderHovered
-        ctx.fillRect(x + xOffset, y, width - xOffset, height)
-        ctx.globalAlpha = 1
-      }
-
-      ctx.font = headerFont
-      ctx.fillStyle = isSelected ? theme.textHeaderSelected : theme.textHeader
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.fillText(
-        column.title,
-        x + width / 2,
-        y + height / 2,
-      )
-      ctx.textAlign = "left"
-      ctx.restore()
+    ctx.font = headerFont
+    ctx.fillStyle = isSelected ? theme.textHeaderSelected : theme.textHeader
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
+    ctx.fillText(column.title, x + width / 2, y + height / 2)
+    ctx.textAlign = "left"
+    ctx.restore()
   }, [])
 
   const bodyPx = Math.max(1, gridRowCount) * ROW_HEIGHT
@@ -1184,12 +1113,10 @@ export function ScenarioPercentTable({
         }}
       />
       {title ? <h2 className="section-heading">{title}</h2> : null}
-      {description ? (
-        <div className="section-body">{description}</div>
-      ) : null}
+      {description ? <div className="section-body">{description}</div> : null}
       <div ref={tableSectionRef} className="space-y-0">
         <div className="space-y-1.5" data-guided-mode-toolbar="">
-        {(() => {
+          {(() => {
             const showCorrelationReturn =
               variant === "costMixed" &&
               costCorrelationMode?.active === true &&
@@ -1224,10 +1151,7 @@ export function ScenarioPercentTable({
             return (
               <>
                 {showGuidedReturn ? (
-                  <div
-                    className="flex w-full justify-end sm:hidden"
-                    data-guided-return-row=""
-                  >
+                  <div className="flex w-full justify-end sm:hidden" data-guided-return-row="">
                     <button
                       type="button"
                       onClick={onGuidedReturn}
@@ -1238,373 +1162,356 @@ export function ScenarioPercentTable({
                     </button>
                   </div>
                 ) : null}
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-0 flex-1 space-y-1.5">
-            {showRelationshipSelectHint ? (
-              <p className="section-body text-[11px] text-muted-foreground/80">
-                {t("inputs.driverImpactSelectHint")}
-              </p>
-            ) : null}
-            {showDefineSelectHint ? (
-              <p className="section-body text-[11px] text-muted-foreground/80">
-                {t(
-                  readOnly
-                    ? "inputs.defineSelectHintReadOnly"
-                    : "inputs.defineSelectHint",
-                )}
-              </p>
-            ) : null}
-            {costCorrelationMode?.active &&
-            costCorrelationMode.savedSummaries.length > 0 ? (
-              <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                {(() => {
-                  const nameById = new Map(
-                    rows.map((row, index) => [
-                      row.id,
-                      row.name.trim() ||
-                        (language === "no"
-                          ? `Kost ${index + 1}`
-                          : `Cost ${index + 1}`),
-                    ]),
-                  )
-                  return costCorrelationMode.savedSummaries.map((summary) => {
-                    const label = formatSavedCorrelationSummaryLabel({
-                      summary,
-                      nameById,
-                      language,
-                      costItemsWord: t("inputs.costCorrelationCostItemsWord"),
-                    })
-                    return (
-                      <div
-                        key={summary.id}
-                        className={cn(
-                          "group/corr-summary relative inline-flex max-w-full items-center",
-                          "rounded border border-border/70 bg-background",
-                          "hover:border-[#1d868c]/40",
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    {showRelationshipSelectHint ? (
+                      <p className="section-body text-[11px] text-muted-foreground/80">
+                        {t("inputs.driverImpactSelectHint")}
+                      </p>
+                    ) : null}
+                    {showDefineSelectHint ? (
+                      <p className="section-body text-[11px] text-muted-foreground/80">
+                        {t(
+                          readOnly ? "inputs.defineSelectHintReadOnly" : "inputs.defineSelectHint",
                         )}
+                      </p>
+                    ) : null}
+                    {costCorrelationMode?.active &&
+                    costCorrelationMode.savedSummaries.length > 0 ? (
+                      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                        {(() => {
+                          const nameById = new Map(
+                            rows.map((row, index) => [
+                              row.id,
+                              row.name.trim() ||
+                                (language === "no" ? `Kost ${index + 1}` : `Cost ${index + 1}`),
+                            ]),
+                          )
+                          return costCorrelationMode.savedSummaries.map((summary) => {
+                            const label = formatSavedCorrelationSummaryLabel({
+                              summary,
+                              nameById,
+                              language,
+                              costItemsWord: t("inputs.costCorrelationCostItemsWord"),
+                            })
+                            return (
+                              <div
+                                key={summary.id}
+                                className={cn(
+                                  "group/corr-summary relative inline-flex max-w-full items-center",
+                                  "rounded border border-border/70 bg-background",
+                                  "hover:border-[#1d868c]/40",
+                                )}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => costCorrelationMode.onOpenSummary(summary.rowIds)}
+                                  aria-label={t("inputs.costCorrelationOpenSummary").replace(
+                                    "{summary}",
+                                    label,
+                                  )}
+                                  className={cn(
+                                    "min-w-0 truncate py-0.5 pl-2 pr-5 text-left",
+                                    "font-sans text-[11px] leading-snug text-muted-foreground",
+                                    "hover:text-foreground",
+                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
+                                  )}
+                                >
+                                  {label}
+                                </button>
+                                {!readOnly ? (
+                                  <button
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.preventDefault()
+                                      event.stopPropagation()
+                                      costCorrelationMode.onRemoveSummary(summary.rowIds)
+                                    }}
+                                    aria-label={t("inputs.costCorrelationRemove")}
+                                    title={t("inputs.costCorrelationRemove")}
+                                    className={cn(
+                                      "corr-summary-remove absolute right-0.5 top-0.5",
+                                      "flex size-3.5 items-center justify-center rounded-sm",
+                                      "text-muted-foreground/70 hover:bg-muted hover:text-foreground",
+                                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
+                                    )}
+                                  >
+                                    <X className="size-2.5" strokeWidth={2.25} aria-hidden />
+                                  </button>
+                                ) : null}
+                              </div>
+                            )
+                          })
+                        })()}
+                      </div>
+                    ) : null}
+                    {costCorrelationMode?.active && costCorrelationMode.saveConfirmVisible ? (
+                      <p
+                        role="status"
+                        aria-live="polite"
+                        className="section-body flex items-center gap-1 text-[11px] text-[#1d868c] motion-safe:transition-opacity motion-safe:duration-200"
                       >
-                        <button
-                          type="button"
-                          onClick={() =>
-                            costCorrelationMode.onOpenSummary(summary.rowIds)
-                          }
-                          aria-label={t(
-                            "inputs.costCorrelationOpenSummary",
-                          ).replace("{summary}", label)}
-                          className={cn(
-                            "min-w-0 truncate py-0.5 pl-2 pr-5 text-left",
-                            "font-sans text-[11px] leading-snug text-muted-foreground",
-                            "hover:text-foreground",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
+                        <Check className="size-3.5 shrink-0" aria-hidden />
+                        <span>
+                          {costCorrelationMode.saveConfirmKind === "removed"
+                            ? t("inputs.costCorrelationRemoved")
+                            : t("inputs.costCorrelationSaved")}
+                        </span>
+                      </p>
+                    ) : null}
+                    {showCorrelationSelectInstruction ? (
+                      <p className="section-body text-[11px] text-muted-foreground/80">
+                        {t("inputs.costCorrelationSelectHint")}
+                      </p>
+                    ) : null}
+                    {showCorrelationGroupControls && costCorrelationMode ? (
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+                        <span className="section-body shrink-0 text-[11px] tabular-nums text-muted-foreground/80">
+                          {t("inputs.costCorrelationSelectedCount").replace(
+                            "{count}",
+                            String(correlationSelectedCount),
                           )}
-                        >
-                          {label}
-                        </button>
-                        {!readOnly ? (
-                        <button
-                          type="button"
-                          onClick={(event) => {
-                            event.preventDefault()
-                            event.stopPropagation()
-                            costCorrelationMode.onRemoveSummary(summary.rowIds)
+                        </span>
+                        <span className="section-body shrink-0 text-[11px] text-muted-foreground/80">
+                          {t("expanders.costCorrelation")}
+                        </span>
+                        <InlineMagnitudeSlider
+                          min={-0.9}
+                          max={0.9}
+                          step={0.1}
+                          value={costCorrelationMode.pendingRho}
+                          origin={0}
+                          ariaLabel={t("expanders.costCorrelation")}
+                          onChange={(next) => {
+                            if (readOnly) return
+                            costCorrelationMode.onPendingRhoChange(snapCorrelationCoefficient(next))
                           }}
-                          aria-label={t("inputs.costCorrelationRemove")}
-                          title={t("inputs.costCorrelationRemove")}
-                          className={cn(
-                            "corr-summary-remove absolute right-0.5 top-0.5",
-                            "flex size-3.5 items-center justify-center rounded-sm",
-                            "text-muted-foreground/70 hover:bg-muted hover:text-foreground",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1d868c]/35",
+                          disabled={readOnly}
+                        />
+                        <span className="section-body w-8 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">
+                          {formatCorrelationControlValue(
+                            costCorrelationMode.pendingRho,
+                            language,
+                            costCorrelationMode.pendingMixed,
                           )}
-                        >
-                          <X className="size-2.5" strokeWidth={2.25} aria-hidden />
-                        </button>
+                        </span>
+                        {!readOnly ? (
+                          <button
+                            type="button"
+                            onClick={costCorrelationMode.onApplyGroupCorrelation}
+                            disabled={costCorrelationMode.pendingMixed}
+                            className={buttonVariants({
+                              variant: "outline",
+                              size: "sm",
+                              className: cn(
+                                "h-7 px-2.5 text-[11px]",
+                                "border-[#1d868c]/45 text-[#1d868c] hover:bg-[#1d868c]/10 hover:text-[#1d868c]",
+                                "disabled:opacity-40",
+                              ),
+                            })}
+                          >
+                            {t("inputs.costCorrelationApply")}
+                          </button>
                         ) : null}
                       </div>
-                    )
-                  })
-                })()}
-              </div>
-            ) : null}
-            {costCorrelationMode?.active &&
-            costCorrelationMode.saveConfirmVisible ? (
-              <p
-                role="status"
-                aria-live="polite"
-                className="section-body flex items-center gap-1 text-[11px] text-[#1d868c] motion-safe:transition-opacity motion-safe:duration-200"
-              >
-                <Check className="size-3.5 shrink-0" aria-hidden />
-                <span>
-                  {costCorrelationMode.saveConfirmKind === "removed"
-                    ? t("inputs.costCorrelationRemoved")
-                    : t("inputs.costCorrelationSaved")}
-                </span>
-              </p>
-            ) : null}
-            {showCorrelationSelectInstruction ? (
-              <p className="section-body text-[11px] text-muted-foreground/80">
-                {t("inputs.costCorrelationSelectHint")}
-              </p>
-            ) : null}
-            {showCorrelationGroupControls && costCorrelationMode ? (
-              <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-                <span className="section-body shrink-0 text-[11px] tabular-nums text-muted-foreground/80">
-                  {t("inputs.costCorrelationSelectedCount").replace(
-                    "{count}",
-                    String(correlationSelectedCount),
-                  )}
-                </span>
-                <span className="section-body shrink-0 text-[11px] text-muted-foreground/80">
-                  {t("expanders.costCorrelation")}
-                </span>
-                <InlineMagnitudeSlider
-                  min={-0.9}
-                  max={0.9}
-                  step={0.1}
-                  value={costCorrelationMode.pendingRho}
-                  origin={0}
-                  ariaLabel={t("expanders.costCorrelation")}
-                  onChange={(next) => {
-                    if (readOnly) return
-                    costCorrelationMode.onPendingRhoChange(
-                      snapCorrelationCoefficient(next),
-                    )
-                  }}
-                  disabled={readOnly}
-                />
-                <span className="section-body w-8 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">
-                  {formatCorrelationControlValue(
-                    costCorrelationMode.pendingRho,
-                    language,
-                    costCorrelationMode.pendingMixed,
-                  )}
-                </span>
-                {!readOnly ? (
-                  <button
-                    type="button"
-                    onClick={costCorrelationMode.onApplyGroupCorrelation}
-                    disabled={costCorrelationMode.pendingMixed}
-                    className={buttonVariants({
-                      variant: "outline",
-                      size: "sm",
-                      className: cn(
-                        "h-7 px-2.5 text-[11px]",
-                        "border-[#1d868c]/45 text-[#1d868c] hover:bg-[#1d868c]/10 hover:text-[#1d868c]",
-                        "disabled:opacity-40",
-                      ),
-                    })}
-                  >
-                    {t("inputs.costCorrelationApply")}
-                  </button>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  {showGuidedReturn ? (
+                    ) : null}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {showGuidedReturn ? (
+                      <button
+                        type="button"
+                        onClick={onGuidedReturn}
+                        className={cn(returnButtonClassName, "hidden sm:inline-flex")}
+                        data-guided-return={guidedReturnKind}
+                      >
+                        {t("inputs.guidedReturnToReview")}
+                      </button>
+                    ) : null}
+                    {guidedInputMode && !readOnly ? (
+                      <button
+                        type="button"
+                        onClick={guidedInputMode.onOpen}
+                        aria-pressed={guidedInputMode.active}
+                        title={t("inputs.openFocusMode")}
+                        aria-label={t("inputs.openFocusMode")}
+                        className={buttonVariants({
+                          variant: "ghost",
+                          size: "icon-sm",
+                          className: cn(
+                            guidedInputMode.active
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground",
+                          ),
+                        })}
+                      >
+                        <Play className="size-4" aria-hidden />
+                      </button>
+                    ) : null}
+                    {defineMode ? (
+                      <button
+                        type="button"
+                        onClick={defineMode.onToggle}
+                        aria-pressed={defineMode.active}
+                        title={readOnly ? t("inputs.defineViewDetails") : t("expanders.define")}
+                        aria-label={
+                          readOnly ? t("inputs.defineViewDetails") : t("expanders.define")
+                        }
+                        className={buttonVariants({
+                          variant: defineMode.active ? "outline" : "ghost",
+                          size: "icon-sm",
+                          className: cn(
+                            defineMode.active
+                              ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
+                              : "text-muted-foreground hover:text-foreground",
+                          ),
+                        })}
+                      >
+                        <FileText className="size-4" aria-hidden />
+                      </button>
+                    ) : null}
+                    {variant === "costMixed" && costCorrelationMode ? (
+                      <button
+                        type="button"
+                        onClick={costCorrelationMode.onToggle}
+                        aria-pressed={costCorrelationMode.active}
+                        title={t("expanders.costCorrelation")}
+                        aria-label={t("expanders.costCorrelation")}
+                        className={buttonVariants({
+                          variant: costCorrelationMode.active ? "outline" : "ghost",
+                          size: "icon-sm",
+                          className: cn(
+                            costCorrelationMode.active
+                              ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
+                              : "text-muted-foreground hover:text-foreground",
+                          ),
+                        })}
+                      >
+                        <Link2 className="size-4" aria-hidden />
+                      </button>
+                    ) : null}
+                    {variant === "driverMixed" && driverImpactMode ? (
+                      <button
+                        type="button"
+                        onClick={driverImpactMode.onToggle}
+                        aria-pressed={driverImpactMode.active}
+                        title={t("expanders.driverImpact")}
+                        aria-label={t("expanders.driverImpact")}
+                        className={buttonVariants({
+                          variant: driverImpactMode.active ? "outline" : "ghost",
+                          size: "icon-sm",
+                          className: cn(
+                            driverImpactMode.active
+                              ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
+                              : "text-muted-foreground hover:text-foreground",
+                          ),
+                        })}
+                      >
+                        <SlidersHorizontal className="size-4" aria-hidden />
+                      </button>
+                    ) : null}
                     <button
                       type="button"
-                      onClick={onGuidedReturn}
-                      className={cn(returnButtonClassName, "hidden sm:inline-flex")}
-                      data-guided-return={guidedReturnKind}
+                      onClick={clearTableRows}
+                      aria-label={t("inputs.clearTableTooltip")}
+                      title={t("inputs.clearTableTooltip")}
+                      disabled={readOnly || !hasTableData}
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon-sm",
+                        className:
+                          "text-muted-foreground hover:text-foreground disabled:opacity-40",
+                      })}
                     >
-                      {t("inputs.guidedReturnToReview")}
+                      <Trash2 className="size-4" aria-hidden />
                     </button>
-                  ) : null}
-            {guidedInputMode && !readOnly ? (
-              <button
-                type="button"
-                onClick={guidedInputMode.onOpen}
-                aria-pressed={guidedInputMode.active}
-                title={t("inputs.openFocusMode")}
-                aria-label={t("inputs.openFocusMode")}
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "icon-sm",
-                  className: cn(
-                    guidedInputMode.active
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  ),
-                })}
-              >
-                <Play className="size-4" aria-hidden />
-              </button>
-            ) : null}
-            {defineMode ? (
-              <button
-                type="button"
-                onClick={defineMode.onToggle}
-                aria-pressed={defineMode.active}
-                title={
-                  readOnly
-                    ? t("inputs.defineViewDetails")
-                    : t("expanders.define")
-                }
-                aria-label={
-                  readOnly
-                    ? t("inputs.defineViewDetails")
-                    : t("expanders.define")
-                }
-                className={buttonVariants({
-                  variant: defineMode.active ? "outline" : "ghost",
-                  size: "icon-sm",
-                  className: cn(
-                    defineMode.active
-                      ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
-                      : "text-muted-foreground hover:text-foreground",
-                  ),
-                })}
-              >
-                <FileText className="size-4" aria-hidden />
-              </button>
-            ) : null}
-            {variant === "costMixed" && costCorrelationMode ? (
-              <button
-                type="button"
-                onClick={costCorrelationMode.onToggle}
-                aria-pressed={costCorrelationMode.active}
-                title={t("expanders.costCorrelation")}
-                aria-label={t("expanders.costCorrelation")}
-                className={buttonVariants({
-                  variant: costCorrelationMode.active ? "outline" : "ghost",
-                  size: "icon-sm",
-                  className: cn(
-                    costCorrelationMode.active
-                      ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
-                      : "text-muted-foreground hover:text-foreground",
-                  ),
-                })}
-              >
-                <Link2 className="size-4" aria-hidden />
-              </button>
-            ) : null}
-            {variant === "driverMixed" && driverImpactMode ? (
-              <button
-                type="button"
-                onClick={driverImpactMode.onToggle}
-                aria-pressed={driverImpactMode.active}
-                title={t("expanders.driverImpact")}
-                aria-label={t("expanders.driverImpact")}
-                className={buttonVariants({
-                  variant: driverImpactMode.active ? "outline" : "ghost",
-                  size: "icon-sm",
-                  className: cn(
-                    driverImpactMode.active
-                      ? "border-[#1d868c]/45 bg-[#1d868c]/10 text-[#1d868c] hover:bg-[#1d868c]/15 hover:text-[#1d868c]"
-                      : "text-muted-foreground hover:text-foreground",
-                  ),
-                })}
-              >
-                <SlidersHorizontal className="size-4" aria-hidden />
-              </button>
-            ) : null}
-            <button
-              type="button"
-              onClick={clearTableRows}
-              aria-label={t("inputs.clearTableTooltip")}
-              title={t("inputs.clearTableTooltip")}
-              disabled={readOnly || !hasTableData}
-              className={buttonVariants({
-                variant: "ghost",
-                size: "icon-sm",
-                className:
-                  "text-muted-foreground hover:text-foreground disabled:opacity-40",
-              })}
-            >
-              <Trash2 className="size-4" aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={onRowAppended}
-              aria-label={t("inputs.addRow")}
-              title={t("inputs.addRow")}
-              disabled={readOnly || maxRowsReached}
-              className={buttonVariants({
-                variant: "ghost",
-                size: "icon-sm",
-                className:
-                  "text-muted-foreground hover:text-foreground disabled:opacity-40",
-              })}
-            >
-              <Plus className="size-4" aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={onDeleteSelectedRow}
-              disabled={
-                readOnly || selectedRow === null || rows.length <= minRows
-              }
-              aria-label={t("inputs.deleteSelectedRow")}
-              title={t("inputs.deleteSelectedRow")}
-              className={buttonVariants({
-                variant: "ghost",
-                size: "icon-sm",
-                className: "text-muted-foreground hover:text-foreground",
-              })}
-            >
-              <Minus className="size-4" aria-hidden />
-            </button>
-            {toolbarHelpText ? (
-              <span
-                className="relative inline-flex shrink-0"
-                onMouseEnter={() => setHelpTooltipOpen(true)}
-                onMouseLeave={() => setHelpTooltipOpen(false)}
-                onFocusCapture={() => setHelpTooltipOpen(true)}
-                onBlurCapture={(event) => {
-                  const next = event.relatedTarget
-                  if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
-                    setHelpTooltipOpen(false)
-                  }
-                }}
-              >
-                <button
-                  ref={helpTriggerRef}
-                  type="button"
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "icon-sm",
-                    className:
-                      "text-muted-foreground/55 hover:text-muted-foreground",
-                  })}
-                  aria-label={
-                    toolbarHelpGuideHint
-                      ? `${toolbarHelpText} ${t("inputs.guidanceUseGuide")} ${toolbarHelpGuideHint}`
-                      : toolbarHelpText
-                  }
-                >
-                  <HelpCircle className="size-4 stroke-[1.25]" aria-hidden />
-                </button>
-                {helpTooltipOpen && typeof document !== "undefined"
-                  ? createPortal(
+                    <button
+                      type="button"
+                      onClick={onRowAppended}
+                      aria-label={t("inputs.addRow")}
+                      title={t("inputs.addRow")}
+                      disabled={readOnly || maxRowsReached}
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon-sm",
+                        className:
+                          "text-muted-foreground hover:text-foreground disabled:opacity-40",
+                      })}
+                    >
+                      <Plus className="size-4" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onDeleteSelectedRow}
+                      disabled={readOnly || selectedRow === null || rows.length <= minRows}
+                      aria-label={t("inputs.deleteSelectedRow")}
+                      title={t("inputs.deleteSelectedRow")}
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon-sm",
+                        className: "text-muted-foreground hover:text-foreground",
+                      })}
+                    >
+                      <Minus className="size-4" aria-hidden />
+                    </button>
+                    {toolbarHelpText ? (
                       <span
-                        ref={helpTooltipRef}
-                        role="tooltip"
-                        className="pointer-events-none fixed z-[120] w-max max-w-[min(22rem,calc(100vw-2rem))] rounded-md border border-border/70 bg-card px-2.5 py-2 text-left text-[11px] leading-snug text-muted-foreground shadow-sm"
-                        style={{
-                          top: `${helpTooltipPosition.top}px`,
-                          left: `${helpTooltipPosition.left}px`,
+                        className="relative inline-flex shrink-0"
+                        onMouseEnter={() => setHelpTooltipOpen(true)}
+                        onMouseLeave={() => setHelpTooltipOpen(false)}
+                        onFocusCapture={() => setHelpTooltipOpen(true)}
+                        onBlurCapture={(event) => {
+                          const next = event.relatedTarget
+                          if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
+                            setHelpTooltipOpen(false)
+                          }
                         }}
                       >
-                        <span className="block">{toolbarHelpText}</span>
-                        {toolbarHelpGuideHint ? (
-                          <span className="mt-1.5 flex items-center gap-1">
-                            <span>{t("inputs.guidanceUseGuide")}</span>
-                            <Play
-                              className="size-3 shrink-0 fill-[#1d868c] text-[#1d868c]"
-                              aria-hidden
-                            />
-                            <span>{toolbarHelpGuideHint}</span>
-                          </span>
-                        ) : null}
-                      </span>,
-                      document.body,
-                    )
-                  : null}
-              </span>
-            ) : null}
+                        <button
+                          ref={helpTriggerRef}
+                          type="button"
+                          className={buttonVariants({
+                            variant: "ghost",
+                            size: "icon-sm",
+                            className: "text-muted-foreground/55 hover:text-muted-foreground",
+                          })}
+                          aria-label={
+                            toolbarHelpGuideHint
+                              ? `${toolbarHelpText} ${t("inputs.guidanceUseGuide")} ${toolbarHelpGuideHint}`
+                              : toolbarHelpText
+                          }
+                        >
+                          <HelpCircle className="size-4 stroke-[1.25]" aria-hidden />
+                        </button>
+                        {helpTooltipOpen && typeof document !== "undefined"
+                          ? createPortal(
+                              <span
+                                ref={helpTooltipRef}
+                                role="tooltip"
+                                className="pointer-events-none fixed z-[120] w-max max-w-[min(22rem,calc(100vw-2rem))] rounded-md border border-border/70 bg-card px-2.5 py-2 text-left text-[11px] leading-snug text-muted-foreground shadow-sm"
+                                style={{
+                                  top: `${helpTooltipPosition.top}px`,
+                                  left: `${helpTooltipPosition.left}px`,
+                                }}
+                              >
+                                <span className="block">{toolbarHelpText}</span>
+                                {toolbarHelpGuideHint ? (
+                                  <span className="mt-1.5 flex items-center gap-1">
+                                    <span>{t("inputs.guidanceUseGuide")}</span>
+                                    <Play
+                                      className="size-3 shrink-0 fill-[#1d868c] text-[#1d868c]"
+                                      aria-hidden
+                                    />
+                                    <span>{toolbarHelpGuideHint}</span>
+                                  </span>
+                                ) : null}
+                              </span>,
+                              document.body,
+                            )
+                          : null}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
-        </div>
               </>
             )
           })()}
@@ -1665,8 +1572,7 @@ export function ScenarioPercentTable({
             }}
           />
           {variant === "driverMixed" &&
-          (driverLikelySpanRows.length > 0 ||
-            driverSupportInvalidRows.length > 0) ? (
+          (driverLikelySpanRows.length > 0 || driverSupportInvalidRows.length > 0) ? (
             <div className="space-y-1 border-t border-border/70 bg-background px-2 py-2">
               {driverLikelySpanRows.map(({ row }) => (
                 <div
@@ -1722,9 +1628,7 @@ export function ScenarioPercentTable({
                       top: HEADER_HEIGHT + rowIndex * ROW_HEIGHT,
                       height: ROW_HEIGHT,
                       width: costColumnWidths[0],
-                      backgroundColor: isChanged
-                        ? CHANGED_VS_SIM_CELL_BG
-                        : undefined,
+                      backgroundColor: isChanged ? CHANGED_VS_SIM_CELL_BG : undefined,
                     }}
                   >
                     <InlineMagnitudeSlider
@@ -1734,10 +1638,7 @@ export function ScenarioPercentTable({
                       value={impactValue}
                       origin={0}
                       ariaLabel={t("inputs.driverImpactCellLabel")
-                        .replace(
-                          "{driver}",
-                          costImpactSliders.selectedDriverLabel ?? "",
-                        )
+                        .replace("{driver}", costImpactSliders.selectedDriverLabel ?? "")
                         .replace("{cost}", label)}
                       onChange={(next) => {
                         if (readOnly) return
@@ -1749,9 +1650,7 @@ export function ScenarioPercentTable({
                       }}
                       disabled={readOnly}
                     />
-                    <span className={INLINE_SLIDER_VALUE_CLASS}>
-                      {impactValue}%
-                    </span>
+                    <span className={INLINE_SLIDER_VALUE_CLASS}>{impactValue}%</span>
                     <span className={INLINE_SLIDER_NAME_CLASS} title={label}>
                       {label}
                     </span>
@@ -1759,9 +1658,7 @@ export function ScenarioPercentTable({
                 )
               })
             : null}
-          {variant === "costMixed" &&
-          costCorrelationMode?.active &&
-          costColumnWidths !== null
+          {variant === "costMixed" && costCorrelationMode?.active && costColumnWidths !== null
             ? rows.map((row, rowIndex) => {
                 if (parseCostForSimulation(row) === null) return null
                 const selected = correlationSelectedIdSet.has(row.id)
@@ -1771,10 +1668,7 @@ export function ScenarioPercentTable({
                     key={`corr-select-${row.id}`}
                     type="button"
                     aria-pressed={selected}
-                    aria-label={t("inputs.costCorrelationToggleRow").replace(
-                      "{cost}",
-                      label,
-                    )}
+                    aria-label={t("inputs.costCorrelationToggleRow").replace("{cost}", label)}
                     className="pointer-events-auto absolute left-0 z-20 flex items-center justify-center px-1.5"
                     style={{
                       top: HEADER_HEIGHT + rowIndex * ROW_HEIGHT,
@@ -1878,19 +1772,13 @@ export function ScenarioPercentTable({
                       }}
                       aria-label={t("inputs.defineDefinedIndicator")}
                       onMouseEnter={(event) => {
-                        scheduleDefinePreviewOpen(
-                          row.id,
-                          event.currentTarget,
-                        )
+                        scheduleDefinePreviewOpen(row.id, event.currentTarget)
                       }}
                       onMouseLeave={() => {
                         scheduleDefinePreviewClose()
                       }}
                       onFocus={(event) => {
-                        scheduleDefinePreviewOpen(
-                          row.id,
-                          event.currentTarget,
-                        )
+                        scheduleDefinePreviewOpen(row.id, event.currentTarget)
                       }}
                       onBlur={() => {
                         scheduleDefinePreviewClose()
@@ -1940,11 +1828,7 @@ export function ScenarioPercentTable({
                 : undefined
             }
             popoverKind={
-              variant === "driverMixed"
-                ? "driver"
-                : variant === "costMixed"
-                  ? "cost"
-                  : undefined
+              variant === "driverMixed" ? "driver" : variant === "costMixed" ? "cost" : undefined
             }
           >
             {variant === "costMixed" ? (
@@ -1956,9 +1840,7 @@ export function ScenarioPercentTable({
                   defineSelectedRow.name.trim() ||
                   (language === "no" ? "Kostnadspost" : "Cost item")
                 }
-                description={
-                  (defineSelectedRow as CostElementRow).description ?? ""
-                }
+                description={(defineSelectedRow as CostElementRow).description ?? ""}
                 onCancel={() => defineMode.onClearSelection()}
                 onSave={
                   readOnly
@@ -1967,10 +1849,7 @@ export function ScenarioPercentTable({
                         onRowsChange(
                           rows.map((row) =>
                             row.id === defineSelectedRow.id
-                              ? withCostDescription(
-                                  row as CostElementRow,
-                                  description,
-                                )
+                              ? withCostDescription(row as CostElementRow, description)
                               : row,
                           ),
                         )
@@ -1984,15 +1863,10 @@ export function ScenarioPercentTable({
                 readOnly={readOnly}
                 rowId={defineSelectedRow.id}
                 rowLabel={
-                  defineSelectedRow.name.trim() ||
-                  (language === "no" ? "Driver" : "Driver")
+                  defineSelectedRow.name.trim() || (language === "no" ? "Driver" : "Driver")
                 }
-                description={
-                  (defineSelectedRow as DriverRow).description ?? ""
-                }
-                uncertaintyNotes={
-                  (defineSelectedRow as DriverRow).uncertaintyNotes
-                }
+                description={(defineSelectedRow as DriverRow).description ?? ""}
+                uncertaintyNotes={(defineSelectedRow as DriverRow).uncertaintyNotes}
                 onCancel={() => defineMode.onClearSelection()}
                 onSave={
                   readOnly
@@ -2002,10 +1876,7 @@ export function ScenarioPercentTable({
                           rows.map((row) => {
                             if (row.id !== defineSelectedRow.id) return row
                             return withDriverUncertaintyNotes(
-                              withDriverDescription(
-                                row as DriverRow,
-                                description,
-                              ),
+                              withDriverDescription(row as DriverRow, description),
                               uncertaintyNotes,
                             )
                           }),
@@ -2017,9 +1888,7 @@ export function ScenarioPercentTable({
             ) : null}
           </DefineRowPopover>
         ) : null}
-        {defineMode?.active &&
-        definePreviewRowId !== null &&
-        definePreviewText !== "" ? (
+        {defineMode?.active && definePreviewRowId !== null && definePreviewText !== "" ? (
           <DefineRowPreviewTooltip
             open
             anchorKey={definePreviewRowId}

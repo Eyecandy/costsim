@@ -1,7 +1,10 @@
 /// <reference lib="webworker" />
 
 import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWorkerMessages"
-import type { ShapleyWorkerRequest, ShapleyWorkerResponse } from "@/domain/simulation/shapleyWorkerMessages"
+import type {
+  ShapleyWorkerRequest,
+  ShapleyWorkerResponse,
+} from "@/domain/simulation/shapleyWorkerMessages"
 
 self.onmessage = (e: MessageEvent<ShapleyWorkerRequest>) => {
   const msg = e.data

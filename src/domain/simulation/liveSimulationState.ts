@@ -35,11 +35,7 @@ export type LiveSimulationState = {
 }
 
 export type LiveResultValidityKind =
-  | "none"
-  | "valid"
-  | "stale"
-  | "wrong_analysis"
-  | "wrong_checkpoint"
+  "none" | "valid" | "stale" | "wrong_analysis" | "wrong_checkpoint"
 
 export type LiveResultValidity = {
   kind: LiveResultValidityKind
@@ -80,14 +76,8 @@ export function coerceSimulationInputSignature(signature: string): string {
   return trimmed
 }
 
-export function hasLiveSimulationResults(
-  state: LiveSimulationState | null | undefined,
-): boolean {
-  return Boolean(
-    state &&
-      state.projectResults.length > 0 &&
-      state.inputSignature.trim() !== "",
-  )
+export function hasLiveSimulationResults(state: LiveSimulationState | null | undefined): boolean {
+  return Boolean(state && state.projectResults.length > 0 && state.inputSignature.trim() !== "")
 }
 
 function compactDraftResultValidity(args: {
@@ -96,10 +86,7 @@ function compactDraftResultValidity(args: {
   currentProjects: readonly Project[]
   compact: OngoingCheckpointResultSnapshotV1
 }): LiveResultValidity {
-  if (
-    args.analysisId != null &&
-    args.analysisId !== args.compact.analysisId
-  ) {
+  if (args.analysisId != null && args.analysisId !== args.compact.analysisId) {
     return { kind: "wrong_analysis" }
   }
   if (args.checkpointId !== args.compact.checkpointId) {
@@ -118,10 +105,7 @@ function singleDraftResultValidity(args: {
   currentProjects: readonly Project[]
   draft: SingleDraftResultSnapshotV1
 }): LiveResultValidity {
-  if (
-    args.analysisId != null &&
-    args.analysisId !== args.draft.analysisId
-  ) {
+  if (args.analysisId != null && args.analysisId !== args.draft.analysisId) {
     return { kind: "wrong_analysis" }
   }
   const currentSig = buildSimulationInputSignature(args.currentProjects)
@@ -147,11 +131,7 @@ export function getLiveResultValidity(args: {
 }): LiveResultValidity {
   const sim = args.simulationState
   if (hasLiveSimulationResults(sim)) {
-    if (
-      args.analysisId != null &&
-      sim!.analysisId != null &&
-      args.analysisId !== sim!.analysisId
-    ) {
+    if (args.analysisId != null && sim!.analysisId != null && args.analysisId !== sim!.analysisId) {
       return { kind: "wrong_analysis" }
     }
     if (args.checkpointId !== sim!.checkpointId) {
@@ -176,11 +156,7 @@ export function getLiveResultValidity(args: {
   }
 
   const singleDraft = args.singleDraftResult
-  if (
-    singleDraft &&
-    isSingleDraftResultSnapshot(singleDraft) &&
-    args.checkpointId == null
-  ) {
+  if (singleDraft && isSingleDraftResultSnapshot(singleDraft) && args.checkpointId == null) {
     return singleDraftResultValidity({
       analysisId: args.analysisId,
       currentProjects: args.currentProjects,
@@ -191,8 +167,6 @@ export function getLiveResultValidity(args: {
   return { kind: "none" }
 }
 
-export function isLiveResultValid(
-  args: Parameters<typeof getLiveResultValidity>[0],
-): boolean {
+export function isLiveResultValid(args: Parameters<typeof getLiveResultValidity>[0]): boolean {
   return getLiveResultValidity(args).kind === "valid"
 }

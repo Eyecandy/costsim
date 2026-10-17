@@ -90,10 +90,7 @@ function optionalText(raw: string | undefined): string | null {
 
 export function buildPdfCostItemBlocks(project: Project): PdfCostItemBlock[] {
   return project.costRows
-    .filter(
-      (row) =>
-        scenarioHasContent(row) && parseCostForSimulation(row) !== null,
-    )
+    .filter((row) => scenarioHasContent(row) && parseCostForSimulation(row) !== null)
     .map((row) => {
       const mostLikely = parseNumberField(row.likely)!
       const optimisticPct = parseNumberField(row.optimistic)!
@@ -110,10 +107,7 @@ export function buildPdfCostItemBlocks(project: Project): PdfCostItemBlock[] {
 
 export function buildPdfDriverBlocks(project: Project): PdfDriverBlock[] {
   return project.driverRows
-    .filter(
-      (row) =>
-        scenarioHasContent(row) && parseDriverForSimulation(row) !== null,
-    )
+    .filter((row) => scenarioHasContent(row) && parseDriverForSimulation(row) !== null)
     .map((row) => ({
       name: row.name.trim() || "—",
       description: optionalText(row.description),
@@ -124,9 +118,7 @@ export function buildPdfDriverBlocks(project: Project): PdfDriverBlock[] {
 }
 
 export function buildPdfAssumptionTexts(project: Project): string[] {
-  return (project.assumptions ?? [])
-    .map((a) => a.text)
-    .filter((t) => t.trim() !== "")
+  return (project.assumptions ?? []).map((a) => a.text).filter((t) => t.trim() !== "")
 }
 
 /** Sparse non-default impact overrides only (≠ 100). */
@@ -140,9 +132,7 @@ export function buildPdfImpactOverrides(project: Project): PdfImpactOverride[] {
   const out: PdfImpactOverride[] = []
   for (const d of drivers) {
     for (const c of costs) {
-      const pct = resolveDriverImpactPercent(
-        project.driverImpacts?.[d.id]?.[c.id],
-      )
+      const pct = resolveDriverImpactPercent(project.driverImpacts?.[d.id]?.[c.id])
       if (pct === 100) continue
       out.push({
         driverName: d.name.trim() || "—",
@@ -159,16 +149,11 @@ export function buildPdfImpactOverrides(project: Project): PdfImpactOverride[] {
  * Diagonal = 1; unspecified pairs = 0; specified pairs = rho (symmetric).
  * Fallback to pairs only when cost-item count exceeds readability threshold.
  */
-export function buildPdfCorrelationSection(
-  project: Project,
-): PdfCorrelationSection {
+export function buildPdfCorrelationSection(project: Project): PdfCorrelationSection {
   const costs = project.costRows.filter(
     (r) => scenarioHasContent(r) && parseCostForSimulation(r) !== null,
   )
-  const pairs = collectNonZeroCostCorrelations(
-    costs,
-    project.costCorrelations,
-  )
+  const pairs = collectNonZeroCostCorrelations(costs, project.costCorrelations)
   if (pairs.length === 0) return { kind: "none" }
 
   const mappedPairs: PdfCorrelationPair[] = pairs.map((p) => ({
@@ -182,9 +167,7 @@ export function buildPdfCorrelationSection(
     involvedIds.add(p.costItemAId)
     involvedIds.add(p.costItemBId)
   }
-  const involvedNames = costs
-    .filter((c) => involvedIds.has(c.id))
-    .map((c) => c.name.trim() || "—")
+  const involvedNames = costs.filter((c) => involvedIds.has(c.id)).map((c) => c.name.trim() || "—")
   const groupSummary = detectUniformCompleteGroup(involvedNames, mappedPairs)
 
   if (costs.length > PDF_CORRELATION_MATRIX_MAX_COST_ITEMS) {
@@ -265,9 +248,7 @@ export function formatPdfRho(value: number, language: AppLanguage): string {
 }
 
 /** Use millions display when any absolute cost is ≥ 1e6. */
-export function resolvePdfAmountScale(
-  amounts: readonly number[],
-): PdfAmountScale {
+export function resolvePdfAmountScale(amounts: readonly number[]): PdfAmountScale {
   const max = amounts.reduce((m, v) => Math.max(m, Math.abs(v)), 0)
   return max >= 1_000_000 ? "mill" : "raw"
 }
@@ -281,12 +262,7 @@ export function formatPdfAbsoluteAmount(
   if (scale === "mill") {
     const m = value / 1_000_000
     const abs = Math.abs(m)
-    const fd =
-      abs >= 100 || Math.abs(m - Math.round(m)) < 1e-6
-        ? 0
-        : abs >= 10
-          ? 1
-          : 1
+    const fd = abs >= 100 || Math.abs(m - Math.round(m)) < 1e-6 ? 0 : abs >= 10 ? 1 : 1
     const body = formatNumber(m, fd, language)
     return language === "en" ? `${body} mill.` : `${body} mill.`
   }
@@ -372,18 +348,13 @@ export function mapShapleyToPdfContribution(
     uncertaintyReserve: {
       startValue: result.uncertaintyReserveDecomposition.startValue,
       endValue: result.uncertaintyReserveDecomposition.endValue,
-      contributions: mapFactors(
-        result.uncertaintyReserveDecomposition.contributions,
-      ),
+      contributions: mapFactors(result.uncertaintyReserveDecomposition.contributions),
     },
   }
 }
 
 /** Format signed percent for PDF metadata rows. */
-export function formatPdfSignedPct(
-  value: number,
-  language: "no" | "en",
-): string {
+export function formatPdfSignedPct(value: number, language: "no" | "en"): string {
   const abs = Math.abs(value)
   const body =
     language === "en"
@@ -402,10 +373,7 @@ export function formatPdfSignedPct(
 }
 
 /** Compact monetary label for S-curve P50/P85 callouts. */
-export function formatPdfSCurveMarkerValue(
-  value: number,
-  language: AppLanguage,
-): string {
+export function formatPdfSCurveMarkerValue(value: number, language: AppLanguage): string {
   const scale = resolvePdfAmountScale([value])
   return formatPdfAbsoluteAmount(value, language, scale)
 }

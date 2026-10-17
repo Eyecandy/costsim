@@ -20,12 +20,8 @@ import {
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function dialogSource() {
-  return readFileSync(
-    join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(root, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function appSource() {
@@ -101,41 +97,26 @@ describe("Focus definition draft lifecycle", () => {
       "Updated definition",
       COST_DESCRIPTION_MAX_LENGTH,
     )
-    const first = commitGuidedDefinitionDraft(
-      dirty,
-      COST_DESCRIPTION_MAX_LENGTH,
-    )
+    const first = commitGuidedDefinitionDraft(dirty, COST_DESCRIPTION_MAX_LENGTH)
     expect(first.commit).toEqual({
       rowId: "cost-1",
       description: "Updated definition",
     })
-    const second = commitGuidedDefinitionDraft(
-      first.state,
-      COST_DESCRIPTION_MAX_LENGTH,
-    )
+    const second = commitGuidedDefinitionDraft(first.state, COST_DESCRIPTION_MAX_LENGTH)
     expect(second.commit).toBeNull()
   })
 
   it("4: unchanged blur does not write", () => {
-    const result = commitGuidedDefinitionDraft(
-      baseState({ draft: "Canonical", dirty: true }),
-      200,
-    )
+    const result = commitGuidedDefinitionDraft(baseState({ draft: "Canonical", dirty: true }), 200)
     expect(result.commit).toBeNull()
-    expect(guidedDefinitionDraftNeedsCommit("Canonical", "Canonical")).toBe(
-      false,
-    )
+    expect(guidedDefinitionDraftNeedsCommit("Canonical", "Canonical")).toBe(false)
   })
 
   it("5: Enter newline is not a commit path (no Enter→commit without modifier)", () => {
     const body = guidedDefinitionTextareaSource()
     // Bare Enter must not commit; only Cmd/Ctrl+Enter.
-    expect(body).toMatch(
-      /event\.key === "Enter" && \(event\.metaKey \|\| event\.ctrlKey\)/,
-    )
-    expect(body).not.toMatch(
-      /if \(event\.key === "Enter"\) \{\s*event\.preventDefault/,
-    )
+    expect(body).toMatch(/event\.key === "Enter" && \(event\.metaKey \|\| event\.ctrlKey\)/)
+    expect(body).not.toMatch(/if \(event\.key === "Enter"\) \{\s*event\.preventDefault/)
     expect(body).toContain("rows={2}")
   })
 
@@ -165,7 +146,7 @@ describe("Focus definition draft lifecycle", () => {
     const src = dialogSource()
     const escapeBlock = src.slice(
       src.indexOf('if (event.key !== "Escape") return'),
-      src.indexOf("window.addEventListener(\"keydown\", onKeyDown)"),
+      src.indexOf('window.addEventListener("keydown", onKeyDown)'),
     )
     expect(escapeBlock).toContain("guidedDescription")
     expect(escapeBlock).toContain("guidedInlineEdit")
@@ -233,9 +214,7 @@ describe("Focus definition draft lifecycle", () => {
     expect(driverDef).toContain("DRIVER_DESCRIPTION_MAX_LENGTH")
     // Single shared component — not two ad-hoc onChange→onPatchRow textareas.
     expect((src.match(/<GuidedDefinitionTextarea/g) ?? []).length).toBe(2)
-    expect(src).not.toMatch(
-      /onChange=\{\(event\) => \{\s*onPatchRow\(row\.id,\s*\{\s*description:/,
-    )
+    expect(src).not.toMatch(/onChange=\{\(event\) => \{\s*onPatchRow\(row\.id,\s*\{\s*description:/)
     expect(COST_DESCRIPTION_MAX_LENGTH).toBeGreaterThan(0)
     expect(DRIVER_DESCRIPTION_MAX_LENGTH).toBeGreaterThan(0)
   })
@@ -248,9 +227,7 @@ describe("Focus definition draft lifecycle", () => {
 
   it("12: read-only remains non-editable (Guided not mounted when archived)", () => {
     const app = appSource()
-    expect(app).toContain(
-      "activeProject && guidedInputKind && !analysisReadOnly",
-    )
+    expect(app).toContain("activeProject && guidedInputKind && !analysisReadOnly")
     expect(app).toContain("onPatchRow={(rowId, patch) => {")
     expect(app).toContain("if (analysisReadOnly) return")
   })

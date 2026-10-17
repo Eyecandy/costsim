@@ -12,10 +12,7 @@
  * forcing a re-simulation of the imported state.
  */
 
-import type {
-  AnalysisDocument,
-  AnalysisWorkspacePayload,
-} from "@/domain/analysis/analysisDocument"
+import type { AnalysisDocument, AnalysisWorkspacePayload } from "@/domain/analysis/analysisDocument"
 import { isAnalysisTrashed } from "@/domain/analysis/analysisDocument"
 import type { ArchivedAnalysisSnapshotV1 } from "@/domain/analysis/archivedAnalysisSnapshot"
 import {
@@ -79,11 +76,7 @@ export function resolveArchivedSingleAlternatives(
 export function canStartOngoingFromArchivedSingle(
   doc: Pick<AnalysisDocument, "status" | "analysisMode" | "deletedAt">,
 ): boolean {
-  return (
-    !isAnalysisTrashed(doc) &&
-    doc.status === "archived" &&
-    doc.analysisMode === "single"
-  )
+  return !isAnalysisTrashed(doc) && doc.status === "archived" && doc.analysisMode === "single"
 }
 
 /**
@@ -221,14 +214,10 @@ export function planCreateOngoingFromArchivedSingle(
 
   // Deep-clone sources before planning so workspace/ongoing never alias archive data.
   const isolatedProjects = sourceProjects.map((p) => cloneIsolated(p))
-  const planned = planOngoingFromSingleArchiveProjects(
-    isolatedProjects,
-    selectedProjectId,
-    {
-      checkpointName: options?.checkpointName,
-      createdAt: options?.createdAt,
-    },
-  )
+  const planned = planOngoingFromSingleArchiveProjects(isolatedProjects, selectedProjectId, {
+    checkpointName: options?.checkpointName,
+    createdAt: options?.createdAt,
+  })
   if (!planned) {
     return { ok: false, reason: "project_not_found" }
   }
@@ -248,17 +237,11 @@ export function planCreateOngoingFromArchivedSingle(
       },
     )
     if (checkpointSnapshot) {
-      ongoing = archiveCheckpoint(
-        ongoing,
-        cp1Id,
-        checkpointSnapshot,
-        createdAt,
-      )
+      ongoing = archiveCheckpoint(ongoing, cp1Id, checkpointSnapshot, createdAt)
     }
   }
 
-  const selectedName =
-    planned.workspace.projects[0]?.name?.trim() || source.name
+  const selectedName = planned.workspace.projects[0]?.name?.trim() || source.name
 
   return {
     ok: true,

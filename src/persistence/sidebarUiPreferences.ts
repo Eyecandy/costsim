@@ -5,8 +5,7 @@
 
 import { loadFromStorage, saveToStorage } from "@/persistence/storage"
 
-export const SIDEBAR_UI_PREFERENCES_KEY =
-  "cost-simulator:v1:sidebarUiPreferences" as const
+export const SIDEBAR_UI_PREFERENCES_KEY = "cost-simulator:v1:sidebarUiPreferences" as const
 
 export type SidebarUiPreferences = {
   version: 1

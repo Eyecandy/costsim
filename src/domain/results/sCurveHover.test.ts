@@ -20,7 +20,6 @@ import {
 } from "@/domain/results/sCurveHover"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function sCurveSource() {
   return readFileSync(join(repoRoot, "src/features/results/ResultsSCurve.tsx"), "utf8")
 }
@@ -42,7 +41,7 @@ describe("expanded S-curve hover", () => {
     expect(src).toContain("if (!expanded) return []")
     expect(resultsPanelSource()).toContain("<ResultsSCurve")
     expect(resultsPanelSource()).toContain("series={cdfSeries}")
-    expect(resultsPanelSource()).toContain("onExpand={() => setExpandedChart({ kind: \"scurve\" })}")
+    expect(resultsPanelSource()).toContain('onExpand={() => setExpandedChart({ kind: "scurve" })}')
     expect(resultsPanelSource()).toMatch(
       /expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/,
     )
@@ -99,12 +98,8 @@ describe("expanded S-curve hover", () => {
 
   it("E: known synthetic distributions return expected percentile values", () => {
     const uniform = Array.from({ length: 100 }, (_, i) => i + 1)
-    expect(wholePercentileLabel(cumulativeProbabilityAtCost(uniform, 72))).toBe(
-      "P72",
-    )
-    expect(wholePercentileLabel(cumulativeProbabilityAtCost(uniform, 61))).toBe(
-      "P61",
-    )
+    expect(wholePercentileLabel(cumulativeProbabilityAtCost(uniform, 72))).toBe("P72")
+    expect(wholePercentileLabel(cumulativeProbabilityAtCost(uniform, 61))).toBe("P61")
   })
 
   it("F: below-range cost returns approximately P0", () => {
@@ -148,11 +143,7 @@ describe("expanded S-curve hover", () => {
       1,
     )
     expect(rows.map((r) => r.id)).toEqual(["z", "a", "m"])
-    expect(rows.map((r) => r.label)).toEqual([
-      "Last in id, first in chart",
-      "Second",
-      "Third",
-    ])
+    expect(rows.map((r) => r.label)).toEqual(["Last in id, first in chart", "Second", "Third"])
   })
 
   it("K: NO/EN formatting remains correct", () => {
@@ -218,9 +209,7 @@ describe("expanded S-curve hover", () => {
     expect(src).toContain("resolveSCurveCostDisplayScale")
     expect(src).toContain("formatSCurveCost")
     expect(src).toContain("costDisplayScale")
-    expect(src).toContain(
-      "formatSCurveCost(tick, costDisplayScale, language)",
-    )
+    expect(src).toContain("formatSCurveCost(tick, costDisplayScale, language)")
     expect(src).not.toContain("formatMillionsCompact")
     expect(src).not.toContain("value / 1_000_000")
     expect(hoverSource()).toContain("resolveSCurveCostDisplayScale")

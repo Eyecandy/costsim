@@ -44,9 +44,7 @@ export function shouldShowCorrelationSelectInstruction(opts: {
   saveConfirmVisible?: boolean
 }): boolean {
   return (
-    opts.correlationActive === true &&
-    opts.selectedCount < 2 &&
-    opts.saveConfirmVisible !== true
+    opts.correlationActive === true && opts.selectedCount < 2 && opts.saveConfirmVisible !== true
   )
 }
 

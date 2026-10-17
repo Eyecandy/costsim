@@ -106,12 +106,7 @@ export function SectionExpander({
           />
         </div>
       </div>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={headerId}
-        hidden={!isOpen}
-      >
+      <div id={panelId} role="region" aria-labelledby={headerId} hidden={!isOpen}>
         <div className={cn("pt-2", bodyClassName)}>{children}</div>
       </div>
     </div>

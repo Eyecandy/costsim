@@ -12,9 +12,7 @@ import {
 } from "@/domain/results/tableRows"
 import type { SimulationProjectPayload } from "@/domain/simulation/simulationTypes"
 
-export function buildSimulationProjectPayload(
-  project: Project,
-): SimulationProjectPayload | null {
+export function buildSimulationProjectPayload(project: Project): SimulationProjectPayload | null {
   const parsed = project.costRows
     .map((row) => ({ row, params: parseCostForSimulation(row) }))
     .filter(
@@ -51,10 +49,7 @@ export function buildSimulationProjectPayload(
       parsedDriverRows,
       project.driverImpacts,
     ),
-    costCorrelation: buildSimulationCostCorrelationMatrix(
-      parsedCostRows,
-      project.costCorrelations,
-    ),
+    costCorrelation: buildSimulationCostCorrelationMatrix(parsedCostRows, project.costCorrelations),
     costNames: parsed.map((x) => x.row.name),
     driverNames: driverParsed.map((x) => x.row.name),
     costRowIds: parsedCostRows.map((r) => r.id),

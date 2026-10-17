@@ -76,10 +76,7 @@ export function AddAlternativeDialog({
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
-          id={titleId}
-          className="m-0 mb-3 font-sans text-[15px] font-medium text-foreground"
-        >
+        <h2 id={titleId} className="m-0 mb-3 font-sans text-[15px] font-medium text-foreground">
           {t("projects.addAlternativeTitle")}
         </h2>
 
@@ -144,12 +141,7 @@ export function AddAlternativeDialog({
               </select>
             </label>
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setMode("choose")}
-              >
+              <Button type="button" variant="ghost" size="sm" onClick={() => setMode("choose")}>
                 {t("common.cancel")}
               </Button>
               <Button

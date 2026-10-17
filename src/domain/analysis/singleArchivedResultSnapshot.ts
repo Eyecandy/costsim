@@ -20,8 +20,7 @@ export const SINGLE_ARCHIVED_RESULT_KIND = "single_archived_result_v1" as const
 export const SINGLE_ARCHIVED_RESULT_SCHEMA_VERSION = 1 as const
 
 export type SingleAnalysisArchivedSnapshot =
-  | ArchivedAnalysisSnapshotV1
-  | SingleArchivedResultSnapshotV1
+  ArchivedAnalysisSnapshotV1 | SingleArchivedResultSnapshotV1
 
 export type SingleArchivedResultSnapshotV1 = {
   kind: typeof SINGLE_ARCHIVED_RESULT_KIND
@@ -49,9 +48,7 @@ export type BuildSingleArchivedResultSnapshotInput = {
   simulationCount: number
   resultPreferences: ResultPreferencesV1
   resultView?: ResolvedResultView
-  shapleyByProjectId?: Readonly<
-    Record<string, ShapleyAttributionResult | null>
-  >
+  shapleyByProjectId?: Readonly<Record<string, ShapleyAttributionResult | null>>
   archivedAt?: string
   simulationRunIdByProjectId?: Readonly<Record<string, string>>
 }
@@ -78,8 +75,7 @@ export function buildSingleArchivedResultSnapshot(
 ): SingleArchivedResultSnapshotV1 {
   const projectsAtArchive = structuredClone(input.projects) as Project[]
   const resultPreferences = structuredClone(input.resultPreferences)
-  const resultView =
-    structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
+  const resultView = structuredClone(input.resultView) ?? resolveResultView(resultPreferences)
   const byProjectId: Record<string, CompactProjectResultV1> = {}
 
   for (const project of projectsAtArchive) {
@@ -88,8 +84,7 @@ export function buildSingleArchivedResultSnapshot(
     byProjectId[project.id] = buildCompactProjectResult({
       project,
       result,
-      simulatedBaseCost:
-        input.simulatedBaseCostByProjectId[project.id] ?? null,
+      simulatedBaseCost: input.simulatedBaseCostByProjectId[project.id] ?? null,
       resultView,
       contribution: input.shapleyByProjectId?.[project.id] ?? null,
     })
@@ -137,9 +132,10 @@ export function remapSingleArchivedResultSnapshot(args: {
   }
   const simulationRunIdByProjectId = args.snapshot.simulationRunIdByProjectId
     ? Object.fromEntries(
-        Object.entries(args.snapshot.simulationRunIdByProjectId).map(
-          ([oldId, runId]) => [args.projectIdMap.get(oldId) ?? oldId, runId],
-        ),
+        Object.entries(args.snapshot.simulationRunIdByProjectId).map(([oldId, runId]) => [
+          args.projectIdMap.get(oldId) ?? oldId,
+          runId,
+        ]),
       )
     : undefined
   const remapped: SingleArchivedResultSnapshotV1 = {

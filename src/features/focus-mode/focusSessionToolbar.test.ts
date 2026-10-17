@@ -4,7 +4,6 @@ import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -18,14 +17,8 @@ describe("Focus session shared toolbar", () => {
     expect(shell).toContain('data-focus-mode-close=""')
     // Toolbar is session-scoped (not dormant), not variant- or hostOnly-gated.
     const toolbarStart = shell.indexOf('data-focus-session-toolbar=""')
-    const beforeHeader = shell.slice(
-      toolbarStart,
-      shell.indexOf('data-focus-mode-header=""'),
-    )
-    const toolbarBlock = beforeHeader.slice(
-      0,
-      beforeHeader.lastIndexOf("        ) : null}"),
-    )
+    const beforeHeader = shell.slice(toolbarStart, shell.indexOf('data-focus-mode-header=""'))
+    const toolbarBlock = beforeHeader.slice(0, beforeHeader.lastIndexOf("        ) : null}"))
     expect(toolbarBlock).toContain("data-focus-mode-fullscreen-toggle")
     expect(toolbarBlock).toContain("data-focus-mode-close")
     expect(toolbarBlock).not.toContain("hostOnly")
@@ -70,10 +63,7 @@ describe("Focus session shared toolbar", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const toolbarMarker = shell.indexOf('data-focus-session-toolbar=""')
     const toolbarOuterStart = shell.lastIndexOf("<div", toolbarMarker)
-    const beforeHeader = shell.slice(
-      toolbarOuterStart,
-      shell.indexOf('data-focus-mode-header=""'),
-    )
+    const beforeHeader = shell.slice(toolbarOuterStart, shell.indexOf('data-focus-mode-header=""'))
     // Outer wrapper only — stop before nested headerActions ternary.
     const toolbarAnchor = beforeHeader.slice(
       0,

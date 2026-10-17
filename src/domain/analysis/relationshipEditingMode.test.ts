@@ -20,7 +20,6 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function scenarioTableSource() {
   return readFileSync(
     join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
@@ -88,18 +87,12 @@ describe("relationship editing mode UX", () => {
       }),
     ).toBe(false)
     const app = appSource()
-    expect(app).toContain(
-      "if (!impactModeActive) setImpactSelectedDriverId(null)",
-    )
+    expect(app).toContain("if (!impactModeActive) setImpactSelectedDriverId(null)")
   })
 
   it("E: Correlation mode shows multi-select instruction when fewer than 2 selected", () => {
-    expect(messages.no.inputs.costCorrelationSelectHint).toBe(
-      "Velg minst to kostnadsposter.",
-    )
-    expect(messages.en.inputs.costCorrelationSelectHint).toBe(
-      "Select at least two cost items.",
-    )
+    expect(messages.no.inputs.costCorrelationSelectHint).toBe("Velg minst to kostnadsposter.")
+    expect(messages.en.inputs.costCorrelationSelectHint).toBe("Select at least two cost items.")
     expect(
       shouldShowCorrelationSelectInstruction({
         correlationActive: true,
@@ -118,9 +111,7 @@ describe("relationship editing mode UX", () => {
         selectedCount: 2,
       }),
     ).toBe(false)
-    expect(scenarioTableSource()).toContain(
-      't("inputs.costCorrelationSelectHint")',
-    )
+    expect(scenarioTableSource()).toContain('t("inputs.costCorrelationSelectHint")')
     expect(scenarioTableSource()).toContain("onToggleCostSelection")
   })
 
@@ -140,9 +131,7 @@ describe("relationship editing mode UX", () => {
     expect(messages.no.inputs.costCorrelationApply).toBe("Bruk")
     expect(messages.en.inputs.costCorrelationApply).toBe("Apply")
     expect(messages.no.inputs.costCorrelationSelectedCount).toBe("{count} valgt")
-    expect(messages.en.inputs.costCorrelationSelectedCount).toBe(
-      "{count} selected",
-    )
+    expect(messages.en.inputs.costCorrelationSelectedCount).toBe("{count} selected")
     const src = scenarioTableSource()
     expect(src).toContain("onApplyGroupCorrelation")
     expect(src).toContain("showCorrelationGroupControls")
@@ -177,15 +166,11 @@ describe("relationship editing mode UX", () => {
     expect(app).toContain("clearCorrelationEditingState")
     expect(app).toContain("clearCorrelationSaveConfirm")
     expect(app).toContain("correlationSelectedCostIds")
-    expect(app).toMatch(
-      /if \(!correlationModeActive\) \{\s*clearCorrelationEditingState\(\)/,
-    )
+    expect(app).toMatch(/if \(!correlationModeActive\) \{\s*clearCorrelationEditingState\(\)/)
   })
 
   it("I: modes stay mutually exclusive; outside click exits Impact and Correlation", () => {
-    expect(messages.en.inputs.driverImpactSelectHint).toBe(
-      "Select a driver to adjust impact.",
-    )
+    expect(messages.en.inputs.driverImpactSelectHint).toBe("Select a driver to adjust impact.")
     const app = appSource()
     expect(app).toContain("setCorrelationModeActive(false)")
     expect(app).toContain("setImpactModeActive(false)")
@@ -201,14 +186,10 @@ describe("relationship editing mode UX", () => {
     // Outside click must not clear guided resume (toolbar toggle still does).
     const deactivateBody = app.slice(
       app.indexOf("const deactivateEditingModes"),
-      app.indexOf(
-        "if (!impactModeActive && !correlationModeActive && !defineModeActive) return",
-      ),
+      app.indexOf("if (!impactModeActive && !correlationModeActive && !defineModeActive) return"),
     )
     expect(deactivateBody).not.toContain("setGuidedResume")
-    expect(app).toContain(
-      'setGuidedResume((r) => (r?.after === "correlation" ? null : r))',
-    )
+    expect(app).toContain('setGuidedResume((r) => (r?.after === "correlation" ? null : r))')
     const src = scenarioTableSource()
     expect(src).toContain("onCellClicked={onCellClicked}")
     expect(src).toContain("driverImpactMode.onSelectDriver")
@@ -252,7 +233,11 @@ describe("cost correlation group apply", () => {
 
   it("F/P: Apply sets all unique selected-group pairs (9 items → 36 pairs)", () => {
     const nine = Array.from({ length: 9 }, (_, i) => ({ id: `c${i}` }))
-    const patched = applyCostCorrelationGroupPatch(undefined, nine.map((r) => r.id), "0.5")
+    const patched = applyCostCorrelationGroupPatch(
+      undefined,
+      nine.map((r) => r.id),
+      "0.5",
+    )
     const matrix = buildSimulationCostCorrelationMatrix(nine, patched)
     let pairs = 0
     for (let i = 0; i < 9; i++) {
@@ -264,7 +249,12 @@ describe("cost correlation group apply", () => {
     }
     expect(pairs).toBe(36)
     expect(
-      isCostCorrelationGroupPatchValid(nine, undefined, nine.map((r) => r.id), "0.5"),
+      isCostCorrelationGroupPatchValid(
+        nine,
+        undefined,
+        nine.map((r) => r.id),
+        "0.5",
+      ),
     ).toBe(true)
   })
 
@@ -297,15 +287,13 @@ describe("cost correlation group apply", () => {
       "0.9",
     )
     const before = structuredClone(base)
-    expect(
-      isCostCorrelationGroupPatchValid(rows, base, ["a", "c"], "-0.9"),
-    ).toBe(false)
+    expect(isCostCorrelationGroupPatchValid(rows, base, ["a", "c"], "-0.9")).toBe(false)
     // Caller must not commit when invalid; patch function itself is pure.
     const attempted = applyCostCorrelationGroupPatch(base, ["a", "c"], "-0.9")
     expect(base).toEqual(before)
-    expect(
-      buildSimulationCostCorrelationMatrix(rows, base),
-    ).toEqual(buildSimulationCostCorrelationMatrix(rows, before))
+    expect(buildSimulationCostCorrelationMatrix(rows, base)).toEqual(
+      buildSimulationCostCorrelationMatrix(rows, before),
+    )
     // Attempted patch would differ, but UI rejects it so stored stays `base`.
     expect(attempted).not.toEqual(base)
   })
@@ -329,11 +317,9 @@ describe("cost correlation group apply", () => {
   })
 
   it("selected count text uses live count placeholder", () => {
-    expect(
-      messages.no.inputs.costCorrelationSelectedCount.replace("{count}", "4"),
-    ).toBe("4 valgt")
-    expect(
-      messages.en.inputs.costCorrelationSelectedCount.replace("{count}", "4"),
-    ).toBe("4 selected")
+    expect(messages.no.inputs.costCorrelationSelectedCount.replace("{count}", "4")).toBe("4 valgt")
+    expect(messages.en.inputs.costCorrelationSelectedCount.replace("{count}", "4")).toBe(
+      "4 selected",
+    )
   })
 })

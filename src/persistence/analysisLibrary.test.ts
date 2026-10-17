@@ -23,7 +23,6 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 describe("Analysis Library repository", () => {
   beforeEach(() => {
     clearLocalAnalysisLibraryStorageForTests()
@@ -78,11 +77,7 @@ describe("Analysis Library repository", () => {
     const summaries = await repo.listSummaries()
     const recent = summaries
       .slice()
-      .sort(
-        (x, y) =>
-          new Date(y.lastOpenedAt).getTime() -
-          new Date(x.lastOpenedAt).getTime(),
-      )
+      .sort((x, y) => new Date(y.lastOpenedAt).getTime() - new Date(x.lastOpenedAt).getTime())
     expect(recent[0]!.id).toBe(a.id)
     expect(summaries.find((s) => s.id === a.id)?.folderId).toBe(folder.id)
     expect(b.folderId).toBeNull()
@@ -132,9 +127,9 @@ describe("Analysis Library repository", () => {
     expect(archived.status).toBe("archived")
     expect(archived.folderId).toBe(folder.id)
     expect(archived.archivedSnapshot).toEqual(snapshot)
-    await expect(
-      repo.saveDraft({ ...archived, status: "draft", name: "hack" }),
-    ).rejects.toThrow(/archived/i)
+    await expect(repo.saveDraft({ ...archived, status: "draft", name: "hack" })).rejects.toThrow(
+      /archived/i,
+    )
 
     const draft = await repo.createDraftFromArchived({
       archivedId: archived.id,
@@ -144,9 +139,7 @@ describe("Analysis Library repository", () => {
     expect(draft.status).toBe("draft")
     expect(draft.previousVersionId).toBe(archived.id)
     expect(draft.analysisMode).toBe("single")
-    expect(draft.workspace.projects[0]!.id).not.toBe(
-      archived.workspace.projects[0]!.id,
-    )
+    expect(draft.workspace.projects[0]!.id).not.toBe(archived.workspace.projects[0]!.id)
     const still = await repo.get(archived.id)
     expect(still?.status).toBe("archived")
     expect(still?.name).toBe("Archive me")
@@ -222,21 +215,14 @@ describe("Analysis Library repository", () => {
       },
     }
     // Session/domain must sync before save — repository no longer does this.
-    const { syncActiveCheckpointWorkspace } = await import(
-      "@/domain/analysis/analysisCheckpoint"
-    )
+    const { syncActiveCheckpointWorkspace } = await import("@/domain/analysis/analysisCheckpoint")
     const synced = {
       ...withPhase,
-      ongoing: syncActiveCheckpointWorkspace(
-        created.ongoing!,
-        withPhase.workspace,
-      ),
+      ongoing: syncActiveCheckpointWorkspace(created.ongoing!, withPhase.workspace),
     }
     await repo.saveDraft(synced)
     const loaded = await repo.get(created.id)
-    expect(loaded?.ongoing?.checkpoints[0]!.workspace.projects[0]!.profile?.phase).toBe(
-      "execution",
-    )
+    expect(loaded?.ongoing?.checkpoints[0]!.workspace.projects[0]!.profile?.phase).toBe("execution")
   })
 
   it("persists checkpoint switch and archived checkpoint workspace", async () => {
@@ -314,9 +300,7 @@ describe("Analysis Library repository", () => {
     })
     const draftView = await repo.get(created.id)
     expect(draftView?.ongoing?.activeCheckpointId).toBe(cp2Id)
-    expect(
-      draftView?.workspace.projects[0]!.profile?.phase,
-    ).toBe("execution")
+    expect(draftView?.workspace.projects[0]!.profile?.phase).toBe("execution")
 
     await repo.saveDraft({
       ...draftView!,
@@ -328,12 +312,8 @@ describe("Analysis Library repository", () => {
     })
     const archivedView = await repo.get(created.id)
     expect(archivedView?.ongoing?.activeCheckpointId).toBe(cp1.id)
-    expect(
-      archivedView?.workspace.projects[0]!.profile?.phase,
-    ).toBe("preliminary_design")
-    expect(
-      archivedView?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.status,
-    ).toBe("archived")
+    expect(archivedView?.workspace.projects[0]!.profile?.phase).toBe("preliminary_design")
+    expect(archivedView?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.status).toBe("archived")
   })
 
   it("defaults legacy documents without analysisMode to single", async () => {
@@ -430,10 +410,7 @@ describe("Analysis Library repository", () => {
     expect(app).toMatch(/handleAddProject[\s\S]*isOngoingAnalysis/)
     expect(app).toMatch(/handleCopyExistingAlternative[\s\S]*isOngoingAnalysis/)
     expect(app).toMatch(/handleDeleteProject[\s\S]*isOngoingAnalysis/)
-    const nav = readFileSync(
-      join(repoRoot, "src/features/checkpoints/CheckpointNav.tsx"),
-      "utf8",
-    )
+    const nav = readFileSync(join(repoRoot, "src/features/checkpoints/CheckpointNav.tsx"), "utf8")
     expect(nav).toContain('data-checkpoint-nav="timeline"')
     expect(nav).not.toContain("border-b-[1.5px] border-[#1d868c]")
     expect(nav).not.toContain("rounded-t-lg")

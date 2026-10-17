@@ -51,9 +51,7 @@ describe("computeTotalFromSampledValues", () => {
   })
 
   it("C: +10% driver, 50% impact on one cost item → multiplier 1.05", () => {
-    expect(
-      driverFactorForCostItem([10], [50]),
-    ).toBeCloseTo(1.05)
+    expect(driverFactorForCostItem([10], [50])).toBeCloseTo(1.05)
 
     expect(
       computeTotalFromSampledValues({
@@ -65,9 +63,7 @@ describe("computeTotalFromSampledValues", () => {
   })
 
   it("D: two drivers +10% and -5% at 100% impact → 1.10 × 0.95", () => {
-    expect(
-      driverFactorForCostItem([10, -5], [100, 100]),
-    ).toBeCloseTo(1.1 * 0.95)
+    expect(driverFactorForCostItem([10, -5], [100, 100])).toBeCloseTo(1.1 * 0.95)
 
     expect(
       computeTotalFromSampledValues({
@@ -240,16 +236,15 @@ describe("cost-item Gaussian copula sampling", () => {
   })
 
   it("preserves triangular marginal means within tolerance", () => {
-    const { inputSeries, costCorrelationPrep } =
-      simulateAggregateCostWithDriversValuesAndSeries({
-        runs: RUNS,
-        costTriangles: [triA, triB],
-        drivers: [],
-        costCorrelation: [
-          [1, 0.75],
-          [0.75, 1],
-        ],
-      })
+    const { inputSeries, costCorrelationPrep } = simulateAggregateCostWithDriversValuesAndSeries({
+      runs: RUNS,
+      costTriangles: [triA, triB],
+      drivers: [],
+      costCorrelation: [
+        [1, 0.75],
+        [0.75, 1],
+      ],
+    })
     const a = inputSeries[0]!.values
     const b = inputSeries[1]!.values
     expect(costCorrelationPrep.status.kind).toBe("valid")

@@ -3,14 +3,13 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function resultsPanelSource() {
   return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 function resultsLayoutSource() {
   const src = resultsPanelSource()
-  const start = src.indexOf('space-y-6 [&>div:not(:first-child)]:pt-3')
+  const start = src.indexOf("space-y-6 [&>div:not(:first-child)]:pt-3")
   return src.slice(start)
 }
 
@@ -49,12 +48,8 @@ describe("results section layout", () => {
     expect(src).toContain("const [exportOpen, setExportOpen] = useState(false)")
 
     const layout = resultsLayoutSource()
-    expect(layout).toMatch(
-      /title=\{t\("results\.keyMetricsTitle"\)\}[\s\S]*?defaultOpen/,
-    )
-    expect(layout).toMatch(
-      /title=\{t\("charts\.sCurveTitle"\)\}[\s\S]*?defaultOpen/,
-    )
+    expect(layout).toMatch(/title=\{t\("results\.keyMetricsTitle"\)\}[\s\S]*?defaultOpen/)
+    expect(layout).toMatch(/title=\{t\("charts\.sCurveTitle"\)\}[\s\S]*?defaultOpen/)
     const tornadoBlock = layout.slice(
       layout.indexOf("charts.tornadoTitle"),
       layout.indexOf("charts.attributionTitle"),
@@ -122,9 +117,7 @@ describe("results section layout", () => {
     expect(options).toContain("handleCopyAiBriefPackage")
     expect(options).not.toContain("onRequestReset")
     expect(options).not.toContain("results.startOverButton")
-    expect(options).toContain(
-      'className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"',
-    )
+    expect(options).toContain('className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"')
   })
 
   it("resets expander defaults after a new simulation without invalidating Shapley from expander toggles", () => {
@@ -136,9 +129,7 @@ describe("results section layout", () => {
     expect(src).toContain("setContributionOpen(true)")
     expect(src).toContain("setExportOpen(false)")
     expect(src).toContain("[resultsLayoutResetKey]")
-    expect(src).not.toMatch(
-      /resultsLayoutResetKey[\s\S]{0,200}requestCalculation/,
-    )
+    expect(src).not.toMatch(/resultsLayoutResetKey[\s\S]{0,200}requestCalculation/)
   })
 
   it("wraps Development, Key figures, S-curve, Tornado, Contribution Analysis and Options", () => {

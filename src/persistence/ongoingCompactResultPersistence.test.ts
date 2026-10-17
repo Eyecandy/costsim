@@ -21,15 +21,11 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/persistence/localAnalysisLibraryRepository"
-import {
-  DEFAULT_RESULT_PREFERENCES,
-  resolveResultView,
-} from "@/domain/results/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES, resolveResultView } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 function fixture() {
   const blank = createBlankWorkspaceRuntimeState()
@@ -82,9 +78,7 @@ describe("Ongoing compact result persistence A–K", () => {
         index === 0 ? { ...row, likely: "999" } : row,
       ),
     }
-    expect(buildSimulationInputSignature([edited])).not.toBe(
-      compact.inputSignature,
-    )
+    expect(buildSimulationInputSignature([edited])).not.toBe(compact.inputSignature)
     expect(compact.sCurve.points.length).toBeGreaterThan(0)
   })
 
@@ -92,43 +86,33 @@ describe("Ongoing compact result persistence A–K", () => {
     const { blank, compact } = fixture()
     let ongoing = createInitialOngoingState(blank)
     const id = ongoing.activeCheckpointId
-    ongoing = archiveCheckpoint(
-      ongoing,
-      id,
-      { ...compact, checkpointId: id },
-    )
+    ongoing = archiveCheckpoint(ongoing, id, { ...compact, checkpointId: id })
     expect(JSON.stringify(ongoing)).not.toContain('"values"')
-    expect(isOngoingCheckpointResultSnapshot(
-      ongoing.checkpoints[0]?.archivedSnapshot,
-    )).toBe(true)
+    expect(isOngoingCheckpointResultSnapshot(ongoing.checkpoints[0]?.archivedSnapshot)).toBe(true)
   })
 
   it("D: archived compact contribution is frozen and needs no rerun", () => {
     const { compact } = fixture()
     expect(compact.contribution).toBeNull()
-    expect(readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )).toContain("ongoingCompactResult.contribution")
-    expect(readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )).toContain("onContributionReady")
-    expect(readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )).toContain("attachOngoingDraftContribution")
+    expect(readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")).toContain(
+      "ongoingCompactResult.contribution",
+    )
+    expect(readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")).toContain(
+      "onContributionReady",
+    )
+    expect(
+      readFileSync(
+        join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
+        "utf8",
+      ),
+    ).toContain("attachOngoingDraftContribution")
   })
 
   it("E: compares compact checkpoint Key Figures", () => {
     const { blank, compact } = fixture()
     let ongoing = createInitialOngoingState(blank)
     const cp1 = ongoing.activeCheckpointId
-    ongoing = archiveCheckpoint(
-      ongoing,
-      cp1,
-      { ...compact, checkpointId: cp1 },
-    )
+    ongoing = archiveCheckpoint(ongoing, cp1, { ...compact, checkpointId: cp1 })
     const next = createNextCheckpoint(ongoing, { analysisId: "analysis-1" })
     expect(next.ok).toBe(true)
     if (!next.ok) return
@@ -144,10 +128,8 @@ describe("Ongoing compact result persistence A–K", () => {
     })
     expect(comparison?.kind).toBe("comparison")
     if (comparison?.kind === "comparison") {
-      expect(comparison.keyFigures?.find((row) => row.metric === "p50")?.change)
-        .toBe(0)
-      expect(comparison.extensions?.sCurve?.previous.displayPoints?.length)
-        .toBeGreaterThan(0)
+      expect(comparison.keyFigures?.find((row) => row.metric === "p50")?.change).toBe(0)
+      expect(comparison.extensions?.sCurve?.previous.displayPoints?.length).toBeGreaterThan(0)
     }
   })
 
@@ -155,11 +137,7 @@ describe("Ongoing compact result persistence A–K", () => {
     const { blank, compact } = fixture()
     let ongoing = createInitialOngoingState(blank)
     const id = ongoing.activeCheckpointId
-    ongoing = archiveCheckpoint(
-      ongoing,
-      id,
-      { ...compact, checkpointId: id },
-    )
+    ongoing = archiveCheckpoint(ongoing, id, { ...compact, checkpointId: id })
     const series = buildOngoingDevelopmentSeries({
       checkpoints: ongoing.checkpoints,
     })
@@ -170,11 +148,10 @@ describe("Ongoing compact result persistence A–K", () => {
   it("G: create-next inherits compact ownership only", () => {
     const { blank, compact } = fixture()
     let ongoing = createInitialOngoingState(blank)
-    ongoing = archiveCheckpoint(
-      ongoing,
-      ongoing.activeCheckpointId,
-      { ...compact, checkpointId: ongoing.activeCheckpointId },
-    )
+    ongoing = archiveCheckpoint(ongoing, ongoing.activeCheckpointId, {
+      ...compact,
+      checkpointId: ongoing.activeCheckpointId,
+    })
     const next = createNextCheckpoint(ongoing, { analysisId: "analysis-1" })
     expect(next.ok).toBe(true)
     if (!next.ok) return
@@ -187,12 +164,8 @@ describe("Ongoing compact result persistence A–K", () => {
       join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
-    expect(source).toContain(
-      "doc.ongoingDraftResult.checkpointId === checkpoint.id",
-    )
-    expect(source).toContain(
-      "doc.ongoingDraftResult.analysisId === doc.id",
-    )
+    expect(source).toContain("doc.ongoingDraftResult.checkpointId === checkpoint.id")
+    expect(source).toContain("doc.ongoingDraftResult.analysisId === doc.id")
   })
 
   it("I: leave paths remain non-blocking after save failure", () => {
@@ -235,9 +208,7 @@ describe("Ongoing compact result persistence A–K", () => {
       analysisId: "a",
       checkpointId: "c",
     })
-    expect(compact.resultView).toEqual(
-      resolveResultView(DEFAULT_RESULT_PREFERENCES),
-    )
+    expect(compact.resultView).toEqual(resolveResultView(DEFAULT_RESULT_PREFERENCES))
     assertNoHeavyValuesInOngoingSnapshot(compact)
   })
 })

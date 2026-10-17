@@ -23,8 +23,7 @@ export const PDF_WATERFALL_PLOT_LEFT = 2
 
 export const PDF_WATERFALL_PLOT_RIGHT = 98
 
-export const PDF_WATERFALL_PLOT_WIDTH =
-  PDF_WATERFALL_PLOT_RIGHT - PDF_WATERFALL_PLOT_LEFT
+export const PDF_WATERFALL_PLOT_WIDTH = PDF_WATERFALL_PLOT_RIGHT - PDF_WATERFALL_PLOT_LEFT
 
 export type PdfWaterfallValueFormat = "chart" | "adaptive"
 
@@ -77,10 +76,8 @@ export function preparePdfWaterfallPresentation(
   let formatValue: (value: number) => string
   let formatDelta: (value: number) => string
   if (valueFormat === "adaptive") {
-    formatValue = (value) =>
-      formatAdaptiveMonetaryValue(value, input.language)
-    formatDelta = (value) =>
-      formatAdaptiveMonetarySignedDelta(value, input.language)
+    formatValue = (value) => formatAdaptiveMonetaryValue(value, input.language)
+    formatDelta = (value) => formatAdaptiveMonetarySignedDelta(value, input.language)
   } else {
     const displayScale = resolveWaterfallDisplayScale(
       collectWaterfallDisplayValues({
@@ -89,8 +86,7 @@ export function preparePdfWaterfallPresentation(
         contributions: displayRows.map((row) => row.contribution),
       }),
     )
-    formatValue = (value) =>
-      formatWaterfallValueWithScale(value, displayScale, input.language)
+    formatValue = (value) => formatWaterfallValueWithScale(value, displayScale, input.language)
     formatDelta = (value) =>
       formatWaterfallSignedDeltaWithScale(value, displayScale, input.language)
   }

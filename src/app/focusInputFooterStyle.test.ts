@@ -7,7 +7,6 @@ import { brandPrimaryButtonClass } from "@/shared/brand"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -30,11 +29,11 @@ describe("Focus Input footer style from first open", () => {
     const app = readAppSource()
     const inputNav = app.slice(
       app.indexOf('data-focus-input-nav=""'),
-      app.indexOf("data-guided-next=\"\"", app.indexOf('data-focus-input-nav=""')) + 40,
+      app.indexOf('data-guided-next=""', app.indexOf('data-focus-input-nav=""')) + 40,
     )
     const resultsNav = app.slice(
       app.indexOf('data-focus-results-nav=""'),
-      app.indexOf("data-focus-results-next=\"\"") + 80,
+      app.indexOf('data-focus-results-next=""') + 80,
     )
     expect(inputNav).toContain("FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS")
     expect(inputNav).toContain('variant: "ghost"')
@@ -54,9 +53,7 @@ describe("Focus Input footer style from first open", () => {
     )
     expect(footer).toContain("if (focusPortalTarget) return null")
     expect(app).toContain('ensureFocusMode={focusView === "input"}')
-    expect(app).toContain(
-      "focusView !== null ? focusPortalTarget : null",
-    )
+    expect(app).toContain("focusView !== null ? focusPortalTarget : null")
   })
 
   it("Simulation primary run button remains brand primary (unchanged)", () => {
@@ -68,7 +65,7 @@ describe("Focus Input footer style from first open", () => {
     const app = readAppSource()
     const inputNav = app.slice(
       app.indexOf('data-focus-input-nav=""'),
-      app.indexOf("{focusView === \"results\" &&", app.indexOf('data-focus-input-nav=""')),
+      app.indexOf('{focusView === "results" &&', app.indexOf('data-focus-input-nav=""')),
     )
     expect(inputNav).not.toContain("brandPrimaryButtonClass")
     expect(inputNav).not.toContain("bg-[#1d868c]")

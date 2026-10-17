@@ -4,16 +4,11 @@
  */
 
 import type { CompactFrozenKeyFiguresV1 } from "@/domain/analysis/compactAnalysisResult"
-import {
-  resolveResultView,
-  type ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import { resolveResultView, type ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 /** Live Monte Carlo arrays present — compact draft is reload fallback only. */
-export function hasLiveProjectResultArrays(
-  projectResults: readonly ProjectResult[],
-): boolean {
+export function hasLiveProjectResultArrays(projectResults: readonly ProjectResult[]): boolean {
   return projectResults.some((r) => r.values.length > 0)
 }
 
@@ -28,11 +23,7 @@ export function shouldUseCompactResultAnalytics(args: {
   singleDraftResult: unknown
 }): boolean {
   if (hasLiveProjectResultArrays(args.projectResults)) return false
-  return Boolean(
-    args.ongoingCompactResult ||
-      args.singleArchivedCompact ||
-      args.singleDraftResult,
-  )
+  return Boolean(args.ongoingCompactResult || args.singleArchivedCompact || args.singleDraftResult)
 }
 
 /**
@@ -75,10 +66,7 @@ export function compactFrozenKeyFiguresSupportPreferences(
   prefs: ResultPreferencesV1,
 ): boolean {
   const view = resolveResultView(prefs)
-  const required = new Set<number>([
-    ...view.keyFigures.percentiles,
-    ...view.sCurve.percentiles,
-  ])
+  const required = new Set<number>([...view.keyFigures.percentiles, ...view.sCurve.percentiles])
   for (const p of required) {
     const value = keyFigures.percentiles[String(p)]
     if (typeof value !== "number" || !Number.isFinite(value)) {

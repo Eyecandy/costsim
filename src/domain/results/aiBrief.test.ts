@@ -29,20 +29,14 @@ import {
 import type { Project } from "@/domain/analysis/project"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import {
-  DEFAULT_RESULT_PREFERENCES,
-  resolveResultView,
-} from "@/domain/results/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES, resolveResultView } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const defaultResultView = resolveResultView(DEFAULT_RESULT_PREFERENCES)
 
 function resultsPanelSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 function richProject(): Project {
@@ -293,18 +287,14 @@ describe("ai-brief-v3", () => {
   })
 
   it("displayName E/F/H: instructions use displayName; never surface ids; NO/EN work", () => {
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
-      "Bruk `displayName`",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("Bruk `displayName`")
     expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
       "skal aldri vises eller forkortes",
     )
     expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain(
       "Bruk prosjekt-id som stabil identitet",
     )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
-      "Use `displayName`",
-    )
+    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("Use `displayName`")
     expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
       "must never be shown or abbreviated",
     )
@@ -381,9 +371,7 @@ describe("ai-brief-v3", () => {
     expect(metrics).toHaveProperty("uncertaintyAllowance")
     expect(metrics).not.toHaveProperty("riskProfile")
     expect(brief.method).not.toHaveProperty("riskProfileDefinition")
-    expect(brief.interpretationHints).not.toHaveProperty(
-      "useRiskProfileOnlyPerMethodDefinition",
-    )
+    expect(brief.interpretationHints).not.toHaveProperty("useRiskProfileOnlyPerMethodDefinition")
   })
 
   it("quality B: driverConcentration exported only with explicit method definition", () => {
@@ -397,12 +385,8 @@ describe("ai-brief-v3", () => {
       simulationCount: 20_000,
     })
     expect(brief.method.driverConcentrationDefinition.topN).toBe(6)
-    expect(
-      brief.method.driverConcentrationDefinition.categories.high,
-    ).toContain("0.50")
-    expect(
-      brief.interpretationHints.useDriverConcentrationOnlyPerMethodDefinition,
-    ).toBe(true)
+    expect(brief.method.driverConcentrationDefinition.categories.high).toContain("0.50")
+    expect(brief.interpretationHints.useDriverConcentrationOnlyPerMethodDefinition).toBe(true)
   })
 
   it("quality C/D: correlationSummary removed; correlations[] remain", () => {
@@ -417,10 +401,9 @@ describe("ai-brief-v3", () => {
     })
     expect(brief.projects[0]!).not.toHaveProperty("correlationSummary")
     expect(brief.projects[0]!.correlations).toHaveLength(3)
-    expect(collectNonZeroCostCorrelations(
-      richProject().costRows,
-      richProject().costCorrelations,
-    )).toHaveLength(3)
+    expect(
+      collectNonZeroCostCorrelations(richProject().costRows, richProject().costCorrelations),
+    ).toHaveLength(3)
   })
 
   it("quality E–H: Contribution Analysis Top 6 + exact Other; negatives preserved", () => {
@@ -455,12 +438,8 @@ describe("ai-brief-v3", () => {
   })
 
   it("quality I: prompt no longer references obsolete uncertaintyAssessment field", () => {
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain(
-      "uncertaintyAssessment",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain(
-      "uncertaintyAssessment",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("uncertaintyAssessment")
+    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain("uncertaintyAssessment")
     expect(
       buildAiBriefV3({
         resultView: defaultResultView,
@@ -484,7 +463,7 @@ describe("ai-brief-v3", () => {
     expect(market.overrides).toEqual([])
     expect(
       buildAiBriefV3({
-      resultView: defaultResultView,
+        resultView: defaultResultView,
         language: "en",
         projects: [richProject()],
         activeProjectId: "proj-rich",
@@ -493,9 +472,7 @@ describe("ai-brief-v3", () => {
         simulationCount: 20_000,
       }).interpretationHints.emptyDriverImpactOverridesMeansDefaultOnAllCostItems,
     ).toBe(true)
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
-      'not "no impact"',
-    )
+    expect(messages.en.results.aiBriefClipboardPromptEn).toContain('not "no impact"')
   })
 
   it("quality K: AI Brief generation does not trigger simulation or Shapley", () => {
@@ -550,20 +527,14 @@ describe("ai-brief-v3", () => {
     // F/G: no mandatory method / full audit
     expect(no).toContain("systematisk auditere")
     expect(en).toContain("systematically audit")
-    expect(no).toContain(
-      "ta dem bare inn i første svar når de faktisk påvirker tolkningen",
-    )
+    expect(no).toContain("ta dem bare inn i første svar når de faktisk påvirker tolkningen")
     expect(en).toContain(
       "include them in the first response only when they materially affect interpretation",
     )
 
     // H: do not ask for info already in brief
-    expect(no).toContain(
-      "Ikke spør etter informasjon som allerede finnes i assumptions",
-    )
-    expect(en).toContain(
-      "Do not ask for information already contained in assumptions",
-    )
+    expect(no).toContain("Ikke spør etter informasjon som allerede finnes i assumptions")
+    expect(en).toContain("Do not ask for information already contained in assumptions")
 
     // I: reliability rules remain
     expect(no).toContain("Bland ikke disse")
@@ -610,9 +581,7 @@ describe("ai-brief-v3", () => {
     })
     expect(brief.method.distributionType).toBe("triangular")
     expect(brief.method.triangularSupportCalibratedFromPercentiles).toBe(true)
-    expect(
-      brief.method.estimateInterpretation.triangularSupportExtendsBeyondPercentiles,
-    ).toBe(true)
+    expect(brief.method.estimateInterpretation.triangularSupportExtendsBeyondPercentiles).toBe(true)
   })
 
   it("C–F: assumptions and descriptions included", () => {
@@ -656,10 +625,7 @@ describe("ai-brief-v3", () => {
 
   it("H/I: sparse non-zero correlations; omitted pairs documented as zero", () => {
     const project = richProject()
-    const pairs = collectNonZeroCostCorrelations(
-      project.costRows,
-      project.costCorrelations,
-    )
+    const pairs = collectNonZeroCostCorrelations(project.costRows, project.costCorrelations)
     expect(pairs).toHaveLength(3)
     expect(pairs.every((p) => p.rho === 0.5)).toBe(true)
     const brief = buildAiBriefV3({
@@ -755,18 +721,10 @@ describe("ai-brief-v3", () => {
   it("N/O/P: instruction distinguishes tornado vs contribution; overlap caution; label safeguards", () => {
     expect(messages.no.results.aiBriefClipboardPromptNo).toContain("ai-brief-v3")
     expect(messages.en.results.aiBriefClipboardPromptEn).toContain("ai-brief-v3")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
-      "Bland ikke disse",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
-      "Do not conflate them",
-    )
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
-      "kan være overlappende",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
-      "may be overlapping",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("Bland ikke disse")
+    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("Do not conflate them")
+    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("kan være overlappende")
+    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("may be overlapping")
     expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
       "ikke finn på detaljert faglig betydning",
     )
@@ -782,9 +740,7 @@ describe("ai-brief-v3", () => {
       simulatedBaseCostByProjectId: {},
       simulationCount: 20_000,
     })
-    expect(brief.interpretationHints.doNotConflateTornadoAndContribution).toBe(
-      true,
-    )
+    expect(brief.interpretationHints.doNotConflateTornadoAndContribution).toBe(true)
     expect(brief.interpretationHints).not.toHaveProperty(
       "useTornadoAsSourceOfTruthForDriverPriority",
     )
@@ -853,17 +809,12 @@ describe("ai-brief-v3", () => {
     })
     expect(brief.projects[0]!.metrics.baseCost).toBe(100)
     expect(brief.projects[0]!.metrics.p50).not.toBeNull()
-    expect(brief.projects[0]!.distribution.p50).toBe(
-      brief.projects[0]!.metrics.p50,
-    )
+    expect(brief.projects[0]!.distribution.p50).toBe(brief.projects[0]!.metrics.p50)
   })
 })
 
 describe("ai-brief Ongoing development context", () => {
-  function projectResults(
-    projectId: string,
-    values: number[],
-  ): ProjectResult[] {
+  function projectResults(projectId: string, values: number[]): ProjectResult[] {
     return [
       {
         projectId,
@@ -938,15 +889,9 @@ describe("ai-brief Ongoing development context", () => {
       simulationCount: 20_000,
     })
     expect(brief).not.toHaveProperty("ongoingDevelopment")
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain(
-      "ongoingDevelopment",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain(
-      "ongoingDevelopment",
-    )
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain(
-      "løpende analyse",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("ongoingDevelopment")
+    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain("ongoingDevelopment")
+    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("løpende analyse")
     const src = resultsPanelSource()
     expect(src).toContain("aiBriefClipboardPromptOngoingAddendum")
     expect(src).toContain('analysisMode === "ongoing"')
@@ -962,12 +907,8 @@ describe("ai-brief Ongoing development context", () => {
     expect(development).not.toBeNull()
     expect(development!.viewedCheckpointId).toBe(cp3.id)
     expect(development!.viewedSequence).toBe(3)
-    expect(development!.interpretationNotes.currentCheckpointIsPrimaryFocus).toBe(
-      true,
-    )
-    expect(development!.series[development!.series.length - 1]!.checkpointId).toBe(
-      cp3.id,
-    )
+    expect(development!.interpretationNotes.currentCheckpointIsPrimaryFocus).toBe(true)
+    expect(development!.series[development!.series.length - 1]!.checkpointId).toBe(cp3.id)
     const brief = buildAiBriefV3({
       resultView: defaultResultView,
       language: "en",
@@ -978,9 +919,7 @@ describe("ai-brief Ongoing development context", () => {
         [cp3.workspace.activeProjectId]: 120,
       },
       simulationCount: 100,
-      ongoingCompactResult: isOngoingCheckpointResultSnapshot(
-        cp3.archivedSnapshot,
-      )
+      ongoingCompactResult: isOngoingCheckpointResultSnapshot(cp3.archivedSnapshot)
         ? cp3.archivedSnapshot
         : null,
       ongoingDevelopment: development,
@@ -1023,9 +962,7 @@ describe("ai-brief Ongoing development context", () => {
     expect(development.series).toHaveLength(5)
     expect(development.series[4]!.source).toBe("live")
     expect(development.series[4]!.baseCost).toBe(130)
-    expect(development.series.slice(0, 4).every((p) => p.source === "archived")).toBe(
-      true,
-    )
+    expect(development.series.slice(0, 4).every((p) => p.source === "archived")).toBe(true)
   })
 
   it("E: previous-checkpoint deltas are supplied for key figures", () => {
@@ -1047,9 +984,7 @@ describe("ai-brief Ongoing development context", () => {
     expect(development.previousComparison!.deltas.baseCost).toBe(5)
     expect(development.previousComparison!.deltas.p50).not.toBeNull()
     expect(development.previousComparison!.deltas.p85).not.toBeNull()
-    expect(
-      development.previousComparison!.deltas.uncertaintySpanP85MinusBase,
-    ).not.toBeNull()
+    expect(development.previousComparison!.deltas.uncertaintySpanP85MinusBase).not.toBeNull()
   })
 
   it("F: P85 − Base Cost is calculated consistently per checkpoint", () => {
@@ -1075,24 +1010,14 @@ describe("ai-brief Ongoing development context", () => {
   })
 
   it("G: prompt tells the AI to distinguish cost level from uncertainty", () => {
-    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain(
-      "kostnadsnivå",
-    )
-    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain(
-      "usikkerhet",
-    )
+    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain("kostnadsnivå")
+    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain("usikkerhet")
     expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain(
       "uncertaintySpanP85MinusBase",
     )
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain(
-      "cost level",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain(
-      "uncertainty",
-    )
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toMatch(
-      /distinguish/i,
-    )
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain("cost level")
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain("uncertainty")
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toMatch(/distinguish/i)
     const ongoing = buildFiveCheckpointTimeline()
     const cp2 = ongoing.checkpoints.find((c) => c.sequence === 2)!
     const development = buildAiBriefOngoingDevelopment({
@@ -1100,8 +1025,7 @@ describe("ai-brief Ongoing development context", () => {
       viewedCheckpointId: cp2.id,
     })!
     expect(
-      development.interpretationNotes
-        .distinguishCostLevelMovementFromUncertaintyMovement,
+      development.interpretationNotes.distinguishCostLevelMovementFromUncertaintyMovement,
     ).toBe(true)
   })
 
@@ -1185,9 +1109,7 @@ describe("ai-brief Ongoing development context", () => {
     // Compact series of scalars — far smaller than raw MC payloads.
     expect(json.length).toBeLessThan(8_000)
     for (const point of brief.ongoingDevelopment!.series) {
-      expect(typeof point.baseCost === "number" || point.baseCost === null).toBe(
-        true,
-      )
+      expect(typeof point.baseCost === "number" || point.baseCost === null).toBe(true)
       expect(Object.keys(point).sort()).toEqual(
         [
           "baseCost",

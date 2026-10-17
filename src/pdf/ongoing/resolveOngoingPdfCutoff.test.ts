@@ -28,7 +28,6 @@ import {
 } from "@/pdf/ongoing/resolveOngoingPdfCutoff"
 import { repoRoot } from "@/test-utils/repoRoot"
 
-
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
 }
@@ -157,9 +156,7 @@ describe("Ongoing PDF cutoff A–J", () => {
     })
     expect(built.ok).toBe(true)
     if (!built.ok) return
-    expect(built.model.development.points.map((p) => p.sequence)).toEqual([
-      1, 2,
-    ])
+    expect(built.model.development.points.map((p) => p.sequence)).toEqual([1, 2])
     expect(built.model.development.points.at(-1)!.baseCost).toBe(200)
   })
 
@@ -203,9 +200,7 @@ describe("Ongoing PDF cutoff A–J", () => {
     if (!built.ok) return
     expect(built.model.cover.comparison?.previous.sequence).toBe(1)
     expect(built.model.cover.comparison?.current.sequence).toBe(2)
-    const base = built.model.cover.comparison!.rows.find(
-      (r) => r.metricId === "baseCost",
-    )!
+    const base = built.model.cover.comparison!.rows.find((r) => r.metricId === "baseCost")!
     expect(base.change).toBe(100)
   })
 
@@ -243,9 +238,7 @@ describe("Ongoing PDF cutoff A–J", () => {
     expect(built.model.cutoff.sequence).toBe(2)
     expect(built.model.history).toHaveLength(2)
     expect(built.model.history.every((h) => h.sequence <= 2)).toBe(true)
-    expect(built.model.development.points.every((p) => p.sequence <= 2)).toBe(
-      true,
-    )
+    expect(built.model.development.points.every((p) => p.sequence <= 2)).toBe(true)
     expect(built.model.excludedDraft?.sequence).toBe(3)
     expect(built.model.excludedDraft?.name).toBe("CP3 draft")
     // Draft name may appear in exclusion metadata only — not as analytical content.
@@ -280,14 +273,14 @@ describe("Ongoing PDF cutoff A–J", () => {
   })
 
   it("I: Single PDF path unchanged (smoke)", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
+    const panel =
+      readSrc("src/features/results/ResultsPanel.tsx") +
+      readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("planOngoingPdfExport")
     expect(panel).toContain("ConfirmDialog")
     expect(panel).toContain("ProjectReportDocument")
-    expect(panel).toMatch(
-      /analysisMode === "ongoing"[\s\S]*planOngoingPdfExport/,
-    )
+    expect(panel).toMatch(/analysisMode === "ongoing"[\s\S]*planOngoingPdfExport/)
   })
 
   it("J: no later leakage — CP3 values/names absent from cutoff CP2 model", async () => {

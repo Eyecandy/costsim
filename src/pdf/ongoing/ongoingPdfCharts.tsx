@@ -44,10 +44,7 @@ import {
 } from "@/pdf/buildPdfReportModel"
 import { PdfWaterfallChart } from "@/pdf/pdfWaterfallChart"
 import type { OngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
-import type {
-  OngoingPdfSCurve,
-  OngoingPdfTornadoRow,
-} from "@/pdf/ongoing/ongoingPdfTypes"
+import type { OngoingPdfSCurve, OngoingPdfTornadoRow } from "@/pdf/ongoing/ongoingPdfTypes"
 
 const styles = StyleSheet.create({
   chartWrap: { marginTop: 6, marginBottom: 8 },
@@ -99,10 +96,8 @@ const TORNADO_W = 520
 const TORNADO_LABEL_COL_W = Math.round(TORNADO_W * 0.33)
 const TORNADO_BAR_PAD_X = 8
 const TORNADO_VALUE_LABEL_GUTTER = 34
-const TORNADO_BAR_START_X =
-  TORNADO_LABEL_COL_W + TORNADO_BAR_PAD_X + TORNADO_VALUE_LABEL_GUTTER
-const TORNADO_BAR_END_X =
-  TORNADO_W - TORNADO_BAR_PAD_X - TORNADO_VALUE_LABEL_GUTTER
+const TORNADO_BAR_START_X = TORNADO_LABEL_COL_W + TORNADO_BAR_PAD_X + TORNADO_VALUE_LABEL_GUTTER
+const TORNADO_BAR_END_X = TORNADO_W - TORNADO_BAR_PAD_X - TORNADO_VALUE_LABEL_GUTTER
 const TORNADO_ZERO_X = (TORNADO_BAR_START_X + TORNADO_BAR_END_X) / 2
 const TORNADO_ROW_H = 16
 const TORNADO_BAR_H = 6
@@ -206,10 +201,7 @@ export function OngoingPdfSCurveChart({
     uniquePdfMarkerPercentiles([series]),
     SCURVE_PDF_GEOMETRY,
   )
-  const yOrdinaryTicks = layoutPdfClassicOrdinaryYTicks(
-    yEmphasized,
-    SCURVE_PDF_GEOMETRY,
-  )
+  const yOrdinaryTicks = layoutPdfClassicOrdinaryYTicks(yEmphasized, SCURVE_PDF_GEOMETRY)
   const xCostLabels = layoutPdfClassicXCostLabels({
     guides,
     scale: costScale,
@@ -219,10 +211,7 @@ export function OngoingPdfSCurveChart({
 
   return (
     <View style={styles.chartWrap} wrap={false}>
-      <Svg
-        viewBox={`0 0 ${CHART_W} ${CHART_H}`}
-        style={{ width: CHART_W, height: CHART_H }}
-      >
+      <Svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} style={{ width: CHART_W, height: CHART_H }}>
         {CHART_Y_PROB_TICKS.map((p) => {
           const y = CHART_PLOT_BOTTOM - p * CHART_INNER_H
           return (
@@ -360,16 +349,11 @@ export function OngoingPdfTornadoChart({
   const half = (TORNADO_BAR_END_X - TORNADO_BAR_START_X) / 2
   const scale = (v: number) => (v / maxAbs) * half
   const height = rows.length * TORNADO_ROW_H + 8
-  const amountScale = resolvePdfAmountScale(
-    rows.flatMap((r) => [r.lowImpact, r.highImpact]),
-  )
+  const amountScale = resolvePdfAmountScale(rows.flatMap((r) => [r.lowImpact, r.highImpact]))
 
   return (
     <View style={styles.chartWrap} wrap={false}>
-      <Svg
-        viewBox={`0 0 ${TORNADO_W} ${height}`}
-        style={{ width: TORNADO_W, height }}
-      >
+      <Svg viewBox={`0 0 ${TORNADO_W} ${height}`} style={{ width: TORNADO_W, height }}>
         <Line
           x1={TORNADO_ZERO_X}
           y1={0}
@@ -382,8 +366,7 @@ export function OngoingPdfTornadoChart({
           const y = i * TORNADO_ROW_H + (TORNADO_ROW_H - TORNADO_BAR_H) / 2
           const lowW = Math.abs(scale(row.lowImpact))
           const highW = Math.abs(scale(row.highImpact))
-          const name =
-            row.name.length > 28 ? `${row.name.slice(0, 27)}…` : row.name
+          const name = row.name.length > 28 ? `${row.name.slice(0, 27)}…` : row.name
           return [
             <SvgText
               key={`${row.name}-${i}-n`}
@@ -469,9 +452,7 @@ export function OngoingPdfContributionCharts({
         valueFormat="adaptive"
         showTotalSpanBar
       />
-      <Text style={[styles.waterfallTitle, { marginTop: 10 }]}>
-        {reserveLabel}
-      </Text>
+      <Text style={[styles.waterfallTitle, { marginTop: 10 }]}>{reserveLabel}</Text>
       <PdfWaterfallChart
         waterfall={block.uncertaintyReserve}
         startLabel={p50Label}
@@ -500,9 +481,7 @@ export function OngoingPdfDevelopmentChart({
   if (points.length === 0) return null
 
   const values = points.flatMap((p) =>
-    [p.baseCost, p.p50, p.p85].filter(
-      (v): v is number => v !== null && Number.isFinite(v),
-    ),
+    [p.baseCost, p.p50, p.p85].filter((v): v is number => v !== null && Number.isFinite(v)),
   )
   if (values.length === 0) return null
   let minY = Math.min(...values)
@@ -514,10 +493,8 @@ export function OngoingPdfDevelopmentChart({
   const plotW = DEV_W - DEV_PAD_L - DEV_PAD_R
   const plotH = DEV_H - DEV_PAD_T - DEV_PAD_B
   const n = points.length
-  const xAt = (i: number) =>
-    DEV_PAD_L + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW)
-  const yAt = (v: number) =>
-    DEV_PAD_T + plotH - ((v - minY) / (maxY - minY || 1)) * plotH
+  const xAt = (i: number) => DEV_PAD_L + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW)
+  const yAt = (v: number) => DEV_PAD_T + plotH - ((v - minY) / (maxY - minY || 1)) * plotH
 
   const linePath = (key: "baseCost" | "p50" | "p85"): string | null => {
     const coords: Array<{ x: number; y: number }> = []
@@ -528,10 +505,7 @@ export function OngoingPdfDevelopmentChart({
     })
     if (coords.length === 0) return null
     return coords
-      .map(
-        (c, i) =>
-          `${i === 0 ? "M" : "L"} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`,
-      )
+      .map((c, i) => `${i === 0 ? "M" : "L"} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`)
       .join(" ")
   }
 
@@ -551,10 +525,7 @@ export function OngoingPdfDevelopmentChart({
           </View>
         ))}
       </View>
-      <Svg
-        viewBox={`0 0 ${DEV_W} ${DEV_H}`}
-        style={{ width: DEV_W, height: DEV_H }}
-      >
+      <Svg viewBox={`0 0 ${DEV_W} ${DEV_H}`} style={{ width: DEV_W, height: DEV_H }}>
         <Line
           x1={DEV_PAD_L}
           y1={DEV_PAD_T + plotH}
@@ -571,9 +542,7 @@ export function OngoingPdfDevelopmentChart({
           ] as const
         ).map(([key, color]) => {
           const d = linePath(key)
-          return d ? (
-            <Path key={key} d={d} stroke={color} strokeWidth={1.4} fill="none" />
-          ) : null
+          return d ? <Path key={key} d={d} stroke={color} strokeWidth={1.4} fill="none" /> : null
         })}
         {points.map((p, i) => (
           <SvgText
@@ -585,27 +554,11 @@ export function OngoingPdfDevelopmentChart({
             {`CP${p.sequence}`}
           </SvgText>
         ))}
-        <SvgText
-          x={2}
-          y={DEV_PAD_T + 4}
-          style={{ fontSize: 6, fill: "#94a3b8" }}
-        >
-          {formatPdfAbsoluteAmount(
-            maxY,
-            language,
-            resolvePdfAmountScale([maxY]),
-          )}
+        <SvgText x={2} y={DEV_PAD_T + 4} style={{ fontSize: 6, fill: "#94a3b8" }}>
+          {formatPdfAbsoluteAmount(maxY, language, resolvePdfAmountScale([maxY]))}
         </SvgText>
-        <SvgText
-          x={2}
-          y={DEV_PAD_T + plotH}
-          style={{ fontSize: 6, fill: "#94a3b8" }}
-        >
-          {formatPdfAbsoluteAmount(
-            minY,
-            language,
-            resolvePdfAmountScale([minY]),
-          )}
+        <SvgText x={2} y={DEV_PAD_T + plotH} style={{ fontSize: 6, fill: "#94a3b8" }}>
+          {formatPdfAbsoluteAmount(minY, language, resolvePdfAmountScale([minY]))}
         </SvgText>
       </Svg>
     </View>

@@ -4,10 +4,7 @@ import type { SampleSummary } from "@/domain/simulation/simulation"
 /** Switch to million compact form at this absolute magnitude (inclusive). */
 const PROBABILITY_THRESHOLD_MILLIONS_AT = 1_000_000
 
-export function formatKeyFigureStat(
-  v: number | null,
-  language: "no" | "en",
-): string {
+export function formatKeyFigureStat(v: number | null, language: "no" | "en"): string {
   return v === null ? "—" : formatNumber(v, 0, language)
 }
 
@@ -15,10 +12,7 @@ export function formatKeyFigureStat(
  * Authoritative Key Figures percentage: one decimal, locale separators,
  * space before `%` (e.g. NO `12,0 %` / EN `12.0 %`).
  */
-export function formatKeyFigurePercent(
-  v: number | null,
-  language: AppLanguage,
-): string {
+export function formatKeyFigurePercent(v: number | null, language: AppLanguage): string {
   if (v === null || !Number.isFinite(v)) return "—"
   return `${formatNumber(v, 1, language)} %`
 }
@@ -37,10 +31,7 @@ export function formatKeyFigureAbsoluteWithPercent(
 }
 
 /** @deprecated Prefer {@link formatKeyFigurePercent}. */
-export function formatKeyFigurePct(
-  v: number | null,
-  language: AppLanguage = "en",
-): string {
+export function formatKeyFigurePct(v: number | null, language: AppLanguage = "en"): string {
   return formatKeyFigurePercent(v, language)
 }
 
@@ -63,10 +54,7 @@ export function formatKeyFigurePctDecimal(
  * NO uses `mill.`; EN uses `M`. Million values use up to 1 decimal and drop
  * trailing zeros (e.g. `1 mill.` / `1.2 M`).
  */
-export function formatProbabilityThreshold(
-  amount: number,
-  language: AppLanguage,
-): string {
+export function formatProbabilityThreshold(amount: number, language: AppLanguage): string {
   if (!Number.isFinite(amount)) return "—"
   if (amount === 0) return formatNumber(0, 0, language)
 
@@ -87,10 +75,7 @@ export function formatProbabilityThreshold(
  * Amount text for the Probability-below Key Figures row label.
  * @see {@link formatProbabilityThreshold}
  */
-export function formatProbabilityBelowLabelAmount(
-  amount: number,
-  language: AppLanguage,
-): string {
+export function formatProbabilityBelowLabelAmount(amount: number, language: AppLanguage): string {
   return formatProbabilityThreshold(amount, language)
 }
 
@@ -100,10 +85,7 @@ export function formatProbabilityBelowRowLabel(
   template: string,
   language: AppLanguage,
 ): string {
-  return template.replace(
-    "{amount}",
-    formatProbabilityBelowLabelAmount(amount, language),
-  )
+  return template.replace("{amount}", formatProbabilityBelowLabelAmount(amount, language))
 }
 
 export type KeyFiguresProjectValues = {

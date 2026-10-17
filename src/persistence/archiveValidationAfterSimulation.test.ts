@@ -165,11 +165,7 @@ describe("archive validation after simulation", () => {
       }),
     ).toBe(true)
 
-    let ongoing = archiveCheckpoint(
-      created.ongoing!,
-      created.ongoing!.activeCheckpointId,
-      snap1,
-    )
+    let ongoing = archiveCheckpoint(created.ongoing!, created.ongoing!.activeCheckpointId, snap1)
     await repo.saveDraft({
       ...created,
       ongoing,
@@ -198,26 +194,23 @@ describe("archive validation after simulation", () => {
         name: "CP2 renamed",
       },
     ]
-    expect(buildSimulationInputSignature(renamedProjects)).toBe(
-      next.inheritedResult.inputSignature,
-    )
+    expect(buildSimulationInputSignature(renamedProjects)).toBe(next.inheritedResult.inputSignature)
 
     // Model edit + "simulate" on CP2
     const editedProjects = [
       {
         ...next.newCheckpoint.workspace.projects[0]!,
         name: "CP2 edited",
-        costRows: next.newCheckpoint.workspace.projects[0]!.costRows.map(
-          (r, i) =>
-            i === 0
-              ? {
-                  ...r,
-                  name: "Cost",
-                  optimistic: "90",
-                  likely: "999",
-                  pessimistic: "110",
-                }
-              : r,
+        costRows: next.newCheckpoint.workspace.projects[0]!.costRows.map((r, i) =>
+          i === 0
+            ? {
+                ...r,
+                name: "Cost",
+                optimistic: "90",
+                likely: "999",
+                pessimistic: "110",
+              }
+            : r,
         ),
       },
     ]
@@ -249,27 +242,19 @@ describe("archive validation after simulation", () => {
           : c,
       ),
     }
-    ongoing = archiveCheckpoint(
-      ongoing,
-      ongoing.activeCheckpointId,
-      snap2,
-    )
+    ongoing = archiveCheckpoint(ongoing, ongoing.activeCheckpointId, snap2)
 
     const cp1 = ongoing.checkpoints.find((c) => c.id === cp1Id)!
     const cp2 = getActiveCheckpoint(ongoing)!
     expect(cp1.status).toBe("archived")
     expect(
-      cp1.archivedSnapshot &&
-        "projectResults" in cp1.archivedSnapshot
+      cp1.archivedSnapshot && "projectResults" in cp1.archivedSnapshot
         ? cp1.archivedSnapshot.projectResults[0]?.values
         : undefined,
-    ).toEqual(
-      snap1.projectResults[0]?.values,
-    )
+    ).toEqual(snap1.projectResults[0]?.values)
     expect(cp2.status).toBe("archived")
     expect(
-      cp2.archivedSnapshot &&
-        "projectsAtArchive" in cp2.archivedSnapshot
+      cp2.archivedSnapshot && "projectsAtArchive" in cp2.archivedSnapshot
         ? cp2.archivedSnapshot.projectsAtArchive[0]?.name
         : undefined,
     ).toBe("CP2 edited")
@@ -290,16 +275,12 @@ describe("archive validation after simulation", () => {
   it("App gates archive menu/button on librarySession.canArchive", () => {
     const app = readAppSource()
     expect(app).toContain("canArchive={librarySession.canArchive}")
-    expect(app).toContain(
-      "isOngoingAnalysis && librarySession.canArchive",
-    )
+    expect(app).toContain("isOngoingAnalysis && librarySession.canArchive")
     expect(app).toContain("getArchiveBlockReason")
   })
 })
 
-function ensureWorkspace(
-  ongoing: ReturnType<typeof createInitialOngoingState>,
-) {
+function ensureWorkspace(ongoing: ReturnType<typeof createInitialOngoingState>) {
   const active = getActiveCheckpoint(ongoing)!
   return {
     projects: active.workspace.projects,

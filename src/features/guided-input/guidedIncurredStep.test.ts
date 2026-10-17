@@ -18,10 +18,7 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -31,9 +28,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -147,15 +142,10 @@ describe("guided incurred costs step", () => {
       costRows: [cost({ id: "c1" })],
       driverRows: [driver({ id: "d1" })],
     })
-    expect(steps.find((s) => s.phase === "correlation")?.phase).toBe(
-      "correlation",
-    )
+    expect(steps.find((s) => s.phase === "correlation")?.phase).toBe("correlation")
     expect(steps.find((s) => s.phase === "impact")?.phase).toBe("impact")
-    const workflow = readFileSync(
-      join(repoRoot, "src/domain/guided/guidedWorkflow.ts"),
-      "utf8",
-    )
-    expect(workflow).toContain('phase: GuidedResumeAfter')
+    const workflow = readFileSync(join(repoRoot, "src/domain/guided/guidedWorkflow.ts"), "utf8")
+    expect(workflow).toContain("phase: GuidedResumeAfter")
   })
 
   it("J: incurred is not modelled as an uncertainty factor in guided UI", () => {

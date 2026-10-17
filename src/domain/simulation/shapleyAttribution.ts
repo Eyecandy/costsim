@@ -161,11 +161,7 @@ export function costActive(mask: PlayerMask, costIndex: number): boolean {
   return (mask & playerBit(costIndex)) !== 0n
 }
 
-export function driverActive(
-  mask: PlayerMask,
-  driverIndex: number,
-  nCosts: number,
-): boolean {
+export function driverActive(mask: PlayerMask, driverIndex: number, nCosts: number): boolean {
   return (mask & playerBit(nCosts + driverIndex)) !== 0n
 }
 
@@ -196,11 +192,7 @@ function pregenerateCostUniforms(
   return uniforms
 }
 
-function pregenerateDriverUniforms(
-  runs: number,
-  nDrivers: number,
-  rng: () => number,
-): number[][] {
+function pregenerateDriverUniforms(runs: number, nDrivers: number, rng: () => number): number[][] {
   const uniforms: number[][] = new Array(runs)
   for (let r = 0; r < runs; r++) {
     const row = new Array<number>(nDrivers)
@@ -239,10 +231,7 @@ function quickselectCopy(values: readonly number[], k: number): number {
 /**
  * Linear-interpolation percentile matching `percentile(values, p)` without full sort.
  */
-export function percentileOfNumbers(
-  values: readonly number[],
-  p: number,
-): number | null {
+export function percentileOfNumbers(values: readonly number[], p: number): number | null {
   if (!Number.isFinite(p) || p < 0 || p > 100) return null
   const n = values.length
   if (n === 0) return null
@@ -263,9 +252,7 @@ export function medianOfNumbers(values: readonly number[]): number | null {
 }
 
 /** Derive P50 and P85 from the same simulated subset totals. */
-export function quantilesFromSampleTotals(
-  totals: readonly number[],
-): SubsetQuantiles {
+export function quantilesFromSampleTotals(totals: readonly number[]): SubsetQuantiles {
   return {
     p50: percentileOfNumbers(totals, 50) ?? NaN,
     p85: percentileOfNumbers(totals, 85) ?? NaN,
@@ -295,19 +282,13 @@ type ShapleyEngineContext = {
   totalsBuffer: number[]
 }
 
-function computeBaseCost(
-  costModes: readonly number[],
-  incurredCosts: number,
-): number {
+function computeBaseCost(costModes: readonly number[], incurredCosts: number): number {
   let sum = Number.isFinite(incurredCosts) ? Math.max(0, incurredCosts) : 0
   for (const m of costModes) sum += m
   return sum
 }
 
-function evaluateSubsetQuantiles(
-  ctx: ShapleyEngineContext,
-  mask: PlayerMask,
-): SubsetQuantiles {
+function evaluateSubsetQuantiles(ctx: ShapleyEngineContext, mask: PlayerMask): SubsetQuantiles {
   const cached = ctx.subsetCache.get(mask)
   if (cached !== undefined) {
     ctx.cacheHits += 1
@@ -360,19 +341,14 @@ function evaluateSubsetQuantiles(
 }
 
 function readMemoryDeltaBytes(startBytes: number | null): number | null {
-  const proc = (
-    globalThis as { process?: { memoryUsage?: () => { heapUsed: number } } }
-  ).process
+  const proc = (globalThis as { process?: { memoryUsage?: () => { heapUsed: number } } }).process
   if (startBytes === null || !proc?.memoryUsage) return null
   return proc.memoryUsage().heapUsed - startBytes
 }
 
 function buildContributionRows(
   contributions: readonly number[],
-  input: Pick<
-    ShapleyAttributionInput,
-    "costIds" | "costNames" | "driverIds" | "driverNames"
-  >,
+  input: Pick<ShapleyAttributionInput, "costIds" | "costNames" | "driverIds" | "driverNames">,
   nCosts: number,
 ): ShapleyContribution[] {
   const rows: ShapleyContribution[] = []
@@ -405,10 +381,8 @@ function emptyAttributionDiagnostics(
   mainSimulationP85: number | null,
   correlationPrepKind: string,
 ): ShapleyAttributionDiagnostics {
-  const p50ReconciliationDelta =
-    mainSimulationP50 === null ? null : mainSimulationP50 - baseCost
-  const p85ReconciliationDelta =
-    mainSimulationP85 === null ? null : mainSimulationP85 - baseCost
+  const p50ReconciliationDelta = mainSimulationP50 === null ? null : mainSimulationP50 - baseCost
+  const p85ReconciliationDelta = mainSimulationP85 === null ? null : mainSimulationP85 - baseCost
   const rawShapleyReserveSpread = 0
   const mainSimulationReserveSpread =
     mainSimulationP50 !== null && mainSimulationP85 !== null
@@ -462,9 +436,7 @@ export function computeShapleyAttribution(
   input: ShapleyAttributionInput,
 ): ShapleyAttributionResult {
   const started = typeof performance !== "undefined" ? performance.now() : Date.now()
-  const proc = (
-    globalThis as { process?: { memoryUsage?: () => { heapUsed: number } } }
-  ).process
+  const proc = (globalThis as { process?: { memoryUsage?: () => { heapUsed: number } } }).process
   const memoryStart = proc?.memoryUsage?.().heapUsed ?? null
 
   const config: ShapleyAttributionConfig = {
@@ -475,20 +447,16 @@ export function computeShapleyAttribution(
   const nCosts = input.costTriangles.length
   const nDrivers = input.drivers.length
   const nPlayers = nCosts + nDrivers
-  const incurred = Number.isFinite(input.incurredCosts)
-    ? Math.max(0, input.incurredCosts)
-    : 0
+  const incurred = Number.isFinite(input.incurredCosts) ? Math.max(0, input.incurredCosts) : 0
   const costModes = input.costTriangles.map((t) => t.mode)
   const baseCost = computeBaseCost(costModes, incurred)
 
   const mainSimulationP50 =
-    input.mainSimulationP50 != null &&
-    Number.isFinite(input.mainSimulationP50)
+    input.mainSimulationP50 != null && Number.isFinite(input.mainSimulationP50)
       ? input.mainSimulationP50
       : null
   const mainSimulationP85 =
-    input.mainSimulationP85 != null &&
-    Number.isFinite(input.mainSimulationP85)
+    input.mainSimulationP85 != null && Number.isFinite(input.mainSimulationP85)
       ? input.mainSimulationP85
       : null
 
@@ -530,9 +498,7 @@ export function computeShapleyAttribution(
 
   const rng = createSeededRng(input.seed ?? 0x5a4e_1e00)
   const correlationPrep = prepareCostCorrelationCholesky(
-    input.costCorrelation === undefined
-      ? undefined
-      : input.costCorrelation,
+    input.costCorrelation === undefined ? undefined : input.costCorrelation,
     nCosts,
   )
 
@@ -547,16 +513,8 @@ export function computeShapleyAttribution(
     driverImpacts: input.driverImpacts,
     incurred,
     runs: config.runsPerSubset,
-    costUniforms: pregenerateCostUniforms(
-      config.runsPerSubset,
-      correlationPrep.choleskyL,
-      rng,
-    ),
-    driverUniforms: pregenerateDriverUniforms(
-      config.runsPerSubset,
-      nDrivers,
-      rng,
-    ),
+    costUniforms: pregenerateCostUniforms(config.runsPerSubset, correlationPrep.choleskyL, rng),
+    driverUniforms: pregenerateDriverUniforms(config.runsPerSubset, nDrivers, rng),
     subsetCache: new Map(),
     cacheHits: 0,
     subsetsEvaluated: 0,
@@ -663,23 +621,12 @@ export function computeShapleyAttribution(
       const absDelta = Math.abs(mean2 - mean1)
       convergenceMaxAbsDelta = Math.max(convergenceMaxAbsDelta, absDelta)
       const scale = Math.max(Math.abs(mean1), Math.abs(mean2), 1e-9)
-      convergenceMaxRelativeDelta = Math.max(
-        convergenceMaxRelativeDelta,
-        absDelta / scale,
-      )
+      convergenceMaxRelativeDelta = Math.max(convergenceMaxRelativeDelta, absDelta / scale)
     }
   }
 
-  const expectedContributionRows = buildContributionRows(
-    expectedContributions,
-    input,
-    nCosts,
-  )
-  const reserveContributionRows = buildContributionRows(
-    reserveContributions,
-    input,
-    nCosts,
-  )
+  const expectedContributionRows = buildContributionRows(expectedContributions, input, nCosts)
+  const reserveContributionRows = buildContributionRows(reserveContributions, input, nCosts)
 
   const expectedContributionSum = expectedContributionRows.reduce(
     (acc, row) => acc + row.contribution,
@@ -689,23 +636,17 @@ export function computeShapleyAttribution(
     (acc, row) => acc + row.contribution,
     0,
   )
-  const additivityResidual =
-    baseCost + expectedContributionSum - estimatedP50FullModel
+  const additivityResidual = baseCost + expectedContributionSum - estimatedP50FullModel
   const reserveAdditivityResidual =
     estimatedP50FullModel + reserveContributionSum - estimatedP85FullModel
   const expectedAddition = estimatedP50FullModel - baseCost
   const uncertaintyReserve = estimatedP85FullModel - estimatedP50FullModel
   const mainSimulationP50Difference =
-    mainSimulationP50 === null
-      ? null
-      : estimatedP50FullModel - mainSimulationP50
+    mainSimulationP50 === null ? null : estimatedP50FullModel - mainSimulationP50
   const mainSimulationP85Difference =
-    mainSimulationP85 === null
-      ? null
-      : estimatedP85FullModel - mainSimulationP85
+    mainSimulationP85 === null ? null : estimatedP85FullModel - mainSimulationP85
 
-  const finished =
-    typeof performance !== "undefined" ? performance.now() : Date.now()
+  const finished = typeof performance !== "undefined" ? performance.now() : Date.now()
 
   const expectedAdditionDecomposition: ShapleyAttributionDecomposition = {
     startValue: baseCost,

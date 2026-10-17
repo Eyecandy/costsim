@@ -98,8 +98,7 @@ export function duplicateProject(
     driverRows,
     driverImpacts,
     costCorrelations,
-    assumptions:
-      assumptions && assumptions.length > 0 ? assumptions : undefined,
+    assumptions: assumptions && assumptions.length > 0 ? assumptions : undefined,
     profile: cloneProjectProfile(source.profile),
   }
 
@@ -107,9 +106,7 @@ export function duplicateProject(
 }
 
 /** Deep-clone alternatives with fresh row/project IDs (for "create new version"). */
-export function cloneProjectsWithMaps(
-  projects: readonly Project[],
-): CloneProjectsResult {
+export function cloneProjectsWithMaps(projects: readonly Project[]): CloneProjectsResult {
   const projectIdMap = new Map<string, string>()
   const rowIdMap = new Map<string, string>()
 

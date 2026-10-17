@@ -57,15 +57,7 @@ describe("Shapley cache invalidation by simulationRunId", () => {
     const entry = mockCacheEntry(mockResult(200), inputSignature, run1)
     expect(isShapleyCacheEntryValid(entry, inputSignature, run1)).toBe(true)
     expect(
-      resolveShapleyProjectStatus(
-        "p1",
-        inputSignature,
-        run1,
-        { p1: entry },
-        null,
-        {},
-        false,
-      ),
+      resolveShapleyProjectStatus("p1", inputSignature, run1, { p1: entry }, null, {}, false),
     ).toBe("ready")
   })
 
@@ -74,15 +66,7 @@ describe("Shapley cache invalidation by simulationRunId", () => {
 
     expect(isShapleyCacheEntryValid(entry, inputSignature, run2)).toBe(false)
     expect(
-      resolveShapleyProjectStatus(
-        "p1",
-        inputSignature,
-        run2,
-        { p1: entry },
-        null,
-        {},
-        false,
-      ),
+      resolveShapleyProjectStatus("p1", inputSignature, run2, { p1: entry }, null, {}, false),
     ).toBe("idle")
   })
 
@@ -117,12 +101,12 @@ describe("Shapley cache invalidation by simulationRunId", () => {
 
     expect(run1Result.estimatedP50).toBe(mainP50Run1)
     expect(run2Result.estimatedP50).toBe(mainP50Run2)
-    expect(
-      Math.abs(run1Result.baseCost + run1Result.expectedAddition - mainP50Run1),
-    ).toBeLessThan(1e-9)
-    expect(
-      Math.abs(run2Result.baseCost + run2Result.expectedAddition - mainP50Run2),
-    ).toBeLessThan(1e-9)
+    expect(Math.abs(run1Result.baseCost + run1Result.expectedAddition - mainP50Run1)).toBeLessThan(
+      1e-9,
+    )
+    expect(Math.abs(run2Result.baseCost + run2Result.expectedAddition - mainP50Run2)).toBeLessThan(
+      1e-9,
+    )
   })
 
   it("keeps cache valid when neither inputs nor simulationRunId change", () => {
@@ -152,23 +136,13 @@ describe("Shapley cache invalidation by simulationRunId", () => {
     const entryP1 = mockCacheEntry(mockResult(200), inputSignature, runIds.p1!)
     const entryP2 = mockCacheEntry(mockResult(300), inputSignature, runIds.p2!)
 
-    expect(isShapleyCacheEntryValid(entryP1, inputSignature, runIds.p1!)).toBe(
-      true,
-    )
-    expect(isShapleyCacheEntryValid(entryP2, inputSignature, runIds.p2!)).toBe(
-      true,
-    )
-    expect(isShapleyCacheEntryValid(entryP1, inputSignature, runIds.p2!)).toBe(
-      false,
-    )
+    expect(isShapleyCacheEntryValid(entryP1, inputSignature, runIds.p1!)).toBe(true)
+    expect(isShapleyCacheEntryValid(entryP2, inputSignature, runIds.p2!)).toBe(true)
+    expect(isShapleyCacheEntryValid(entryP1, inputSignature, runIds.p2!)).toBe(false)
 
     const nextRunIds = createSimulationRunIdsForProjects(["p1", "p2"], 4)
-    expect(
-      isShapleyCacheEntryValid(entryP1, inputSignature, nextRunIds.p1!),
-    ).toBe(false)
-    expect(
-      isShapleyCacheEntryValid(entryP2, inputSignature, nextRunIds.p2!),
-    ).toBe(false)
+    expect(isShapleyCacheEntryValid(entryP1, inputSignature, nextRunIds.p1!)).toBe(false)
+    expect(isShapleyCacheEntryValid(entryP2, inputSignature, nextRunIds.p2!)).toBe(false)
   })
 
   it("changes simulationRunKey when any project receives a new simulation run", () => {

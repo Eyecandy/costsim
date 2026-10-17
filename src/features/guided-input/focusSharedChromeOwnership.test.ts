@@ -12,7 +12,6 @@ import {
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -39,14 +38,9 @@ describe("Focus shared session chrome ownership", () => {
     expect(guided).toContain("data-guided-embedded-in-focus-host")
     expect(guided).toContain("if (focusPortalTarget) return null")
     // Embedded path portals body only — no dialogSurface wrapper with header.
-    const embedStart = guided.indexOf(
-      "Embedded Focus path: body-only into the shared shell",
-    )
+    const embedStart = guided.indexOf("Embedded Focus path: body-only into the shared shell")
     expect(embedStart).toBeGreaterThan(-1)
-    const embedBlock = guided.slice(
-      embedStart,
-      guided.indexOf("Non-embedded suspend", embedStart),
-    )
+    const embedBlock = guided.slice(embedStart, guided.indexOf("Non-embedded suspend", embedStart))
     expect(embedBlock).toContain("data-guided-dialog-body")
     expect(embedBlock).toContain("renderBody()")
     expect(embedBlock).not.toContain("data-guided-dialog-header")
@@ -81,9 +75,7 @@ describe("Focus shared session chrome ownership", () => {
     )
     expect(embedPath).not.toContain("return null")
     expect(app).toContain('suspend={focusView === "results"}')
-    expect(app).toContain(
-      "focusView !== null ? focusPortalTarget : null",
-    )
+    expect(app).toContain("focusView !== null ? focusPortalTarget : null")
   })
 
   it("shared geometry contracts — one header/content/footer class set", () => {

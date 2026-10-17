@@ -3,10 +3,7 @@ import { Menu, Pin, PinOff } from "lucide-react"
 
 import { AnalysisLibraryNav } from "@/features/analysis-library/AnalysisLibraryNav"
 import { useI18n } from "@/i18n/useI18n"
-import {
-  loadSidebarPinned,
-  saveSidebarPinned,
-} from "@/persistence/sidebarUiPreferences"
+import { loadSidebarPinned, saveSidebarPinned } from "@/persistence/sidebarUiPreferences"
 import { cn } from "@/shared/utils"
 
 const SIDEBAR_WIDTH_PX = 240

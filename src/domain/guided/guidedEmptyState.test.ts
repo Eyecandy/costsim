@@ -13,16 +13,12 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
 
 function dialogSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-    "utf8",
-  )
+  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
 }
 
 function tableSource() {
@@ -32,9 +28,7 @@ function tableSource() {
   )
 }
 
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Bygning",
     optimistic: "-10",
@@ -44,9 +38,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Marked",
     optimistic: "-5",
@@ -83,22 +75,12 @@ describe("Guided Input empty Cost Items", () => {
   })
 
   it("B: empty-state copy is shown (NO/EN)", () => {
-    expect(messages.no.inputs.guidedCostsEmptyHeading).toBe(
-      "Ingen kostnadsposter ennå",
-    )
-    expect(messages.no.inputs.guidedCostsEmptyAdd).toBe(
-      "Legg til kostnadsposter",
-    )
-    expect(messages.en.inputs.guidedCostsEmptyHeading).toBe(
-      "No cost items yet",
-    )
+    expect(messages.no.inputs.guidedCostsEmptyHeading).toBe("Ingen kostnadsposter ennå")
+    expect(messages.no.inputs.guidedCostsEmptyAdd).toBe("Legg til kostnadsposter")
+    expect(messages.en.inputs.guidedCostsEmptyHeading).toBe("No cost items yet")
     expect(messages.en.inputs.guidedCostsEmptyAdd).toBe("Add cost items")
-    expect(messages.no.inputs.guidedCostsEmptyGuidance).toContain(
-      "kostnadsgrunnlag",
-    )
-    expect(messages.en.inputs.guidedCostsEmptyGuidance).toContain(
-      "cost basis",
-    )
+    expect(messages.no.inputs.guidedCostsEmptyGuidance).toContain("kostnadsgrunnlag")
+    expect(messages.en.inputs.guidedCostsEmptyGuidance).toContain("cost basis")
     const dialog = dialogSource()
     expect(dialog).toContain('data-guided-phase="costsEmpty"')
     expect(dialog).toContain("guidedCostsEmptyGuidance")
@@ -153,9 +135,7 @@ describe("Guided Input empty Cost Items", () => {
       costRows: [nameOnly],
       driverRows: [],
     })
-    expect(steps.some((s) => s.phase === "cost" && s.rowId === "c1")).toBe(
-      true,
-    )
+    expect(steps.some((s) => s.phase === "cost" && s.rowId === "c1")).toBe(true)
     expect(steps.some((s) => s.phase === "costsEmpty")).toBe(false)
     // Name + most likely alone is enough to enter cost review (no range gate).
     expect(listGuidedInputRows([nameOnly])).toHaveLength(1)
@@ -171,20 +151,12 @@ describe("Guided Input empty Drivers", () => {
     })
     expect(steps.some((s) => s.phase === "impact")).toBe(false)
     expect(steps.some((s) => s.phase === "driversEmpty")).toBe(true)
-    expect(messages.no.inputs.guidedDriversEmptyHeading).toBe(
-      "Ingen drivere er lagt inn",
-    )
-    expect(messages.en.inputs.guidedDriversEmptyHeading).toBe(
-      "No drivers have been added",
-    )
+    expect(messages.no.inputs.guidedDriversEmptyHeading).toBe("Ingen drivere er lagt inn")
+    expect(messages.en.inputs.guidedDriversEmptyHeading).toBe("No drivers have been added")
     expect(messages.no.inputs.guidedDriversEmptyAdd).toBe("Legg til drivere")
     expect(messages.en.inputs.guidedDriversEmptyAdd).toBe("Add drivers")
-    expect(messages.no.inputs.guidedDriversEmptyContinue).toBe(
-      "Fortsett uten drivere",
-    )
-    expect(messages.en.inputs.guidedDriversEmptyContinue).toBe(
-      "Continue without drivers",
-    )
+    expect(messages.no.inputs.guidedDriversEmptyContinue).toBe("Fortsett uten drivere")
+    expect(messages.en.inputs.guidedDriversEmptyContinue).toBe("Continue without drivers")
     const dialog = dialogSource()
     expect(dialog).toContain('data-guided-phase="driversEmpty"')
     expect(dialog).toContain("data-guided-add-drivers")
@@ -210,9 +182,7 @@ describe("Guided Input empty Drivers", () => {
     const driversIntro = withRows.findIndex((s) => s.phase === "driversIntro")
     expect(driversIntro).toBeGreaterThan(0)
     expect(withRows[driversIntro]?.phase).toBe("driversIntro")
-    expect(findGuidedWorkflowPhaseIndex(withRows, "drivers")).toBe(
-      driversIntro + 1,
-    )
+    expect(findGuidedWorkflowPhaseIndex(withRows, "drivers")).toBe(driversIntro + 1)
     expect(withRows[driversIntro + 1]).toMatchObject({
       phase: "driver",
       rowId: "d1",
@@ -229,9 +199,7 @@ describe("Guided Input empty Drivers", () => {
       "driversEmpty",
       "simulation",
     ])
-    expect(findGuidedWorkflowPhaseIndex(stillEmpty, "drivers")).toBe(
-      emptyIntro + 1,
-    )
+    expect(findGuidedWorkflowPhaseIndex(stillEmpty, "drivers")).toBe(emptyIntro + 1)
     expect(stillEmpty[emptyIntro + 1]?.phase).toBe("driversEmpty")
   })
 
@@ -243,15 +211,10 @@ describe("Guided Input empty Drivers", () => {
     })
     const emptyIdx = steps.findIndex((s) => s.phase === "driversEmpty")
     expect(steps[emptyIdx + 1]?.phase).toBe("simulation")
-    expect(steps.slice(emptyIdx).some((s) => s.phase === "impact")).toBe(
-      false,
-    )
+    expect(steps.slice(emptyIdx).some((s) => s.phase === "impact")).toBe(false)
     const dialog = dialogSource()
     // Secondary continue uses goNext (advances to Simulation step)
-    const footer = dialog.slice(
-      dialog.indexOf("isDriversEmpty"),
-      dialog.indexOf("isReview ?"),
-    )
+    const footer = dialog.slice(dialog.indexOf("isDriversEmpty"), dialog.indexOf("isReview ?"))
     expect(footer).toContain("goNext")
     expect(footer).toContain("guidedDriversEmptyContinue")
   })
@@ -307,9 +270,7 @@ describe("Guided empty-state resume / normal use", () => {
       costRows: [cost({ id: "c1" })],
       driverRows: [driver({ id: "d1" })],
     })
-    expect(findGuidedWorkflowPhaseIndex(steps, "correlation")).toBeGreaterThan(
-      0,
-    )
+    expect(findGuidedWorkflowPhaseIndex(steps, "correlation")).toBeGreaterThan(0)
     expect(findGuidedWorkflowPhaseIndex(steps, "impact")).toBeGreaterThan(0)
     expect(findGuidedWorkflowPhaseIndex(steps, "costItems")).toBe(
       steps.findIndex((s) => s.phase === "cost"),

@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -27,7 +26,7 @@ describe("Results header right-side control group", () => {
 
     const endGroup = expander.slice(
       expander.indexOf('data-section-expander-end=""'),
-      expander.indexOf('id={panelId}'),
+      expander.indexOf("id={panelId}"),
     )
     expect(endGroup).toContain("headerTrailing")
     expect(endGroup).toContain("data-section-expander-trailing")
@@ -47,8 +46,7 @@ describe("Results header right-side control group", () => {
 
     const actions = panel.slice(
       panel.indexOf('data-results-header-actions=""'),
-      panel.indexOf("</div>", panel.indexOf('data-results-header-actions=""')) +
-        6,
+      panel.indexOf("</div>", panel.indexOf('data-results-header-actions=""')) + 6,
     )
     const focusIdx = actions.indexOf("data-results-focus-toggle")
     const settingsIdx = actions.indexOf("ResultPreferencesPanel")
@@ -58,14 +56,8 @@ describe("Results header right-side control group", () => {
 
     // In SectionExpander, trailing renders before chevron inside end group.
     const endStart = expander.indexOf('data-section-expander-end=""')
-    const trailingIdx = expander.indexOf(
-      'data-section-expander-trailing=""',
-      endStart,
-    )
-    const chevronIdx = expander.indexOf(
-      'data-section-expander-chevron=""',
-      endStart,
-    )
+    const trailingIdx = expander.indexOf('data-section-expander-trailing=""', endStart)
+    const chevronIdx = expander.indexOf('data-section-expander-chevron=""', endStart)
     expect(trailingIdx).toBeGreaterThan(-1)
     expect(chevronIdx).toBeGreaterThan(-1)
     expect(trailingIdx).toBeLessThan(chevronIdx)

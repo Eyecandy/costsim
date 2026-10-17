@@ -28,24 +28,16 @@ import {
   buildOngoingPdfReportModel,
   extractFrozenPdfKeyFigures,
 } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import {
-  ONGOING_PDF_REPORT_KIND,
-  ONGOING_PDF_SECTION_IDS,
-} from "@/pdf/ongoing/ongoingPdfTypes"
+import { ONGOING_PDF_REPORT_KIND, ONGOING_PDF_SECTION_IDS } from "@/pdf/ongoing/ongoingPdfTypes"
 import { buildPdfReportModelForMode } from "@/pdf/exportPdfReport"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
-
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
 }
 
-function projectResults(
-  projectId: string,
-  values: number[],
-  incurredCosts = 0,
-): ProjectResult[] {
+function projectResults(projectId: string, values: number[], incurredCosts = 0): ProjectResult[] {
   return [
     {
       projectId,
@@ -64,10 +56,7 @@ function valuesForPercentiles(p50: number, p85: number): number[] {
   ]
 }
 
-function setTipAssumptions(
-  ongoing: ReturnType<typeof createInitialOngoingState>,
-  texts: string[],
-) {
+function setTipAssumptions(ongoing: ReturnType<typeof createInitialOngoingState>, texts: string[]) {
   const tip = getLatestCheckpoint(ongoing)!
   tip.workspace.projects[0] = {
     ...tip.workspace.projects[0]!,
@@ -146,8 +135,7 @@ const sectionLabels = {
 }
 
 const coverCopy = {
-  reportBasisArchivedOnly:
-    "Report basis: Archived checkpoints up to and including {cutoffLabel}.",
+  reportBasisArchivedOnly: "Report basis: Archived checkpoints up to and including {cutoffLabel}.",
   reportBasisWithExcludedDraft:
     "Report basis: Archived checkpoints up to and including {cutoffLabel}. {draftLabel} is active and is not included in the report.",
   reportMeaning:
@@ -260,9 +248,7 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(built.model.cover.comparison).not.toBeNull()
     expect(built.model.cover.comparison!.previous.sequence).toBe(1)
     expect(built.model.cover.comparison!.current.sequence).toBe(2)
-    const base = built.model.cover.comparison!.rows.find(
-      (r) => r.metricId === "baseCost",
-    )!
+    const base = built.model.cover.comparison!.rows.find((r) => r.metricId === "baseCost")!
     expect(base.previous).toBe(100)
     expect(base.current).toBe(130)
     expect(base.change).toBe(30)
@@ -284,9 +270,7 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(built.ok).toBe(true)
     if (!built.ok) return
     expect(built.model).not.toHaveProperty("changeSincePrevious")
-    expect(
-      built.model.cover.tocEntries.some((e) => String(e.id).includes("change")),
-    ).toBe(false)
+    expect(built.model.cover.tocEntries.some((e) => String(e.id).includes("change"))).toBe(false)
 
     const doc = readSrc("src/pdf/ongoing/OngoingReportDocument.tsx")
     expect(doc).not.toContain("ONGOING_PDF_SECTION_IDS.change")
@@ -348,9 +332,7 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(built.ok).toBe(true)
     if (!built.ok) return
     expect(built.model.latestDetail.assumptions).toEqual(["CP2 frozen premise"])
-    expect(built.model.latestDetail.assumptions).not.toContain(
-      "CP3 draft premise — exclude",
-    )
+    expect(built.model.latestDetail.assumptions).not.toContain("CP3 draft premise — exclude")
     expect(built.model.latestDetail.assumptionsContextText).toContain("CP2")
   })
 
@@ -365,9 +347,7 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(built.model.latestDetail.assumptions).toEqual([])
     expect(built.model.latestDetail.assumptionsContextText).toBeNull()
     expect(
-      built.model.cover.tocEntries.some(
-        (e) => e.id === ONGOING_PDF_SECTION_IDS.assumptions,
-      ),
+      built.model.cover.tocEntries.some((e) => e.id === ONGOING_PDF_SECTION_IDS.assumptions),
     ).toBe(false)
 
     const doc = readSrc("src/pdf/ongoing/OngoingReportDocument.tsx")
@@ -420,9 +400,7 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(historyIdx).toBeLessThan(methodIdx)
 
     expect(messages.no.results.pdfOngoingMethodTitle).toBe("Om analysemetoden")
-    expect(messages.en.results.pdfOngoingMethodTitle).toBe(
-      "About the analysis method",
-    )
+    expect(messages.en.results.pdfOngoingMethodTitle).toBe("About the analysis method")
     // Single PDF method title unchanged
     expect(messages.no.results.pdfMethodTitle).toMatch(/^06/)
     expect(messages.en.results.pdfMethodTitle).toMatch(/^06/)
@@ -431,7 +409,9 @@ describe("Ongoing PDF information architecture A–K", () => {
   it("K: Single PDF builders remain separate (regression smoke)", () => {
     const exportSrc = readSrc("src/pdf/exportPdfReport.ts")
     expect(exportSrc).toContain('mode === "ongoing"')
-    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
+    const panel =
+      readSrc("src/features/results/ResultsPanel.tsx") +
+      readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("ProjectReportDocument")
     expect(panel).toContain("OngoingReportDocument")
@@ -485,13 +465,10 @@ describe("Ongoing PDF information architecture A–K", () => {
     expect(draftBuilt.ok).toBe(true)
     if (!draftBuilt.ok) return
     expect(draftBuilt.model.history).toHaveLength(2)
-    expect(
-      draftBuilt.model.history.some((h) => h.name === "Draft CP3"),
-    ).toBe(false)
+    expect(draftBuilt.model.history.some((h) => h.name === "Draft CP3")).toBe(false)
 
     // compact / legacy frozen sources
-    const snap = ongoing.checkpoints.find((c) => c.sequence === 1)!
-      .archivedSnapshot
+    const snap = ongoing.checkpoints.find((c) => c.sequence === 1)!.archivedSnapshot
     expect(isOngoingCheckpointResultSnapshot(snap)).toBe(true)
     expect(JSON.stringify(built.model)).not.toMatch(/"values":\s*\[/)
 
@@ -501,18 +478,12 @@ describe("Ongoing PDF information architecture A–K", () => {
       p50: 90,
       p85: 110,
     })
-    expect(
-      isLegacyHeavyArchivedSnapshot(
-        legacyOngoing.checkpoints[0]!.archivedSnapshot,
-      ),
-    ).toBe(true)
+    expect(isLegacyHeavyArchivedSnapshot(legacyOngoing.checkpoints[0]!.archivedSnapshot)).toBe(true)
     const legacyBuilt = buildWithLatestCutoff(legacyOngoing.checkpoints)
     expect(legacyBuilt.ok).toBe(true)
     if (!legacyBuilt.ok) return
     expect(legacyBuilt.model.history[0]!.frozenSource).toBe("legacy")
-    expect(
-      extractFrozenPdfKeyFigures(legacyOngoing.checkpoints[0]!)?.baseCost,
-    ).toBe(80)
+    expect(extractFrozenPdfKeyFigures(legacyOngoing.checkpoints[0]!)?.baseCost).toBe(80)
   })
 
   it("TOC maps to rendered section ids (no change / assumptionsMethod)", () => {

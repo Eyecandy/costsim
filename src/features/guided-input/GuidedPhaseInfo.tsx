@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react"
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { HelpCircle, X } from "lucide-react"
 
@@ -31,11 +24,7 @@ const PANEL_CLASS =
  * Click-toggle popover (longer than LabelHelpTooltip); stays inside the guided session.
  * Portals into the browser fullscreen element when Focus owns true fullscreen.
  */
-export function GuidedPhaseInfo({
-  content,
-  topic,
-  className,
-}: GuidedPhaseInfoProps) {
+export function GuidedPhaseInfo({ content, topic, className }: GuidedPhaseInfoProps) {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
@@ -54,17 +43,11 @@ export function GuidedPhaseInfo({
     const gap = 8
 
     let left = triggerRect.left
-    left = Math.max(
-      viewportPad,
-      Math.min(left, window.innerWidth - panelWidth - viewportPad),
-    )
+    left = Math.max(viewportPad, Math.min(left, window.innerWidth - panelWidth - viewportPad))
 
     let top = triggerRect.bottom + gap
     if (top + panelHeight > window.innerHeight - viewportPad) {
-      top = Math.max(
-        viewportPad,
-        triggerRect.top - panelHeight - gap,
-      )
+      top = Math.max(viewportPad, triggerRect.top - panelHeight - gap)
     }
 
     setPosition({ top, left })
@@ -145,10 +128,7 @@ export function GuidedPhaseInfo({
               onClick={(event) => event.stopPropagation()}
             >
               <div className="mb-2 flex items-start justify-between gap-2">
-                <h4
-                  id={titleId}
-                  className="m-0 font-sans text-[13px] font-medium text-foreground"
-                >
+                <h4 id={titleId} className="m-0 font-sans text-[13px] font-medium text-foreground">
                   {content.title}
                 </h4>
                 <button
@@ -170,16 +150,10 @@ export function GuidedPhaseInfo({
               </div>
               <div className="space-y-2.5">
                 {content.meaning ? (
-                  <HelpSection
-                    label={content.meaningLabel}
-                    body={content.meaning}
-                  />
+                  <HelpSection label={content.meaningLabel} body={content.meaning} />
                 ) : null}
                 {content.discuss ? (
-                  <HelpSection
-                    label={content.discussLabel}
-                    body={content.discuss}
-                  />
+                  <HelpSection label={content.discussLabel} body={content.discuss} />
                 ) : null}
                 {content.avoid ? (
                   <HelpSection label={content.avoidLabel} body={content.avoid} />

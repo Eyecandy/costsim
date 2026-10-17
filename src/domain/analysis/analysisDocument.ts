@@ -131,16 +131,11 @@ export type LibraryIndexV1 = {
   summaries?: Record<string, AnalysisSummary>
 }
 
-export function isAnalysisTrashed(doc: {
-  deletedAt?: string | null
-}): boolean {
+export function isAnalysisTrashed(doc: { deletedAt?: string | null }): boolean {
   return typeof doc.deletedAt === "string" && doc.deletedAt.length > 0
 }
 
-export function isTrashExpired(
-  deletedAt: string,
-  nowMs: number = Date.now(),
-): boolean {
+export function isTrashExpired(deletedAt: string, nowMs: number = Date.now()): boolean {
   const t = new Date(deletedAt).getTime()
   if (!Number.isFinite(t)) return false
   return nowMs - t >= TRASH_RETENTION_DAYS * 24 * 60 * 60 * 1000
@@ -157,9 +152,7 @@ export function toAnalysisSummary(doc: AnalysisDocument): AnalysisSummary {
     updatedAt: doc.updatedAt,
     lastOpenedAt: doc.lastOpenedAt,
     archivedAt:
-      doc.status === "archived"
-        ? (doc.archivedSnapshot?.archivedAt ?? doc.updatedAt)
-        : undefined,
+      doc.status === "archived" ? (doc.archivedSnapshot?.archivedAt ?? doc.updatedAt) : undefined,
     deletedAt: doc.deletedAt ?? null,
   }
 }

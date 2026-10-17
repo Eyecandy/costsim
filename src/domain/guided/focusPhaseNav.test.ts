@@ -20,7 +20,6 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
 }
@@ -60,13 +59,7 @@ describe("Focus phase navigation helpers", () => {
     expect(getFocusPhaseForGuidedStep("driver")).toBe("drivers")
     expect(getFocusPhaseForGuidedStep("impact")).toBe("drivers")
     expect(getFocusPhaseForGuidedStep("simulation")).toBe("simulation")
-    expect(FOCUS_USER_PHASES).toEqual([
-      "project",
-      "costs",
-      "drivers",
-      "simulation",
-      "results",
-    ])
+    expect(FOCUS_USER_PHASES).toEqual(["project", "costs", "drivers", "simulation", "results"])
   })
 
   it("forward: projectProfile → Project; assumptions → Costs", () => {
@@ -189,18 +182,10 @@ describe("Focus phase navigation helpers", () => {
       costRows: [cost("c1"), cost("c2")],
       driverRows: [driver("d1")],
     })
-    expect(steps[findGuidedStepIndexForFocusPhase(steps, "project")]?.phase).toBe(
-      "projectProfile",
-    )
-    expect(steps[findGuidedStepIndexForFocusPhase(steps, "costs")]?.phase).toBe(
-      "assumptions",
-    )
-    expect(steps[findGuidedStepIndexForFocusPhase(steps, "drivers")]?.phase).toBe(
-      "driversIntro",
-    )
-    expect(
-      steps[findGuidedStepIndexForFocusPhase(steps, "simulation")]?.phase,
-    ).toBe("simulation")
+    expect(steps[findGuidedStepIndexForFocusPhase(steps, "project")]?.phase).toBe("projectProfile")
+    expect(steps[findGuidedStepIndexForFocusPhase(steps, "costs")]?.phase).toBe("assumptions")
+    expect(steps[findGuidedStepIndexForFocusPhase(steps, "drivers")]?.phase).toBe("driversIntro")
+    expect(steps[findGuidedStepIndexForFocusPhase(steps, "simulation")]?.phase).toBe("simulation")
   })
 
   it("J: Driver Play uses full workflow; Project/Costs reachable behind Drivers landing", () => {
@@ -257,17 +242,15 @@ describe("Focus phase navigation helpers", () => {
       costRows: [],
       driverRows: [],
     })
-    expect(noCosts[findGuidedStepIndexForFocusPhase(noCosts, "costs")]?.phase).toBe(
-      "assumptions",
-    )
+    expect(noCosts[findGuidedStepIndexForFocusPhase(noCosts, "costs")]?.phase).toBe("assumptions")
     const driverEmpty = buildGuidedWorkflowSteps({
       entry: "driver",
       costRows: [],
       driverRows: [],
     })
-    expect(
-      driverEmpty[findGuidedStepIndexForFocusPhase(driverEmpty, "drivers")]?.phase,
-    ).toBe("driversIntro")
+    expect(driverEmpty[findGuidedStepIndexForFocusPhase(driverEmpty, "drivers")]?.phase).toBe(
+      "driversIntro",
+    )
   })
 })
 
@@ -282,9 +265,7 @@ describe("Focus phase navigation wiring", () => {
     expect(app).toContain("setFurthestReachedFocusPhase(null)")
     expect(app).toContain("resumeFocusUserPhase={guidedLandFocusPhase}")
     // Existing results do not seed furthest — only session current phase does.
-    expect(app).not.toMatch(
-      /hasViewableResults[\s\S]{0,80}setFurthestReachedFocusPhase/,
-    )
+    expect(app).not.toMatch(/hasViewableResults[\s\S]{0,80}setFurthestReachedFocusPhase/)
   })
 
   it("Guided publishes workflowPhase; goToFocusUserPhase uses shared helper", () => {

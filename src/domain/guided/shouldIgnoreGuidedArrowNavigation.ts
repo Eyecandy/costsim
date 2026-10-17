@@ -45,9 +45,7 @@ const EDITABLE_ANCESTOR_SELECTOR = [
   'input[type="range"]',
 ].join(", ")
 
-export function shouldIgnoreGuidedArrowNavigation(
-  target: EventTarget | null,
-): boolean {
+export function shouldIgnoreGuidedArrowNavigation(target: EventTarget | null): boolean {
   if (target == null || typeof Element === "undefined") return false
   if (!(target instanceof Element)) return false
 
@@ -56,10 +54,7 @@ export function shouldIgnoreGuidedArrowNavigation(
     return NATIVE_ARROW_INPUT_TYPES.has(target.type)
   }
 
-  if (
-    target instanceof HTMLTextAreaElement ||
-    target instanceof HTMLSelectElement
-  ) {
+  if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) {
     return true
   }
 

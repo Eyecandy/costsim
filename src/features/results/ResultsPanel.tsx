@@ -21,9 +21,7 @@ import {
   compareCheckpoints,
   type CheckpointResultSource,
 } from "@/domain/analysis/checkpointComparison"
-import {
-  formatCheckpointLegendLabel,
-} from "@/domain/analysis/checkpointComparisonPresentation"
+import { formatCheckpointLegendLabel } from "@/domain/analysis/checkpointComparisonPresentation"
 import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
 import { ConfirmDialog } from "@/shared/ConfirmDialog"
 import {
@@ -40,12 +38,12 @@ import {
   FOCUS_NEXT_STEPS_ACTION_COL_CLASS,
 } from "@/domain/guided/focusSessionFrame"
 import { toggleSelectedProjectId } from "@/domain/results/sCurveProjectEmphasis"
-import {
-  getProjectColorCssVar,
-  getProjectColorHex,
-} from "@/domain/results/projectColors"
+import { getProjectColorCssVar, getProjectColorHex } from "@/domain/results/projectColors"
 import { ResultsTornado } from "@/features/results/ResultsTornado"
-import { buildTornadoSharedLayout, computeTornadoSharedSymmetricMaxAbs } from "@/features/results/tornadoShared"
+import {
+  buildTornadoSharedLayout,
+  computeTornadoSharedSymmetricMaxAbs,
+} from "@/features/results/tornadoShared"
 import { ExpandedChartDialog } from "@/features/results/ExpandedChartDialog"
 import { formatNumber } from "@/domain/results/formatNumber"
 import {
@@ -77,10 +75,7 @@ import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftR
 import { Check, Play } from "lucide-react"
 import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import {
-  buildAiBriefOngoingDevelopment,
-  buildAiBriefV3,
-} from "@/domain/results/aiBrief"
+import { buildAiBriefOngoingDevelopment, buildAiBriefV3 } from "@/domain/results/aiBrief"
 import { SectionExpander } from "@/shared/SectionExpander"
 import { SpotlightLoadingText } from "@/shared/SpotlightLoadingText"
 import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"
@@ -227,9 +222,7 @@ export function ResultsPanel({
   onFocusReviewInput,
 }: ResultsPanelProps) {
   const { t, language } = useI18n()
-  const useArchivedResults = Boolean(
-    analysisArchivedView && archivedSnapshot,
-  )
+  const useArchivedResults = Boolean(analysisArchivedView && archivedSnapshot)
   // Live MC arrays win over persisted draft compact (reload fallback only).
   const useCompactResults = shouldUseCompactResultAnalytics({
     projectResults,
@@ -246,22 +239,18 @@ export function ResultsPanel({
   const resultPreferences = resultSettingsEditable
     ? liveResultPreferences
     : useCompactResults
-      ? (ongoingCompactResult ?? singleArchivedCompact ?? singleDraftResult)!
-          .resultPreferences
+      ? (ongoingCompactResult ?? singleArchivedCompact ?? singleDraftResult)!.resultPreferences
       : useArchivedResults
         ? archivedSnapshot!.resultPreferences
         : liveResultPreferences
-  const archivedResultView =
-    resultSettingsEditable
-      ? null
-      : useCompactResults
-        ? (ongoingCompactResult ?? singleArchivedCompact ?? singleDraftResult)!
-            .resultView
-        : useArchivedResults
-          ? archivedSnapshot!.resultView
-          : null
-  const useSeededShapley =
-    Boolean(draftResultSeed) && !useArchivedResults && !singleDraftResult
+  const archivedResultView = resultSettingsEditable
+    ? null
+    : useCompactResults
+      ? (ongoingCompactResult ?? singleArchivedCompact ?? singleDraftResult)!.resultView
+      : useArchivedResults
+        ? archivedSnapshot!.resultView
+        : null
+  const useSeededShapley = Boolean(draftResultSeed) && !useArchivedResults && !singleDraftResult
   const sCurveMarkerPercentiles = useMemo(
     () =>
       archivedResultView
@@ -287,17 +276,11 @@ export function ResultsPanel({
       /* canonical signature is not full projects */
     }
     return projects
-  }, [
-    projects,
-    projectResults.length,
-    lastSimulatedProjects,
-    lastSimulatedInputSignature,
-  ])
+  }, [projects, projectResults.length, lastSimulatedProjects, lastSimulatedInputSignature])
   const [shareCopied, setShareCopied] = useState(false)
   const [aiBriefCopied, setAiBriefCopied] = useState(false)
   const [showPdfBlockedNotice, setShowPdfBlockedNotice] = useState(false)
-  const [showOngoingPdfBlockedNotice, setShowOngoingPdfBlockedNotice] =
-    useState(false)
+  const [showOngoingPdfBlockedNotice, setShowOngoingPdfBlockedNotice] = useState(false)
   const [ongoingPdfDraftConfirm, setOngoingPdfDraftConfirm] = useState<{
     cutoffCheckpointId: string
     draftLabel: string
@@ -307,8 +290,7 @@ export function ResultsPanel({
   } | null>(null)
   const [showShareBlockedNotice, setShowShareBlockedNotice] = useState(false)
   const [showShareOversizedNotice, setShowShareOversizedNotice] = useState(false)
-  const [showPdfShareOversizedNotice, setShowPdfShareOversizedNotice] =
-    useState(false)
+  const [showPdfShareOversizedNotice, setShowPdfShareOversizedNotice] = useState(false)
   const [showAiBriefStaleNotice, setShowAiBriefStaleNotice] = useState(false)
   const [resultsExpanderOpen, setResultsExpanderOpen] = useState(true)
   const [keyFiguresOpen, setKeyFiguresOpen] = useState(true)
@@ -317,17 +299,11 @@ export function ResultsPanel({
   const [tornadoOpen, setTornadoOpen] = useState(true)
   const [contributionOpen, setContributionOpen] = useState(true)
   const [exportOpen, setExportOpen] = useState(false)
-  const [expandedChart, setExpandedChart] = useState<ExpandedResultChart | null>(
-    null,
-  )
+  const [expandedChart, setExpandedChart] = useState<ExpandedResultChart | null>(null)
   /** Ephemeral S-curve legend multi-select; shared with expanded view; not persisted. */
-  const [sCurveSelectedProjectIds, setSCurveSelectedProjectIds] = useState<
-    readonly string[]
-  >([])
+  const [sCurveSelectedProjectIds, setSCurveSelectedProjectIds] = useState<readonly string[]>([])
   const toggleSCurveProjectSelection = useCallback((projectId: string) => {
-    setSCurveSelectedProjectIds((prev) =>
-      toggleSelectedProjectId(prev, projectId),
-    )
+    setSCurveSelectedProjectIds((prev) => toggleSelectedProjectId(prev, projectId))
   }, [])
   const clearSCurveProjectSelection = useCallback(() => {
     setSCurveSelectedProjectIds([])
@@ -368,12 +344,8 @@ export function ResultsPanel({
   const aiBriefCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pdfStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const shareStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const shareOversizedNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-  const pdfShareOversizedNoticeDismissRef = useRef<
-    ReturnType<typeof setTimeout> | null
-  >(null)
+  const shareOversizedNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pdfShareOversizedNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const aiBriefStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const baseCostByProjectId = useMemo(() => {
     const m = new Map<string, number | null>()
@@ -390,16 +362,12 @@ export function ResultsPanel({
     const map = new Map<string, CompactProjectResultV1>()
     if (!useCompactResults) return map
     if (singleDraftResult) {
-      for (const [projectId, result] of Object.entries(
-        singleDraftResult.byProjectId,
-      )) {
+      for (const [projectId, result] of Object.entries(singleDraftResult.byProjectId)) {
         map.set(projectId, result)
       }
     }
     if (singleArchivedCompact) {
-      for (const [projectId, result] of Object.entries(
-        singleArchivedCompact.byProjectId,
-      )) {
+      for (const [projectId, result] of Object.entries(singleArchivedCompact.byProjectId)) {
         map.set(projectId, result)
       }
     }
@@ -415,12 +383,7 @@ export function ResultsPanel({
       })
     }
     return map
-  }, [
-    ongoingCompactResult,
-    singleArchivedCompact,
-    singleDraftResult,
-    useCompactResults,
-  ])
+  }, [ongoingCompactResult, singleArchivedCompact, singleDraftResult, useCompactResults])
   const frozenKeyFiguresByProjectId = useMemo(() => {
     const map = new Map()
     for (const [projectId, result] of compactResultByProjectId) {
@@ -430,9 +393,7 @@ export function ResultsPanel({
   }, [compactResultByProjectId])
 
   const simulatedIncurredByProjectId = useMemo(() => {
-    const map = new Map(
-      projectResults.map((r) => [r.projectId, r.incurredCosts]),
-    )
+    const map = new Map(projectResults.map((r) => [r.projectId, r.incurredCosts]))
     for (const [projectId, result] of compactResultByProjectId) {
       map.set(projectId, result.incurredCosts)
     }
@@ -440,29 +401,17 @@ export function ResultsPanel({
   }, [compactResultByProjectId, projectResults])
 
   const checkpointComparison = useMemo(() => {
-    if (
-      !ongoingCheckpoints ||
-      !viewedCheckpointId ||
-      !checkpointComparisonResultSource
-    ) {
+    if (!ongoingCheckpoints || !viewedCheckpointId || !checkpointComparisonResultSource) {
       return null
     }
     return compareCheckpoints({
       checkpoints: ongoingCheckpoints,
       viewedCheckpointId,
       viewedResultSource: checkpointComparisonResultSource,
-      keyFigureMetricIds: listVisibleComparableKeyFigureRowIds(
-        resultPreferences.keyFigures,
-      ),
-      probabilityBelowAmount:
-        resultPreferences.keyFigures.probabilityBelowCostLevel.amount,
+      keyFigureMetricIds: listVisibleComparableKeyFigureRowIds(resultPreferences.keyFigures),
+      probabilityBelowAmount: resultPreferences.keyFigures.probabilityBelowCostLevel.amount,
     })
-  }, [
-    ongoingCheckpoints,
-    viewedCheckpointId,
-    checkpointComparisonResultSource,
-    resultPreferences,
-  ])
+  }, [ongoingCheckpoints, viewedCheckpointId, checkpointComparisonResultSource, resultPreferences])
 
   /**
    * Live tip source only while viewing a draft checkpoint. Archived navigation
@@ -485,11 +434,7 @@ export function ResultsPanel({
       viewedCheckpointId: viewedDraftCheckpointId,
       viewedResultSource: developmentLiveResultSource,
     })
-  }, [
-    ongoingCheckpoints,
-    viewedDraftCheckpointId,
-    developmentLiveResultSource,
-  ])
+  }, [ongoingCheckpoints, viewedDraftCheckpointId, developmentLiveResultSource])
 
   const cdfSeries = useMemo(() => {
     const primary = displayProjects.map((p, i) => ({
@@ -513,28 +458,20 @@ export function ResultsPanel({
       !previous ||
       ((!previous.values || previous.values.length === 0) &&
         (!previous.displayPoints || previous.displayPoints.length === 0))
-    ) return primary
+    )
+      return primary
     return [
       ...primary,
       {
         id: `checkpoint-ref-${previous.checkpointId}`,
-        label: formatCheckpointLegendLabel(
-          previous.sequence,
-          t("checkpoints.sequenceLabel"),
-        ),
+        label: formatCheckpointLegendLabel(previous.sequence, t("checkpoints.sequenceLabel")),
         values: previous.values,
         displayPoints: previous.displayPoints,
         colorVar: getProjectColorCssVar(0),
         emphasis: "reference" as const,
       },
     ]
-  }, [
-    displayProjects,
-    resultsByProjectId,
-    compactResultByProjectId,
-    checkpointComparison,
-    t,
-  ])
+  }, [displayProjects, resultsByProjectId, compactResultByProjectId, checkpointComparison, t])
 
   const tornadoRowsByProjectId = useMemo(() => {
     const m = new Map<string, DeterministicTornadoRow[]>()
@@ -552,12 +489,7 @@ export function ResultsPanel({
     }
     for (const p of displayProjects) {
       const pr = projectResults.find((r) => r.projectId === p.id)
-      m.set(
-        p.id,
-        pr && pr.values.length > 0
-          ? computeDeterministicTornadoRows(p, 6)
-          : [],
-      )
+      m.set(p.id, pr && pr.values.length > 0 ? computeDeterministicTornadoRows(p, 6) : [])
     }
     return m
   }, [
@@ -594,21 +526,13 @@ export function ResultsPanel({
     [tornadoRowsGroups],
   )
 
-  const {
-    requestCalculation,
-    getStatus,
-    getResult,
-    getError,
-  } = useLazyShapleyAttribution({
+  const { requestCalculation, getStatus, getResult, getError } = useLazyShapleyAttribution({
     displayProjects,
     projectResults,
     simulationRunIdByProjectId,
     // Keep archived / persisted Contribution from running live Shapley.
     inputsStale:
-      pdfExportBlockedStaleInputs ||
-      analysisArchivedView ||
-      useCompactResults ||
-      useSeededShapley,
+      pdfExportBlockedStaleInputs || analysisArchivedView || useCompactResults || useSeededShapley,
   })
 
   const getShapleyResult = useCallback(
@@ -665,16 +589,13 @@ export function ResultsPanel({
   const archivedContributionMissing = useMemo(() => {
     if (useCompactResults) {
       return displayProjects.every(
-        (project) =>
-          (compactResultByProjectId.get(project.id)?.contribution ?? null) ===
-          null,
+        (project) => (compactResultByProjectId.get(project.id)?.contribution ?? null) === null,
       )
     }
     if (!useArchivedResults || !archivedSnapshot) return false
     if (displayProjects.length === 0) return true
     return displayProjects.every(
-      (project) =>
-        (archivedSnapshot.shapleyByProjectId[project.id] ?? null) === null,
+      (project) => (archivedSnapshot.shapleyByProjectId[project.id] ?? null) === null,
     )
   }, [
     archivedSnapshot,
@@ -687,8 +608,7 @@ export function ResultsPanel({
   const attributionUi = useMemo(() => {
     if (useCompactResults) {
       const states = displayProjects.map((project) => {
-        const result =
-          compactResultByProjectId.get(project.id)?.contribution ?? null
+        const result = compactResultByProjectId.get(project.id)?.contribution ?? null
         return {
           projectId: project.id,
           projectName: project.name,
@@ -708,8 +628,7 @@ export function ResultsPanel({
     }
     if (useArchivedResults && archivedSnapshot) {
       const states = displayProjects.map((project) => {
-        const result =
-          archivedSnapshot.shapleyByProjectId[project.id] ?? null
+        const result = archivedSnapshot.shapleyByProjectId[project.id] ?? null
         return {
           projectId: project.id,
           projectName: project.name,
@@ -720,9 +639,7 @@ export function ResultsPanel({
       })
       return {
         states,
-        allReady:
-          states.length > 0 &&
-          states.some((state) => state.result !== null),
+        allReady: states.length > 0 && states.some((state) => state.result !== null),
         anyCalculating: false,
         anyIdle: states.some((state) => state.result === null),
         anyError: false,
@@ -732,8 +649,7 @@ export function ResultsPanel({
 
     if (useSeededShapley && draftResultSeed) {
       const states = displayProjects.map((project) => {
-        const result =
-          draftResultSeed.shapleyByProjectId[project.id] ?? null
+        const result = draftResultSeed.shapleyByProjectId[project.id] ?? null
         return {
           projectId: project.id,
           projectName: project.name,
@@ -744,9 +660,7 @@ export function ResultsPanel({
       })
       return {
         states,
-        allReady:
-          states.length > 0 &&
-          states.some((state) => state.result !== null),
+        allReady: states.length > 0 && states.some((state) => state.result !== null),
         anyCalculating: false,
         anyIdle: states.some((state) => state.result === null),
         anyError: false,
@@ -766,9 +680,7 @@ export function ResultsPanel({
       states,
       allReady:
         states.length > 0 &&
-        states.every(
-          (state) => state.status === "ready" && state.result !== null,
-        ),
+        states.every((state) => state.status === "ready" && state.result !== null),
       anyCalculating: states.some((state) => state.status === "calculating"),
       anyIdle: states.some((state) => state.status === "idle"),
       anyError: states.some((state) => state.status === "error"),
@@ -795,7 +707,7 @@ export function ResultsPanel({
     if (!sessionStorage.getItem("DEBUG_TORNADO")) return
     for (const p of displayProjects) {
       const rows = tornadoRowsByProjectId.get(p.id) ?? []
-      // eslint-disable-next-line no-console -- opt-in via sessionStorage DEBUG_TORNADO
+       
       console.info("[DEBUG_TORNADO]", {
         projectId: p.id,
         projectName: p.name,
@@ -892,8 +804,7 @@ export function ResultsPanel({
       latestSnap &&
         typeof latestSnap === "object" &&
         "simulationCount" in latestSnap &&
-        typeof (latestSnap as { simulationCount?: unknown }).simulationCount ===
-          "number"
+        typeof (latestSnap as { simulationCount?: unknown }).simulationCount === "number"
         ? (latestSnap as { simulationCount: number }).simulationCount
         : undefined,
     )
@@ -923,12 +834,8 @@ export function ResultsPanel({
         method: t("results.pdfOngoingMethodTitle"),
       },
       coverCopy: {
-        reportBasisArchivedOnly: t(
-          "results.pdfOngoingReportBasisArchivedOnly",
-        ),
-        reportBasisWithExcludedDraft: t(
-          "results.pdfOngoingReportBasisWithExcludedDraft",
-        ),
+        reportBasisArchivedOnly: t("results.pdfOngoingReportBasisArchivedOnly"),
+        reportBasisWithExcludedDraft: t("results.pdfOngoingReportBasisWithExcludedDraft"),
         reportMeaning: t("results.pdfOngoingReportMeaning"),
         assumptionsContext: t("results.pdfOngoingAssumptionsContext"),
       },
@@ -940,8 +847,7 @@ export function ResultsPanel({
         t("results.pdfMethodParagraph2"),
         t("results.pdfMethodParagraph3"),
       ],
-      resolveProfileOptionLabel: (optionId) =>
-        t(`projectProfile.options.${optionId}`),
+      resolveProfileOptionLabel: (optionId) => t(`projectProfile.options.${optionId}`),
     })
     if (!built.ok) {
       setShowOngoingPdfBlockedNotice(true)
@@ -955,9 +861,7 @@ export function ResultsPanel({
       return
     }
 
-    const { downloadOngoingReportPdf } = await import(
-      "@/features/results/pdfExport"
-    )
+    const { downloadOngoingReportPdf } = await import("@/features/results/pdfExport")
     await downloadOngoingReportPdf({ model: built.model, language, t })
   }
 
@@ -1032,8 +936,7 @@ export function ResultsPanel({
     }
     setShowPdfShareOversizedNotice(false)
     // Snapshot Result Preferences at Generate click (archived prefs when viewing archive).
-    const resultViewSnapshot =
-      archivedResultView ?? resolveResultView(resultPreferences)
+    const resultViewSnapshot = archivedResultView ?? resolveResultView(resultPreferences)
     const comparisonProjects = displayProjects
 
     const rowLabels = {
@@ -1055,14 +958,14 @@ export function ResultsPanel({
           labels: rowLabels,
         })
       : buildKeyFigureMetricTableRows({
-      resultView: resultViewSnapshot,
-      projects: comparisonProjects,
-      valuesByProjectId: resultsByProjectId,
-      baseCostByProjectId,
-      simulatedIncurredByProjectId,
-      language,
-      labels: rowLabels,
-    })
+          resultView: resultViewSnapshot,
+          projects: comparisonProjects,
+          valuesByProjectId: resultsByProjectId,
+          baseCostByProjectId,
+          simulatedIncurredByProjectId,
+          language,
+          labels: rowLabels,
+        })
 
     let shareLinkAppendix: {
       url: string
@@ -1117,9 +1020,7 @@ export function ResultsPanel({
       t("results.pdfMethodParagraph3"),
     ]
 
-    const { downloadProjectReportPdf } = await import(
-      "@/features/results/pdfExport"
-    )
+    const { downloadProjectReportPdf } = await import("@/features/results/pdfExport")
     await downloadProjectReportPdf({
       language,
       t,
@@ -1131,8 +1032,7 @@ export function ResultsPanel({
         label: project.name,
         ...(compactResultByProjectId.has(project.id)
           ? {
-              displayPoints:
-                compactResultByProjectId.get(project.id)!.sCurve.points,
+              displayPoints: compactResultByProjectId.get(project.id)!.sCurve.points,
             }
           : { values: resultsByProjectId.get(project.id) ?? [] }),
         color: getProjectColorHex(idx),
@@ -1172,12 +1072,8 @@ export function ResultsPanel({
     setShowAiBriefStaleNotice(false)
     setShowPdfBlockedNotice(false)
     // Snapshot Result Preferences at Generate click (archived prefs when viewing archive).
-    const resultViewSnapshot =
-      archivedResultView ?? resolveResultView(resultPreferences)
-    const contributionAnalysisByProjectId: Record<
-      string,
-      ShapleyAttributionResult
-    > = {}
+    const resultViewSnapshot = archivedResultView ?? resolveResultView(resultPreferences)
+    const contributionAnalysisByProjectId: Record<string, ShapleyAttributionResult> = {}
     for (const project of projects) {
       const existing = getShapleyResult(project.id)
       if (existing) contributionAnalysisByProjectId[project.id] = existing
@@ -1216,9 +1112,7 @@ export function ResultsPanel({
       ongoingDevelopment,
     })
     const promptKey =
-      language === "no"
-        ? "results.aiBriefClipboardPromptNo"
-        : "results.aiBriefClipboardPromptEn"
+      language === "no" ? "results.aiBriefClipboardPromptNo" : "results.aiBriefClipboardPromptEn"
     const promptBase = t(promptKey)
     const prompt =
       analysisMode === "ongoing"
@@ -1320,8 +1214,7 @@ export function ResultsPanel({
   }, [pdfExportBlockedStaleInputs])
 
   const inFocusStep = focusSection != null
-  const showFocusSection = (id: FocusResultSectionId) =>
-    !inFocusStep || focusSection === id
+  const showFocusSection = (id: FocusResultSectionId) => !inFocusStep || focusSection === id
 
   return (
     <>
@@ -1339,265 +1232,243 @@ export function ResultsPanel({
           {inFocusStep ? (
             <div className="space-y-6" data-focus-results-body="">
               {showFocusSection("keyFigures") ? (
-          <SectionExpander
-            title={t("results.keyMetricsTitle")}
-            defaultOpen
-            open
-            onOpenChange={() => {}}
-            headerClassName="px-0 py-1"
-            titleClassName="text-[11px]"
-          >
-          <div className="space-y-2">
-            <p className="section-body">
-              {t("helper.resultsKeyMetrics")}
-            </p>
-          <ResultsKeyFiguresTable
-            projects={displayProjects}
-            valuesByProjectId={resultsByProjectId}
-            baseCostByProjectId={baseCostByProjectId}
-            simulatedIncurredByProjectId={simulatedIncurredByProjectId}
-            preferences={resultPreferences}
-            frozenKeyFiguresByProjectId={frozenKeyFiguresByProjectId}
-            expandLabel={t("charts.openLargerView")}
-            onExpand={() => setExpandedChart({ kind: "keyFigures" })}
-          />
-        </div>
-          </SectionExpander>
+                <SectionExpander
+                  title={t("results.keyMetricsTitle")}
+                  defaultOpen
+                  open
+                  onOpenChange={() => {}}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("helper.resultsKeyMetrics")}</p>
+                    <ResultsKeyFiguresTable
+                      projects={displayProjects}
+                      valuesByProjectId={resultsByProjectId}
+                      baseCostByProjectId={baseCostByProjectId}
+                      simulatedIncurredByProjectId={simulatedIncurredByProjectId}
+                      preferences={resultPreferences}
+                      frozenKeyFiguresByProjectId={frozenKeyFiguresByProjectId}
+                      expandLabel={t("charts.openLargerView")}
+                      onExpand={() => setExpandedChart({ kind: "keyFigures" })}
+                    />
+                  </div>
+                </SectionExpander>
               ) : null}
               {showFocusSection("development") && developmentSeries ? (
-            <SectionExpander
-              title={t("checkpoints.developmentTitle")}
-              defaultOpen
-              open
-              onOpenChange={() => {}}
-              headerClassName="px-0 py-1"
-              titleClassName="text-[11px]"
-            >
-              <div className="space-y-2" data-ongoing-development-section="">
-                <p className="section-body">
-                  {t("checkpoints.developmentHelper")}
-                </p>
-                {developmentSeries.points.length === 0 ? (
-                  <p
-                    className="section-body text-muted-foreground/85"
-                    role="status"
-                  >
-                    {t("checkpoints.developmentEmpty")}
-                  </p>
-                ) : (
-                  <ResultsDevelopmentChart
-                    series={developmentSeries}
-                    expandLabel={t("charts.openLargerView")}
-                    onExpand={() => setExpandedChart({ kind: "development" })}
-                  />
-                )}
-              </div>
-            </SectionExpander>
+                <SectionExpander
+                  title={t("checkpoints.developmentTitle")}
+                  defaultOpen
+                  open
+                  onOpenChange={() => {}}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2" data-ongoing-development-section="">
+                    <p className="section-body">{t("checkpoints.developmentHelper")}</p>
+                    {developmentSeries.points.length === 0 ? (
+                      <p className="section-body text-muted-foreground/85" role="status">
+                        {t("checkpoints.developmentEmpty")}
+                      </p>
+                    ) : (
+                      <ResultsDevelopmentChart
+                        series={developmentSeries}
+                        expandLabel={t("charts.openLargerView")}
+                        onExpand={() => setExpandedChart({ kind: "development" })}
+                      />
+                    )}
+                  </div>
+                </SectionExpander>
               ) : null}
               {showFocusSection("scurve") ? (
-        <SectionExpander
-          title={t("charts.sCurveTitle")}
-          defaultOpen
-          open
-          onOpenChange={() => {}}
-          headerClassName="px-0 py-1"
-          titleClassName="text-[11px]"
-        >
-        <div className="space-y-2">
-            <p className="section-body">
-              {t("charts.sCurveSubtitle")}
-            </p>
-          <ResultsSCurve
-            series={cdfSeries}
-            markerPercentiles={sCurveMarkerPercentiles}
-            expandLabel={t("charts.openLargerView")}
-            onExpand={() => setExpandedChart({ kind: "scurve" })}
-            selectedProjectIds={sCurveSelectedProjectIds}
-            onToggleProjectSelection={toggleSCurveProjectSelection}
-          />
-        </div>
-        </SectionExpander>
+                <SectionExpander
+                  title={t("charts.sCurveTitle")}
+                  defaultOpen
+                  open
+                  onOpenChange={() => {}}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("charts.sCurveSubtitle")}</p>
+                    <ResultsSCurve
+                      series={cdfSeries}
+                      markerPercentiles={sCurveMarkerPercentiles}
+                      expandLabel={t("charts.openLargerView")}
+                      onExpand={() => setExpandedChart({ kind: "scurve" })}
+                      selectedProjectIds={sCurveSelectedProjectIds}
+                      onToggleProjectSelection={toggleSCurveProjectSelection}
+                    />
+                  </div>
+                </SectionExpander>
               ) : null}
               {showFocusSection("tornado") ? (
-        <SectionExpander
-          title={t("charts.tornadoTitle")}
-          defaultOpen
-          open
-          onOpenChange={() => {}}
-          headerClassName="px-0 py-1"
-          titleClassName="text-[11px]"
-        >
-        <div className="space-y-2">
-          <p className="section-body">
-            {t("charts.tornadoSubtitle")}
-          </p>
-          <div className="space-y-6">
-            {displayProjects.map((p, projectIndex) => {
-              const pr = projectResults.find((r) => r.projectId === p.id)
-              const rows = tornadoRowsByProjectId.get(p.id) ?? []
-              const tornadoRemountKey = pr
-                ? `${p.id}\u001f${rows.map((r) => `${r.type}\u001e${r.name}\u001e${r.spread}`).join("\u001d")}`
-                : `${p.id}\u001fnone`
-              return (
-                <div key={p.id} className="space-y-2">
-                  <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
-                    <ProjectColorSwatch projectIndex={projectIndex} />
-                    <span className="min-w-0 truncate">{p.name}</span>
-                  </h3>
-                  <ResultsTornado
-                    key={tornadoRemountKey}
-                    rows={tornadoRowsByProjectId.get(p.id) ?? []}
-                    layout={sharedTornadoLayout}
-                    sharedSymmetricMaxAbs={sharedTornadoSymmetricMaxAbs}
-                    displayScale={tornadoDisplayScaleByProjectId.get(p.id)}
-                    expandLabel={t("charts.openLargerView")}
-                    onExpand={() =>
-                      setExpandedChart({
-                        kind: "tornado",
-                        projectId: p.id,
-                        projectName: p.name,
-                      })
-                    }
-                  />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-        </SectionExpander>
-              ) : null}
-              {showFocusSection("contribution") &&
-              appFeatures.showExpectedAddition ? (
-          <SectionExpander
-            title={t("charts.attributionTitle")}
-            defaultOpen
-            open
-            onOpenChange={() => {}}
-            headerClassName="px-0 py-1"
-            titleClassName="text-[11px]"
-          >
-            <div className="space-y-2">
-              <p className="section-body">
-                {t("charts.attributionSubtitle")}
-              </p>
-
-              {!attributionUi.allReady ? (
-                <div className="pt-1">
-                  {archivedContributionMissing ? (
-                    <p className="section-body text-[11px] text-muted-foreground/85">
-                      {t("results.archivedContributionNotStored")}
-                    </p>
-                  ) : pdfExportBlockedStaleInputs ? (
-                    <p className="section-body text-[11px] text-muted-foreground/85">
-                      {t("results.waterfallStaleInputs")}
-                    </p>
-                  ) : attributionUi.anyError ? (
-                    <div className="space-y-2">
-                      <p
-                        className="section-body text-[11px] text-destructive/90"
-                        role="alert"
-                      >
-                        {attributionUi.firstError ?? t("results.waterfallError")}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          for (const project of displayProjects) {
-                            const status = getStatus(project.id)
-                            if (status === "error" || status === "idle") {
-                              requestCalculation(project.id)
-                            }
-                          }
-                        }}
-                      >
-                        {t("results.tryAgain")}
-                      </Button>
+                <SectionExpander
+                  title={t("charts.tornadoTitle")}
+                  defaultOpen
+                  open
+                  onOpenChange={() => {}}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("charts.tornadoSubtitle")}</p>
+                    <div className="space-y-6">
+                      {displayProjects.map((p, projectIndex) => {
+                        const pr = projectResults.find((r) => r.projectId === p.id)
+                        const rows = tornadoRowsByProjectId.get(p.id) ?? []
+                        const tornadoRemountKey = pr
+                          ? `${p.id}\u001f${rows.map((r) => `${r.type}\u001e${r.name}\u001e${r.spread}`).join("\u001d")}`
+                          : `${p.id}\u001fnone`
+                        return (
+                          <div key={p.id} className="space-y-2">
+                            <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
+                              <ProjectColorSwatch projectIndex={projectIndex} />
+                              <span className="min-w-0 truncate">{p.name}</span>
+                            </h3>
+                            <ResultsTornado
+                              key={tornadoRemountKey}
+                              rows={tornadoRowsByProjectId.get(p.id) ?? []}
+                              layout={sharedTornadoLayout}
+                              sharedSymmetricMaxAbs={sharedTornadoSymmetricMaxAbs}
+                              displayScale={tornadoDisplayScaleByProjectId.get(p.id)}
+                              expandLabel={t("charts.openLargerView")}
+                              onExpand={() =>
+                                setExpandedChart({
+                                  kind: "tornado",
+                                  projectId: p.id,
+                                  projectName: p.name,
+                                })
+                              }
+                            />
+                          </div>
+                        )
+                      })}
                     </div>
-                  ) : (
-                    <SpotlightLoadingText
-                      text={t("results.calculatingContributions")}
-                      className="section-body text-[11px]"
-                      data-contribution-loading=""
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-8 pt-1">
-                  {attributionUi.states.map((state, projectIndex) =>
-                    state.result ? (
-                      <div key={state.projectId} className="space-y-4">
-                        <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
-                          <ProjectColorSwatch projectIndex={projectIndex} />
-                          <span className="min-w-0 truncate">
-                            {state.projectName}
-                          </span>
-                        </h3>
-                        <div className="space-y-5">
-                          <div className="space-y-2">
-                            <h4 className="section-heading text-[10px]">
-                                {t("charts.waterfallTitle")}
-                              </h4>
-                            <ResultsWaterfall
-                              result={state.result}
-                              baseCostLabel={t("keyMetrics.baseCost")}
-                              p50Label={t("keyMetrics.p50")}
-                              expectedAdditionLabel={t("keyMetrics.expectedAddition")}
-                              otherLabel={t("results.waterfallOther")}
-                              expandLabel={t("charts.openLargerView")}
-                              onExpand={() =>
-                                  setExpandedChart({
-                                    kind: "expectedAddition",
-                                    projectId: state.projectId,
-                                    projectName: state.projectName,
-                                  })
-                              }
-                            />
-                          </div>
+                  </div>
+                </SectionExpander>
+              ) : null}
+              {showFocusSection("contribution") && appFeatures.showExpectedAddition ? (
+                <SectionExpander
+                  title={t("charts.attributionTitle")}
+                  defaultOpen
+                  open
+                  onOpenChange={() => {}}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("charts.attributionSubtitle")}</p>
 
+                    {!attributionUi.allReady ? (
+                      <div className="pt-1">
+                        {archivedContributionMissing ? (
+                          <p className="section-body text-[11px] text-muted-foreground/85">
+                            {t("results.archivedContributionNotStored")}
+                          </p>
+                        ) : pdfExportBlockedStaleInputs ? (
+                          <p className="section-body text-[11px] text-muted-foreground/85">
+                            {t("results.waterfallStaleInputs")}
+                          </p>
+                        ) : attributionUi.anyError ? (
                           <div className="space-y-2">
-                            <h4 className="section-heading text-[10px]">
-                                {t("charts.reserveWaterfallTitle")}
-                              </h4>
-                            <ResultsReserveWaterfall
-                              result={state.result}
-                              p50Label={t("keyMetrics.p50")}
-                              p85Label={t("keyMetrics.p85")}
-                              uncertaintyReserveLabel={t("keyMetrics.uncertaintyReserve")}
-                              otherLabel={t("results.waterfallOther")}
-                              expandLabel={t("charts.openLargerView")}
-                              onExpand={() =>
-                                  setExpandedChart({
-                                    kind: "uncertaintyReserve",
-                                    projectId: state.projectId,
-                                    projectName: state.projectName,
-                                  })
-                              }
-                            />
+                            <p
+                              className="section-body text-[11px] text-destructive/90"
+                              role="alert"
+                            >
+                              {attributionUi.firstError ?? t("results.waterfallError")}
+                            </p>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                for (const project of displayProjects) {
+                                  const status = getStatus(project.id)
+                                  if (status === "error" || status === "idle") {
+                                    requestCalculation(project.id)
+                                  }
+                                }
+                              }}
+                            >
+                              {t("results.tryAgain")}
+                            </Button>
                           </div>
-                        </div>
+                        ) : (
+                          <SpotlightLoadingText
+                            text={t("results.calculatingContributions")}
+                            className="section-body text-[11px]"
+                            data-contribution-loading=""
+                          />
+                        )}
                       </div>
-                    ) : null,
-                  )}
-                </div>
-              )}
-            </div>
-          </SectionExpander>
+                    ) : (
+                      <div className="space-y-8 pt-1">
+                        {attributionUi.states.map((state, projectIndex) =>
+                          state.result ? (
+                            <div key={state.projectId} className="space-y-4">
+                              <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
+                                <ProjectColorSwatch projectIndex={projectIndex} />
+                                <span className="min-w-0 truncate">{state.projectName}</span>
+                              </h3>
+                              <div className="space-y-5">
+                                <div className="space-y-2">
+                                  <h4 className="section-heading text-[10px]">
+                                    {t("charts.waterfallTitle")}
+                                  </h4>
+                                  <ResultsWaterfall
+                                    result={state.result}
+                                    baseCostLabel={t("keyMetrics.baseCost")}
+                                    p50Label={t("keyMetrics.p50")}
+                                    expectedAdditionLabel={t("keyMetrics.expectedAddition")}
+                                    otherLabel={t("results.waterfallOther")}
+                                    expandLabel={t("charts.openLargerView")}
+                                    onExpand={() =>
+                                      setExpandedChart({
+                                        kind: "expectedAddition",
+                                        projectId: state.projectId,
+                                        projectName: state.projectName,
+                                      })
+                                    }
+                                  />
+                                </div>
+
+                                <div className="space-y-2">
+                                  <h4 className="section-heading text-[10px]">
+                                    {t("charts.reserveWaterfallTitle")}
+                                  </h4>
+                                  <ResultsReserveWaterfall
+                                    result={state.result}
+                                    p50Label={t("keyMetrics.p50")}
+                                    p85Label={t("keyMetrics.p85")}
+                                    uncertaintyReserveLabel={t("keyMetrics.uncertaintyReserve")}
+                                    otherLabel={t("results.waterfallOther")}
+                                    expandLabel={t("charts.openLargerView")}
+                                    onExpand={() =>
+                                      setExpandedChart({
+                                        kind: "uncertaintyReserve",
+                                        projectId: state.projectId,
+                                        projectName: state.projectName,
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ) : null,
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </SectionExpander>
               ) : null}
               {showFocusSection("nextSteps") ? (
-                <div
-                  className="mx-auto flex max-w-3xl flex-col gap-6"
-                  data-focus-next-steps=""
-                >
+                <div className="mx-auto flex max-w-3xl flex-col gap-6" data-focus-next-steps="">
                   <p className="m-0 font-sans text-[14px] leading-relaxed text-foreground">
                     {t("inputs.focusNextStepsBody")}
                   </p>
 
-                  <section
-                    className="space-y-3"
-                    data-focus-next-steps-continue=""
-                  >
+                  <section className="space-y-3" data-focus-next-steps-continue="">
                     <h3 className="m-0 font-sans text-[12px] font-semibold tracking-wide text-muted-foreground">
                       {t("inputs.focusContinueWorkingHeading")}
                     </h3>
@@ -1628,8 +1499,7 @@ export function ResultsPanel({
                           </div>
                         </div>
                       ) : null}
-                      {onRequestArchiveAndCreateNext &&
-                      !analysisArchivedView ? (
+                      {onRequestArchiveAndCreateNext && !analysisArchivedView ? (
                         <div className="rounded-md border border-border/50 bg-background/70 p-3">
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                             <div className="min-w-0 space-y-0.5">
@@ -1659,10 +1529,7 @@ export function ResultsPanel({
                     </div>
                   </section>
 
-                  <section
-                    className="space-y-3"
-                    data-focus-next-steps-use-results=""
-                  >
+                  <section className="space-y-3" data-focus-next-steps-use-results="">
                     <h3 className="m-0 font-sans text-[12px] font-semibold tracking-wide text-muted-foreground">
                       {t("inputs.focusUseResultsHeading")}
                     </h3>
@@ -1735,11 +1602,7 @@ export function ResultsPanel({
                                 data-focus-next-steps-share=""
                               >
                                 <span className="relative inline-flex w-full items-center justify-center">
-                                  <span
-                                    className={
-                                      shareCopied ? "invisible" : "visible"
-                                    }
-                                  >
+                                  <span className={shareCopied ? "invisible" : "visible"}>
                                     {t("results.copyShareLink")}
                                   </span>
                                   {shareCopied ? (
@@ -1747,10 +1610,7 @@ export function ResultsPanel({
                                       className="absolute inset-0 inline-flex items-center justify-center"
                                       aria-live="polite"
                                     >
-                                      <Check
-                                        className="size-3.5"
-                                        aria-hidden
-                                      />
+                                      <Check className="size-3.5" aria-hidden />
                                     </span>
                                   ) : null}
                                 </span>
@@ -1799,11 +1659,7 @@ export function ResultsPanel({
                               data-focus-next-steps-ai-brief=""
                             >
                               <span className="relative inline-flex w-full items-center justify-center">
-                                <span
-                                  className={
-                                    aiBriefCopied ? "invisible" : "visible"
-                                  }
-                                >
+                                <span className={aiBriefCopied ? "invisible" : "visible"}>
                                   {t("results.copyAiBrief")}
                                 </span>
                                 {aiBriefCopied ? (
@@ -1833,518 +1689,495 @@ export function ResultsPanel({
               ) : null}
             </div>
           ) : (
-          <SectionExpander
-            title={t("results.resultsHeading")}
-            defaultOpen
-            open={resultsExpanderOpen}
-            onOpenChange={setResultsExpanderOpen}
-            headerClassName="px-0"
-            bodyClassName="pt-5"
-            headerTrailing={
-              <div
-                className="flex shrink-0 items-center gap-0.5"
-                data-results-header-actions=""
-              >
-                {onOpenFocusResults && !focusResultsActive ? (
-                  <button
-                    type="button"
-                    className={buttonVariants({
-                      variant: "ghost",
-                      size: "icon-sm",
-                      className:
-                        "text-muted-foreground hover:text-foreground",
-                    })}
-                    aria-label={t("inputs.openFocusMode")}
-                    title={t("inputs.openFocusMode")}
-                    onClick={onOpenFocusResults}
-                    data-results-focus-toggle=""
-                  >
-                    <Play className="size-4" aria-hidden />
-                  </button>
-                ) : null}
-                {resultSettingsEditable ? (
-                  <ResultPreferencesPanel
-                    preferences={resultPreferences}
-                    onChange={replacePreferences}
-                    onAddKeyFigurePercentile={addKeyFigurePercentile}
-                    onRemoveKeyFigurePercentile={removeKeyFigurePercentile}
-                    onAddSCurvePercentile={addSCurvePercentile}
-                    onRemoveSCurvePercentile={removeSCurvePercentile}
-                    onSaveAsDefault={saveAsDefault}
-                    onReset={resetToDefaults}
-                    compactDerivedMetricsDeferred={useCompactResults}
-                  />
-                ) : null}
-              </div>
-            }
-          >
-        <div className="space-y-6 [&>div:not(:first-child)]:pt-3">
-          {ongoingCheckpoints &&
-          viewedCheckpointId &&
-          checkpointComparisonResultSource ? (
-            <CheckpointComparisonSection
-              slot="context"
-              checkpoints={ongoingCheckpoints}
-              viewedCheckpointId={viewedCheckpointId}
-              viewedResultSource={checkpointComparisonResultSource}
-              resultPreferences={resultPreferences}
-            />
-          ) : null}
-          <SectionExpander
-            title={t("results.keyMetricsTitle")}
-            defaultOpen
-            open={keyFiguresOpen}
-            onOpenChange={setKeyFiguresOpen}
-            headerClassName="px-0 py-1"
-            titleClassName="text-[11px]"
-          >
-          <div className="space-y-2">
-            <p className="section-body">
-              {t("helper.resultsKeyMetrics")}
-            </p>
-          <ResultsKeyFiguresTable
-            projects={displayProjects}
-            valuesByProjectId={resultsByProjectId}
-            baseCostByProjectId={baseCostByProjectId}
-            simulatedIncurredByProjectId={simulatedIncurredByProjectId}
-            preferences={resultPreferences}
-            frozenKeyFiguresByProjectId={frozenKeyFiguresByProjectId}
-            expandLabel={t("charts.openLargerView")}
-            onExpand={() => setExpandedChart({ kind: "keyFigures" })}
-          />
-        </div>
-          </SectionExpander>
-
-          {ongoingCheckpoints &&
-          viewedCheckpointId &&
-          checkpointComparisonResultSource ? (
-            <CheckpointComparisonSection
-              slot="change"
-              checkpoints={ongoingCheckpoints}
-              viewedCheckpointId={viewedCheckpointId}
-              viewedResultSource={checkpointComparisonResultSource}
-              resultPreferences={resultPreferences}
-            />
-          ) : null}
-
-          {developmentSeries ? (
             <SectionExpander
-              title={t("checkpoints.developmentTitle")}
+              title={t("results.resultsHeading")}
               defaultOpen
-              open={developmentOpen}
-              onOpenChange={setDevelopmentOpen}
-              headerClassName="px-0 py-1"
-              titleClassName="text-[11px]"
-            >
-              <div className="space-y-2" data-ongoing-development-section="">
-                <p className="section-body">
-                  {t("checkpoints.developmentHelper")}
-                </p>
-                {developmentSeries.points.length === 0 ? (
-                  <p
-                    className="section-body text-muted-foreground/85"
-                    role="status"
-                  >
-                    {t("checkpoints.developmentEmpty")}
-                  </p>
-                ) : (
-                  <ResultsDevelopmentChart
-                    series={developmentSeries}
-                    expandLabel={t("charts.openLargerView")}
-                    onExpand={() => setExpandedChart({ kind: "development" })}
-                  />
-                )}
-              </div>
-            </SectionExpander>
-          ) : null}
-
-        <SectionExpander
-          title={t("charts.sCurveTitle")}
-          defaultOpen
-          open={sCurveOpen}
-          onOpenChange={setSCurveOpen}
-          headerClassName="px-0 py-1"
-          titleClassName="text-[11px]"
-        >
-        <div className="space-y-2">
-            <p className="section-body">
-              {t("charts.sCurveSubtitle")}
-            </p>
-          <ResultsSCurve
-            series={cdfSeries}
-            markerPercentiles={sCurveMarkerPercentiles}
-            expandLabel={t("charts.openLargerView")}
-            onExpand={() => setExpandedChart({ kind: "scurve" })}
-            selectedProjectIds={sCurveSelectedProjectIds}
-            onToggleProjectSelection={toggleSCurveProjectSelection}
-          />
-        </div>
-        </SectionExpander>
-
-        <SectionExpander
-          title={t("charts.tornadoTitle")}
-          defaultOpen
-          open={tornadoOpen}
-          onOpenChange={setTornadoOpen}
-          headerClassName="px-0 py-1"
-          titleClassName="text-[11px]"
-        >
-        <div className="space-y-2">
-          <p className="section-body">
-            {t("charts.tornadoSubtitle")}
-          </p>
-          <div className="space-y-5 pt-1">
-            {displayProjects.map((p, projectIndex) => {
-              const pr = projectResults.find((r) => r.projectId === p.id)
-              const rows = tornadoRowsByProjectId.get(p.id) ?? []
-              const tornadoRemountKey = pr
-                ? `${p.id}\u001f${rows.map((r) => `${r.type}\u001e${r.name}\u001e${r.spread}`).join("\u001d")}`
-                : `${p.id}\u001fnone`
-              return (
-                <div key={p.id} className="space-y-2">
-                    <h4 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
-                      <ProjectColorSwatch projectIndex={projectIndex} />
-                      <span className="min-w-0 truncate">{p.name}</span>
-                    </h4>
-                  <ResultsTornado
-                    key={tornadoRemountKey}
-                    rows={tornadoRowsByProjectId.get(p.id) ?? []}
-                    layout={sharedTornadoLayout}
-                    sharedSymmetricMaxAbs={sharedTornadoSymmetricMaxAbs}
-                    displayScale={tornadoDisplayScaleByProjectId.get(p.id)}
-                    expandLabel={t("charts.openLargerView")}
-                    onExpand={() =>
-                      setExpandedChart({
-                        kind: "tornado",
-                        projectId: p.id,
-                        projectName: p.name,
-                      })
-                    }
-                  />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-        </SectionExpander>
-
-        {appFeatures.showExpectedAddition ? (
-          <SectionExpander
-            title={t("charts.attributionTitle")}
-            defaultOpen
-            open={contributionOpen}
-            onOpenChange={setContributionOpen}
-            headerClassName="px-0 py-1"
-            titleClassName="text-[11px]"
-          >
-            <div className="space-y-2">
-              <p className="section-body">
-                {t("charts.attributionSubtitle")}
-              </p>
-
-              {!attributionUi.allReady ? (
-                <div className="pt-1">
-                  {archivedContributionMissing ? (
-                    <p className="section-body text-[11px] text-muted-foreground/85">
-                      {t("results.archivedContributionNotStored")}
-                    </p>
-                  ) : pdfExportBlockedStaleInputs ? (
-                    <p className="section-body text-[11px] text-muted-foreground/85">
-                      {t("results.waterfallStaleInputs")}
-                    </p>
-                  ) : attributionUi.anyError ? (
-                    <div className="space-y-2">
-                      <p
-                        className="section-body text-[11px] text-destructive/90"
-                        role="alert"
-                      >
-                        {attributionUi.firstError ?? t("results.waterfallError")}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          for (const project of displayProjects) {
-                            const status = getStatus(project.id)
-                            if (status === "error" || status === "idle") {
-                              requestCalculation(project.id)
-                            }
-                          }
-                        }}
-                      >
-                        {t("results.tryAgain")}
-                      </Button>
-                    </div>
-                  ) : (
-                    <SpotlightLoadingText
-                      text={t("results.calculatingContributions")}
-                      className="section-body text-[11px]"
-                      data-contribution-loading=""
+              open={resultsExpanderOpen}
+              onOpenChange={setResultsExpanderOpen}
+              headerClassName="px-0"
+              bodyClassName="pt-5"
+              headerTrailing={
+                <div className="flex shrink-0 items-center gap-0.5" data-results-header-actions="">
+                  {onOpenFocusResults && !focusResultsActive ? (
+                    <button
+                      type="button"
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon-sm",
+                        className: "text-muted-foreground hover:text-foreground",
+                      })}
+                      aria-label={t("inputs.openFocusMode")}
+                      title={t("inputs.openFocusMode")}
+                      onClick={onOpenFocusResults}
+                      data-results-focus-toggle=""
+                    >
+                      <Play className="size-4" aria-hidden />
+                    </button>
+                  ) : null}
+                  {resultSettingsEditable ? (
+                    <ResultPreferencesPanel
+                      preferences={resultPreferences}
+                      onChange={replacePreferences}
+                      onAddKeyFigurePercentile={addKeyFigurePercentile}
+                      onRemoveKeyFigurePercentile={removeKeyFigurePercentile}
+                      onAddSCurvePercentile={addSCurvePercentile}
+                      onRemoveSCurvePercentile={removeSCurvePercentile}
+                      onSaveAsDefault={saveAsDefault}
+                      onReset={resetToDefaults}
+                      compactDerivedMetricsDeferred={useCompactResults}
                     />
-                  )}
+                  ) : null}
                 </div>
-              ) : (
-                <div className="space-y-8 pt-1">
-                  {attributionUi.states.map((state, projectIndex) =>
-                    state.result ? (
-                      <div key={state.projectId} className="space-y-4">
-                        <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
-                          <ProjectColorSwatch projectIndex={projectIndex} />
-                          <span className="min-w-0 truncate">
-                            {state.projectName}
-                          </span>
-                        </h3>
-                        <div className="space-y-5">
-                          <div className="space-y-2">
-                            <h4 className="section-heading text-[10px]">
-                                {t("charts.waterfallTitle")}
-                              </h4>
-                            <ResultsWaterfall
-                              result={state.result}
-                              baseCostLabel={t("keyMetrics.baseCost")}
-                              p50Label={t("keyMetrics.p50")}
-                              expectedAdditionLabel={t("keyMetrics.expectedAddition")}
-                              otherLabel={t("results.waterfallOther")}
+              }
+            >
+              <div className="space-y-6 [&>div:not(:first-child)]:pt-3">
+                {ongoingCheckpoints && viewedCheckpointId && checkpointComparisonResultSource ? (
+                  <CheckpointComparisonSection
+                    slot="context"
+                    checkpoints={ongoingCheckpoints}
+                    viewedCheckpointId={viewedCheckpointId}
+                    viewedResultSource={checkpointComparisonResultSource}
+                    resultPreferences={resultPreferences}
+                  />
+                ) : null}
+                <SectionExpander
+                  title={t("results.keyMetricsTitle")}
+                  defaultOpen
+                  open={keyFiguresOpen}
+                  onOpenChange={setKeyFiguresOpen}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("helper.resultsKeyMetrics")}</p>
+                    <ResultsKeyFiguresTable
+                      projects={displayProjects}
+                      valuesByProjectId={resultsByProjectId}
+                      baseCostByProjectId={baseCostByProjectId}
+                      simulatedIncurredByProjectId={simulatedIncurredByProjectId}
+                      preferences={resultPreferences}
+                      frozenKeyFiguresByProjectId={frozenKeyFiguresByProjectId}
+                      expandLabel={t("charts.openLargerView")}
+                      onExpand={() => setExpandedChart({ kind: "keyFigures" })}
+                    />
+                  </div>
+                </SectionExpander>
+
+                {ongoingCheckpoints && viewedCheckpointId && checkpointComparisonResultSource ? (
+                  <CheckpointComparisonSection
+                    slot="change"
+                    checkpoints={ongoingCheckpoints}
+                    viewedCheckpointId={viewedCheckpointId}
+                    viewedResultSource={checkpointComparisonResultSource}
+                    resultPreferences={resultPreferences}
+                  />
+                ) : null}
+
+                {developmentSeries ? (
+                  <SectionExpander
+                    title={t("checkpoints.developmentTitle")}
+                    defaultOpen
+                    open={developmentOpen}
+                    onOpenChange={setDevelopmentOpen}
+                    headerClassName="px-0 py-1"
+                    titleClassName="text-[11px]"
+                  >
+                    <div className="space-y-2" data-ongoing-development-section="">
+                      <p className="section-body">{t("checkpoints.developmentHelper")}</p>
+                      {developmentSeries.points.length === 0 ? (
+                        <p className="section-body text-muted-foreground/85" role="status">
+                          {t("checkpoints.developmentEmpty")}
+                        </p>
+                      ) : (
+                        <ResultsDevelopmentChart
+                          series={developmentSeries}
+                          expandLabel={t("charts.openLargerView")}
+                          onExpand={() => setExpandedChart({ kind: "development" })}
+                        />
+                      )}
+                    </div>
+                  </SectionExpander>
+                ) : null}
+
+                <SectionExpander
+                  title={t("charts.sCurveTitle")}
+                  defaultOpen
+                  open={sCurveOpen}
+                  onOpenChange={setSCurveOpen}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("charts.sCurveSubtitle")}</p>
+                    <ResultsSCurve
+                      series={cdfSeries}
+                      markerPercentiles={sCurveMarkerPercentiles}
+                      expandLabel={t("charts.openLargerView")}
+                      onExpand={() => setExpandedChart({ kind: "scurve" })}
+                      selectedProjectIds={sCurveSelectedProjectIds}
+                      onToggleProjectSelection={toggleSCurveProjectSelection}
+                    />
+                  </div>
+                </SectionExpander>
+
+                <SectionExpander
+                  title={t("charts.tornadoTitle")}
+                  defaultOpen
+                  open={tornadoOpen}
+                  onOpenChange={setTornadoOpen}
+                  headerClassName="px-0 py-1"
+                  titleClassName="text-[11px]"
+                >
+                  <div className="space-y-2">
+                    <p className="section-body">{t("charts.tornadoSubtitle")}</p>
+                    <div className="space-y-5 pt-1">
+                      {displayProjects.map((p, projectIndex) => {
+                        const pr = projectResults.find((r) => r.projectId === p.id)
+                        const rows = tornadoRowsByProjectId.get(p.id) ?? []
+                        const tornadoRemountKey = pr
+                          ? `${p.id}\u001f${rows.map((r) => `${r.type}\u001e${r.name}\u001e${r.spread}`).join("\u001d")}`
+                          : `${p.id}\u001fnone`
+                        return (
+                          <div key={p.id} className="space-y-2">
+                            <h4 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
+                              <ProjectColorSwatch projectIndex={projectIndex} />
+                              <span className="min-w-0 truncate">{p.name}</span>
+                            </h4>
+                            <ResultsTornado
+                              key={tornadoRemountKey}
+                              rows={tornadoRowsByProjectId.get(p.id) ?? []}
+                              layout={sharedTornadoLayout}
+                              sharedSymmetricMaxAbs={sharedTornadoSymmetricMaxAbs}
+                              displayScale={tornadoDisplayScaleByProjectId.get(p.id)}
                               expandLabel={t("charts.openLargerView")}
                               onExpand={() =>
-                                  setExpandedChart({
-                                    kind: "expectedAddition",
-                                    projectId: state.projectId,
-                                    projectName: state.projectName,
-                                  })
+                                setExpandedChart({
+                                  kind: "tornado",
+                                  projectId: p.id,
+                                  projectName: p.name,
+                                })
                               }
                             />
                           </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </SectionExpander>
 
-                          <div className="space-y-2">
-                            <h4 className="section-heading text-[10px]">
-                                {t("charts.reserveWaterfallTitle")}
-                              </h4>
-                            <ResultsReserveWaterfall
-                              result={state.result}
-                              p50Label={t("keyMetrics.p50")}
-                              p85Label={t("keyMetrics.p85")}
-                              uncertaintyReserveLabel={t("keyMetrics.uncertaintyReserve")}
-                              otherLabel={t("results.waterfallOther")}
-                              expandLabel={t("charts.openLargerView")}
-                              onExpand={() =>
-                                  setExpandedChart({
-                                    kind: "uncertaintyReserve",
-                                    projectId: state.projectId,
-                                    projectName: state.projectName,
-                                  })
-                              }
+                {appFeatures.showExpectedAddition ? (
+                  <SectionExpander
+                    title={t("charts.attributionTitle")}
+                    defaultOpen
+                    open={contributionOpen}
+                    onOpenChange={setContributionOpen}
+                    headerClassName="px-0 py-1"
+                    titleClassName="text-[11px]"
+                  >
+                    <div className="space-y-2">
+                      <p className="section-body">{t("charts.attributionSubtitle")}</p>
+
+                      {!attributionUi.allReady ? (
+                        <div className="pt-1">
+                          {archivedContributionMissing ? (
+                            <p className="section-body text-[11px] text-muted-foreground/85">
+                              {t("results.archivedContributionNotStored")}
+                            </p>
+                          ) : pdfExportBlockedStaleInputs ? (
+                            <p className="section-body text-[11px] text-muted-foreground/85">
+                              {t("results.waterfallStaleInputs")}
+                            </p>
+                          ) : attributionUi.anyError ? (
+                            <div className="space-y-2">
+                              <p
+                                className="section-body text-[11px] text-destructive/90"
+                                role="alert"
+                              >
+                                {attributionUi.firstError ?? t("results.waterfallError")}
+                              </p>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  for (const project of displayProjects) {
+                                    const status = getStatus(project.id)
+                                    if (status === "error" || status === "idle") {
+                                      requestCalculation(project.id)
+                                    }
+                                  }
+                                }}
+                              >
+                                {t("results.tryAgain")}
+                              </Button>
+                            </div>
+                          ) : (
+                            <SpotlightLoadingText
+                              text={t("results.calculatingContributions")}
+                              className="section-body text-[11px]"
+                              data-contribution-loading=""
                             />
+                          )}
+                        </div>
+                      ) : (
+                        <div className="space-y-8 pt-1">
+                          {attributionUi.states.map((state, projectIndex) =>
+                            state.result ? (
+                              <div key={state.projectId} className="space-y-4">
+                                <h3 className="section-heading flex min-w-0 items-center gap-1.5 text-[11px] normal-case tracking-normal">
+                                  <ProjectColorSwatch projectIndex={projectIndex} />
+                                  <span className="min-w-0 truncate">{state.projectName}</span>
+                                </h3>
+                                <div className="space-y-5">
+                                  <div className="space-y-2">
+                                    <h4 className="section-heading text-[10px]">
+                                      {t("charts.waterfallTitle")}
+                                    </h4>
+                                    <ResultsWaterfall
+                                      result={state.result}
+                                      baseCostLabel={t("keyMetrics.baseCost")}
+                                      p50Label={t("keyMetrics.p50")}
+                                      expectedAdditionLabel={t("keyMetrics.expectedAddition")}
+                                      otherLabel={t("results.waterfallOther")}
+                                      expandLabel={t("charts.openLargerView")}
+                                      onExpand={() =>
+                                        setExpandedChart({
+                                          kind: "expectedAddition",
+                                          projectId: state.projectId,
+                                          projectName: state.projectName,
+                                        })
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <h4 className="section-heading text-[10px]">
+                                      {t("charts.reserveWaterfallTitle")}
+                                    </h4>
+                                    <ResultsReserveWaterfall
+                                      result={state.result}
+                                      p50Label={t("keyMetrics.p50")}
+                                      p85Label={t("keyMetrics.p85")}
+                                      uncertaintyReserveLabel={t("keyMetrics.uncertaintyReserve")}
+                                      otherLabel={t("results.waterfallOther")}
+                                      expandLabel={t("charts.openLargerView")}
+                                      onExpand={() =>
+                                        setExpandedChart({
+                                          kind: "uncertaintyReserve",
+                                          projectId: state.projectId,
+                                          projectName: state.projectName,
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null,
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </SectionExpander>
+                ) : null}
+
+                {appFeatures.allowShareLink ? (
+                  <SectionExpander
+                    title={t("results.optionsHeading")}
+                    defaultOpen={false}
+                    open={exportOpen}
+                    onOpenChange={setExportOpen}
+                    headerClassName="px-0 py-1"
+                    titleClassName="text-[11px]"
+                  >
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-stretch">
+                        <div className="flex h-full min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
+                          <div className="flex h-full flex-col gap-2">
+                            <div className="space-y-1">
+                              <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
+                                {t("results.actionsHeading")}
+                              </h4>
+                              <p className="section-body text-[11px] text-muted-foreground/80">
+                                {t("results.actionsHelperText")}
+                              </p>
+                            </div>
+                            <div className="mt-auto flex flex-col gap-2">
+                              <div className="flex flex-nowrap items-stretch gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"
+                                  onClick={() => void handleDownloadPdf()}
+                                >
+                                  {t("results.downloadPdf")}
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"
+                                  onClick={() => void handleCopyShareLink()}
+                                >
+                                  <span className="relative inline-flex w-full items-center justify-center">
+                                    <span className={shareCopied ? "invisible" : "visible"}>
+                                      {t("results.copyShareLink")}
+                                    </span>
+                                    {shareCopied ? (
+                                      <span
+                                        className="absolute inset-0 inline-flex items-center justify-center"
+                                        aria-live="polite"
+                                      >
+                                        <Check className="size-3.5" aria-hidden />
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </Button>
+                              </div>
+                              {showPdfBlockedNotice ? (
+                                <p
+                                  className="text-xs leading-snug text-muted-foreground/80"
+                                  role="status"
+                                >
+                                  {t("results.pdfExportBlockedStaleInputs")}
+                                </p>
+                              ) : null}
+                              {showOngoingPdfBlockedNotice ? (
+                                <p
+                                  className="text-xs leading-snug text-muted-foreground/80"
+                                  role="status"
+                                >
+                                  {t("results.pdfOngoingExportBlockedNoArchived")}
+                                </p>
+                              ) : null}
+                              {showShareBlockedNotice ? (
+                                <p
+                                  className="text-xs leading-snug text-muted-foreground/80"
+                                  role="status"
+                                >
+                                  {t("results.shareLinkBlockedStaleInputs")}
+                                </p>
+                              ) : null}
+                              {showShareOversizedNotice || showPdfShareOversizedNotice ? (
+                                <p
+                                  className="text-xs leading-snug text-muted-foreground/80"
+                                  role="status"
+                                >
+                                  {t("results.shareLinkTooLarge")}
+                                </p>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex h-full min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
+                          <div className="flex h-full flex-col gap-2">
+                            <div className="space-y-1">
+                              <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
+                                {t("results.aiAnalyzeHeading")}
+                              </h4>
+                              <p className="section-body text-[11px] text-muted-foreground/80">
+                                {t("results.aiAnalyzeHelper")}
+                              </p>
+                            </div>
+                            <div className="mt-auto flex flex-col gap-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-8 w-full font-sans text-xs font-medium"
+                                onClick={() => void handleCopyAiBriefPackage()}
+                              >
+                                <span className="relative inline-flex w-full items-center justify-center">
+                                  <span className={aiBriefCopied ? "invisible" : "visible"}>
+                                    {t("results.copyAiBrief")}
+                                  </span>
+                                  {aiBriefCopied ? (
+                                    <span
+                                      className="absolute inset-0 inline-flex items-center justify-center"
+                                      aria-live="polite"
+                                    >
+                                      <Check className="size-3.5" aria-hidden />
+                                    </span>
+                                  ) : null}
+                                </span>
+                              </Button>
+                              {showAiBriefStaleNotice ? (
+                                <p
+                                  className="text-xs leading-snug text-muted-foreground/80"
+                                  role="status"
+                                >
+                                  {t("results.aiBriefBlockedStaleInputs")}
+                                </p>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    ) : null,
-                  )}
-                </div>
-              )}
-            </div>
-          </SectionExpander>
-        ) : null}
 
-        {appFeatures.allowShareLink ? (
-          <SectionExpander
-            title={t("results.optionsHeading")}
-            defaultOpen={false}
-            open={exportOpen}
-            onOpenChange={setExportOpen}
-            headerClassName="px-0 py-1"
-            titleClassName="text-[11px]"
-          >
-            <div className="space-y-3">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-stretch">
-              <div className="flex h-full min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
-                <div className="flex h-full flex-col gap-2">
-                  <div className="space-y-1">
-                    <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
-                      {t("results.actionsHeading")}
-                    </h4>
-                    <p className="section-body text-[11px] text-muted-foreground/80">
-                      {t("results.actionsHelperText")}
-                    </p>
-                  </div>
-                  <div className="mt-auto flex flex-col gap-2">
-                  <div className="flex flex-nowrap items-stretch gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"
-                      onClick={() => void handleDownloadPdf()}
-                    >
-                      {t("results.downloadPdf")}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 min-w-0 flex-1 font-sans text-xs font-medium"
-                      onClick={() => void handleCopyShareLink()}
-                    >
-                      <span className="relative inline-flex w-full items-center justify-center">
-                        <span className={shareCopied ? "invisible" : "visible"}>
-                          {t("results.copyShareLink")}
-                        </span>
-                        {shareCopied ? (
-                          <span
-                            className="absolute inset-0 inline-flex items-center justify-center"
-                            aria-live="polite"
-                          >
-                            <Check className="size-3.5" aria-hidden />
-                          </span>
-                        ) : null}
-                      </span>
-                    </Button>
-                  </div>
-                  {showPdfBlockedNotice ? (
-                    <p
-                      className="text-xs leading-snug text-muted-foreground/80"
-                      role="status"
-                    >
-                      {t("results.pdfExportBlockedStaleInputs")}
-                    </p>
-                  ) : null}
-                  {showOngoingPdfBlockedNotice ? (
-                    <p
-                      className="text-xs leading-snug text-muted-foreground/80"
-                      role="status"
-                    >
-                      {t("results.pdfOngoingExportBlockedNoArchived")}
-                    </p>
-                  ) : null}
-                  {showShareBlockedNotice ? (
-                    <p
-                      className="text-xs leading-snug text-muted-foreground/80"
-                      role="status"
-                    >
-                      {t("results.shareLinkBlockedStaleInputs")}
-                    </p>
-                  ) : null}
-                  {showShareOversizedNotice || showPdfShareOversizedNotice ? (
-                    <p
-                      className="text-xs leading-snug text-muted-foreground/80"
-                      role="status"
-                    >
-                      {t("results.shareLinkTooLarge")}
-                    </p>
-                  ) : null}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex h-full min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
-                <div className="flex h-full flex-col gap-2">
-                  <div className="space-y-1">
-                    <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
-                      {t("results.aiAnalyzeHeading")}
-                    </h4>
-                    <p className="section-body text-[11px] text-muted-foreground/80">
-                      {t("results.aiAnalyzeHelper")}
-                    </p>
-                  </div>
-                  <div className="mt-auto flex flex-col gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-full font-sans text-xs font-medium"
-                    onClick={() => void handleCopyAiBriefPackage()}
-                  >
-                    <span className="relative inline-flex w-full items-center justify-center">
-                      <span className={aiBriefCopied ? "invisible" : "visible"}>
-                        {t("results.copyAiBrief")}
-                      </span>
-                      {aiBriefCopied ? (
-                        <span
-                          className="absolute inset-0 inline-flex items-center justify-center"
-                          aria-live="polite"
-                        >
-                          <Check className="size-3.5" aria-hidden />
-                        </span>
+                      {!analysisArchivedView && onRequestArchiveAndCreateNext ? (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          <div className="flex min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
+                            <div className="flex flex-col gap-2">
+                              <div className="space-y-1">
+                                <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
+                                  {t("checkpoints.archiveAndCreateNextHeading")}
+                                </h4>
+                                <p className="section-body text-[11px] text-muted-foreground/80">
+                                  {t("checkpoints.archiveAndCreateNextHelper")}
+                                </p>
+                              </div>
+                              <div className="mt-auto flex flex-col gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  data-archive-and-create-next=""
+                                  className="h-8 w-full font-sans text-xs font-medium hover:border-[#1d868c]/40 hover:bg-[#1d868c]/[0.04] hover:text-foreground active:border-[#1d868c]/45 active:bg-[#1d868c]/[0.08] focus-visible:border-[#1d868c]/35 focus-visible:ring-[#1d868c]/15"
+                                  onClick={onRequestArchiveAndCreateNext}
+                                >
+                                  {t("checkpoints.archiveAndCreateNextAction")}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                          <div aria-hidden="true" />
+                        </div>
                       ) : null}
-                    </span>
-                  </Button>
-                  {showAiBriefStaleNotice ? (
-                    <p
-                      className="text-xs leading-snug text-muted-foreground/80"
-                      role="status"
-                    >
-                      {t("results.aiBriefBlockedStaleInputs")}
-                    </p>
-                  ) : null}
-                  </div>
-                </div>
+                      {onRequestFinishOngoingAnalysis ? (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          <div className="flex min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
+                            <div className="flex flex-col gap-2">
+                              <div className="space-y-1">
+                                <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
+                                  {t("checkpoints.finishOngoingHeading")}
+                                </h4>
+                                <p className="section-body text-[11px] text-muted-foreground/80">
+                                  {t("checkpoints.finishOngoingHelper")}
+                                </p>
+                              </div>
+                              <div className="mt-auto flex flex-col gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  data-finish-ongoing-analysis=""
+                                  className="h-8 w-full font-sans text-xs font-medium hover:border-[#1d868c]/40 hover:bg-[#1d868c]/[0.04] hover:text-foreground active:border-[#1d868c]/45 active:bg-[#1d868c]/[0.08] focus-visible:border-[#1d868c]/35 focus-visible:ring-[#1d868c]/15"
+                                  onClick={onRequestFinishOngoingAnalysis}
+                                >
+                                  {t("checkpoints.finishOngoingAction")}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                          <div aria-hidden="true" />
+                        </div>
+                      ) : null}
+                    </div>
+                  </SectionExpander>
+                ) : null}
               </div>
-            </div>
-
-            {!analysisArchivedView && onRequestArchiveAndCreateNext ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="flex min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
-                  <div className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
-                        {t("checkpoints.archiveAndCreateNextHeading")}
-                      </h4>
-                      <p className="section-body text-[11px] text-muted-foreground/80">
-                        {t("checkpoints.archiveAndCreateNextHelper")}
-                      </p>
-                    </div>
-                    <div className="mt-auto flex flex-col gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        data-archive-and-create-next=""
-                        className="h-8 w-full font-sans text-xs font-medium hover:border-[#1d868c]/40 hover:bg-[#1d868c]/[0.04] hover:text-foreground active:border-[#1d868c]/45 active:bg-[#1d868c]/[0.08] focus-visible:border-[#1d868c]/35 focus-visible:ring-[#1d868c]/15"
-                        onClick={onRequestArchiveAndCreateNext}
-                      >
-                        {t("checkpoints.archiveAndCreateNextAction")}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div aria-hidden="true" />
-              </div>
-            ) : null}
-            {onRequestFinishOngoingAnalysis ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="flex min-w-0 flex-col rounded-md border border-border/50 bg-background/70 p-3">
-                  <div className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <h4 className="font-sans text-[11px] font-semibold tracking-wide text-muted-foreground">
-                        {t("checkpoints.finishOngoingHeading")}
-                      </h4>
-                      <p className="section-body text-[11px] text-muted-foreground/80">
-                        {t("checkpoints.finishOngoingHelper")}
-                      </p>
-                    </div>
-                    <div className="mt-auto flex flex-col gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        data-finish-ongoing-analysis=""
-                        className="h-8 w-full font-sans text-xs font-medium hover:border-[#1d868c]/40 hover:bg-[#1d868c]/[0.04] hover:text-foreground active:border-[#1d868c]/45 active:bg-[#1d868c]/[0.08] focus-visible:border-[#1d868c]/35 focus-visible:ring-[#1d868c]/15"
-                        onClick={onRequestFinishOngoingAnalysis}
-                      >
-                        {t("checkpoints.finishOngoingAction")}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div aria-hidden="true" />
-              </div>
-            ) : null}
-            </div>
-          </SectionExpander>
-        ) : null}
-        </div>
-          </SectionExpander>
+            </SectionExpander>
           )}
         </CardContent>
       </Card>
@@ -2355,15 +2188,15 @@ export function ResultsPanel({
             ? t("results.keyMetricsTitle")
             : expandedChart?.kind === "development"
               ? t("checkpoints.developmentTitle")
-            : expandedChart?.kind === "scurve"
-              ? t("charts.sCurveTitle")
-              : expandedChart?.kind === "tornado"
-                ? t("charts.tornadoTitle")
-                : expandedChart?.kind === "expectedAddition"
-                  ? t("charts.waterfallTitle")
-                  : expandedChart?.kind === "uncertaintyReserve"
-                    ? t("charts.reserveWaterfallTitle")
-                    : ""
+              : expandedChart?.kind === "scurve"
+                ? t("charts.sCurveTitle")
+                : expandedChart?.kind === "tornado"
+                  ? t("charts.tornadoTitle")
+                  : expandedChart?.kind === "expectedAddition"
+                    ? t("charts.waterfallTitle")
+                    : expandedChart?.kind === "uncertaintyReserve"
+                      ? t("charts.reserveWaterfallTitle")
+                      : ""
         }
         subtitle={
           expandedChart &&
@@ -2376,12 +2209,8 @@ export function ResultsPanel({
                 )
                 return (
                   <>
-                    {projectIndex >= 0 ? (
-                      <ProjectColorSwatch projectIndex={projectIndex} />
-                    ) : null}
-                    <span className="min-w-0 truncate">
-                      {expandedChart.projectName}
-                    </span>
+                    {projectIndex >= 0 ? <ProjectColorSwatch projectIndex={projectIndex} /> : null}
+                    <span className="min-w-0 truncate">{expandedChart.projectName}</span>
                   </>
                 )
               })()
@@ -2418,9 +2247,7 @@ export function ResultsPanel({
             rows={tornadoRowsByProjectId.get(expandedChart.projectId) ?? []}
             layout={sharedTornadoLayout}
             sharedSymmetricMaxAbs={sharedTornadoSymmetricMaxAbs}
-            displayScale={tornadoDisplayScaleByProjectId.get(
-              expandedChart.projectId,
-            )}
+            displayScale={tornadoDisplayScaleByProjectId.get(expandedChart.projectId)}
             expanded
           />
         ) : null}

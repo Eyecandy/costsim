@@ -75,8 +75,7 @@ function liveStateFor(
     projectResults?: ProjectResult[]
   },
 ) {
-  const projectResults =
-    opts.projectResults ?? resultsFor(projects[0]!.id)
+  const projectResults = opts.projectResults ?? resultsFor(projects[0]!.id)
   return emptyLiveSimulationState({
     analysisId: opts.analysisId,
     checkpointId: opts.checkpointId,
@@ -89,10 +88,7 @@ function liveStateFor(
   })
 }
 
-function snapshotFor(
-  projects: readonly Project[],
-  activeProjectId: string,
-) {
+function snapshotFor(projects: readonly Project[], activeProjectId: string) {
   return buildArchivedAnalysisSnapshot({
     projects,
     activeProjectId,
@@ -139,11 +135,7 @@ describe("ongoing state ownership + canonical validity", () => {
       }),
     ).toBeNull()
 
-    const archived = archiveCheckpoint(
-      ongoing,
-      cpId,
-      snapshotFor(projects, activeProjectId),
-    )
+    const archived = archiveCheckpoint(ongoing, cpId, snapshotFor(projects, activeProjectId))
     expect(getActiveCheckpoint(archived)?.status).toBe("archived")
   })
 
@@ -160,9 +152,7 @@ describe("ongoing state ownership + canonical validity", () => {
     const edited: Project[] = [
       {
         ...projects[0]!,
-        costRows: projects[0]!.costRows.map((r, i) =>
-          i === 0 ? { ...r, likely: "999" } : r,
-        ),
+        costRows: projects[0]!.costRows.map((r, i) => (i === 0 ? { ...r, likely: "999" } : r)),
       },
     ]
 
@@ -237,8 +227,8 @@ describe("ongoing state ownership + canonical validity", () => {
     const editedProjects: Project[] = [
       {
         ...next.newCheckpoint.workspace.projects[0]!,
-        costRows: next.newCheckpoint.workspace.projects[0]!.costRows.map(
-          (r, i) => (i === 0 ? { ...r, likely: "42" } : r),
+        costRows: next.newCheckpoint.workspace.projects[0]!.costRows.map((r, i) =>
+          i === 0 ? { ...r, likely: "42" } : r,
         ),
       },
     ]
@@ -259,16 +249,14 @@ describe("ongoing state ownership + canonical validity", () => {
 
     const reloaded = await repo.get(created.id)
     expect(reloaded?.ongoing?.activeCheckpointId).toBe(cp2Id)
+    expect(reloaded?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.status).toBe("archived")
     expect(
-      reloaded?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.status,
-    ).toBe("archived")
-    expect(
-      reloaded?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.workspace
-        .projects[0]?.costRows[0]?.likely,
+      reloaded?.ongoing?.checkpoints.find((c) => c.id === cp1.id)?.workspace.projects[0]
+        ?.costRows[0]?.likely,
     ).not.toBe("42")
     expect(
-      reloaded?.ongoing?.checkpoints.find((c) => c.id === cp2Id)?.workspace
-        .projects[0]?.costRows[0]?.likely,
+      reloaded?.ongoing?.checkpoints.find((c) => c.id === cp2Id)?.workspace.projects[0]?.costRows[0]
+        ?.likely,
     ).toBe("42")
 
     const profileEdit = {
@@ -319,9 +307,7 @@ describe("ongoing state ownership + canonical validity", () => {
       i === 0 ? { ...r, description: "docs only" } : r,
     )
 
-    expect(buildSimulationInputSignature(descriptive)).toBe(
-      buildSimulationInputSignature(projects),
-    )
+    expect(buildSimulationInputSignature(descriptive)).toBe(buildSimulationInputSignature(projects))
     expect(
       getLiveResultValidity({
         analysisId,
@@ -359,9 +345,7 @@ describe("ongoing state ownership + canonical validity", () => {
         {
           ...base,
           costRows: base.costRows.map((r, i) =>
-            i === 0
-              ? { ...r, optimistic: "80", likely: "200", pessimistic: "130" }
-              : r,
+            i === 0 ? { ...r, optimistic: "80", likely: "200", pessimistic: "130" } : r,
           ),
         },
       ],
@@ -469,9 +453,7 @@ describe("ongoing state ownership + canonical validity", () => {
     const edited: Project[] = [
       {
         ...projects[0]!,
-        costRows: projects[0]!.costRows.map((r, i) =>
-          i === 0 ? { ...r, likely: "77" } : r,
-        ),
+        costRows: projects[0]!.costRows.map((r, i) => (i === 0 ? { ...r, likely: "77" } : r)),
       },
     ]
     expect(
@@ -522,9 +504,7 @@ describe("ongoing state ownership + canonical validity", () => {
         {
           ...projects[0]!,
           name: "Editor only",
-          costRows: projects[0]!.costRows.map((r, i) =>
-            i === 0 ? { ...r, likely: "123" } : r,
-          ),
+          costRows: projects[0]!.costRows.map((r, i) => (i === 0 ? { ...r, likely: "123" } : r)),
         },
       ],
       activeProjectId,
@@ -537,10 +517,7 @@ describe("ongoing state ownership + canonical validity", () => {
     const loaded = await repo.get(created.id)
     expect(loaded?.ongoing?.activeCheckpointId).toBe(cp1Id)
     // Checkpoint workspace unchanged — repo did not sync editor into it.
-    expect(
-      loaded?.ongoing?.checkpoints[0]!.workspace.projects[0]!.costRows[0]!
-        .likely,
-    ).toBe("100")
+    expect(loaded?.ongoing?.checkpoints[0]!.workspace.projects[0]!.costRows[0]!.likely).toBe("100")
     // get() re-derives document.workspace from the active checkpoint (load
     // normalization), so unsynced editor workspace is not what get() returns.
     expect(loaded?.workspace.projects[0]!.costRows[0]!.likely).toBe("100")

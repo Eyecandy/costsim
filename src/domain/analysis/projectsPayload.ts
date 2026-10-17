@@ -30,9 +30,7 @@ function isProject(x: unknown): x is Project {
   ) {
     return false
   }
-  return (
-    o.costRows.every(isScenarioRow) && o.driverRows.every(isScenarioRow)
-  )
+  return o.costRows.every(isScenarioRow) && o.driverRows.every(isScenarioRow)
 }
 
 /** Validates and normalizes a stored/shared projects array. Returns null when the payload is not usable. */
@@ -42,7 +40,11 @@ export function parseProjectsPayload(data: unknown): Project[] | null {
   for (const item of data.slice(0, appFeatures.maxProjects)) {
     if (!isProject(item)) return null
     const p = item as Project & { incurredCosts?: unknown; assumptions?: unknown }
-    const { assumptions: _rawAssumptions, profile: _rawProfile, ...base } = p as Project & {
+    const {
+      assumptions: _rawAssumptions,
+      profile: _rawProfile,
+      ...base
+    } = p as Project & {
       assumptions?: unknown
       profile?: unknown
     }

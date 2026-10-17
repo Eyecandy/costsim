@@ -2,10 +2,8 @@ import { useState } from "react"
 
 export function useAnalysisDialogs() {
   const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false)
-  const [finishOngoingConfirmOpen, setFinishOngoingConfirmOpen] =
-    useState(false)
-  const [deleteCheckpointConfirmOpen, setDeleteCheckpointConfirmOpen] =
-    useState(false)
+  const [finishOngoingConfirmOpen, setFinishOngoingConfirmOpen] = useState(false)
+  const [deleteCheckpointConfirmOpen, setDeleteCheckpointConfirmOpen] = useState(false)
   const [nextCheckpointOpen, setNextCheckpointOpen] = useState(false)
   const [trashConfirmOpen, setTrashConfirmOpen] = useState(false)
   const [renameOpen, setRenameOpen] = useState(false)
@@ -13,15 +11,11 @@ export function useAnalysisDialogs() {
   const [startOngoingAlternatives, setStartOngoingAlternatives] = useState<
     { id: string; name: string }[]
   >([])
-  const [startOngoingError, setStartOngoingError] = useState<string | null>(
-    null,
-  )
+  const [startOngoingError, setStartOngoingError] = useState<string | null>(null)
   const [renameValue, setRenameValue] = useState("")
   const [renameError, setRenameError] = useState<string | null>(null)
   const [saveContinueOpen, setSaveContinueOpen] = useState(false)
-  const [saveContinueError, setSaveContinueError] = useState<string | null>(
-    null,
-  )
+  const [saveContinueError, setSaveContinueError] = useState<string | null>(null)
 
   return {
     archiveConfirmOpen,

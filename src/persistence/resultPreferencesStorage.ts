@@ -14,23 +14,17 @@ import {
 } from "@/domain/results/resultPreferences"
 
 /** Versioned storage key — local device default only (not project/share data). */
-export const RESULT_PREFERENCES_STORAGE_KEY =
-  "cost-simulator:v1:resultPreferences" as const
+export const RESULT_PREFERENCES_STORAGE_KEY = "cost-simulator:v1:resultPreferences" as const
 
 export function loadResultPreferences(): ResultPreferencesV1 {
-  const raw = loadFromStorage<unknown | null>(
-    RESULT_PREFERENCES_STORAGE_KEY,
-    null,
-  )
+  const raw = loadFromStorage<unknown | null>(RESULT_PREFERENCES_STORAGE_KEY, null)
   if (raw === null) {
     return cloneResultPreferences(DEFAULT_RESULT_PREFERENCES)
   }
   return normalizeResultPreferences(raw)
 }
 
-export function saveResultPreferences(
-  preferences: ResultPreferencesV1,
-): void {
+export function saveResultPreferences(preferences: ResultPreferencesV1): void {
   const normalized = normalizeResultPreferences(preferences)
   saveToStorage(RESULT_PREFERENCES_STORAGE_KEY, normalized)
 }

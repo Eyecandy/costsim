@@ -6,7 +6,6 @@ import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function appSource() {
   return readAppSource()
 }
@@ -31,9 +30,7 @@ describe("simulation run spotlight loading", () => {
 
   it("G: keeps a stable h-8 full-width slot for the swap", () => {
     const app = appSource()
-    const slotStart = app.indexOf(
-      "flex h-8 w-full shrink-0 items-center justify-center",
-    )
+    const slotStart = app.indexOf("flex h-8 w-full shrink-0 items-center justify-center")
     expect(slotStart).toBeGreaterThan(-1)
     // Include archived disabled CTA branch; idle/running/archive all stay in-slot.
     const slot = app.slice(slotStart, slotStart + 1600)
@@ -47,14 +44,8 @@ describe("simulation run spotlight loading", () => {
 
   it("reuses the same spotlight component/CSS as Contribution Analysis", () => {
     const app = appSource()
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
-    const component = readFileSync(
-      join(repoRoot, "src/shared/SpotlightLoadingText.tsx"),
-      "utf8",
-    )
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const component = readFileSync(join(repoRoot, "src/shared/SpotlightLoadingText.tsx"), "utf8")
     const css = readFileSync(join(repoRoot, "src/index.css"), "utf8")
     expect(app).toContain('from "@/shared/SpotlightLoadingText"')
     expect(panel).toContain('from "@/shared/SpotlightLoadingText"')
@@ -65,38 +56,23 @@ describe("simulation run spotlight loading", () => {
 
   it("matches run-button typography for Simulerer… / Simulating…", () => {
     const app = appSource()
-    const slotStart = app.indexOf(
-      "flex h-8 w-full shrink-0 items-center justify-center",
-    )
+    const slotStart = app.indexOf("flex h-8 w-full shrink-0 items-center justify-center")
     const slot = app.slice(slotStart, slotStart + 1600)
     expect(slot).toContain("font-sans text-xs font-semibold")
     expect(slot).toContain("brandPrimaryTextClass")
-    expect(slot).toContain(
-      "font-sans text-xs font-semibold uppercase tracking-wide",
-    )
+    expect(slot).toContain("font-sans text-xs font-semibold uppercase tracking-wide")
   })
 
   it("uses theme primary token for simulation loading only", () => {
     const app = appSource()
     const css = readFileSync(join(repoRoot, "src/index.css"), "utf8")
-    const component = readFileSync(
-      join(repoRoot, "src/shared/SpotlightLoadingText.tsx"),
-      "utf8",
-    )
+    const component = readFileSync(join(repoRoot, "src/shared/SpotlightLoadingText.tsx"), "utf8")
     const brand = readFileSync(join(repoRoot, "src/shared/brand.ts"), "utf8")
-    const logo = readFileSync(
-      join(repoRoot, "src/shared/BrandWordmark.tsx"),
-      "utf8",
-    )
-    const panel = readFileSync(
-      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
-      "utf8",
-    )
+    const logo = readFileSync(join(repoRoot, "src/shared/BrandWordmark.tsx"), "utf8")
+    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
     expect(app).toContain('tone="primary"')
     expect(app).toContain("brandPrimaryTextClass")
-    expect(app).not.toMatch(
-      /data-simulation-loading[\s\S]{0,200}text-\[#1d868c\]/,
-    )
+    expect(app).not.toMatch(/data-simulation-loading[\s\S]{0,200}text-\[#1d868c\]/)
     expect(component).toContain('tone = "muted"')
     expect(panel).not.toContain('tone="primary"')
     expect(brand).toContain('brandPrimaryTextClass = "text-[#1d868c]"')
@@ -104,9 +80,7 @@ describe("simulation run spotlight loading", () => {
     expect(logo).not.toContain("text-[#1d868c]")
     expect(css).toContain('.spotlight-loading-text[data-tone="primary"]')
     expect(css).toContain("--spotlight-brand: currentColor")
-    expect(css).toContain(
-      "color-mix(in oklab, var(--spotlight-brand) 45%, white)",
-    )
+    expect(css).toContain("color-mix(in oklab, var(--spotlight-brand) 45%, white)")
     expect(css).not.toContain(
       '.spotlight-loading-text[data-tone="primary"] {\n  /* Theme primary token',
     )

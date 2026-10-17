@@ -3,23 +3,17 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
-import {
-  buildFocusResultSteps,
-  focusResultSectionTitleKey,
-} from "@/domain/guided/focusResultSteps"
+import { buildFocusResultSteps, focusResultSectionTitleKey } from "@/domain/guided/focusResultSteps"
 import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 
-
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
 }
 
-function cost(
-  partial: Partial<CostElementRow> & { id: string },
-): CostElementRow {
+function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
     name: "Cost",
     optimistic: "90",
@@ -29,9 +23,7 @@ function cost(
   }
 }
 
-function driver(
-  partial: Partial<DriverRow> & { id: string },
-): DriverRow {
+function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
   return {
     name: "Driver",
     optimistic: "-5",
@@ -144,9 +136,7 @@ describe("Focus Results stepwise workflow", () => {
       app.indexOf("worker.onerror"),
       app.indexOf("return () => {", app.indexOf("worker.onerror")),
     )
-    expect(errorBlock).toContain(
-      "pendingFocusResultsAfterGuidedRunRef.current = false",
-    )
+    expect(errorBlock).toContain("pendingFocusResultsAfterGuidedRunRef.current = false")
     expect(errorBlock).not.toContain('setFocusView("results")')
   })
 
@@ -156,13 +146,7 @@ describe("Focus Results stepwise workflow", () => {
       includeDevelopment: false,
       includeContribution: true,
     })
-    expect(steps).toEqual([
-      "keyFigures",
-      "scurve",
-      "tornado",
-      "contribution",
-      "nextSteps",
-    ])
+    expect(steps).toEqual(["keyFigures", "scurve", "tornado", "contribution", "nextSteps"])
     expect(panel).toContain("focusSection")
     expect(panel).toContain("data-focus-results-step")
     expect(panel).toContain("data-focus-result-section")
@@ -182,8 +166,8 @@ describe("Focus Results stepwise workflow", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
-    expect(frame).toContain(
-      'FOCUS_SESSION_CARD_CLASS =\n  "h-[min(92vh,48rem)] w-[min(96vw,60rem)]"',
+    expect(frame).toMatch(
+      /FOCUS_SESSION_CARD_CLASS =\s*"h-\[min\(92vh,48rem\)\] w-\[min\(96vw,60rem\)\]"/,
     )
     expect(shell).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(guided).toContain("FOCUS_SESSION_CARD_CLASS")
@@ -287,18 +271,14 @@ describe("Focus Results stepwise workflow", () => {
     expect(app).toContain("focusShellRef")
     expect(app).toContain("keepMounted={Boolean(guidedInputKind")
     // Exit fullscreen keeps Focus open (Escape while FS returns early).
-    expect(shell).toMatch(
-      /isElementFullscreen\(focusRootRef\.current\)[\s\S]*?return/,
-    )
+    expect(shell).toMatch(/isElementFullscreen\(focusRootRef\.current\)[\s\S]*?return/)
   })
 
   it("Fullscreen Input → Results keeps shared host mounted", () => {
     const app = readAppSource()
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
-    expect(app).toContain("suspend={focusView === \"results\"}")
-    expect(guided).toContain(
-      "Does not exit browser fullscreen — the shared Focus host owns it",
-    )
+    expect(app).toContain('suspend={focusView === "results"}')
+    expect(guided).toContain("Does not exit browser fullscreen — the shared Focus host owns it")
     expect(guided).toContain("data-guided-soft-suspend")
     expect(guided).not.toContain("if (suspend) return null\n\n  const dialogSurface")
   })
@@ -309,9 +289,7 @@ describe("Focus Results stepwise workflow", () => {
       includeContribution: true,
     })
     expect(steps.at(-1)).toBe("nextSteps")
-    expect(focusResultSectionTitleKey("nextSteps")).toBe(
-      "inputs.focusNextStepsTitle",
-    )
+    expect(focusResultSectionTitleKey("nextSteps")).toBe("inputs.focusNextStepsTitle")
     expect(messages.no.inputs.focusNextStepsTitle).toBe("Neste steg")
     expect(messages.en.inputs.focusNextStepsTitle).toBe("Next steps")
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
@@ -353,12 +331,8 @@ describe("Focus Results stepwise workflow", () => {
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(panel).toContain('data-focus-next-steps-continue=""')
     expect(panel).toContain('data-focus-next-steps-use-results=""')
-    expect(messages.no.inputs.focusContinueWorkingHeading).toBe(
-      "Fortsett arbeidet",
-    )
-    expect(messages.en.inputs.focusContinueWorkingHeading).toBe(
-      "Continue working",
-    )
+    expect(messages.no.inputs.focusContinueWorkingHeading).toBe("Fortsett arbeidet")
+    expect(messages.en.inputs.focusContinueWorkingHeading).toBe("Continue working")
     expect(messages.no.inputs.focusUseResultsHeading).toBe("Bruk resultatene")
     expect(messages.en.inputs.focusUseResultsHeading).toBe("Use the results")
     expect(messages.no.inputs.focusNextStepsBody).toBe(
@@ -403,9 +377,7 @@ describe("Focus Results stepwise workflow", () => {
   it("A–F: Focus session arrow keys reuse Previous/Next with safeguards", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const app = readAppSource()
-    const ignore = readSrc(
-      "src/features/focus-mode/shouldIgnoreFocusArrowNavigation.ts",
-    )
+    const ignore = readSrc("src/features/focus-mode/shouldIgnoreFocusArrowNavigation.ts")
     expect(shell).toContain("shouldIgnoreFocusArrowNavigation")
     expect(shell).toContain("ArrowLeft")
     expect(shell).toContain("ArrowRight")
@@ -428,9 +400,7 @@ describe("Focus Results stepwise workflow", () => {
     expect(ignore).toContain("data-confirm-dialog")
     // Fullscreen uses the same shell handlers — no separate FS keyboard path.
     expect(shell).not.toContain("browserFullscreen && event.key")
-    expect(shell).not.toMatch(
-      /data-focus-browser-fullscreen[\s\S]{0,200}ArrowLeft/,
-    )
+    expect(shell).not.toMatch(/data-focus-browser-fullscreen[\s\S]{0,200}ArrowLeft/)
   })
 
   it("O: Focus refinements do not own simulation / results state", () => {
@@ -475,13 +445,9 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("section title keys map correctly", () => {
-    expect(focusResultSectionTitleKey("keyFigures")).toBe(
-      "results.keyMetricsTitle",
-    )
+    expect(focusResultSectionTitleKey("keyFigures")).toBe("results.keyMetricsTitle")
     expect(focusResultSectionTitleKey("scurve")).toBe("charts.sCurveTitle")
     expect(focusResultSectionTitleKey("tornado")).toBe("charts.tornadoTitle")
-    expect(focusResultSectionTitleKey("contribution")).toBe(
-      "charts.attributionTitle",
-    )
+    expect(focusResultSectionTitleKey("contribution")).toBe("charts.attributionTitle")
   })
 })

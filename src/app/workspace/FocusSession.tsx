@@ -71,7 +71,12 @@ export function FocusSession({
   addKeyFigurePercentile: (p: number) => void
   addSCurvePercentile: (p: number) => void
   analysisReadOnly: boolean
-  checkpointComparisonResultSource: { resultsComparable: boolean; compact?: OngoingCheckpointResultSnapshotV1 | undefined; projectResults: ProjectResult[]; simulatedBaseCostByProjectId: Record<string, number | null>; } | null
+  checkpointComparisonResultSource: {
+    resultsComparable: boolean
+    compact?: OngoingCheckpointResultSnapshotV1 | undefined
+    projectResults: ProjectResult[]
+    simulatedBaseCostByProjectId: Record<string, number | null>
+  } | null
   guidedFocusSession: ReturnType<typeof useGuidedFocusSession>
   guidedFocusState: ReturnType<typeof useGuidedFocusState>
   handleRevertInputsToLastSimulation: () => void
@@ -125,9 +130,7 @@ export function FocusSession({
   return (
     <>
       {(Boolean(guidedInputKind && !analysisReadOnly) ||
-        (focusView === "results" &&
-          hasViewableResults &&
-          focusResultSection !== null)) && (
+        (focusView === "results" && hasViewableResults && focusResultSection !== null)) && (
         <FocusModeShell
           ref={focusShellRef}
           open={focusView !== null}
@@ -156,25 +159,14 @@ export function FocusSession({
                     {activeProject.name}
                   </span>
                 </span>
-                <span
-                  className="shrink-0 text-muted-foreground/70"
-                  data-focus-results-context=""
-                >
+                <span className="shrink-0 text-muted-foreground/70" data-focus-results-context="">
                   {t("inputs.focusResultsContext")}
                 </span>
               </p>
             ) : focusView === "input" && guidedFocusChromeMeta ? (
-              <p
-                className="m-0 flex min-w-0 items-center gap-1.5"
-                data-guided-project-context=""
-              >
-                <ProjectColorSwatch
-                  projectIndex={guidedFocusChromeMeta.projectIndex}
-                />
-                <span
-                  className="min-w-0 truncate"
-                  title={guidedFocusChromeMeta.projectName}
-                >
+              <p className="m-0 flex min-w-0 items-center gap-1.5" data-guided-project-context="">
+                <ProjectColorSwatch projectIndex={guidedFocusChromeMeta.projectIndex} />
+                <span className="min-w-0 truncate" title={guidedFocusChromeMeta.projectName}>
                   {guidedFocusChromeMeta.projectName}
                 </span>
               </p>
@@ -206,26 +198,16 @@ export function FocusSession({
                 onSelectPhase={navigateToFocusUserPhase}
                 t={t}
               />
-            ) : focusView === "input" &&
-              guidedFocusChromeMeta?.progressLabel ? (
-              <span data-guided-progress="">
-                {guidedFocusChromeMeta.progressLabel}
-              </span>
+            ) : focusView === "input" && guidedFocusChromeMeta?.progressLabel ? (
+              <span data-guided-progress="">{guidedFocusChromeMeta.progressLabel}</span>
             ) : null
           }
           onExitFocus={exitFocusMode}
-          onNavigatePrevious={
-            focusView !== null ? navigateFocusPrevious : undefined
-          }
-          onNavigateNext={
-            focusView !== null ? navigateFocusNext : undefined
-          }
+          onNavigatePrevious={focusView !== null ? navigateFocusPrevious : undefined}
+          onNavigateNext={focusView !== null ? navigateFocusNext : undefined}
           canNavigateNext={
             focusView === "results"
-              ? canFocusNavigateNextResults(
-                  focusResultStepIndex,
-                  focusResultSteps.length,
-                )
+              ? canFocusNavigateNextResults(focusResultStepIndex, focusResultSteps.length)
               : focusView === "input"
                 ? Boolean(guidedFocusChromeMeta?.canGoNext)
                 : false
@@ -238,17 +220,13 @@ export function FocusSession({
                 : false
           }
           surfaceAttr={
-            focusView === "results"
-              ? "data-focus-results-surface"
-              : "data-focus-input-surface"
+            focusView === "results" ? "data-focus-results-surface" : "data-focus-input-surface"
           }
           headerActions={
             focusView === "results" &&
             shouldShowResultSettingsEditor({
               analysisArchivedView: analysisReadOnly,
-              useArchivedResults: Boolean(
-                analysisReadOnly && librarySession.archivedSnapshot,
-              ),
+              useArchivedResults: Boolean(analysisReadOnly && librarySession.archivedSnapshot),
             }) ? (
               <ResultPreferencesPanel
                 preferences={resultPreferences}
@@ -264,19 +242,11 @@ export function FocusSession({
           }
           status={
             focusView === "results" && showStaleInputNotice ? (
-              <div
-                className="flex min-w-0 flex-col gap-1"
-                data-focus-stale-notice=""
-              >
+              <div className="flex min-w-0 flex-col gap-1" data-focus-stale-notice="">
                 <p className="font-sans text-xs font-medium leading-snug text-foreground/85">
                   {t("projects.staleInputsTitle")}
                 </p>
-                <p
-                  className={cn(
-                    SIMULATION_NOTICE_TEXT_CLASS,
-                    "min-w-0 break-words",
-                  )}
-                >
+                <p className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}>
                   {showStaleInputChanges
                     ? noticeWithColorWord(
                         t("projects.staleInputsNoticeWithChanges"),
@@ -325,9 +295,7 @@ export function FocusSession({
                   onClick={navigateFocusPrevious}
                   data-focus-results-previous=""
                   data-focus-session-previous=""
-                  data-focus-back-to-input={
-                    focusResultStepIndex <= 0 ? "" : undefined
-                  }
+                  data-focus-back-to-input={focusResultStepIndex <= 0 ? "" : undefined}
                 >
                   {focusResultStepIndex <= 0
                     ? t("inputs.focusBackToInput")
@@ -380,8 +348,7 @@ export function FocusSession({
                   {t("inputs.guidedPrevious")}
                 </button>
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                  {guidedFocusChromeMeta.secondaryFooter?.kind ===
-                  "adjustCorrelation" ? (
+                  {guidedFocusChromeMeta.secondaryFooter?.kind === "adjustCorrelation" ? (
                     <button
                       type="button"
                       className={buttonVariants({
@@ -394,8 +361,7 @@ export function FocusSession({
                       {guidedFocusChromeMeta.secondaryFooter.label}
                     </button>
                   ) : null}
-                  {guidedFocusChromeMeta.secondaryFooter?.kind ===
-                  "adjustImpact" ? (
+                  {guidedFocusChromeMeta.secondaryFooter?.kind === "adjustImpact" ? (
                     <button
                       type="button"
                       className={buttonVariants({
@@ -408,8 +374,7 @@ export function FocusSession({
                       {guidedFocusChromeMeta.secondaryFooter.label}
                     </button>
                   ) : null}
-                  {guidedFocusChromeMeta.secondaryFooter?.kind ===
-                  "addDrivers" ? (
+                  {guidedFocusChromeMeta.secondaryFooter?.kind === "addDrivers" ? (
                     <button
                       type="button"
                       className={buttonVariants({
@@ -440,9 +405,7 @@ export function FocusSession({
             ) : null
           }
         >
-          {focusView === "results" &&
-          hasViewableResults &&
-          focusResultSection ? (
+          {focusView === "results" && hasViewableResults && focusResultSection ? (
             <ResultsPanel
               projects={projects}
               activeProjectId={activeProjectId}
@@ -456,12 +419,8 @@ export function FocusSession({
               analysisArchivedView={analysisReadOnly}
               archivedSnapshot={
                 librarySession.archivedSnapshot &&
-                !isOngoingCheckpointResultSnapshot(
-                  librarySession.archivedSnapshot,
-                ) &&
-                !isSingleArchivedResultSnapshot(
-                  librarySession.archivedSnapshot,
-                )
+                !isOngoingCheckpointResultSnapshot(librarySession.archivedSnapshot) &&
+                !isSingleArchivedResultSnapshot(librarySession.archivedSnapshot)
                   ? librarySession.archivedSnapshot
                   : null
               }
@@ -469,17 +428,14 @@ export function FocusSession({
                 ongoingCompactResult ??
                 (isOngoingAnalysis &&
                 librarySession.ongoingDraftResult &&
-                librarySession.docMeta?.id ===
-                  librarySession.ongoingDraftResult.analysisId &&
+                librarySession.docMeta?.id === librarySession.ongoingDraftResult.analysisId &&
                 librarySession.activeCheckpoint?.id ===
                   librarySession.ongoingDraftResult.checkpointId
                   ? librarySession.ongoingDraftResult
                   : null)
               }
               singleArchivedCompact={singleArchivedCompact}
-              singleDraftResult={
-                singleDraftCompact ?? librarySession.singleDraftResult
-              }
+              singleDraftResult={singleDraftCompact ?? librarySession.singleDraftResult}
               draftResultSeed={librarySession.draftResultSeed}
               onContributionReady={
                 isOngoingAnalysis
@@ -500,30 +456,18 @@ export function FocusSession({
                   : undefined
               }
               onRequestFinishOngoingAnalysis={
-                librarySession.canCompleteOngoingAnalysis
-                  ? requestFinishOngoingAnalysis
-                  : undefined
+                librarySession.canCompleteOngoingAnalysis ? requestFinishOngoingAnalysis : undefined
               }
               analysisMode={librarySession.analysisMode}
               ongoingCheckpoints={
-                isOngoingAnalysis
-                  ? librarySession.ongoing?.checkpoints
-                  : undefined
+                isOngoingAnalysis ? librarySession.ongoing?.checkpoints : undefined
               }
               viewedCheckpointId={
-                isOngoingAnalysis
-                  ? librarySession.ongoing?.activeCheckpointId
-                  : undefined
+                isOngoingAnalysis ? librarySession.ongoing?.activeCheckpointId : undefined
               }
               analysisName={librarySession.docMeta?.name}
-              ongoingLifecycle={
-                isOngoingAnalysis
-                  ? librarySession.ongoing?.lifecycle
-                  : undefined
-              }
-              checkpointComparisonResultSource={
-                checkpointComparisonResultSource
-              }
+              ongoingLifecycle={isOngoingAnalysis ? librarySession.ongoing?.lifecycle : undefined}
+              checkpointComparisonResultSource={checkpointComparisonResultSource}
               focusResultsActive
               focusSection={focusResultSection}
               onFocusReviewInput={handleFocusReviewInput}

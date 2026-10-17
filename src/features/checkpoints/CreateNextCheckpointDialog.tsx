@@ -64,14 +64,8 @@ export function CreateNextCheckpointDialog({
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
-          id={titleId}
-          className="m-0 mb-3 font-sans text-[15px] font-medium text-foreground"
-        >
-          {t("checkpoints.nextDialogTitle").replace(
-            "{n}",
-            String(nextSequence),
-          )}
+        <h2 id={titleId} className="m-0 mb-3 font-sans text-[15px] font-medium text-foreground">
+          {t("checkpoints.nextDialogTitle").replace("{n}", String(nextSequence))}
         </h2>
         <label
           htmlFor="next-checkpoint-name"
@@ -84,10 +78,7 @@ export function CreateNextCheckpointDialog({
           id="next-checkpoint-name"
           value={name}
           maxLength={80}
-          placeholder={t("checkpoints.nextNamePlaceholder").replace(
-            "{n}",
-            String(nextSequence),
-          )}
+          placeholder={t("checkpoints.nextNamePlaceholder").replace("{n}", String(nextSequence))}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -100,10 +91,7 @@ export function CreateNextCheckpointDialog({
             }
           }}
         />
-        <p
-          id={hintId}
-          className="mt-2 font-sans text-[11px] leading-snug text-muted-foreground"
-        >
+        <p id={hintId} className="mt-2 font-sans text-[11px] leading-snug text-muted-foreground">
           {t("checkpoints.nextCreatedFrom")
             .replace("{n}", String(sourceSequence))
             .replace("{name}", sourceName)}
@@ -112,12 +100,7 @@ export function CreateNextCheckpointDialog({
           <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
             {t("common.cancel")}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onCreate(name)}
-          >
+          <Button type="button" variant="outline" size="sm" onClick={() => onCreate(name)}>
             {t("checkpoints.nextCreate")}
           </Button>
         </div>

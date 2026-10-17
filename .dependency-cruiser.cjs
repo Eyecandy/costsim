@@ -21,7 +21,8 @@ module.exports = {
     {
       name: "domain-is-framework-free",
       severity: "error",
-      comment: "domain/ must not import React, UI, storage adapters, workers, PDF or the app shell.",
+      comment:
+        "domain/ must not import React, UI, storage adapters, workers, PDF or the app shell.",
       from: { path: "^src/domain/" },
       to: {
         path: [
@@ -59,7 +60,8 @@ module.exports = {
     {
       name: "features-are-independent",
       severity: "error",
-      comment: "Features do not import each other. The one exception is guided-input (see next rule).",
+      comment:
+        "Features do not import each other. The one exception is guided-input (see next rule).",
       from: { path: "^src/features/(?!guided-input/)([^/]+)/" },
       to: { path: "^src/features/", pathNot: "^src/features/$1/" },
     },
@@ -79,4 +81,4 @@ module.exports = {
     exclude: { path: "\\.test\\.tsx?$" },
     reporterOptions: { text: { highlightFocused: true } },
   },
-};
+}

@@ -3,10 +3,7 @@ import { useMemo } from "react"
 import { useI18n as useI18nContext } from "@/i18n/i18nContext"
 import { messages } from "@/i18n/messages"
 
-function getNestedValue(
-  obj: Record<string, unknown>,
-  path: string,
-): string | null {
+function getNestedValue(obj: Record<string, unknown>, path: string): string | null {
   const parts = path.split(".")
   let current: unknown = obj
 
@@ -22,8 +19,9 @@ export function useI18n() {
   const { language, setLanguage } = useI18nContext()
 
   const t = useMemo(
-    () => (key: string): string =>
-      getNestedValue(messages[language] as Record<string, unknown>, key) ?? key,
+    () =>
+      (key: string): string =>
+        getNestedValue(messages[language] as Record<string, unknown>, key) ?? key,
     [language],
   )
 
