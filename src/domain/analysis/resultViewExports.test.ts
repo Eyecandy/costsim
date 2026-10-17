@@ -169,7 +169,7 @@ describe("resolveResultView + export consumers", () => {
   })
 
   it("PDF/AI generation paths snapshot active prefs and do not read localStorage", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
     const pdfDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
     const aiBrief = readSrc("src/domain/results/aiBrief.ts")
     const kfRows = readSrc("src/domain/results/keyFiguresMetricRows.ts")
@@ -177,9 +177,11 @@ describe("resolveResultView + export consumers", () => {
     expect(panel).toContain("resolveResultView(resultPreferences)")
     expect(panel).toContain("resultViewSnapshot")
     expect(panel).toContain("buildKeyFigureMetricTableRows")
+    // The snapshot is taken in ResultsPanel and handed to pdfExport as sCurvePercentiles.
     expect(panel).toContain(
-      "sCurveMarkerPercentiles={resultViewSnapshot.sCurve.percentiles}",
+      "sCurvePercentiles: resultViewSnapshot.sCurve.percentiles",
     )
+    expect(panel).toContain("sCurveMarkerPercentiles={sCurvePercentiles}")
     expect(panel).toContain("resultView: resultViewSnapshot")
     expect(panel).not.toMatch(
       /handleDownloadPdf[\s\S]{0,2500}loadResultPreferences/,

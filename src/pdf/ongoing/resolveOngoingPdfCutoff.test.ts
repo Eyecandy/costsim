@@ -280,7 +280,7 @@ describe("Ongoing PDF cutoff A–J", () => {
   })
 
   it("I: Single PDF path unchanged (smoke)", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("planOngoingPdfExport")
     expect(panel).toContain("ConfirmDialog")

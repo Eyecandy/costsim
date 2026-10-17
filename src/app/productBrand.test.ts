@@ -106,7 +106,7 @@ describe("product brand U·SKOP", () => {
   it("PDF branding uses PRODUCT_NAME / message brand strings", () => {
     expect(messages.no.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(messages.en.results.pdfBrandName).toBe(PRODUCT_NAME)
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx") + readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('brandName: t("results.pdfBrandName")')
     expect(panel).toContain('brandName={t("results.pdfBrandName")}')
     expect(panel).not.toMatch(/\bWIT\b/)

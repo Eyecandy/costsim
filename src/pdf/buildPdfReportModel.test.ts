@@ -31,7 +31,11 @@ function pdfDocSource() {
 }
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  // PDF rendering lives in pdfExport.tsx; the handlers that call it stay in ResultsPanel.tsx.
+  return (
+    readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8") +
+    readFileSync(join(repoRoot, "src/features/results/pdfExport.tsx"), "utf8")
+  )
 }
 
 function richProject(): Project {

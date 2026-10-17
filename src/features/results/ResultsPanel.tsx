@@ -79,19 +79,8 @@ import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisRe
 import type { SingleArchivedResultSnapshotV1 } from "@/domain/analysis/singleArchivedResultSnapshot"
 import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
 import { Check, Play } from "lucide-react"
-import { pdf } from "@react-pdf/renderer"
-import { ProjectReportDocument } from "@/pdf/ProjectReportDocument"
-import {
-  buildPdfAssumptionTexts,
-  buildPdfCorrelationSection,
-  buildPdfCostItemBlocks,
-  buildPdfDriverBlocks,
-  buildPdfImpactOverrides,
-  mapShapleyToPdfContribution,
-} from "@/pdf/buildPdfReportModel"
-import { ensurePdfFonts } from "@/pdf/pdfFonts"
+import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import { OngoingReportDocument } from "@/pdf/ongoing/OngoingReportDocument"
 import {
   buildAiBriefOngoingDevelopment,
   buildAiBriefV3,
@@ -995,74 +984,10 @@ export function ResultsPanel({
       return
     }
 
-    await ensurePdfFonts()
-    const generatedAtDisplay = new Date(
-      built.model.metadata.generatedAtIso,
-    ).toLocaleDateString(language === "no" ? "nb-NO" : "en-GB")
-    const blob = await pdf(
-      <OngoingReportDocument
-        model={built.model}
-        generatedAtDisplay={generatedAtDisplay}
-        labels={{
-          generatedAtLabel: t("results.pdfGeneratedAtLabel"),
-          contentsTitle: t("results.pdfContentsTitle"),
-          currentStatusTitle: t("results.pdfOngoingCurrentStatusTitle"),
-          comparisonTitle: t("results.pdfOngoingComparisonTitle"),
-          developmentTitle: t("results.pdfOngoingDevelopmentTitle"),
-          latestSummaryTitle: t("results.pdfOngoingLatestSummaryTitle"),
-          historyTitle: t("results.pdfOngoingHistoryTitle"),
-          assumptionsTitle: t("results.pdfOngoingAssumptionsTitle"),
-          assumptionsContextFallback: t(
-            "results.pdfOngoingAssumptionsContext",
-          ),
-          methodTitle: t("results.pdfOngoingMethodTitle"),
-          colSequence: t("results.pdfOngoingColSequence"),
-          colName: t("results.pdfOngoingColName"),
-          colArchivedAt: t("results.pdfOngoingColArchivedAt"),
-          colPrevious: t("results.pdfOngoingColPrevious"),
-          colLatest: t("results.pdfOngoingColLatest"),
-          colChange: t("results.pdfOngoingColChange"),
-          colBaseCost: t("keyMetrics.baseCost"),
-          colP50: t("keyMetrics.p50"),
-          colP85: t("keyMetrics.p85"),
-          colExpectedValue: t("keyMetrics.expectedValue"),
-          metricLabel: t("results.pdfMetricsColMetric"),
-          valueLabel: t("results.pdfMetricsColValue"),
-          lifecycleActive: t("results.pdfOngoingLifecycleActive"),
-          lifecycleCompleted: t("results.pdfOngoingLifecycleCompleted"),
-          footerText: t("results.pdfFooter"),
-          emptyDevelopment: t("results.pdfOngoingEmptyDevelopment"),
-          checkpointContextLabel: t(
-            "results.pdfOngoingCheckpointContextLabel",
-          ),
-          archivedCountLabel: t("results.pdfOngoingArchivedCountLabel"),
-          periodLabel: t("results.pdfOngoingPeriodLabel"),
-          sCurveTitle: t("charts.sCurveTitle"),
-          sCurveFootnote: t("results.pdfSCurveFootnote"),
-          tornadoTitle: t("charts.tornadoTitle"),
-          tornadoExplanation: t("results.pdfTornadoExplanation"),
-          contributionTitle: t("results.pdfContributionTitle"),
-          contributionExpectedLabel: t("results.pdfContributionExpected"),
-          contributionReserveLabel: t("results.pdfContributionReserve"),
-          contributionBaseCostLabel: t("keyMetrics.baseCost"),
-          contributionP50Label: t("keyMetrics.p50"),
-          contributionP85Label: t("keyMetrics.p85"),
-          contributionOtherLabel: t("results.waterfallOther"),
-        }}
-      />,
-    ).toBlob()
-
-    const link = document.createElement("a")
-    const objectUrl = URL.createObjectURL(blob)
-    link.href = objectUrl
-    link.download =
-      language === "no"
-        ? "lopende-analyse-rapport.pdf"
-        : "ongoing-analysis-report.pdf"
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(objectUrl)
+    const { downloadOngoingReportPdf } = await import(
+      "@/features/results/pdfExport"
+    )
+    await downloadOngoingReportPdf({ model: built.model, language, t })
   }
 
   const handleDownloadPdf = async () => {
@@ -1221,110 +1146,39 @@ export function ResultsPanel({
       t("results.pdfMethodParagraph3"),
     ]
 
-    const metricColumns = comparisonProjects.map((project) => ({
-      label: project.name,
-    }))
-
-    await ensurePdfFonts()
-
-    const blob = await pdf(
-      <ProjectReportDocument
-        brandName={t("results.pdfBrandName")}
-        title={t("results.pdfReportTitle")}
-        projectNames={comparisonProjects.map((p) => p.name)}
-        generatedAtLabel={`${t("results.pdfGeneratedAtLabel")}: ${new Date().toLocaleDateString(language === "no" ? "nb-NO" : "en-GB")}`}
-        resultsSectionLabel={t("results.pdfResultsSectionLabel")}
-        contentsTitle={t("results.pdfContentsTitle")}
-        metricsTitle={t("results.keyMetricsTitle")}
-        metricColumnLabel={t("results.pdfMetricsColMetric")}
-        columns={metricColumns}
-        rows={rows}
-        sCurveTitle={t("charts.sCurveTitle")}
-        sCurveFootnote={t("results.pdfSCurveFootnote").replace(
-          "{percentiles}",
-          resultViewSnapshot.sCurve.percentiles
-            .map((p) => `P${p}`)
-            .join(language === "no" ? ", " : ", "),
-        )}
-        sCurveSeries={comparisonProjects.map((project, idx) => ({
-          id: project.id,
-          label: project.name,
-          ...(compactResultByProjectId.has(project.id)
-            ? {
-                displayPoints:
-                  compactResultByProjectId.get(project.id)!.sCurve.points,
-              }
-            : { values: resultsByProjectId.get(project.id) ?? [] }),
-          color: getProjectColorHex(idx),
-        }))}
-        sCurveMarkerPercentiles={resultViewSnapshot.sCurve.percentiles}
-        uncertaintyPictureTitle={t("results.pdfUncertaintyPictureTitle")}
-        tornadoTitle={t("charts.tornadoTitle")}
-        tornadoExplanation={t("results.pdfTornadoExplanation")}
-        tornadoProjects={comparisonProjects.map((project) => ({
-          projectName: project.name,
-          rows: (tornadoRowsByProjectId.get(project.id) ?? []).map((row) => ({
-            name: row.name,
-            lowImpact: row.lowImpact,
-            highImpact: row.highImpact,
-          })),
-        }))}
-        contributionTitle={t("results.pdfContributionTitle")}
-        contributionExpectedLabel={t("results.pdfContributionExpected")}
-        contributionReserveLabel={t("results.pdfContributionReserve")}
-        contributionBaseCostLabel={t("keyMetrics.baseCost")}
-        contributionP50Label={t("keyMetrics.p50")}
-        contributionP85Label={t("keyMetrics.p85")}
-        contributionOtherLabel={t("results.waterfallOther")}
-        contributionBlocks={contributionBlocks}
-        analysisBasisTitle={t("results.pdfAnalysisBasisTitle")}
-        assumptionsTitle={t("results.pdfAssumptionsTitle")}
-        assumptionsEmptyText={t("results.pdfAssumptionsEmpty")}
-        estimateUncertaintyTitle={t("results.pdfEstimateUncertaintyTitle")}
-        driversTitle={t("results.pdfDriversTitle")}
-        definitionLabel={t("results.pdfDefinitionLabel")}
-        mostLikelyLabel={t("results.pdfMostLikelyLabel")}
-        modelRelationshipsTitle={t("results.pdfModelRelationshipsTitle")}
-        impactTitle={t("results.pdfImpactTitle")}
-        impactDefaultNote={t("results.pdfImpactDefaultNote")}
-        impactNoOverrides={t("results.pdfImpactNoOverrides")}
-        impactColDriver={t("results.pdfImpactColDriver")}
-        impactColCost={t("results.pdfImpactColCost")}
-        impactColPct={t("results.pdfImpactColPct")}
-        correlationTitle={t("results.pdfCorrelationTitle")}
-        correlationNone={t("results.pdfCorrelationNone")}
-        correlationUnlistedNote={t("results.pdfCorrelationUnlistedNote")}
-        correlationColA={t("results.pdfCorrelationColA")}
-        correlationColB={t("results.pdfCorrelationColB")}
-        correlationColRho={t("results.pdfCorrelationColRho")}
-        projectsBasis={comparisonProjects.map((project) => ({
-          projectName: project.name,
-          assumptions: buildPdfAssumptionTexts(project),
-          costItems: buildPdfCostItemBlocks(project),
-          drivers: buildPdfDriverBlocks(project),
-          impactOverrides: buildPdfImpactOverrides(project),
-          correlation: buildPdfCorrelationSection(project),
-        }))}
-        methodTitle={t("results.pdfMethodTitle")}
-        methodParagraphs={methodParagraphs}
-        openAnalysisTitle={t("results.pdfOpenAnalysisTitle")}
-        openAnalysisHelper={t("results.pdfOpenAnalysisHelper")}
-        shareLinkAppendix={shareLinkAppendix}
-        shareUnavailableNote={shareUnavailableNote}
-        footerText={t("results.pdfFooter")}
-        language={language}
-      />,
-    ).toBlob()
-
-    const link = document.createElement("a")
-    const objectUrl = URL.createObjectURL(blob)
-    link.href = objectUrl
-    link.download =
-      language === "no" ? "usikkerhetsrapport.pdf" : "uncertainty-report.pdf"
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(objectUrl)
+    const { downloadProjectReportPdf } = await import(
+      "@/features/results/pdfExport"
+    )
+    await downloadProjectReportPdf({
+      language,
+      t,
+      comparisonProjects,
+      rows,
+      sCurvePercentiles: resultViewSnapshot.sCurve.percentiles,
+      sCurveSeries: comparisonProjects.map((project, idx) => ({
+        id: project.id,
+        label: project.name,
+        ...(compactResultByProjectId.has(project.id)
+          ? {
+              displayPoints:
+                compactResultByProjectId.get(project.id)!.sCurve.points,
+            }
+          : { values: resultsByProjectId.get(project.id) ?? [] }),
+        color: getProjectColorHex(idx),
+      })),
+      tornadoProjects: comparisonProjects.map((project) => ({
+        projectName: project.name,
+        rows: (tornadoRowsByProjectId.get(project.id) ?? []).map((row) => ({
+          name: row.name,
+          lowImpact: row.lowImpact,
+          highImpact: row.highImpact,
+        })),
+      })),
+      contributionBlocks,
+      methodParagraphs,
+      shareLinkAppendix,
+      shareUnavailableNote,
+    })
   }
 
   const handleCopyAiBriefPackage = async () => {
