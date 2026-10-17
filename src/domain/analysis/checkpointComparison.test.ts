@@ -34,7 +34,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { newId } from "@/domain/results/tableRows"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

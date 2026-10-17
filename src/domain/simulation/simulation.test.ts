@@ -8,7 +8,7 @@ import {
   simulateAggregateCostWithDriversValuesAndSeries,
   triangularQuantile,
   type TriangularParams,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 import { mean, percentile } from "@/domain/simulation/stats"
 
 const fullImpact = (costs: number, drivers: number): number[][] =>

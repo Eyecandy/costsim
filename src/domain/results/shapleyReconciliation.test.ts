@@ -8,7 +8,7 @@ import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
 } from "@/domain/results/formatWaterfallValue"
-import { simulateAggregateCostWithDriversValuesAndSeries } from "@/simulation"
+import { simulateAggregateCostWithDriversValuesAndSeries } from "@/domain/simulation/simulation"
 import { percentile } from "@/domain/simulation/stats"
 
 const RECON_CONFIG = {

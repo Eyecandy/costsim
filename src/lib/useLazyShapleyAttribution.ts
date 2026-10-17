@@ -21,8 +21,8 @@ import {
 } from "@/domain/simulation/simulationRunId"
 import type { Project } from "@/domain/analysis/project"
 import { percentile } from "@/domain/simulation/stats"
-import type { ProjectResult } from "@/simulation.worker"
-import ShapleyWorker from "@/shapley.worker.ts?worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
+import ShapleyWorker from "@/workers/shapley.worker.ts?worker"
 
 type UseLazyShapleyAttributionArgs = {
   displayProjects: readonly Project[]

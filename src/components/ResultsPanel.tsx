@@ -6,8 +6,8 @@ import { appFeatures } from "@/config/appVariant"
 import { buildShareUrl } from "@/persistence/shareLink"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { useI18n } from "@/i18n/useI18n"
-import type { ProjectResult } from "@/simulation.worker"
-import { summarizeSamples, type SampleSummary } from "@/simulation"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
+import { summarizeSamples, type SampleSummary } from "@/domain/simulation/simulation"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   computeDeterministicTornadoRows,

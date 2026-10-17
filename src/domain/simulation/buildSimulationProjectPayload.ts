@@ -10,7 +10,7 @@ import {
   type CostElementRow,
   type DriverRow,
 } from "@/domain/results/tableRows"
-import type { SimulationProjectPayload } from "@/simulation.worker"
+import type { SimulationProjectPayload } from "@/domain/simulation/simulationTypes"
 
 export function buildSimulationProjectPayload(
   project: Project,

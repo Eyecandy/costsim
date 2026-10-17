@@ -8,7 +8,7 @@ import {
   resolveResultView,
   type ResultPreferencesV1,
 } from "@/domain/results/resultPreferences"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 /** Live Monte Carlo arrays present — compact draft is reload fallback only. */
 export function hasLiveProjectResultArrays(

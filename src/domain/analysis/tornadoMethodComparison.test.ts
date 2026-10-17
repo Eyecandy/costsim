@@ -15,7 +15,7 @@ import {
   triangularQuantile,
   type SimulationInputSeriesItem,
   type TriangularParams,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 
 /**
  * Seeded mirror of production series simulation for reproducible MC Tornado

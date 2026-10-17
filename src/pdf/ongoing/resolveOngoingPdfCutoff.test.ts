@@ -19,7 +19,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { PRODUCT_NAME } from "@/lib/brand"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
 import {
   buildOngoingPdfDraftConfirmCopy,

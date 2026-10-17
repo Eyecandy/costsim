@@ -9,7 +9,7 @@ import type {
   ResultPreferencesV1,
 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult, ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 export const DRAFT_RESULT_SEED_VERSION = 1 as const
 

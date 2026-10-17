@@ -1,4 +1,4 @@
-import { costAbsoluteLikelyToTriangular, type TriangularParams } from "@/simulation"
+import { costAbsoluteLikelyToTriangular, type TriangularParams } from "@/domain/simulation/simulation"
 import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
 
 /**

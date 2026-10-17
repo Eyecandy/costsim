@@ -28,7 +28,7 @@ import {
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import type { Project } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 

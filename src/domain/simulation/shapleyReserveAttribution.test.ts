@@ -8,7 +8,7 @@ import {
   reserveValueFromQuantiles,
   type ShapleyAttributionInput,
 } from "@/domain/simulation/shapleyAttribution"
-import { simulateAggregateCostWithDriversValuesAndSeries } from "@/simulation"
+import { simulateAggregateCostWithDriversValuesAndSeries } from "@/domain/simulation/simulation"
 
 const RESERVE_CONFIG = {
   permutations: 80,

@@ -21,7 +21,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { OngoingAnalysisState } from "@/domain/analysis/analysisCheckpoint"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const sessionSource = readFileSync(

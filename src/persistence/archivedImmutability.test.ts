@@ -13,7 +13,7 @@ import { computeDeterministicTornadoRows } from "@/domain/simulation/determinist
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function fakeShapleyStub(): ShapleyAttributionResult {
   // Minimal stand-in — snapshot round-trip only checks identity, not shape validity.

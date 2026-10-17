@@ -16,7 +16,7 @@ import {
   relativeStandardDeviationPercent,
   standardDeviation,
 } from "@/domain/simulation/stats"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 export type CompactFrozenKeyFiguresV1 = {
   baseCost: number | null

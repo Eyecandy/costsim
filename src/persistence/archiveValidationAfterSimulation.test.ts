@@ -18,7 +18,7 @@ import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAna
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 function resultsFor(projectId: string): ProjectResult[] {

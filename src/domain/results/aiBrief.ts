@@ -41,8 +41,8 @@ import {
   uncertaintyModelConfig,
   type UncertaintyMarginalDistribution,
 } from "@/domain/simulation/uncertaintyModelConfig"
-import { summarizeSamples } from "@/simulation"
-import type { ProjectResult } from "@/simulation.worker"
+import { summarizeSamples } from "@/domain/simulation/simulation"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 export const AI_BRIEF_SCHEMA_VERSION = "ai-brief-v3" as const
 

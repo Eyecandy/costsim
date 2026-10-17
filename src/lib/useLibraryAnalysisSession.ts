@@ -66,7 +66,7 @@ import {
   runShapleyAttributionForPayload,
 } from "@/domain/simulation/shapleyWorkerMessages"
 import { percentile } from "@/domain/simulation/stats"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import {
   buildOngoingCheckpointResultSnapshot,
   freezeOngoingCompactForArchive,

@@ -23,7 +23,7 @@ import { isSingleArchivedResultSnapshot } from "@/domain/analysis/singleArchived
 import { runBeforeLeaveWithoutBlocking } from "@/components/AnalysisLibraryNav"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { vi } from "vitest"
 
 function valuesAround(center: number): number[] {

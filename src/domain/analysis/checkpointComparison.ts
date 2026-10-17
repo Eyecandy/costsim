@@ -25,7 +25,7 @@ import {
   standardDeviation,
 } from "@/domain/simulation/stats"
 import type { ScenarioRow } from "@/domain/results/tableRows"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import {
   extractKeyFigureFromOngoingSnapshot,
   isOngoingCheckpointResultSnapshot,

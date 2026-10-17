@@ -16,7 +16,7 @@ import {
   type ResultPreferencesV1,
 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export const ONGOING_CHECKPOINT_RESULT_SCHEMA_VERSION = 1 as const

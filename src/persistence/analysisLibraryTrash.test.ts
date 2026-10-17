@@ -15,7 +15,7 @@ import {
   canArchiveCurrentResults,
 } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot } from "@/test-utils/repoRoot"

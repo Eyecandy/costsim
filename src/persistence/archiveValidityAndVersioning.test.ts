@@ -22,7 +22,7 @@ import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttrib
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { messages } from "@/i18n/messages"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

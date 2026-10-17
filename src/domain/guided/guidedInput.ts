@@ -20,7 +20,7 @@ import {
   clampCostPessimisticPercent,
   clampDriverLikelyPercent,
 } from "@/domain/results/scenarioNumericClamps"
-import { computeTotalFromSampledValues } from "@/simulation"
+import { computeTotalFromSampledValues } from "@/domain/simulation/simulation"
 
 export type GuidedInputKind = "cost" | "driver"
 

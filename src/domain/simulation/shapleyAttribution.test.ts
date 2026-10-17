@@ -16,7 +16,7 @@ import {
 import {
   computeTotalFromSampledValues,
   type TriangularParams,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 
 const TEST_CONFIG = {
   permutations: 60,

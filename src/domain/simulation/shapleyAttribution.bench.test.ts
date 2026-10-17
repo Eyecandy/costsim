@@ -5,7 +5,7 @@ import {
   DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG,
   type ShapleyAttributionInput,
 } from "@/domain/simulation/shapleyAttribution"
-import type { TriangularParams } from "@/simulation"
+import type { TriangularParams } from "@/domain/simulation/simulation"
 
 function makeCost(index: number): TriangularParams {
   const mode = 1_000_000 + index * 50_000

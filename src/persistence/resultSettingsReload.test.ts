@@ -20,7 +20,7 @@ import { buildOngoingCheckpointResultSnapshot } from "@/domain/analysis/ongoingC
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { beforeEach } from "vitest"
 
 function valuesAround(center: number): number[] {

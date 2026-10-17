@@ -55,7 +55,7 @@ function sampleProject(overrides: Partial<Project> = {}): Project {
 describe("lazy Shapley integration", () => {
   it("A: normal simulation worker does not compute Shapley", () => {
     const src = readFileSync(
-      join(repoRoot, "src/simulation.worker.ts"),
+      join(repoRoot, "src/workers/simulation.worker.ts"),
       "utf8",
     )
     expect(src).not.toContain("computeShapleyAttribution")

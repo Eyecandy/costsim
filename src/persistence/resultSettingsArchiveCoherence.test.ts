@@ -35,7 +35,7 @@ import {
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function valuesAround(center: number, n = 200): number[] {
   return Array.from({ length: n }, (_, i) => center + (i - n / 2) * 0.01)

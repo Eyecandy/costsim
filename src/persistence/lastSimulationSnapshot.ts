@@ -1,4 +1,4 @@
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import LZString from "lz-string"
 
 import {

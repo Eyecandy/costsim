@@ -5,7 +5,7 @@
  * Single Analysis uses checkpointId = null.
  */
 
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { Project } from "@/domain/analysis/project"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"

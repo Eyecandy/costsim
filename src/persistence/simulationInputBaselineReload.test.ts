@@ -25,7 +25,7 @@ import {
 } from "@/domain/analysis/singleDraftResultSnapshot"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function valuesAround(center: number): number[] {
   return Array.from({ length: 20_000 }, (_, i) => center + (i - 10_000) * 0.01)

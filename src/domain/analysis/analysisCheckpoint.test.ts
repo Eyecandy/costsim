@@ -14,7 +14,7 @@ import {
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 describe("analysisCheckpoint", () => {
   it("creates Checkpoint 1 with exactly one project", () => {

@@ -4,7 +4,7 @@
  * Kept for method-comparison tests. User-facing Tornado uses
  * `computeDeterministicTornadoRows` in `deterministicTornado.ts`.
  */
-import type { SimulationInputSeriesItem } from "@/simulation"
+import type { SimulationInputSeriesItem } from "@/domain/simulation/simulation"
 import { percentile } from "@/domain/simulation/stats"
 
 export type MonteCarloConditionalTornadoRow = {

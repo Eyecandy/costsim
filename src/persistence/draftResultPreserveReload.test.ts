@@ -27,7 +27,7 @@ import {
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
 import type { Project } from "@/domain/analysis/project"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 function valuesAround(center: number): number[] {

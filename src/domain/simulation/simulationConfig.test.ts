@@ -31,7 +31,7 @@ describe("simulationConfig product architecture", () => {
     expect(app).toContain("w.postMessage({ runs, projects: payloads })")
     expect(app).not.toContain("useState(20_000)")
     expect(app).not.toMatch(/const\s+\[\s*runs\s*\]\s*=\s*useState/)
-    const worker = readSrc("src/simulation.worker.ts")
+    const worker = readSrc("src/workers/simulation.worker.ts")
     expect(worker).not.toContain("simulationConfig")
     expect(worker).not.toContain("20_000")
     expect(worker).toContain("const { runs, projects } = e.data")

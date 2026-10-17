@@ -10,7 +10,7 @@ import {
 import {
   costAbsoluteLikelyToTriangular,
   triangularQuantile,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 import { messages } from "@/i18n/messages"
 import {
   parseCostForSimulation,
@@ -309,7 +309,7 @@ describe("sampling uses calibrated marginals", () => {
       "utf8",
     )
     expect(shapley).toContain("triangularQuantile(tri.min, tri.mode, tri.max")
-    expect(shapley).toContain('from "@/simulation"')
+    expect(shapley).toContain('from "@/domain/simulation/simulation"')
     // Payload build must go through calibrated parsers
     const payload = readFileSync(
       join(repoRoot, "src/domain/simulation/buildSimulationProjectPayload.ts"),
@@ -319,7 +319,7 @@ describe("sampling uses calibrated marginals", () => {
   })
 
   it("J: conversion helpers no longer assign user P10/P90 as min/max", () => {
-    const sim = readFileSync(join(repoRoot, "src/simulation.ts"), "utf8")
+    const sim = readFileSync(join(repoRoot, "src/domain/simulation/simulation.ts"), "utf8")
     const table = readFileSync(join(repoRoot, "src/domain/results/tableRows.ts"), "utf8")
     expect(sim).toContain("triangularParamsFromPercentiles")
     expect(sim).not.toContain("const min = Math.min(vOpt, vLike, vPes)")

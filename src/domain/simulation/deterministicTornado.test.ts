@@ -15,7 +15,7 @@ import {
   computeTotalFromSampledValues,
   summarizeSamples,
   triangularQuantile,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 import { percentile } from "@/domain/simulation/stats"
 
 function cost(

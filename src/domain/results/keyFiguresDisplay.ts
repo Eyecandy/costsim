@@ -1,5 +1,5 @@
 import { formatNumber, type AppLanguage } from "@/domain/results/formatNumber"
-import type { SampleSummary } from "@/simulation"
+import type { SampleSummary } from "@/domain/simulation/simulation"
 
 /** Switch to million compact form at this absolute magnitude (inclusive). */
 const PROBABILITY_THRESHOLD_MILLIONS_AT = 1_000_000

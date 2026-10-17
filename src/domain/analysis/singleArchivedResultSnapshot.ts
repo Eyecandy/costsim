@@ -14,7 +14,7 @@ import {
   type ResultPreferencesV1,
 } from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 export const SINGLE_ARCHIVED_RESULT_KIND = "single_archived_result_v1" as const
 export const SINGLE_ARCHIVED_RESULT_SCHEMA_VERSION = 1 as const

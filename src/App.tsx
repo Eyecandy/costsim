@@ -8,11 +8,11 @@ import {
   useState,
   type SetStateAction,
 } from "react"
-import SimulationWorker from "@/simulation.worker.ts?worker"
+import SimulationWorker from "@/workers/simulation.worker.ts?worker"
 import type {
   ProjectResult,
   SimulationWorkerResult,
-} from "@/simulation.worker"
+} from "@/domain/simulation/simulationTypes"
 
 import { AnalysisActionsMenu } from "@/components/AnalysisActionsMenu"
 import { AddAlternativeDialog } from "@/components/AddAlternativeDialog"

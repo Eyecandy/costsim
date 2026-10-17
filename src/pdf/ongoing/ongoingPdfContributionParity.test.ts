@@ -38,7 +38,7 @@ import {
   pdfWaterfallValueToX,
   preparePdfWaterfallPresentation,
 } from "@/pdf/pdfWaterfallChart"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

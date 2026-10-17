@@ -5,7 +5,7 @@ import { percentile } from "@/domain/simulation/stats"
 import {
   simulateAggregateCostWithDriversValuesAndSeries,
   type TriangularParams,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 
 const MAIN_RUNS = 20_000
 const SHAPLEY_PERMUTATIONS = 100

@@ -28,7 +28,7 @@ import {
 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import type { Project } from "@/domain/analysis/project"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import {
   DEFAULT_RESULT_PREFERENCES,
   resolveResultView,

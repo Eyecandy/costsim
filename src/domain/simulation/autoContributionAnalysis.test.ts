@@ -68,7 +68,7 @@ describe("automatic Contribution Analysis after simulation", () => {
     expect(app).toContain("setIsRunning(false)")
     expect(app).toContain("setProjectResults(e.data.projectResults)")
     const hook = hookSource()
-    expect(hook).toContain('from "@/shapley.worker.ts?worker"')
+    expect(hook).toContain('from "@/workers/shapley.worker.ts?worker"')
     expect(hook).toContain("new ShapleyWorker()")
     expect(hook).not.toContain("new SimulationWorker")
     // Contribution loading is local to the attribution section
@@ -114,7 +114,7 @@ describe("automatic Contribution Analysis after simulation", () => {
     expect(hook).toContain("workerRef.current?.terminate()")
 
     const worker = readFileSync(
-      join(repoRoot, "src/shapley.worker.ts"),
+      join(repoRoot, "src/workers/shapley.worker.ts"),
       "utf8",
     )
     expect(worker).toContain("simulationRunId: msg.simulationRunId")

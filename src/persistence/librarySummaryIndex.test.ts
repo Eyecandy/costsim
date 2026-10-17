@@ -17,7 +17,7 @@ import {
   getLatestCheckpoint,
 } from "@/domain/analysis/analysisCheckpoint"
 import { nowIso } from "@/domain/analysis/analysisDocument"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function installLocalStoragePolyfill() {
   const store = new Map<string, string>()

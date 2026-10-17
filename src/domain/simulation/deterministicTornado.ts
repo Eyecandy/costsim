@@ -21,7 +21,7 @@ import {
 import {
   computeTotalFromSampledValues,
   type DriverImpactMatrix,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 
 export type DeterministicTornadoRow = {
   name: string

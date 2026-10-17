@@ -9,7 +9,7 @@ import {
   triangularQuantile,
   type DriverImpactMatrix,
   type TriangularParams,
-} from "@/simulation"
+} from "@/domain/simulation/simulation"
 
 export type ShapleyAttributionConfig = {
   /** Randomly sampled player permutations (default 100). */

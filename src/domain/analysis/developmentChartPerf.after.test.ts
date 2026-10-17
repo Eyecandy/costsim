@@ -14,7 +14,7 @@ import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAn
 import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function makeValues(n: number, seed = 100): number[] {
   const out = new Array<number>(n)

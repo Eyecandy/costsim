@@ -25,7 +25,7 @@ import {
 } from "@/domain/analysis/singleArchivedResultSnapshot"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import type { ProjectResult } from "@/simulation.worker"
+import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function installStorage() {
   const store = new Map<string, string>()

@@ -88,7 +88,7 @@ describe("uncertaintyModelConfig product architecture", () => {
   })
 
   it("E/F: main MC and Shapley still use explicit triangular implementation", () => {
-    const sim = readSrc("src/simulation.ts")
+    const sim = readSrc("src/domain/simulation/simulation.ts")
     const shapley = readSrc("src/domain/simulation/shapleyAttribution.ts")
     expect(sim).toContain("triangularQuantile")
     expect(sim).toContain("triangularParamsFromPercentiles")
