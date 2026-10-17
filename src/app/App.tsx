@@ -718,6 +718,90 @@ export default function App() {
   const activeProject =
     projects.find((p) => p.id === activeProjectId) ?? projects[0] ?? null
 
+  const liveSimulationState: LiveSimulationState = {
+    analysisId: liveSimAnalysisId,
+    checkpointId: liveSimCheckpointId,
+    inputSignature: lastSimulatedInputSignature,
+    projectResults,
+    simulatedBaseCostByProjectId,
+    activeProjectIdAtRun: activeProjectId,
+    simulationCount: runs,
+    projectsAtRun: lastSimulatedProjects,
+  }
+  const authoritativeOngoingCompact =
+    isOngoingAnalysis
+      ? (ongoingCompactResult ?? librarySession.ongoingDraftResult)
+      : null
+  const authoritativeSingleDraft =
+    !isOngoingAnalysis
+      ? (singleDraftCompact ?? librarySession.singleDraftResult)
+      : null
+  const liveResultValidity = getLiveResultValidity({
+    analysisId: librarySession.docMeta?.id ?? null,
+    checkpointId: isOngoingAnalysis
+      ? librarySession.activeCheckpoint?.id ?? null
+      : null,
+    currentProjects: projects,
+    simulationState: liveSimulationState,
+    ongoingCompactResult: authoritativeOngoingCompact,
+    singleDraftResult: authoritativeSingleDraft,
+  })
+  const currentValidationError = runValidationErrorKey(projects)
+
+  useEffect(() => {
+    if (
+      runErrorKey === null ||
+      runErrorKey === "projects.workerError" ||
+      !(VALIDATION_ERROR_KEYS as readonly string[]).includes(runErrorKey)
+    ) {
+      return
+    }
+    if (currentValidationError === null) {
+      setRunErrorKey(null)
+      setValidationFeedbackActive(false)
+    }
+  }, [runErrorKey, currentValidationError])
+
+  const showValidationFeedback =
+    validationFeedbackActive && currentValidationError !== null
+
+  const hasMeaningfulStaleComparableInput =
+    staleComparableProjects(projects).length > 0
+
+  const showStaleInputNotice =
+    liveResultValidity.kind === "stale" && hasMeaningfulStaleComparableInput
+
+  const hasViewableResults =
+    liveResultValidity.kind === "valid" || liveResultValidity.kind === "stale"
+
+  const checkpointComparisonResultSource = useMemo(() => {
+    if (
+      !isOngoingAnalysis ||
+      (projectResults.length === 0 && !ongoingCompactResult)
+    ) {
+      return null
+    }
+    return {
+      projectResults,
+      simulatedBaseCostByProjectId,
+      ...(ongoingCompactResult ? { compact: ongoingCompactResult } : {}),
+      resultsComparable:
+        analysisReadOnly ||
+        (ongoingCompactResult
+          ? buildSimulationInputSignature(projects) ===
+            ongoingCompactResult.inputSignature
+          : !showStaleInputNotice),
+    }
+  }, [
+    isOngoingAnalysis,
+    projectResults,
+    simulatedBaseCostByProjectId,
+    ongoingCompactResult,
+    projects,
+    analysisReadOnly,
+    showStaleInputNotice,
+  ])
+
   const impactSelectedDriverRow = useMemo(() => {
     if (
       !impactModeActive ||
@@ -1388,62 +1472,6 @@ export default function App() {
       ?.costCorrelationPrep
   }, [activeProject, projectResults])
 
-  const liveSimulationState: LiveSimulationState = {
-    analysisId: liveSimAnalysisId,
-    checkpointId: liveSimCheckpointId,
-    inputSignature: lastSimulatedInputSignature,
-    projectResults,
-    simulatedBaseCostByProjectId,
-    activeProjectIdAtRun: activeProjectId,
-    simulationCount: runs,
-    projectsAtRun: lastSimulatedProjects,
-  }
-  const authoritativeOngoingCompact =
-    isOngoingAnalysis
-      ? (ongoingCompactResult ?? librarySession.ongoingDraftResult)
-      : null
-  const authoritativeSingleDraft =
-    !isOngoingAnalysis
-      ? (singleDraftCompact ?? librarySession.singleDraftResult)
-      : null
-  const liveResultValidity = getLiveResultValidity({
-    analysisId: librarySession.docMeta?.id ?? null,
-    checkpointId: isOngoingAnalysis
-      ? librarySession.activeCheckpoint?.id ?? null
-      : null,
-    currentProjects: projects,
-    simulationState: liveSimulationState,
-    ongoingCompactResult: authoritativeOngoingCompact,
-    singleDraftResult: authoritativeSingleDraft,
-  })
-  const currentValidationError = runValidationErrorKey(projects)
-
-  useEffect(() => {
-    if (
-      runErrorKey === null ||
-      runErrorKey === "projects.workerError" ||
-      !(VALIDATION_ERROR_KEYS as readonly string[]).includes(runErrorKey)
-    ) {
-      return
-    }
-    if (currentValidationError === null) {
-      setRunErrorKey(null)
-      setValidationFeedbackActive(false)
-    }
-  }, [runErrorKey, currentValidationError])
-
-  const showValidationFeedback =
-    validationFeedbackActive && currentValidationError !== null
-
-  const hasMeaningfulStaleComparableInput =
-    staleComparableProjects(projects).length > 0
-
-  const showStaleInputNotice =
-    liveResultValidity.kind === "stale" && hasMeaningfulStaleComparableInput
-
-  const hasViewableResults =
-    liveResultValidity.kind === "valid" || liveResultValidity.kind === "stale"
-
   const currentFocusUserPhase = useMemo(
     () =>
       getFocusUserPhase({
@@ -1600,34 +1628,6 @@ export default function App() {
   }, [showStaleInputNotice, setShowStaleInputChanges])
 
   /** Stable identity for Ongoing comparison / Development tip — not prefs/UI. */
-  const checkpointComparisonResultSource = useMemo(() => {
-    if (
-      !isOngoingAnalysis ||
-      (projectResults.length === 0 && !ongoingCompactResult)
-    ) {
-      return null
-    }
-    return {
-      projectResults,
-      simulatedBaseCostByProjectId,
-      ...(ongoingCompactResult ? { compact: ongoingCompactResult } : {}),
-      resultsComparable:
-        analysisReadOnly ||
-        (ongoingCompactResult
-          ? buildSimulationInputSignature(projects) ===
-            ongoingCompactResult.inputSignature
-          : !showStaleInputNotice),
-    }
-  }, [
-    isOngoingAnalysis,
-    projectResults,
-    simulatedBaseCostByProjectId,
-    ongoingCompactResult,
-    projects,
-    analysisReadOnly,
-    showStaleInputNotice,
-  ])
-
   const focusResultSteps = useMemo(
     () =>
       buildFocusResultSteps({
