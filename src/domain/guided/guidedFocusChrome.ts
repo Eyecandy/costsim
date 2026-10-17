@@ -1,4 +1,4 @@
-import type { GuidedPhaseInfoContent } from "@/components/GuidedPhaseInfo"
+import type { GuidedPhaseInfoContent } from "@/domain/guided/guidedPhaseInfoContent"
 import type { GuidedWorkflowPhase } from "@/domain/guided/guidedWorkflow"
 
 /**

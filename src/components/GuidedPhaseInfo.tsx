@@ -12,15 +12,9 @@ import { HelpCircle, X } from "lucide-react"
 import { useOverlayPortalContainer } from "@/lib/overlayPortalContainer"
 import { cn } from "@/lib/utils"
 
-export type GuidedPhaseInfoContent = {
-  title: string
-  meaning: string
-  discuss: string
-  avoid: string
-  meaningLabel: string
-  discussLabel: string
-  avoidLabel: string
-}
+import type { GuidedPhaseInfoContent } from "@/domain/guided/guidedPhaseInfoContent"
+
+export type { GuidedPhaseInfoContent }
 
 type GuidedPhaseInfoProps = {
   content: GuidedPhaseInfoContent
