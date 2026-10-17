@@ -1,56 +1,74 @@
-/** Layer rules for src/. Run with `npm run check:deps`. */
+/**
+ * Layer rules for src/. Run with `npm run check:deps` (part of `npm run check`).
+ *
+ *   domain       framework-free logic (no React, no browser storage)
+ *   persistence  localStorage / sessionStorage / URL adapters; may use domain
+ *   workers      Web Worker entry files; may use domain
+ *   shared       UI building blocks and helpers used by several features
+ *   features/*   one folder per product feature (components + hooks + tests)
+ *   app          the shell: routing, login, top-level App
+ *   pdf          PDF report building and rendering
+ */
 module.exports = {
   forbidden: [
     {
       name: "no-circular",
-      severity: "warn",
+      severity: "error",
       comment: "Circular imports make modules impossible to understand or move on their own.",
       from: {},
       to: { circular: true },
     },
     {
-      name: "logic-not-into-ui",
-      severity: "warn",
-      comment: "lib/ and domain/ hold framework-free logic. They must not import UI, the app shell or PDF rendering.",
-      from: { path: "^src/(lib|domain)/", pathNot: "\\.test\\.tsx?$" },
-      to: { path: "^src/(components|features|app|pdf|App\\.tsx|Router\\.tsx|[A-Za-z]+Page\\.tsx)" },
-    },
-    {
-      name: "logic-not-into-worker-entry",
-      severity: "warn",
-      comment: "Shared types must live in domain/, not in a worker entry file.",
-      from: { path: "^src/(lib|domain)/", pathNot: "\\.test\\.tsx?$" },
-      to: { path: "^src/(workers/)?[a-z]+\\.worker\\.ts$" },
-    },
-    {
-      name: "domain-no-react-or-dom-libs",
-      severity: "warn",
-      comment: "domain/ must stay free of React.",
+      name: "domain-is-framework-free",
+      severity: "error",
+      comment: "domain/ must not import React, UI, storage adapters, workers, PDF or the app shell.",
       from: { path: "^src/domain/" },
-      to: { path: "^node_modules/(react|react-dom)/" },
-    },
-    {
-      name: "domain-only-depends-on-domain",
-      severity: "warn",
-      comment: "domain/ may not import persistence/, features/, app/ or shared UI.",
-      from: { path: "^src/domain/" },
-      to: { path: "^src/(persistence|features|app|shared)/" },
-    },
-    {
-      name: "persistence-only-depends-on-domain",
-      severity: "warn",
-      from: { path: "^src/persistence/" },
-      to: { path: "^src/(features|app|pdf)/" },
-    },
-    {
-      name: "features-no-cross-feature-internals",
-      severity: "warn",
-      comment: "A feature may only import another feature through its index.ts.",
-      from: { path: "^src/features/([^/]+)/" },
       to: {
-        path: "^src/features/([^/]+)/",
-        pathNot: ["^src/features/$1/", "^src/features/[^/]+/index\\.ts$"],
+        path: [
+          "^node_modules/(react|react-dom)/",
+          "^src/(persistence|workers|features|shared|app|pdf)/",
+        ],
       },
+    },
+    {
+      name: "persistence-uses-domain-only",
+      severity: "error",
+      from: { path: "^src/persistence/" },
+      to: { path: "^src/(features|shared|app|pdf|workers)/" },
+    },
+    {
+      name: "workers-use-domain-only",
+      severity: "error",
+      from: { path: "^src/workers/" },
+      to: { path: "^src/(features|shared|app|pdf|persistence)/" },
+    },
+    {
+      name: "shared-is-below-features",
+      severity: "error",
+      comment: "shared/ may not depend on features/ or app/.",
+      from: { path: "^src/shared/" },
+      to: { path: "^src/(features|app)/" },
+    },
+    {
+      name: "features-not-into-app",
+      severity: "error",
+      comment: "Only the app shell may import features, never the other way round.",
+      from: { path: "^src/(features|pdf|persistence|domain)/" },
+      to: { path: "^src/app/" },
+    },
+    {
+      name: "features-are-independent",
+      severity: "error",
+      comment: "Features do not import each other. The one exception is guided-input (see next rule).",
+      from: { path: "^src/features/(?!guided-input/)([^/]+)/" },
+      to: { path: "^src/features/", pathNot: "^src/features/$1/" },
+    },
+    {
+      name: "guided-input-allowed-features",
+      severity: "error",
+      comment: "guided-input composes focus-mode, scenario-tables and workspace, and nothing else.",
+      from: { path: "^src/features/guided-input/" },
+      to: { path: "^src/features/(analysis-library|checkpoints|results)/" },
     },
   ],
   options: {
