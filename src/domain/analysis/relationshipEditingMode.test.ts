@@ -8,7 +8,7 @@ import {
   shouldShowCorrelationGroupControls,
   shouldShowCorrelationSelectInstruction,
   shouldShowRelationshipSelectHint,
-} from "@/components/ScenarioPercentTable"
+} from "@/domain/results/scenarioTableModes"
 import { messages } from "@/i18n/messages"
 import {
   applyCostCorrelationGroupPatch,

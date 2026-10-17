@@ -17,7 +17,7 @@ import { join } from "node:path"
 import {
   shouldShowCorrelationGroupControls,
   shouldShowCorrelationSelectInstruction,
-} from "@/components/ScenarioPercentTable"
+} from "@/domain/results/scenarioTableModes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

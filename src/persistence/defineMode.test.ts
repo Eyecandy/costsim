@@ -5,7 +5,7 @@ import { join } from "node:path"
 import {
   isRelationshipEditingModeActive,
   shouldShowDefineSelectHint,
-} from "@/components/ScenarioPercentTable"
+} from "@/domain/results/scenarioTableModes"
 import { messages } from "@/i18n/messages"
 import {
   createProject,

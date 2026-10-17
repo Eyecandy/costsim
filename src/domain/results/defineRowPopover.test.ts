@@ -10,7 +10,7 @@ import {
   withDriverDescription,
 } from "@/domain/results/rowDefinitions"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
-import { shouldShowDefineSelectHint } from "@/components/ScenarioPercentTable"
+import { shouldShowDefineSelectHint } from "@/domain/results/scenarioTableModes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
