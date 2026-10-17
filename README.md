@@ -1,73 +1,53 @@
-# React + TypeScript + Vite
+# Cost simulator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monte Carlo cost-risk simulator. React + TypeScript + Vite, Tailwind, Vitest.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+npm run dev         # dev server
+npm run check       # tsc + eslint + tests + layer rules (run before committing)
+npm run check:deps  # only the layer rules
+npm test            # vitest
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Where things live
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+  domain/        framework-free logic: simulation, analysis, results, guided workflow
+    simulation/  Monte Carlo, Shapley, tornado, correlation, shared result types
+    analysis/    projects, checkpoints, ongoing/archived snapshots
+    results/     key figures, S-curve/waterfall presentation, table rows, AI brief
+    guided/      guided input + focus session logic
+  persistence/   localStorage / sessionStorage / share-link adapters (uses domain)
+  workers/       Web Worker entry files (uses domain)
+  features/      one folder per product feature: components, hooks and their tests
+    analysis-library/  results/  guided-input/  scenario-tables/
+    focus-mode/  checkpoints/  workspace/
+  shared/        UI building blocks and helpers used by several features (ui/, auth/)
+  app/           the shell: App, routing, landing and login pages
+  pdf/           PDF report model and rendering
+  i18n/  config/ translations and app variant flags
+```
+
+Imports always use the `@/` alias (`@/domain/simulation/stats`).
+
+### Where do I put X?
+
+- Pure calculation or data shaping, no React, no storage: `domain/<area>/`.
+- Reads or writes localStorage / sessionStorage / the URL: `persistence/`.
+- A component or hook used by one feature: that feature's folder.
+- Used by two or more features: `shared/`.
+
+### Layer rules
+
+`npm run check:deps` enforces the direction of dependencies (see `.dependency-cruiser.cjs`):
+`domain` imports no React and no storage; `persistence` and `workers` only use `domain`;
+`shared` never imports a feature; features do not import each other (the one exception is
+`guided-input`, which composes `focus-mode`, `scenario-tables` and `workspace`); nothing imports `app`;
+and there are no circular imports.
+
+## Tests
+
+Tests sit next to the code they cover. Many of them read component source files as text
+and assert on the contents. They locate files through `repoRoot` (`src/test-utils/repoRoot.ts`)
+with paths like `"src/app/App.tsx"`, so moving a file means updating those path strings.
