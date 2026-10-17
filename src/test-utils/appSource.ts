@@ -17,15 +17,17 @@ function listSorted(dir: string): string[] {
 }
 
 /**
- * Source text of the workspace screen: `src/app/App.tsx` followed by the files
- * extracted from it into `src/app/workspace/` (sorted by path). Source-text tests
- * read this instead of App.tsx alone, so moving code between those files does not
- * change what they assert on.
+ * Source text of the workspace screen: the files extracted from `App.tsx` into
+ * `src/app/workspace/` (sorted by path) followed by `src/app/App.tsx` itself.
+ * Source-text tests read this instead of App.tsx alone, so moving code between
+ * those files does not change what they assert on. The extracted files come first
+ * so that `indexOf("someHandler")` finds a definition before App's destructuring
+ * of the same name.
  */
 export function readAppSource(): string {
   const files = [
-    join(repoRoot, "src/app/App.tsx"),
     ...listSorted(join(repoRoot, "src/app/workspace")),
+    join(repoRoot, "src/app/App.tsx"),
   ]
   return files.map((f) => readFileSync(f, "utf8")).join("\n")
 }
