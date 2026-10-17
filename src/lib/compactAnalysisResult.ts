@@ -3,11 +3,11 @@ import {
   type DeterministicTornadoRow,
 } from "@/domain/simulation/deterministicTornado"
 import { computeUncertainDeltaWithPct, type Project } from "@/lib/project"
-import type { ResolvedResultView } from "@/lib/resultPreferences"
+import type { ResolvedResultView } from "@/domain/results/resultPreferences"
 import {
   computeSCurveDisplaySeries,
   SCURVE_DISPLAY_POINT_TARGET,
-} from "@/lib/sCurveDisplay"
+} from "@/domain/results/sCurveDisplay"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   mean,

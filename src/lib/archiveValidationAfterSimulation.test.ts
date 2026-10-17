@@ -15,7 +15,7 @@ import {
 } from "@/lib/buildArchivedAnalysisSnapshot"
 import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"

@@ -18,7 +18,7 @@ import {
   buildOngoingDevelopmentSeries,
   extractDevelopmentMetrics,
 } from "@/lib/ongoingDevelopmentSeries"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { percentile, sortedFiniteValues } from "@/domain/simulation/stats"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"

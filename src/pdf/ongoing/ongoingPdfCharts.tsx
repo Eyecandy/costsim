@@ -14,13 +14,13 @@ import {
   StyleSheet,
   Text,
 } from "@react-pdf/renderer"
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 import {
   SCURVE_ASPECT_RATIO,
   SCURVE_CURVE_STROKE_LINECAP,
   SCURVE_CURVE_STROKE_LINEJOIN,
   SCURVE_CURVE_STROKE_WIDTH,
-} from "@/lib/sCurveDisplay"
+} from "@/domain/results/sCurveDisplay"
 import {
   PDF_SCURVE_GUIDE_STROKE_WIDTH,
   PDF_SCURVE_LABEL_FONT,

@@ -15,14 +15,14 @@ import {
   formatKeyFigurePercent,
   formatKeyFigureStat,
   formatProbabilityBelowRowLabel,
-} from "@/lib/keyFiguresDisplay"
+} from "@/domain/results/keyFiguresDisplay"
 import { computeUncertainDeltaWithPct, type Project } from "@/lib/project"
 import {
   formatPercentileLabel,
   shouldShowProbabilityBelowCostLevel,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
-import { frozenProbabilityBelowForAmount } from "@/lib/resultSettingsPresentation"
+} from "@/domain/results/resultPreferences"
+import { frozenProbabilityBelowForAmount } from "@/domain/results/resultSettingsPresentation"
 import {
   mean,
   percentile,

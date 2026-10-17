@@ -12,7 +12,7 @@ import {
   changedScenarioCellKeySet,
 } from "@/lib/simInputSnapshotDiff"
 import { createProject, type Project } from "@/lib/project"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

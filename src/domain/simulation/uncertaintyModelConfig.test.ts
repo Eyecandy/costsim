@@ -81,7 +81,7 @@ describe("uncertaintyModelConfig product architecture", () => {
   })
 
   it("D: AI brief distributionType derives from config", () => {
-    const aiBrief = readSrc("src/lib/aiBrief.ts")
+    const aiBrief = readSrc("src/domain/results/aiBrief.ts")
     expect(aiBrief).toContain("uncertaintyModelConfig.marginalDistribution")
     expect(aiBrief).not.toMatch(/distributionType:\s*"triangular"/)
     expect(uncertaintyModelConfig.marginalDistribution).toBe("triangular")

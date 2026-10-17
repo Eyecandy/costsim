@@ -43,7 +43,7 @@ describe("archived state uses Archive icon (not Lock)", () => {
 
   it("does not replace key-figure feature-lock wording (permissions stay Locked)", () => {
     const visibility = readFileSync(
-      join(root, "src/lib/keyFigureVisibility.ts"),
+      join(root, "src/domain/results/keyFigureVisibility.ts"),
       "utf8",
     )
     expect(visibility).toContain("isKeyFigureRowLocked")

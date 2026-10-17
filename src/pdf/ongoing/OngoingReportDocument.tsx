@@ -17,7 +17,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer"
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 import { formatPdfAbsoluteAmount, resolvePdfAmountScale } from "@/pdf/shared"
 import { PDF_A4_PAGE_SIZE } from "@/pdf/shared"
 import {

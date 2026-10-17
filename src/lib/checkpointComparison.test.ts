@@ -29,10 +29,10 @@ import {
   getPercentageDeltaClass,
   selectComparisonKeyFigures,
 } from "@/lib/checkpointComparisonPresentation"
-import { listVisibleComparableKeyFigureRowIds } from "@/lib/keyFigureVisibility"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 import type { Project } from "@/lib/project"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot } from "@/test-utils/repoRoot"

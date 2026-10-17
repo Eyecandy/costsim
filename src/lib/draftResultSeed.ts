@@ -7,7 +7,7 @@ import {
 import type {
   ResolvedResultView,
   ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult, ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 

@@ -2,14 +2,14 @@
  * Pure helpers for PDF report content (easy to unit-test without rendering).
  */
 import type { Project } from "@/lib/project"
-import { collectNonZeroCostCorrelations } from "@/lib/aiBrief"
-import { formatNumber, type AppLanguage } from "@/lib/formatNumber"
+import { collectNonZeroCostCorrelations } from "@/domain/results/aiBrief"
+import { formatNumber, type AppLanguage } from "@/domain/results/formatNumber"
 import {
   parseCostForSimulation,
   parseDriverForSimulation,
   parseNumberField,
   resolveDriverImpactPercent,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 
 /**
  * Max valid cost items for a readable full correlation matrix on A4.

@@ -18,7 +18,7 @@ import { pickAuthoritativeOngoingDraftResult } from "@/lib/ongoingDraftResultCom
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleDraftResultSnapshot,

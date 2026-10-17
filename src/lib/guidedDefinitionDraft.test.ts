@@ -16,7 +16,7 @@ import type { Project } from "@/lib/project"
 import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 

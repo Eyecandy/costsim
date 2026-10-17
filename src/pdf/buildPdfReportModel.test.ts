@@ -19,7 +19,7 @@ import {
   pdfCorrelationCellFill,
   resolvePdfAmountScale,
 } from "@/pdf/buildPdfReportModel"
-import { groupWaterfallContributors } from "@/lib/waterfallContributors"
+import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

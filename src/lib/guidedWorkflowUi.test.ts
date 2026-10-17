@@ -10,7 +10,7 @@ import {
 import { deriveSavedCorrelationSummaries } from "@/domain/simulation/costCorrelationSummaries"
 import { createProject, type Project } from "@/lib/project"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

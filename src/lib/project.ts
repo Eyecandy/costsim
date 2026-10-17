@@ -23,7 +23,7 @@ import {
   parseNumberField,
   resolveDriverImpactPercent,
   clampDriverImpactInput,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 
 /** driverRowId → costRowId → impact % string (0–100). Omitted pairs default to 100%. */
 export type DriverImpactsByRowId = Record<string, Record<string, string>>

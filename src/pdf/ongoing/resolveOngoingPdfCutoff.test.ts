@@ -15,7 +15,7 @@ import {
   assertNoHeavyValuesInOngoingSnapshot,
   buildOngoingCheckpointResultSnapshot,
 } from "@/lib/ongoingCheckpointResultSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { PRODUCT_NAME } from "@/lib/brand"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"

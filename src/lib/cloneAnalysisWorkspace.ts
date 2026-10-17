@@ -1,5 +1,5 @@
 import type { Project } from "@/lib/project"
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 import { cloneProjectProfile } from "@/lib/projectProfile"
 
 export type CloneProjectsResult = {

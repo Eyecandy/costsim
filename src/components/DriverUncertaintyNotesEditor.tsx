@@ -6,8 +6,8 @@ import {
   DRIVER_UNCERTAINTY_NOTE_MAX_LENGTH,
   DRIVER_UNCERTAINTY_NOTES_MAX_PER_SIDE,
   parseDriverUncertaintyNote,
-} from "@/lib/rowDefinitions"
-import type { DriverUncertaintyNotes } from "@/lib/tableRows"
+} from "@/domain/results/rowDefinitions"
+import type { DriverUncertaintyNotes } from "@/domain/results/tableRows"
 import { cn } from "@/lib/utils"
 
 export type DriverUncertaintyNotesEditorProps = {

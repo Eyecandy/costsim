@@ -3,15 +3,15 @@ import { useMemo, type ReactNode } from "react"
 import {
   formatAdaptiveMonetarySignedDelta,
   formatAdaptiveMonetaryValue,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import {
   buildWaterfallChartLayout,
   valueToX,
-} from "@/lib/waterfallLayout"
+} from "@/domain/results/waterfallLayout"
 import {
   groupWaterfallContributors,
   type WaterfallDisplayRow,
-} from "@/lib/waterfallContributors"
+} from "@/domain/results/waterfallContributors"
 import type { ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
 import {
   ChartExpandHost,

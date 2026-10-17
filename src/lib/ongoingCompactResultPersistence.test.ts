@@ -27,7 +27,7 @@ import {
 import {
   DEFAULT_RESULT_PREFERENCES,
   resolveResultView,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"

@@ -18,7 +18,7 @@ import {
   driverLikelyOutsideSpan,
   driverCalibratedSupportInvalid,
   type ScenarioRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import { percentile } from "@/domain/simulation/stats"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -320,7 +320,7 @@ describe("sampling uses calibrated marginals", () => {
 
   it("J: conversion helpers no longer assign user P10/P90 as min/max", () => {
     const sim = readFileSync(join(repoRoot, "src/simulation.ts"), "utf8")
-    const table = readFileSync(join(repoRoot, "src/lib/tableRows.ts"), "utf8")
+    const table = readFileSync(join(repoRoot, "src/domain/results/tableRows.ts"), "utf8")
     expect(sim).toContain("triangularParamsFromPercentiles")
     expect(sim).not.toContain("const min = Math.min(vOpt, vLike, vPes)")
     expect(table).toContain("triangularParamsFromPercentiles")

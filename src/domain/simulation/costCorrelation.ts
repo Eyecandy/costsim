@@ -1,4 +1,4 @@
-import { parseNumberField } from "@/lib/tableRows"
+import { parseNumberField } from "@/domain/results/tableRows"
 
 /** How a cost-item correlation matrix was prepared for Gaussian-copula sampling. */
 export type CostCorrelationPrepStatus =

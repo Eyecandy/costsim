@@ -25,7 +25,7 @@ import {
   canArchiveCurrentResults,
   getArchiveBlockReason,
 } from "@/lib/buildArchivedAnalysisSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"

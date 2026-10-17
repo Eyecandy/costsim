@@ -6,13 +6,13 @@ import {
   COLUMN_HEADER_BOTTOM_GAP_CLASS,
   PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS,
   PROJECT_PROFILE_FOCUS_ROW_CLASS,
-} from "@/lib/columnHeaderLayout"
+} from "@/domain/results/columnHeaderLayout"
 import {
   buildGuidedWorkflowSteps,
   initialGuidedWorkflowStepIndex,
 } from "@/lib/guidedWorkflow"
 import { messages } from "@/i18n/messages"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 
@@ -70,7 +70,7 @@ describe("Focus mode entry hierarchy", () => {
   })
 
   it("A2: Project Profile + Focus row places Focus around 3/4 across on md+", () => {
-    const layout = readSrc("src/lib/columnHeaderLayout.ts")
+    const layout = readSrc("src/domain/results/columnHeaderLayout.ts")
     expect(PROJECT_PROFILE_FOCUS_ROW_CLASS).toContain(
       "md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]",
     )
@@ -147,9 +147,9 @@ describe("Focus mode entry hierarchy", () => {
     const app = readSrc("src/App.tsx")
     const nav = readSrc("src/components/CheckpointNav.tsx")
     expect(COLUMN_HEADER_BOTTOM_GAP_CLASS).toBe("mb-4")
-    expect(app).toContain('from "@/lib/columnHeaderLayout"')
+    expect(app).toContain('from "@/domain/results/columnHeaderLayout"')
     expect(app).toContain("COLUMN_HEADER_BOTTOM_GAP_CLASS")
-    expect(nav).toContain('from "@/lib/columnHeaderLayout"')
+    expect(nav).toContain('from "@/domain/results/columnHeaderLayout"')
     expect(nav).toContain("COLUMN_HEADER_BOTTOM_GAP_CLASS")
     const headerUses = app.match(/COLUMN_HEADER_BOTTOM_GAP_CLASS/g) ?? []
     expect(headerUses.length).toBeGreaterThanOrEqual(2)

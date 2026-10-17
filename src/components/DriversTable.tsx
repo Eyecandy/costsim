@@ -5,7 +5,7 @@ import {
   type GuidedInputModeProps,
 } from "@/components/ScenarioPercentTable"
 import { useI18n } from "@/i18n/useI18n"
-import { type DriverRow } from "@/lib/tableRows"
+import { type DriverRow } from "@/domain/results/tableRows"
 
 type DriversTableProps = {
   rows: DriverRow[]

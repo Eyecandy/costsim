@@ -4,13 +4,13 @@ import {
   formatWaterfallSignedDeltaWithScale,
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   groupWaterfallContributors,
   sumWaterfallDisplayContributions,
-} from "@/lib/waterfallContributors"
-import { buildWaterfallChartLayout } from "@/lib/waterfallLayout"
+} from "@/domain/results/waterfallContributors"
+import { buildWaterfallChartLayout } from "@/domain/results/waterfallLayout"
 import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
 import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWorkerMessages"
 import { createProject } from "@/lib/project"

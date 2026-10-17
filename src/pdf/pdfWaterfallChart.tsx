@@ -7,7 +7,7 @@
  */
 
 import { Line, Rect, Svg, StyleSheet, Text, View } from "@react-pdf/renderer"
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 import {
   formatAdaptiveMonetarySignedDelta,
   formatAdaptiveMonetaryValue,
@@ -15,17 +15,17 @@ import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
   collectWaterfallDisplayValues,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import {
   buildWaterfallChartLayout,
   valueToX,
   type WaterfallChartLayout,
-} from "@/lib/waterfallLayout"
+} from "@/domain/results/waterfallLayout"
 import {
   DEFAULT_WATERFALL_TOP_N,
   groupWaterfallContributors,
   type WaterfallDisplayRow,
-} from "@/lib/waterfallContributors"
+} from "@/domain/results/waterfallContributors"
 import type { PdfContributionWaterfall } from "@/pdf/buildPdfReportModel"
 
 export const PDF_WATERFALL_PLOT_LEFT = 2

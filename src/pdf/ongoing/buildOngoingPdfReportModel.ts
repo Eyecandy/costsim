@@ -13,10 +13,10 @@ import {
   buildPdfAssumptionTexts,
   mapShapleyToPdfContribution,
 } from "@/pdf/buildPdfReportModel"
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 import { mean } from "@/domain/simulation/stats"
-import { computeSCurveDisplaySeries } from "@/lib/sCurveDisplay"
-import { getProjectColorHex } from "@/lib/projectColors"
+import { computeSCurveDisplaySeries } from "@/domain/results/sCurveDisplay"
+import { getProjectColorHex } from "@/domain/results/projectColors"
 import type { Project } from "@/lib/project"
 import {
   collectProjectProfileSummaryOptionIds,

@@ -83,8 +83,8 @@ import {
 import type { Project } from "@/lib/project"
 import { normalizeIncurredCosts } from "@/lib/project"
 import type { ProjectProfile } from "@/lib/projectProfile"
-import { sanitizeScenarioNumericInput } from "@/lib/excelLikeTable"
-import { clampCostLikelyAbs } from "@/lib/scenarioNumericClamps"
+import { sanitizeScenarioNumericInput } from "@/domain/results/excelLikeTable"
+import { clampCostLikelyAbs } from "@/domain/results/scenarioNumericClamps"
 import {
   applyGuidedDefinitionDraftChange,
   cancelGuidedDefinitionDraft,
@@ -95,10 +95,10 @@ import {
 import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
-} from "@/lib/rowDefinitions"
-import { sliderFillRangePct } from "@/lib/sliderFillRange"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
-import { parseNumberField } from "@/lib/tableRows"
+} from "@/domain/results/rowDefinitions"
+import { sliderFillRangePct } from "@/domain/results/sliderFillRange"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
+import { parseNumberField } from "@/domain/results/tableRows"
 import { cn } from "@/lib/utils"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"
 import {

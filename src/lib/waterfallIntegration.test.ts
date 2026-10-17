@@ -7,7 +7,7 @@ import {
   formatWaterfallSignedDeltaWithScale,
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import {
   isShapleyCacheEntryValid,
   ShapleyRequestQueue,
@@ -20,8 +20,8 @@ import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulati
 import {
   groupWaterfallContributors,
   sumWaterfallDisplayContributions,
-} from "@/lib/waterfallContributors"
-import { buildWaterfallChartLayout } from "@/lib/waterfallLayout"
+} from "@/domain/results/waterfallContributors"
+import { buildWaterfallChartLayout } from "@/domain/results/waterfallLayout"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

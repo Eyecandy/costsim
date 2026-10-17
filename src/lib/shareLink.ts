@@ -22,7 +22,7 @@ import {
 import {
   parseCostDescription,
   parseDriverDescription,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import {
   newId,
   parseDriverImpactPercent,
@@ -30,7 +30,7 @@ import {
   type CostElementRow,
   type DriverRow,
   type ScenarioRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import { parseProjectsPayload } from "@/lib/storage"
 import LZString from "lz-string"
 

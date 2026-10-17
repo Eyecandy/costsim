@@ -16,7 +16,7 @@ import {
   buildOngoingCheckpointResultSnapshot,
   isOngoingCheckpointResultSnapshot,
 } from "@/lib/ongoingCheckpointResultSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { PRODUCT_NAME } from "@/lib/brand"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
@@ -24,9 +24,9 @@ import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttrib
 import {
   formatAdaptiveMonetarySignedDelta,
   formatAdaptiveMonetaryValue,
-} from "@/lib/formatWaterfallValue"
-import { groupWaterfallContributors } from "@/lib/waterfallContributors"
-import { buildWaterfallChartLayout } from "@/lib/waterfallLayout"
+} from "@/domain/results/formatWaterfallValue"
+import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
+import { buildWaterfallChartLayout } from "@/domain/results/waterfallLayout"
 import {
   mapShapleyToPdfContribution,
   type PdfContributionWaterfall,

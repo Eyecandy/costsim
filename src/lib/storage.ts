@@ -8,7 +8,7 @@ import { normalizeProjectProfile } from "@/lib/projectProfile"
 import {
   normalizeCostRowDefinitions,
   normalizeDriverRowDefinitions,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import { appFeatures } from "@/config/appVariant"
 
 export const STORAGE_KEYS = {

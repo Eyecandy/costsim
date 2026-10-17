@@ -11,7 +11,7 @@ import {
   normalizeResultPreferences,
   type ResultPreferencesV1,
   cloneResultPreferences,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 
 /** Versioned storage key — local device default only (not project/share data). */
 export const RESULT_PREFERENCES_STORAGE_KEY =

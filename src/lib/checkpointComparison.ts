@@ -14,8 +14,8 @@ import {
   diffRowIds,
   getPrecedingCheckpointPair,
 } from "@/lib/checkpointDiff"
-import type { KeyFigureRowId } from "@/lib/keyFigureVisibility"
-import { keyFigureInlinePercentCompanionId } from "@/lib/keyFigureVisibility"
+import type { KeyFigureRowId } from "@/domain/results/keyFigureVisibility"
+import { keyFigureInlinePercentCompanionId } from "@/domain/results/keyFigureVisibility"
 import { computeUncertainDeltaWithPct } from "@/lib/project"
 import {
   mean,
@@ -24,7 +24,7 @@ import {
   relativeStandardDeviationPercent,
   standardDeviation,
 } from "@/domain/simulation/stats"
-import type { ScenarioRow } from "@/lib/tableRows"
+import type { ScenarioRow } from "@/domain/results/tableRows"
 import type { ProjectResult } from "@/simulation.worker"
 import {
   extractKeyFigureFromOngoingSnapshot,

@@ -8,7 +8,7 @@ import {
   focusResultSectionTitleKey,
 } from "@/lib/focusResultSteps"
 import { buildGuidedWorkflowSteps } from "@/lib/guidedWorkflow"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

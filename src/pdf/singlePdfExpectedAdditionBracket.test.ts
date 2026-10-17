@@ -12,7 +12,7 @@ import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
   collectWaterfallDisplayValues,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
 import {
   preparePdfWaterfallPresentation,

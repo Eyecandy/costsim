@@ -20,10 +20,10 @@ import {
   withCostDescription,
   withDriverDescription,
   withDriverUncertaintyNotes,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import { parseProjectsPayload } from "@/lib/storage"
 import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
-import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

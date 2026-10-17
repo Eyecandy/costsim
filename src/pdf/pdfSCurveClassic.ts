@@ -8,10 +8,10 @@
 
 import {
   formatSCurveYAxisPercentileTick,
-} from "@/lib/sCurveClassicGuides"
-import { formatSCurveCost, resolveSCurveCostDisplayScale } from "@/lib/sCurveHover"
-import type { AppLanguage } from "@/lib/formatNumber"
-import { formatPercentileLabel } from "@/lib/resultPreferences"
+} from "@/domain/results/sCurveClassicGuides"
+import { formatSCurveCost, resolveSCurveCostDisplayScale } from "@/domain/results/sCurveHover"
+import type { AppLanguage } from "@/domain/results/formatNumber"
+import { formatPercentileLabel } from "@/domain/results/resultPreferences"
 
 export { formatSCurveCost, resolveSCurveCostDisplayScale }
 

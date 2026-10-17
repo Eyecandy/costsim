@@ -4,10 +4,10 @@ import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulati
 import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import { computeBaseCostSum, createProject } from "@/lib/project"
 import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 
 /** Representative ~200 M example project matching reported key-figure scale. */
 function build200MExampleProject() {

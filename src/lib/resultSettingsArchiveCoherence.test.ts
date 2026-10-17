@@ -27,11 +27,11 @@ import {
   DEFAULT_RESULT_PREFERENCES,
   addKeyFigurePercentile,
   cloneResultPreferences,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import {
   compactFrozenKeyFiguresSupportPreferences,
   compactSnapshotSupportsResultPreferences,
-} from "@/lib/resultSettingsPresentation"
+} from "@/domain/results/resultSettingsPresentation"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { Project } from "@/lib/project"

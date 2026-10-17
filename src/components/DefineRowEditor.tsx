@@ -7,8 +7,8 @@ import { useI18n } from "@/i18n/useI18n"
 import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
-} from "@/lib/rowDefinitions"
-import type { DriverUncertaintyNotes } from "@/lib/tableRows"
+} from "@/domain/results/rowDefinitions"
+import type { DriverUncertaintyNotes } from "@/domain/results/tableRows"
 import { cn } from "@/lib/utils"
 
 export type DefineCostEditorProps = {

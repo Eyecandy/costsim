@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { buildAiBriefV3 } from "@/lib/aiBrief"
-import { buildKeyFigureMetricTableRows } from "@/lib/keyFiguresMetricRows"
+import { buildAiBriefV3 } from "@/domain/results/aiBrief"
+import { buildKeyFigureMetricTableRows } from "@/domain/results/keyFiguresMetricRows"
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,
   resolveResultView,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import type { Project } from "@/lib/project"
 import type { ProjectResult } from "@/simulation.worker"
 import { messages } from "@/i18n/messages"
@@ -171,8 +171,8 @@ describe("resolveResultView + export consumers", () => {
   it("PDF/AI generation paths snapshot active prefs and do not read localStorage", () => {
     const panel = readSrc("src/components/ResultsPanel.tsx")
     const pdfDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
-    const aiBrief = readSrc("src/lib/aiBrief.ts")
-    const kfRows = readSrc("src/lib/keyFiguresMetricRows.ts")
+    const aiBrief = readSrc("src/domain/results/aiBrief.ts")
+    const kfRows = readSrc("src/domain/results/keyFiguresMetricRows.ts")
 
     expect(panel).toContain("resolveResultView(resultPreferences)")
     expect(panel).toContain("resultViewSnapshot")

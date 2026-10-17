@@ -3,7 +3,7 @@ import type { SingleAnalysisArchivedSnapshot } from "@/lib/singleArchivedResultS
 import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
 import type { OngoingAnalysisState } from "@/lib/analysisCheckpoint"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
-import type { ResultPreferencesV1 } from "@/lib/resultPreferences"
+import type { ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import type { SingleDraftResultSnapshotV1 } from "@/lib/singleDraftResultSnapshot"
 
 export const ANALYSIS_DOCUMENT_SCHEMA_VERSION = 1 as const

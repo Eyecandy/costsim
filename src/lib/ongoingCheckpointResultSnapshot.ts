@@ -14,7 +14,7 @@ import {
   resolveResultView,
   type ResolvedResultView,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"

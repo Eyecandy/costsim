@@ -22,7 +22,7 @@ import {
 } from "@/pdf/buildPdfReportModel"
 import { ensurePdfFonts } from "@/pdf/pdfFonts"
 import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
-import { getProjectColorHex } from "@/lib/projectColors"
+import { getProjectColorHex } from "@/domain/results/projectColors"
 import {
   PDF_A4_PAGE_SIZE,
   PDF_CHAPTER_IDS,

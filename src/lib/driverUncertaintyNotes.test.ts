@@ -18,11 +18,11 @@ import {
   normalizeDriverUncertaintyNotes,
   parseDriverUncertaintyNote,
   withDriverUncertaintyNotes,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { parseProjectsPayload } from "@/lib/storage"
-import type { DriverRow } from "@/lib/tableRows"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import type { DriverRow } from "@/domain/results/tableRows"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -322,10 +322,10 @@ describe("driver uncertainty notes", () => {
     expect(readSrc("src/components/GuidedInputDialog.tsx")).not.toContain(
       "uncertaintyAssessment",
     )
-    expect(readSrc("src/lib/tableRows.ts")).not.toContain(
+    expect(readSrc("src/domain/results/tableRows.ts")).not.toContain(
       "uncertaintyAssessment",
     )
-    expect(readSrc("src/lib/rowDefinitions.ts")).not.toContain(
+    expect(readSrc("src/domain/results/rowDefinitions.ts")).not.toContain(
       "uncertaintyAssessment",
     )
     expect(DRIVER_UNCERTAINTY_NOTE_MAX_LENGTH).toBeGreaterThan(0)

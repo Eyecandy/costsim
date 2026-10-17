@@ -26,7 +26,7 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
 import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { Project } from "@/lib/project"

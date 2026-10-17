@@ -17,7 +17,7 @@ import {
   changedCostTableCellKeySet,
 } from "@/lib/simInputSnapshotDiff"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleDraftResultSnapshot,

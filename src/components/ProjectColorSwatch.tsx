@@ -1,4 +1,4 @@
-import { getProjectColorCssVar } from "@/lib/projectColors"
+import { getProjectColorCssVar } from "@/domain/results/projectColors"
 import { cn } from "@/lib/utils"
 
 type ProjectColorSwatchProps = {

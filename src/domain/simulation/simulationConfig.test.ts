@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
-import { formatNumber } from "@/lib/formatNumber"
+import { formatNumber } from "@/domain/results/formatNumber"
 import { createProject } from "@/lib/project"
 import { DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG } from "@/domain/simulation/shapleyAttribution"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"

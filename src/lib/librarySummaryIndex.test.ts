@@ -8,7 +8,7 @@ import {
   LIBRARY_STORAGE_KEYS,
 } from "@/lib/localAnalysisLibraryRepository"
 import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import {
   archiveCheckpoint,

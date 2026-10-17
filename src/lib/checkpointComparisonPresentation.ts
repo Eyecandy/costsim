@@ -2,14 +2,14 @@
  * Presentation helpers for checkpoint comparison (formatting only).
  */
 
-import type { AppLanguage } from "@/lib/formatNumber"
-import { formatNumber } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
+import { formatNumber } from "@/domain/results/formatNumber"
 import {
   formatKeyFigureAbsoluteWithPercent,
   formatKeyFigurePercent,
   formatKeyFigureStat,
   formatProbabilityBelowRowLabel,
-} from "@/lib/keyFiguresDisplay"
+} from "@/domain/results/keyFiguresDisplay"
 import type {
   CheckpointKeyFigureDelta,
   CheckpointStructuralChangeCounts,
@@ -23,11 +23,11 @@ import {
   keyFigureValueKind,
   listVisibleComparableKeyFigureRowIds,
   type KeyFigureRowId,
-} from "@/lib/keyFigureVisibility"
+} from "@/domain/results/keyFigureVisibility"
 import {
   formatPercentileLabel,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import { defaultCheckpointName } from "@/lib/analysisCheckpoint"
 
 function pickPlural(

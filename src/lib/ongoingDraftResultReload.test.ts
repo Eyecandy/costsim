@@ -25,7 +25,7 @@ import {
 } from "@/lib/localAnalysisLibraryRepository"
 import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { OngoingAnalysisState } from "@/lib/analysisCheckpoint"
 import type { Project } from "@/lib/project"

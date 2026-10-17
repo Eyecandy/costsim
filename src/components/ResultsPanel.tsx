@@ -25,7 +25,7 @@ import {
 import {
   formatCheckpointLegendLabel,
 } from "@/lib/checkpointComparisonPresentation"
-import { listVisibleComparableKeyFigureRowIds } from "@/lib/keyFigureVisibility"
+import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
 import {
   buildOngoingPdfDraftConfirmCopy,
@@ -40,40 +40,40 @@ import {
   FOCUS_NEXT_STEPS_ACTION_CLASS,
   FOCUS_NEXT_STEPS_ACTION_COL_CLASS,
 } from "@/lib/focusSessionFrame"
-import { toggleSelectedProjectId } from "@/lib/sCurveProjectEmphasis"
+import { toggleSelectedProjectId } from "@/domain/results/sCurveProjectEmphasis"
 import {
   getProjectColorCssVar,
   getProjectColorHex,
-} from "@/lib/projectColors"
+} from "@/domain/results/projectColors"
 import {
   buildTornadoSharedLayout,
   computeTornadoSharedSymmetricMaxAbs,
   ResultsTornado,
 } from "@/components/ResultsTornado"
 import { ExpandedChartDialog } from "@/components/ExpandedChartDialog"
-import { formatNumber } from "@/lib/formatNumber"
+import { formatNumber } from "@/domain/results/formatNumber"
 import {
   firstPersistedSimulationCount,
   resolveReportedSimulationCount,
 } from "@/domain/simulation/simulationConfig"
 import { fillUncertaintyModelCopy } from "@/domain/simulation/uncertaintyModelConfig"
-import { resolveTornadoDisplayScales } from "@/lib/formatWaterfallValue"
+import { resolveTornadoDisplayScales } from "@/domain/results/formatWaterfallValue"
 import { useLazyShapleyAttribution } from "@/lib/useLazyShapleyAttribution"
 import {
   resolveSCurvePercentiles,
   resolveResultView,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import {
   shouldShowResultSettingsEditor,
   shouldUseCompactResultAnalytics,
-} from "@/lib/resultSettingsPresentation"
+} from "@/domain/results/resultSettingsPresentation"
 import type { ArchivedAnalysisSnapshotV1 } from "@/lib/archivedAnalysisSnapshot"
 import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { buildOngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
-import { buildKeyFigureMetricTableRows } from "@/lib/keyFiguresMetricRows"
-import { buildKeyFigureMetricTableRowsFromFrozen } from "@/lib/keyFiguresMetricRows"
+import { buildKeyFigureMetricTableRows } from "@/domain/results/keyFiguresMetricRows"
+import { buildKeyFigureMetricTableRowsFromFrozen } from "@/domain/results/keyFiguresMetricRows"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
 import type { CompactProjectResultV1 } from "@/lib/compactAnalysisResult"
 import type { SingleArchivedResultSnapshotV1 } from "@/lib/singleArchivedResultSnapshot"
@@ -95,7 +95,7 @@ import { OngoingReportDocument } from "@/pdf/ongoing/OngoingReportDocument"
 import {
   buildAiBriefOngoingDevelopment,
   buildAiBriefV3,
-} from "@/lib/aiBrief"
+} from "@/domain/results/aiBrief"
 import { SectionExpander } from "@/components/SectionExpander"
 import { SpotlightLoadingText } from "@/components/SpotlightLoadingText"
 import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"

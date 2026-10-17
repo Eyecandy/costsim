@@ -88,7 +88,7 @@ import {
   type GuidedSemanticResume,
 } from "@/lib/focusSessionResume"
 import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/lib/focusSessionFrame"
-import { shouldShowResultSettingsEditor } from "@/lib/resultSettingsPresentation"
+import { shouldShowResultSettingsEditor } from "@/domain/results/resultSettingsPresentation"
 import {
   addProjectIfAllowed,
   maxProjectsReached,
@@ -131,7 +131,7 @@ import {
   COLUMN_HEADER_BOTTOM_GAP_CLASS,
   PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS,
   PROJECT_PROFILE_FOCUS_ROW_CLASS,
-} from "@/lib/columnHeaderLayout"
+} from "@/domain/results/columnHeaderLayout"
 import { cn } from "@/lib/utils"
 import { ProjectColorSwatch } from "@/components/ProjectColorSwatch"
 import { Archive, Play, Plus, X } from "lucide-react"
@@ -144,7 +144,7 @@ import {
   invalidDriverRowCellKeys,
   parseCostForSimulation,
   parseDriverForSimulation,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import { useI18n } from "@/i18n/useI18n"
 import { appFeatures } from "@/config/appVariant"
 import { ConfirmDialog } from "@/components/ConfirmDialog"

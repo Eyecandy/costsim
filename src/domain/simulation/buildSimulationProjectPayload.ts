@@ -9,7 +9,7 @@ import {
   parseDriverForSimulation,
   type CostElementRow,
   type DriverRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import type { SimulationProjectPayload } from "@/simulation.worker"
 
 export function buildSimulationProjectPayload(

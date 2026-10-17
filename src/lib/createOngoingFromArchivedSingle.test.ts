@@ -23,8 +23,8 @@ import {
   getAnalysisLibraryRepository,
   setAnalysisLibraryRepositoryForTests,
 } from "@/lib/analysisLibraryRepository"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { resolveResultView } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
+import { resolveResultView } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 

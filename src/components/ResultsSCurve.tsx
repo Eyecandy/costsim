@@ -28,7 +28,7 @@ import {
   CHART_SVG_TICK_FONT_SIZE,
   CHART_TICK_FILL_CLASS,
   chartPercentileGuideOpacity,
-} from "@/lib/chartPresentation"
+} from "@/domain/results/chartPresentation"
 import {
   SCURVE_CURVE_BOTTOM_PAD,
   SCURVE_CURVE_STROKE_LINECAP,
@@ -42,7 +42,7 @@ import {
   SCURVE_VIEWBOX_HEIGHT,
   SCURVE_VIEWBOX_WIDTH,
   computeSCurveDisplaySeries,
-} from "@/lib/sCurveDisplay"
+} from "@/domain/results/sCurveDisplay"
 import {
   buildClassicGuides,
   classicXLabelY,
@@ -54,7 +54,7 @@ import {
   layoutClassicYAxisLabels,
   shouldHideOrdinaryXTickLabel,
   shouldHideOrdinaryYTickLabel,
-} from "@/lib/sCurveClassicGuides"
+} from "@/domain/results/sCurveClassicGuides"
 import {
   SCURVE_HOVER_CROSSHAIR_STROKE_WIDTH,
   SCURVE_HOVER_MARKER_RADIUS,
@@ -70,9 +70,9 @@ import {
   scurveTooltipPlacement,
   sortFiniteValues,
   togglePinnedCost,
-} from "@/lib/sCurveHover"
-import { sCurveProjectLayerOpacity } from "@/lib/sCurveProjectEmphasis"
-import type { ProjectColorCssVar } from "@/lib/projectColors"
+} from "@/domain/results/sCurveHover"
+import { sCurveProjectLayerOpacity } from "@/domain/results/sCurveProjectEmphasis"
+import type { ProjectColorCssVar } from "@/domain/results/projectColors"
 import { percentile } from "@/domain/simulation/stats"
 
 type CurveSeries = {

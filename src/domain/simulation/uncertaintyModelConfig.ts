@@ -5,7 +5,7 @@
  * Describes the single supported analytical family today; does not abstract the engine.
  */
 
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 
 export const uncertaintyModelConfig = {
   /** Marginal family used by main MC and Shapley after P10/mode/P90 calibration. */

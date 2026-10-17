@@ -12,7 +12,7 @@ import {
 } from "@/lib/analysisCheckpoint"
 import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
 import { buildOngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 

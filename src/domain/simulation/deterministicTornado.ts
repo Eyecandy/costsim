@@ -17,7 +17,7 @@ import {
   parseDriverForSimulation,
   type CostElementRow,
   type DriverRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import {
   computeTotalFromSampledValues,
   type DriverImpactMatrix,

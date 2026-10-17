@@ -3,13 +3,13 @@ import { Fragment, useMemo } from "react"
 import { ChartExpandHost, shouldShowChartExpand } from "@/components/ChartExpandButton"
 import { useI18n } from "@/i18n/useI18n"
 import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
-import { formatNumber } from "@/lib/formatNumber"
+import { formatNumber } from "@/domain/results/formatNumber"
 import {
   collectTornadoDisplayValues,
   formatTornadoSignedDeltaWithScale,
   resolveTornadoDisplayScale,
   type WaterfallDisplayScale,
-} from "@/lib/formatWaterfallValue"
+} from "@/domain/results/formatWaterfallValue"
 import { cn } from "@/lib/utils"
 import {
   TORNADO_CENTER_X,
@@ -21,7 +21,7 @@ import {
   tornadoHalfSpan,
   tornadoModeMetrics,
   tornadoSidePadUnits,
-} from "@/lib/tornadoLayout"
+} from "@/domain/results/tornadoLayout"
 
 type ResultsTornadoProps = {
   rows: readonly DeterministicTornadoRow[]

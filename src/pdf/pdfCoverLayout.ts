@@ -2,7 +2,7 @@
  * Pure cover-page layout helpers for the PDF executive-summary page.
  * Documented thresholds keep the cover on exactly one A4 page.
  */
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 
 /**
  * A4 portrait in PDF user points (1/72").

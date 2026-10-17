@@ -25,7 +25,7 @@ import {
   SCENARIO_COLUMN_KEYS,
   patchScenarioRow,
   sanitizeScenarioNumericInput,
-} from "@/lib/excelLikeTable"
+} from "@/domain/results/excelLikeTable"
 import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/lib/project"
 import {
   snapCorrelationCoefficient,
@@ -42,9 +42,9 @@ import {
 import { buttonVariants } from "@/components/ui/button"
 import type { Language } from "@/i18n/I18nProvider"
 import { useI18n } from "@/i18n/useI18n"
-import { applyPastedGrid } from "@/lib/tsvPaste"
+import { applyPastedGrid } from "@/domain/results/tsvPaste"
 import { cn } from "@/lib/utils"
-import { sliderFillRangePct } from "@/lib/sliderFillRange"
+import { sliderFillRangePct } from "@/domain/results/sliderFillRange"
 import {
   type CostElementRow,
   type DriverRow,
@@ -58,14 +58,14 @@ import {
   parseNumberField,
   resolveDriverImpactPercentForSlider,
   snapDriverImpactPercent,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import {
   costRowHasDefinition,
   driverRowHasDefinition,
   withCostDescription,
   withDriverDescription,
   withDriverUncertaintyNotes,
-} from "@/lib/rowDefinitions"
+} from "@/domain/results/rowDefinitions"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
 import { DefineRowEditor } from "@/components/DefineRowEditor"
 import {
@@ -90,7 +90,7 @@ import {
   clampCostOptimisticPercent,
   clampCostPessimisticPercent,
   clampDriverLikelyPercent,
-} from "@/lib/scenarioNumericClamps"
+} from "@/domain/results/scenarioNumericClamps"
 
 export type ScenarioTableVariant = "allPercent" | "costMixed" | "driverMixed"
 

@@ -34,7 +34,7 @@ async function createNamed(args: {
       "@/lib/buildArchivedAnalysisSnapshot"
     )
     const { DEFAULT_RESULT_PREFERENCES } = await import(
-      "@/lib/resultPreferences"
+      "@/domain/results/resultPreferences"
     )
     const { buildSimulationInputSignature } = await import(
       "@/domain/simulation/simulationInputSignature"

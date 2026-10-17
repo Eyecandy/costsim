@@ -9,7 +9,7 @@ import {
   formatResultPreferenceAmount,
   parseResultPreferenceAmount,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import { cn } from "@/lib/utils"
 
 type ResultPreferencesPanelProps = {

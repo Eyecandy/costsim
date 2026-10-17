@@ -15,9 +15,9 @@ import {
   getPercentageDeltaClass,
   selectComparisonKeyFigures,
 } from "@/lib/checkpointComparisonPresentation"
-import { listVisibleComparableKeyFigureRowIds } from "@/lib/keyFigureVisibility"
+import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
 import type { AnalysisCheckpoint } from "@/lib/analysisCheckpoint"
-import type { ResultPreferencesV1 } from "@/lib/resultPreferences"
+import type { ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import { useI18n } from "@/i18n/useI18n"
 import { KeyFigureMetricColumnHeader, KeyFigureMetricValue } from "@/components/KeyFigureMetricValue"
 import { SectionExpander } from "@/components/SectionExpander"

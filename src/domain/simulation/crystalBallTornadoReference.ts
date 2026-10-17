@@ -11,7 +11,7 @@ import {
   buildSimulationCostCorrelationMatrix,
   type Project,
 } from "@/lib/project"
-import { parseCostForSimulation } from "@/lib/tableRows"
+import { parseCostForSimulation } from "@/domain/results/tableRows"
 
 export {
   costUserPercentileAbsolutes,

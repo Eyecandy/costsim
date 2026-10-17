@@ -9,7 +9,7 @@ import {
   removeKeyFigurePercentile,
   removeSCurvePercentile,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import {
   loadResultPreferences,
   resetResultPreferences,

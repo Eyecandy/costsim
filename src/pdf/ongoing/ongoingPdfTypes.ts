@@ -10,7 +10,7 @@ import type {
   CheckpointStatus,
   OngoingAnalysisLifecycle,
 } from "@/lib/analysisCheckpoint"
-import type { AppLanguage } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
 import type { OngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
 import type { PdfContributionBlock } from "@/pdf/buildPdfReportModel"
 

@@ -13,7 +13,7 @@ import type { Project } from "@/lib/project"
 import {
   resolveResultView,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 import {
@@ -34,7 +34,7 @@ import {
 import {
   compactFrozenKeyFiguresSupportPreferences,
   hasLiveProjectResultArrays,
-} from "@/lib/resultSettingsPresentation"
+} from "@/domain/results/resultSettingsPresentation"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export type BuildArchiveSnapshotInput = {

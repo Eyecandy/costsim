@@ -1,6 +1,6 @@
 import { Check, Plus } from "lucide-react"
 
-import { COLUMN_HEADER_BOTTOM_GAP_CLASS } from "@/lib/columnHeaderLayout"
+import { COLUMN_HEADER_BOTTOM_GAP_CLASS } from "@/domain/results/columnHeaderLayout"
 import { cn } from "@/lib/utils"
 import {
   checkpointPrimaryStageId,

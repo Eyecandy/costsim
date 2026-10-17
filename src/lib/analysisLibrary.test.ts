@@ -18,7 +18,7 @@ import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
 } from "@/lib/buildArchivedAnalysisSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot } from "@/test-utils/repoRoot"
 

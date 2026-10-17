@@ -5,12 +5,12 @@ import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import {
   frozenProbabilityBelowForAmount,
   shouldShowResultSettingsEditor,
   shouldUseCompactResultAnalytics,
-} from "@/lib/resultSettingsPresentation"
+} from "@/domain/results/resultSettingsPresentation"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,

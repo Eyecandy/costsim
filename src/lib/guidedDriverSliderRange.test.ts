@@ -15,12 +15,12 @@ import {
 import {
   clampCostOptimisticPercent,
   clampCostPessimisticPercent,
-} from "@/lib/scenarioNumericClamps"
+} from "@/domain/results/scenarioNumericClamps"
 import {
   driverCalibratedSupportInvalid,
   parseDriverForSimulation,
   type DriverRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

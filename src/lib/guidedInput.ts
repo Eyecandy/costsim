@@ -1,25 +1,25 @@
-import type { AppLanguage } from "@/lib/formatNumber"
-import { formatNumber } from "@/lib/formatNumber"
+import type { AppLanguage } from "@/domain/results/formatNumber"
+import { formatNumber } from "@/domain/results/formatNumber"
 import {
   buildSimulationDriverImpactMatrix,
   normalizeIncurredCosts,
   type Project,
 } from "@/lib/project"
-import type { CostElementRow, DriverRow, ScenarioRow } from "@/lib/tableRows"
+import type { CostElementRow, DriverRow, ScenarioRow } from "@/domain/results/tableRows"
 import {
   driverCalibratedSupportInvalid,
   driverLikelyOutsideSpan,
   isMeaningfullyFilledRow,
   parseDriverForSimulation,
   parseNumberField,
-} from "@/lib/tableRows"
-import { sanitizeScenarioNumericInput } from "@/lib/excelLikeTable"
+} from "@/domain/results/tableRows"
+import { sanitizeScenarioNumericInput } from "@/domain/results/excelLikeTable"
 import {
   clampCostLikelyAbs,
   clampCostOptimisticPercent,
   clampCostPessimisticPercent,
   clampDriverLikelyPercent,
-} from "@/lib/scenarioNumericClamps"
+} from "@/domain/results/scenarioNumericClamps"
 import { computeTotalFromSampledValues } from "@/simulation"
 
 export type GuidedInputKind = "cost" | "driver"

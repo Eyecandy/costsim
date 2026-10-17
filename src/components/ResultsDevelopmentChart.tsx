@@ -4,7 +4,7 @@ import { ChartExpandHost } from "@/components/ChartExpandButton"
 import { useI18n } from "@/i18n/useI18n"
 import {
   formatKeyFigureStat,
-} from "@/lib/keyFiguresDisplay"
+} from "@/domain/results/keyFiguresDisplay"
 import {
   ongoingDevelopmentAxisLabel,
   type OngoingDevelopmentPoint,

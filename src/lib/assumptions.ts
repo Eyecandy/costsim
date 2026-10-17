@@ -1,4 +1,4 @@
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 
 /** Descriptive premise for an uncertainty analysis (not a model input). */
 export type ProjectAssumption = {

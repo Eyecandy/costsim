@@ -13,7 +13,7 @@ import {
 } from "@/lib/analysisCheckpoint"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
 
 describe("analysisCheckpoint", () => {

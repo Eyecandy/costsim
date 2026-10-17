@@ -48,7 +48,7 @@ import {
   cloneResultPreferences,
   normalizeResultPreferences,
   type ResultPreferencesV1,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import {
   omitDraftResultFields,
   replaceDraftResultField,

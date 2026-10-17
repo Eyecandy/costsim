@@ -9,7 +9,7 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
 import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapshot"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot as root } from "@/test-utils/repoRoot"

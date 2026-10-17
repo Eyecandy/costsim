@@ -14,8 +14,8 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { resolveResultView } from "@/lib/resultPreferences"
+import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
+import { resolveResultView } from "@/domain/results/resultPreferences"
 import {
   applyAlternativeSelection,
   applyManualNameEdit,

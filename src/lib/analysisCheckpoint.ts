@@ -12,7 +12,7 @@
  * completion of the whole ongoing analysis, branching histories.
  */
 
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 import type { ArchivedAnalysisSnapshotV1 } from "@/lib/archivedAnalysisSnapshot"
 import type { AnalysisWorkspacePayload } from "@/lib/analysisDocument"
 import type { Project } from "@/lib/project"

@@ -17,7 +17,7 @@ import {
   DEFAULT_RESULT_PREFERENCES,
   normalizeResultPreferences,
   resolveResultView,
-} from "@/lib/resultPreferences"
+} from "@/domain/results/resultPreferences"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"

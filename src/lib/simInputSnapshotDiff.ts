@@ -1,4 +1,4 @@
-import { SCENARIO_COLUMN_KEYS } from "@/lib/excelLikeTable"
+import { SCENARIO_COLUMN_KEYS } from "@/domain/results/excelLikeTable"
 import {
   normalizeIncurredCosts,
   type DriverImpactsByRowId,
@@ -8,7 +8,7 @@ import {
   parseDriverForSimulation,
   resolveDriverImpactPercent,
   type ScenarioRow,
-} from "@/lib/tableRows"
+} from "@/domain/results/tableRows"
 
 /** Changed-cell key for the incurred-cost value cell in the cost table. */
 export const INCURRED_COSTS_CELL_KEY = "__incurredCosts__:likely"

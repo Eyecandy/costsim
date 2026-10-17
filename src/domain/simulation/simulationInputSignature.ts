@@ -10,8 +10,8 @@
 
 import type { Project } from "@/lib/project"
 import { normalizeIncurredCosts } from "@/lib/project"
-import { stripRowDefinitions } from "@/lib/rowDefinitions"
-import { isMeaningfullyFilledRow } from "@/lib/tableRows"
+import { stripRowDefinitions } from "@/domain/results/rowDefinitions"
+import { isMeaningfullyFilledRow } from "@/domain/results/tableRows"
 
 function projectHasMeaningfulTableInput(project: Project): boolean {
   if (normalizeIncurredCosts(project.incurredCosts) > 0) return true

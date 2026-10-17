@@ -1,4 +1,4 @@
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 import {
   ANALYSIS_DOCUMENT_SCHEMA_VERSION,
   DEFAULT_ANALYSIS_MODE,

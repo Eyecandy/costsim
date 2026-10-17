@@ -19,8 +19,8 @@ import {
   SCURVE_CURVE_STROKE_LINEJOIN,
   SCURVE_CURVE_STROKE_WIDTH,
   computeSCurveDisplaySeries,
-} from "@/lib/sCurveDisplay"
-import { formatNumber, type AppLanguage } from "@/lib/formatNumber"
+} from "@/domain/results/sCurveDisplay"
+import { formatNumber, type AppLanguage } from "@/domain/results/formatNumber"
 import { percentile } from "@/domain/simulation/stats"
 import {
   formatPdfAbsoluteAmount,

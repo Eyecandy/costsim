@@ -10,7 +10,7 @@ import {
   maxProjectsReached,
   type Project,
 } from "@/lib/project"
-import { newId } from "@/lib/tableRows"
+import { newId } from "@/domain/results/tableRows"
 
 function richSource(): Project {
   const c1 = newId()
