@@ -46,8 +46,16 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 | 2026-10-17 | 23:26 | Phase 1: `CLAUDE.md`, `engines`/`packageManager`/`.nvmrc`, `typecheck`/`lint:fix`/`test:watch` scripts, env typing + `.env.example`, `.editorconfig`, VS Code files, `.gitignore`; removed unused deps (`lodash`, `marked`, `react-responsive-carousel`, `autoprefixer`, empty `tailwind.config.js`). Only CSS change: legacy `-moz-column-gap` prefix gone. | 69cc018 |
 | 2026-10-18 | 00:05 | Phase 2: 80 lint errors to 0 (underscore-unused convention, dead code removed, 15 non-component exports moved out of component files with a reusable split tool, `prefer-const`); compiler-only React rules kept as warnings under a `--max-warnings 45` ratchet; TypeScript `noUnusedLocals/Parameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `noImplicitOverride`, `noUncheckedIndexedAccess` on; CI workflow, Dependabot, PR template; tests pinned to the `pilot` variant (that was the "failing" test); benchmarks moved to `npm run test:bench` (they tripped the Vitest worker timeout). A fresh-clone `npm ci` + `npm run check` passes. | d3326b5 |
 | 2026-10-18 | 00:10 (approx) | `shadcn` moved to devDependencies and `npm audit fix`: production audit from 25 findings to 0. | following commit |
+| 2026-10-18 | ~00:40 | Phase 3: Prettier (one-time format of 315 files; only 2 source-text tests needed loosening), Husky + lint-staged pre-commit hook, `format`/`format:check` scripts. Markdown excluded. | 8a08b2f |
+| 2026-10-18 | ~01:30 | Phase 4: ESLint with typescript-eslint strict + stylistic, jsx-a11y, type-aware promise rules, unused-disable errors, no `localStorage`/`sessionStorage` outside `persistence/`; 14 dialog backdrops made accessible (close on backdrop click via `target === currentTarget`); Dependabot ignores major bumps. Lint ratchet 36 warnings. | 2d79c41 |
+| 2026-10-18 | ~02:30 | Phase 5a: `ErrorBoundary`, `logError`, global `error`/`unhandledrejection` handlers; silent catches in `useLibraryAnalysisSession` now log; storage moved into `persistence/` (language, auth session, library navigation); typed i18n keys (`MessageKey`, `Translate`) with a compile-time parity check; hard-coded strings moved to messages; `<html lang>` follows the UI language. | 377862e |
 
-`App.tsx`: 4,459 lines at start, 1,208 after the last commit above.
+`App.tsx`: 4,459 lines at start, 1,208 after the last App commit above.
+
+## Not done yet (stopped at the usage limit, 2026-10-18)
+- Phase 5b: de-duplicate helpers (PDF chart geometry in `ProjectReportDocument` / `ongoingPdfCharts` / `ResultsSCurve`, `clamp`, `nearZeroToZero`, `resolvePairRho`, `projectHasMeaningfulTableInput`, the repeated fullscreen code), fix the 6 `exhaustive-deps` disables and timers without cleanup.
+- Phase 6 React 19, Phase 7 bundle splitting / lazy loading / security headers, Phase 8 behavioural tests + coverage, Phase 9 splitting the large files.
+- **Full UI comparison against the original `costsim` has not been run since Phase 2** (you asked for it at the end). Include: dialog backdrop clicks, language switch (`<html lang>`), error boundary, all earlier flows.
 
 Checks after each commit: `tsc -b` clean, lint no worse than the previous commit (88 at start, 80 now), tests 1,332 of 1,333 pass, `check:deps` clean.
 
