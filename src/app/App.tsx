@@ -113,7 +113,6 @@ import {
   STORAGE_KEYS,
 } from "@/persistence/storage"
 import {
-  COLUMN_HEADER_BOTTOM_GAP_CLASS,
   PROJECT_PROFILE_FOCUS_ROW_CLASS,
 } from "@/domain/results/columnHeaderLayout"
 import { cn } from "@/shared/utils"
@@ -124,10 +123,7 @@ import {
 } from "@/domain/results/tableRows"
 import { useI18n } from "@/i18n/useI18n"
 import { appFeatures } from "@/config/appVariant"
-import { SpotlightLoadingText } from "@/shared/SpotlightLoadingText"
 import {
-  brandPrimaryTextClass,
-  brandPrimaryButtonClass,
   PRODUCT_NAME,
 } from "@/shared/brand"
 import {
@@ -158,7 +154,6 @@ import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftR
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 
 import {
-  STICKY_CONTROL_STRIP_CLASSNAME,
   RESULTS_COLUMN_CLASS,
   PROJECT_PROFILE_SECTION_SPACING_CLASS,
   RESULTS_ALIGN_WITH_COST_ITEMS_CLASS,
@@ -168,11 +163,8 @@ import {
   ONGOING_TIMELINE_CELL_CLASS,
   ONGOING_PROJECT_PROFILE_CELL_CLASS,
   ONGOING_COST_CELL_CLASS,
-  ONGOING_SIMULATION_CELL_CLASS,
   ONGOING_RESULTS_CELL_CLASS,
-  SIMULATION_NOTICE_ZONE_CLASS,
   SIMULATION_NOTICE_TEXT_CLASS,
-  NOTICE_WORD_RED_CLASS,
   NOTICE_WORD_GREEN_CLASS,
 } from "@/app/workspace/layoutClasses"
 import { PrimaryFocusModeEntry } from "@/app/workspace/PrimaryFocusModeEntry"
@@ -194,6 +186,7 @@ import { useStaleInputDiffs } from "@/app/workspace/useStaleInputDiffs"
 import { WorkspaceDialogs } from "@/app/workspace/WorkspaceDialogs"
 import { AnalysisHeader } from "@/app/workspace/AnalysisHeader"
 import { ProjectTabs } from "@/app/workspace/ProjectTabs"
+import { SimulationStrip } from "@/app/workspace/SimulationStrip"
 export default function App() {
   const { language, t } = useI18n()
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -2790,135 +2783,19 @@ export default function App() {
                 : RESULTS_COLUMN_CLASS
             }
           >
-            <div
-              className={
-                isOngoingAnalysis
-                  ? ONGOING_SIMULATION_CELL_CLASS
-                  : STICKY_CONTROL_STRIP_CLASSNAME
-              }
-              role="region"
-              aria-label={t("projects.simulationStripRegion")}
-            >
-              <p
-                className={cn(
-                  "font-sans text-[10px] font-normal italic tracking-wide text-muted-foreground/55",
-                  COLUMN_HEADER_BOTTOM_GAP_CLASS,
-                )}
-              >
-                {t("projects.resultsColumnLabel")}
-              </p>
-              <div className="flex h-8 w-full shrink-0 items-center justify-center">
-                {isRunning ? (
-                  <SpotlightLoadingText
-                    text={t("buttons.simulating")}
-                    tone="primary"
-                    className={cn(
-                      "font-sans text-xs font-semibold",
-                      brandPrimaryTextClass,
-                    )}
-                    data-simulation-loading=""
-                    aria-live="polite"
-                    aria-busy="true"
-                  />
-                ) : analysisReadOnly ? (
-                  <Button
-                    type="button"
-                    disabled
-                    title={t("library.runDisabledArchived")}
-                    className={cn(
-                      "h-8 w-full shrink-0 font-sans text-xs font-semibold uppercase tracking-wide opacity-40",
-                      brandPrimaryButtonClass,
-                    )}
-                  >
-                    {t("buttons.runSimulation")}
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    className={cn(
-                      "h-8 w-full shrink-0 font-sans text-xs font-semibold uppercase tracking-wide",
-                      brandPrimaryButtonClass,
-                    )}
-                    onClick={handleRun}
-                  >
-                    {t("buttons.runSimulation")}
-                  </Button>
-                )}
-              </div>
-              <div className={SIMULATION_NOTICE_ZONE_CLASS}>
-                {runErrorKey === "projects.workerError" ? (
-                  <p
-                    className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}
-                    role="alert"
-                  >
-                    {t(runErrorKey)}
-                  </p>
-                ) : null}
-                {showValidationFeedback ? (
-                  <p
-                    className={cn(SIMULATION_NOTICE_TEXT_CLASS, "min-w-0 break-words")}
-                    role="alert"
-                  >
-                    {noticeWithColorWord(
-                      t(currentValidationError),
-                      language === "no" ? "rødt" : "red",
-                      NOTICE_WORD_RED_CLASS,
-                    )}
-                  </p>
-                ) : null}
-                {showStaleInputNotice ? (
-                  <div className="flex min-w-0 flex-col gap-1">
-                    <p
-                      className={cn(
-                        "font-sans text-xs font-medium leading-snug text-foreground/85",
-                        "min-w-0 break-words",
-                      )}
-                    >
-                      {t("projects.staleInputsTitle")}
-                    </p>
-                    <p
-                      className={cn(
-                        SIMULATION_NOTICE_TEXT_CLASS,
-                        "min-w-0 break-words",
-                      )}
-                    >
-                      {showStaleInputChanges
-                        ? noticeWithColorWord(
-                            t("projects.staleInputsNoticeWithChanges"),
-                            language === "no" ? "Grønne" : "Green",
-                            NOTICE_WORD_GREEN_CLASS,
-                          )
-                        : t("projects.staleInputsNotice")}
-                    </p>
-                    <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <Button
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        className="h-auto min-h-0 w-fit shrink-0 self-start px-0 py-0 text-xs leading-snug"
-                        aria-pressed={showStaleInputChanges}
-                        onClick={() =>
-                          setShowStaleInputChanges((prev) => !prev)
-                        }
-                      >
-                        {showStaleInputChanges
-                          ? t("projects.hideInputChanges")
-                          : t("projects.showInputChanges")}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        className="h-auto min-h-0 w-fit shrink-0 self-start px-0 py-0 text-xs leading-snug"
-                        onClick={handleRevertInputsToLastSimulation}
-                      >
-                        {t("projects.revertInputChanges")}
-                      </Button>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
+            <SimulationStrip
+              analysisReadOnly={analysisReadOnly}
+              currentValidationError={currentValidationError}
+              handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
+              handleRun={handleRun}
+              isOngoingAnalysis={isOngoingAnalysis}
+              isRunning={isRunning}
+              runErrorKey={runErrorKey}
+              setShowStaleInputChanges={setShowStaleInputChanges}
+              showStaleInputChanges={showStaleInputChanges}
+              showStaleInputNotice={showStaleInputNotice}
+              showValidationFeedback={showValidationFeedback}
+            />
             <div
               className={
                 isOngoingAnalysis
