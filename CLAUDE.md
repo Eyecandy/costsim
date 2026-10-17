@@ -33,7 +33,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Environment variables: declared in `src/vite-env.d.ts`, documented in `.env.example`. Every `VITE_` value ends up in the public bundle: nothing secret. `VITE_APP_PASSWORD` is a gate, not real authentication.
 
 ## Code style
-- No semicolons, double quotes, 2-space indent, trailing commas (Prettier/ESLint enforce this once configured; follow the existing files until then).
+- Prettier formats everything except Markdown (no semicolons, double quotes, width 100, trailing commas). A pre-commit hook (Husky + lint-staged) runs Prettier and `eslint --fix` on staged files; `npm run format` formats the repo.
 - Files: components `PascalCase.tsx`, hooks `useThing.ts`, everything else `camelCase.ts`. Named exports only (`App` is the one default export). Props types are called `XxxProps`.
 - TypeScript is strict. No `any`, `@ts-ignore`, `as unknown as`. Avoid `!` unless the line before guarantees non-null.
 - No empty `catch`. Either handle it, log it, or write `// intentional: <why>`.
@@ -53,4 +53,4 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 
 ## Known debt (see `docs/refactor-tasks.md` for the live list)
 - Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`, `i18n/messages.ts`.
-- Lint: 0 errors, 45 warnings (React-Compiler rules `refs` / `set-state-in-effect` flagging older patterns, plus a few stale `eslint-disable` lines). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.
+- Lint: 0 errors, 36 warnings (12 `refs` and 14 `set-state-in-effect` from the React-Compiler rules flagging older patterns, 9 `exhaustive-deps`, 1 memoization). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.

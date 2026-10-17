@@ -13,7 +13,6 @@ describe("P50 display diagnosis", () => {
     const formattedMainNo = formatWaterfallValueWithScale(mainP50, scale, "no")
     const formattedMainEn = formatWaterfallValueWithScale(mainP50, scale, "en")
 
-    // eslint-disable-next-line no-console
     console.log({
       mainP50,
       formattedMainNo,
