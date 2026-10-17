@@ -323,7 +323,7 @@ describe("draft result preserve / Results visibility", () => {
 
   it("H: Ongoing session compact mounts Results when App holder empty", () => {
     const app = readFileSync(
-      join(repoRoot, "src/App.tsx"),
+      join(repoRoot, "src/app/App.tsx"),
       "utf8",
     )
     const gate = app.slice(

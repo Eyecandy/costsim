@@ -277,7 +277,7 @@ describe("archive validation after simulation", () => {
 
   it("session archive path heals save chain and reads live eligibility refs", () => {
     const session = readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(session).toContain("enqueueSave")
@@ -289,7 +289,7 @@ describe("archive validation after simulation", () => {
 
   it("App gates archive menu/button on librarySession.canArchive", () => {
     const app = readFileSync(
-      join(repoRoot, "src/App.tsx"),
+      join(repoRoot, "src/app/App.tsx"),
       "utf8",
     )
     expect(app).toContain("canArchive={librarySession.canArchive}")

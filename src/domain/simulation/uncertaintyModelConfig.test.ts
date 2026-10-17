@@ -31,7 +31,7 @@ describe("uncertaintyModelConfig product architecture", () => {
     expect(messages.no.aboutModel.paragraph1).not.toMatch(/triangulær/i)
     expect(messages.en.aboutModel.paragraph1).not.toMatch(/triangular distribution/i)
 
-    const header = readSrc("src/components/GlobalHeaderUtilities.tsx")
+    const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain("fillUncertaintyModelCopy")
     expect(header).toContain("aboutModel.paragraph1")
 
@@ -59,7 +59,7 @@ describe("uncertaintyModelConfig product architecture", () => {
       "triangular distributions",
     )
 
-    const panel = readSrc("src/components/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(panel).toContain("fillUncertaintyModelCopy")
     expect(panel).toContain("results.pdfMethodParagraph1")
     // Ongoing + Single both build methodParagraphs via the same ResultsPanel path.

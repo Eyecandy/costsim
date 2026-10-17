@@ -1,4 +1,4 @@
-import { PRODUCT_NAME } from "@/lib/brand"
+import { PRODUCT_NAME } from "@/shared/brand"
 
 export const messages = {
   no: {

@@ -8,7 +8,7 @@ import {
 } from "@/persistence/analysisLibraryRoutes"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
-import { navigateTo } from "@/lib/auth"
+import { navigateTo } from "@/app/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -87,7 +87,7 @@ async function createBlankNamed(name: string) {
 describe("empty-library New Analysis shares sidebar action", () => {
   it("sidebar exposes openNewAnalysisFromToolbar via openNewAnalysisActionRef", () => {
     const nav = readFileSync(
-      join(repoRoot, "src/components/AnalysisLibraryNav.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
       "utf8",
     )
     expect(nav).toContain("openNewAnalysisFromToolbar")
@@ -100,7 +100,7 @@ describe("empty-library New Analysis shares sidebar action", () => {
 
   it("Home empty-state CTA invokes the registered sidebar action (not requestNewAnalysis)", () => {
     const page = readFileSync(
-      join(repoRoot, "src/AnalysisLibraryPage.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
       "utf8",
     )
     expect(page).toContain("openNewAnalysisActionRef")

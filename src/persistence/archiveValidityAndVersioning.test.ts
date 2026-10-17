@@ -168,7 +168,7 @@ describe("archive validity", () => {
     expect(messages.en.library.archiveNeedsRerun).toBe(
       "Inputs have changed. Run the simulation again before archiving the analysis.",
     )
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("getArchiveBlockReason")
     expect(app).toContain("archiveNeedsSimulation")
     expect(app).toContain("archiveNeedsRerun")
@@ -245,9 +245,9 @@ describe("archived Result View capture", () => {
   })
 
   it("App archives from the same live Result Preferences hook as ResultsPanel", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     const panel = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(app).toContain("useResultPreferences")
@@ -411,7 +411,7 @@ describe("create new version inherits archived results", () => {
 
   it("ResultsPanel uses draftResultSeed Shapley and does not auto-run while seeded", () => {
     const panel = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(panel).toContain("draftResultSeed")
@@ -426,7 +426,7 @@ describe("create new version inherits archived results", () => {
     )
     expect(seed).toContain("buildDraftResultSeedFromArchive")
     expect(seed).not.toContain("DraftResultSnapshotV1")
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("clearDraftResultSeedRef")
     expect(app).toContain("applyDraftResultSeed")
   })

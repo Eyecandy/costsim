@@ -79,7 +79,7 @@ describe("focusSessionNavigation", () => {
 
 describe("unified Focus session ownership", () => {
   it("A–C: App owns continuous Previous/Next across Input and Results", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("navigateFocusPrevious")
     expect(app).toContain("navigateFocusNext")
     expect(app).toContain("guidedDialogRef")
@@ -94,7 +94,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("B: Shell arrows apply for the whole Focus session, not Results-only", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(shell).toContain("shouldIgnoreFocusArrowNavigation")
     expect(shell).toContain("ArrowLeft")
     expect(shell).toContain("onNavigatePrevious")
@@ -102,7 +102,7 @@ describe("unified Focus session ownership", () => {
     expect(shell).not.toMatch(
       /if \(!open \|\| variant !== "results"\) return/,
     )
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain(
       "if (!open || suspend || focusMode || ensureFocusMode) return",
     )
@@ -110,7 +110,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("D–F: X / exitFocusMode closes the whole Focus session including Guided", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     const exit = app.match(
       /const exitFocusMode = useCallback\(\(\) => \{([\s\S]*?)\}, \[[^\]]*\]\)/,
     )
@@ -128,7 +128,7 @@ describe("unified Focus session ownership", () => {
         focusResultStepIndex: 0,
       }),
     ).toEqual({ kind: "enterInputFromResults" })
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     const back = app.match(
       /const backToFocusInput = useCallback\(\(\) => \{([\s\S]*?)\}, \[/,
     )
@@ -138,7 +138,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("C: After Results → Input, Guided does not own competing window arrows", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain(
       "if (!open || suspend || focusMode || ensureFocusMode) return",
     )
@@ -148,8 +148,8 @@ describe("unified Focus session ownership", () => {
   })
 
   it("G: Shared Focus frame contract is phase-invariant", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     expect(shell).toContain('data-focus-frame-contract={dormant ? undefined : "session"}')
     expect(frame).toContain("h-[min(92vh,48rem)] w-[min(96vw,60rem)]")
@@ -167,7 +167,7 @@ describe("unified Focus session ownership", () => {
 
   it("A–G presentation: normal Focus card vs explicit fullscreen", () => {
     const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
-    const shell = readSrc("src/components/FocusModeShell.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(frame).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(frame).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")
     expect(frame).toContain("h-[min(92vh,48rem)] w-[min(96vw,60rem)]")
@@ -179,14 +179,14 @@ describe("unified Focus session ownership", () => {
   })
 
   it("Shell arrows use window listener so Input↔Results remounts keep working", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(shell).toContain('window.addEventListener("keydown", onKeyDown)')
     expect(shell).toContain("target === document.body")
     expect(shell).not.toContain("root.addEventListener(\"keydown\"")
   })
 
   it("H: Focus arrow ignore helper covers editables and overlays", () => {
-    const src = readSrc("src/lib/shouldIgnoreFocusArrowNavigation.ts")
+    const src = readSrc("src/features/focus-mode/shouldIgnoreFocusArrowNavigation.ts")
     expect(src).toContain("shouldIgnoreGuidedArrowNavigation")
     expect(src).toContain("data-expanded-chart-dialog")
     expect(src).toContain("data-result-preferences-panel")
@@ -194,13 +194,13 @@ describe("unified Focus session ownership", () => {
   })
 
   it("I: Simulation → Results still requires viewable results", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     const cont = app.match(
       /const continueFromSimulationToResults = useCallback\(\(\) => \{([\s\S]*?)\}, \[hasViewableResults\]\)/,
     )
     expect(cont?.[1] ?? "").toContain("if (!hasViewableResults) return")
     expect(cont?.[1] ?? "").toContain('setFocusView("results")')
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain("onContinueToResults")
     expect(guided).toContain('simulationResultStatus === "valid"')
     expect(guided).toContain('simulationResultStatus === "stale"')

@@ -40,7 +40,7 @@ const defaultResultView = resolveResultView(DEFAULT_RESULT_PREFERENCES)
 
 function resultsPanelSource() {
   return readFileSync(
-    join(repoRoot, "src/components/ResultsPanel.tsx"),
+    join(repoRoot, "src/features/results/ResultsPanel.tsx"),
     "utf8",
   )
 }

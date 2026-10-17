@@ -200,7 +200,7 @@ describe("buildOngoingDevelopmentSeries performance invariants", () => {
 
 describe("Development wiring stability (source / memo / hover)", () => {
   it("App memoizes checkpointComparisonResultSource", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain(
       "const checkpointComparisonResultSource = useMemo",
     )
@@ -208,7 +208,7 @@ describe("Development wiring stability (source / memo / hover)", () => {
 
   it("ResultsPanel development memo ignores result preferences and archived nav tip", () => {
     const panel = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(panel).toContain("viewedDraftCheckpointId")
@@ -223,7 +223,7 @@ describe("Development wiring stability (source / memo / hover)", () => {
 
   it("hover chart does not import percentile helpers", () => {
     const chart = readFileSync(
-      join(repoRoot, "src/components/ResultsDevelopmentChart.tsx"),
+      join(repoRoot, "src/features/results/ResultsDevelopmentChart.tsx"),
       "utf8",
     )
     expect(chart).not.toContain("extractDevelopmentMetrics")

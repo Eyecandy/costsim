@@ -72,7 +72,7 @@ describe("chartPresentation", () => {
   })
 
   it("renders Classic highlighted percentiles at tick font size", () => {
-    const scurve = readSrc("src/components/ResultsSCurve.tsx")
+    const scurve = readSrc("src/features/results/ResultsSCurve.tsx")
     // Classic Y annotations use tick size, not a larger size
     expect(scurve).toMatch(
       /data-scurve-classic-y-label[\s\S]*?fontSize=\{CHART_SVG_TICK_FONT_SIZE\}|fontSize=\{CHART_SVG_TICK_FONT_SIZE\}[\s\S]*?data-scurve-classic-y-label/,
@@ -92,7 +92,7 @@ describe("chartPresentation", () => {
     expect(SCURVE_EXPANDED_SHELL_CLASS).toContain("max-w-[min(100%,48rem)]")
     expect(SCURVE_INLINE_SHELL_CLASS).toContain("mx-auto")
     expect(SCURVE_EXPANDED_SHELL_CLASS).toContain("mx-auto")
-    const scurve = readSrc("src/components/ResultsSCurve.tsx")
+    const scurve = readSrc("src/features/results/ResultsSCurve.tsx")
     expect(scurve).toContain("SCURVE_INLINE_SHELL_CLASS")
     expect(scurve).toContain("SCURVE_EXPANDED_SHELL_CLASS")
     expect(scurve).toContain("SCURVE_PLOT_ASPECT_CLASS")
@@ -104,7 +104,7 @@ describe("chartPresentation", () => {
   })
 
   it("is consumed by the S-curve for Classic, ticks, and grid", () => {
-    const scurve = readSrc("src/components/ResultsSCurve.tsx")
+    const scurve = readSrc("src/features/results/ResultsSCurve.tsx")
     expect(scurve).toContain("CHART_PRIMARY_STROKE_WIDTH")
     expect(scurve).toContain("CHART_SECONDARY_STROKE_WIDTH")
     expect(scurve).not.toContain("CHART_MINIMAL")
@@ -120,7 +120,7 @@ describe("chartPresentation", () => {
   })
 
   it("keeps Focus and normal Results on the same S-curve component", () => {
-    const panel = readSrc("src/components/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx")
     const matches = panel.match(/<ResultsSCurve/g) ?? []
     expect(matches.length).toBeGreaterThanOrEqual(2)
     expect(panel).toContain('expandedChart?.kind === "scurve"')
@@ -142,13 +142,13 @@ describe("chartPresentation", () => {
   })
 
   it("does not alter Tornado / waterfall / development bar presentation", () => {
-    expect(readSrc("src/components/ResultsTornado.tsx")).toContain(
+    expect(readSrc("src/features/results/ResultsTornado.tsx")).toContain(
       "fillOpacity={0.58}",
     )
-    expect(readSrc("src/components/AttributionWaterfall.tsx")).toContain(
+    expect(readSrc("src/features/results/AttributionWaterfall.tsx")).toContain(
       "fillOpacity={0.62}",
     )
-    const development = readSrc("src/components/ResultsDevelopmentChart.tsx")
+    const development = readSrc("src/features/results/ResultsDevelopmentChart.tsx")
     expect(development).not.toContain("chartPresentation")
   })
 })

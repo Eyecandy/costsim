@@ -173,7 +173,7 @@ describe("archive persistence", () => {
 
   it("session archiveCurrent serializes behind save chain and skips next autosave", () => {
     const session = readFileSync(
-      join(root, "src/lib/useLibraryAnalysisSession.ts"),
+      join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     const archiveFnStart = session.indexOf(

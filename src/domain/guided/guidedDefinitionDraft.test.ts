@@ -22,13 +22,13 @@ import { repoRoot as root } from "@/test-utils/repoRoot"
 
 function dialogSource() {
   return readFileSync(
-    join(root, "src/components/GuidedInputDialog.tsx"),
+    join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
     "utf8",
   )
 }
 
 function appSource() {
-  return readFileSync(join(root, "src/App.tsx"), "utf8")
+  return readFileSync(join(root, "src/app/App.tsx"), "utf8")
 }
 
 function guidedDefinitionTextareaSource(): string {

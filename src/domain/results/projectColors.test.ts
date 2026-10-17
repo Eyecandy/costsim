@@ -32,12 +32,12 @@ describe("projectColors", () => {
 
   it("ResultsPanel and App resolve colors from the shared helper", () => {
     const panel = readFileSync(
-      join(root, "src/components/ResultsPanel.tsx"),
+      join(root, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
     const swatch = readFileSync(
-      join(root, "src/components/ProjectColorSwatch.tsx"),
+      join(root, "src/shared/ProjectColorSwatch.tsx"),
       "utf8",
     )
     expect(panel).toContain("getProjectColorCssVar")
@@ -53,19 +53,19 @@ describe("projectColors", () => {
 
   it("Tornado and Contribution headings use ProjectColorSwatch without recoloring bars", () => {
     const panel = readFileSync(
-      join(root, "src/components/ResultsPanel.tsx"),
+      join(root, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     const tornado = readFileSync(
-      join(root, "src/components/ResultsTornado.tsx"),
+      join(root, "src/features/results/ResultsTornado.tsx"),
       "utf8",
     )
     const waterfall = readFileSync(
-      join(root, "src/components/ResultsWaterfall.tsx"),
+      join(root, "src/features/results/ResultsWaterfall.tsx"),
       "utf8",
     )
     const reserve = readFileSync(
-      join(root, "src/components/ResultsReserveWaterfall.tsx"),
+      join(root, "src/features/results/ResultsReserveWaterfall.tsx"),
       "utf8",
     )
     const tornadoBlock = panel.slice(

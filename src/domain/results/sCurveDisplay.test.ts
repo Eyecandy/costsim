@@ -21,11 +21,11 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
 }
 
 function sCurveSource() {
-  return readFileSync(join(repoRoot, "src/components/ResultsSCurve.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/features/results/ResultsSCurve.tsx"), "utf8")
 }
 
 function pdfSource() {
@@ -130,7 +130,7 @@ describe("S-curve display series", () => {
   it("I: S-curve project colors use shared project identity tokens", () => {
     const src = sCurveSource()
     const panel = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(src).toContain("`var(${c.colorVar})`")

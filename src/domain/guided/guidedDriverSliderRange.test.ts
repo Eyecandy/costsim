@@ -26,7 +26,7 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 function dialogSource() {
   return readFileSync(
-    join(repoRoot, "src/components/GuidedInputDialog.tsx"),
+    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
     "utf8",
   )
 }

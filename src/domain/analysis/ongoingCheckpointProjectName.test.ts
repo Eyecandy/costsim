@@ -177,7 +177,7 @@ describe("ongoing checkpoint Project.name from analysis name", () => {
     expect(a.name).not.toBe(b.name)
 
     const session = readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(session).toContain("analysisName: existing.name")

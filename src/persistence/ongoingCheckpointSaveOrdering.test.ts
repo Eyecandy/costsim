@@ -25,7 +25,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const sessionSource = readFileSync(
-  join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+  join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
   "utf8",
 )
 

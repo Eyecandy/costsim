@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { shouldIgnoreFocusArrowNavigation } from "@/lib/shouldIgnoreFocusArrowNavigation"
+import { shouldIgnoreFocusArrowNavigation } from "@/features/focus-mode/shouldIgnoreFocusArrowNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 
@@ -11,7 +11,7 @@ describe("shouldIgnoreFocusArrowNavigation", () => {
     expect(typeof shouldIgnoreFocusArrowNavigation).toBe("function")
     expect(shouldIgnoreFocusArrowNavigation(null)).toBe(false)
     const src = readFileSync(
-      join(root, "src/lib/shouldIgnoreFocusArrowNavigation.ts"),
+      join(root, "src/features/focus-mode/shouldIgnoreFocusArrowNavigation.ts"),
       "utf8",
     )
     expect(src).toContain("shouldIgnoreGuidedArrowNavigation")

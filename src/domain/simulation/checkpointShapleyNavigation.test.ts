@@ -64,7 +64,7 @@ describe("checkpoint navigation Contribution cache", () => {
 
   it("stale transition stops work without clearing cache or errors", () => {
     const hook = readFileSync(
-      join(repoRoot, "src/lib/useLazyShapleyAttribution.ts"),
+      join(repoRoot, "src/features/results/useLazyShapleyAttribution.ts"),
       "utf8",
     )
     const staleEffect = hook.slice(

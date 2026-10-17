@@ -72,7 +72,7 @@ describe("scenario range endpoint sign fold", () => {
 describe("range sign fold reaches table + Focus + paste paths", () => {
   it("A: ScenarioPercentTable commits and paste use shared O/P clamps", () => {
     const table = readFileSync(
-      join(root, "src/components/ScenarioPercentTable.tsx"),
+      join(root, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
       "utf8",
     )
     expect(table).toContain("clampCostOptimisticPercent")
@@ -129,7 +129,7 @@ describe("range sign fold reaches table + Focus + paste paths", () => {
 
   it("C: Focus still routes numeric commits through normalizeGuidedNumericField", () => {
     const guided = readFileSync(
-      join(root, "src/components/GuidedInputDialog.tsx"),
+      join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
       "utf8",
     )
     expect(guided).toContain("normalizeGuidedNumericField")

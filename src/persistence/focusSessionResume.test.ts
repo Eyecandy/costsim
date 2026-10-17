@@ -252,7 +252,7 @@ describe("focusSessionResume helpers", () => {
 
 describe("Focus session resume wiring", () => {
   it("App restores after library ready; clears on explicit Focus exit", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("didAttemptFocusSessionResumeRef")
     expect(app).toContain("readFocusSessionResume")
     expect(app).toContain("writeFocusSessionResume")
@@ -274,7 +274,7 @@ describe("Focus session resume wiring", () => {
   })
 
   it("Guided publishes workflowRowId; semantic resume lands via helper", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain("workflowRowId")
     expect(guided).toContain("resumeSemanticStep")
     expect(guided).toContain("resolveGuidedStepIndexForResume")
@@ -289,14 +289,14 @@ describe("Focus session resume wiring", () => {
     expect(resume).not.toContain("expandedChart")
     expect(resume).toContain("sessionStorage")
     expect(resume).not.toContain("localStorage")
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).not.toMatch(
       /writeFocusSessionResume[\s\S]{0,200}browserFullscreen/,
     )
   })
 
   it("G: furthestReachedPhase is written and restored", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("furthestReachedPhase: furthestReachedFocusPhase")
     expect(app).toContain("setFurthestReachedFocusPhase(stored.furthestReachedPhase)")
   })

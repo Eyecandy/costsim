@@ -30,8 +30,8 @@ describe("focusSessionFrame", () => {
   })
 
   it("B/G: Shell and Guided both import the shared contract — no Results-only size", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(shell).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(shell).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")
     expect(guided).toContain("FOCUS_SESSION_CARD_CLASS")
@@ -41,7 +41,7 @@ describe("focusSessionFrame", () => {
   })
 
   it("E/F: Fullscreen is explicit via browserFullscreen branch only", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const sizeBlock = shell.slice(
       shell.indexOf("Shared Focus frame"),
       shell.indexOf("data-focus-frame-contract"),

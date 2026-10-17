@@ -326,21 +326,21 @@ describe("completeOngoingAnalysis", () => {
       "Finish and archive",
     )
 
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("finishOngoingConfirmOpen")
     expect(app).toContain("completeOngoingAnalysis")
     expect(app).toContain("canCompleteOngoingAnalysis")
     expect(app).toContain("requestFinishOngoingAnalysis")
 
     const menu = readFileSync(
-      join(repoRoot, "src/components/AnalysisActionsMenu.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
       "utf8",
     )
     expect(menu).toContain("finishOngoingLabel")
     expect(menu).toContain("onFinishOngoing")
 
     const results = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(results).toContain("onRequestFinishOngoingAnalysis")

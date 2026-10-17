@@ -25,7 +25,7 @@ describe("simulationConfig product architecture", () => {
   })
 
   it("B: App wires main simulation request from simulationConfig.mainRuns", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("import { simulationConfig } from \"@/domain/simulation/simulationConfig\"")
     expect(app).toContain("const runs = simulationConfig.mainRuns")
     expect(app).toContain("w.postMessage({ runs, projects: payloads })")
@@ -98,7 +98,7 @@ describe("simulationConfig product architecture", () => {
     expect(messages.en.aboutModel.paragraph1).toContain("{count}")
     expect(messages.no.aboutModel.paragraph1).not.toContain("20 000")
     expect(messages.en.aboutModel.paragraph1).not.toContain("20,000")
-    const header = readSrc("src/components/GlobalHeaderUtilities.tsx")
+    const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain("simulationConfig.mainRuns")
     expect(header).toContain("fillUncertaintyModelCopy")
     expect(header).toMatch(

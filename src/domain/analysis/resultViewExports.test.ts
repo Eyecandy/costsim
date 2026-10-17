@@ -169,7 +169,7 @@ describe("resolveResultView + export consumers", () => {
   })
 
   it("PDF/AI generation paths snapshot active prefs and do not read localStorage", () => {
-    const panel = readSrc("src/components/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx")
     const pdfDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
     const aiBrief = readSrc("src/domain/results/aiBrief.ts")
     const kfRows = readSrc("src/domain/results/keyFiguresMetricRows.ts")

@@ -33,15 +33,15 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const sessionSource = readFileSync(
-  join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+  join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
   "utf8",
 )
 const appSource = readFileSync(
-  join(repoRoot, "src/App.tsx"),
+  join(repoRoot, "src/app/App.tsx"),
   "utf8",
 )
 const menuSource = readFileSync(
-  join(repoRoot, "src/components/AnalysisActionsMenu.tsx"),
+  join(repoRoot, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
   "utf8",
 )
 

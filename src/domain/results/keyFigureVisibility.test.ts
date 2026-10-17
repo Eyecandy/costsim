@@ -122,7 +122,7 @@ describe("shared Key Figure visibility", () => {
   })
 
   it("does not introduce separate comparison preference state", () => {
-    const section = read("src/components/CheckpointComparisonSection.tsx")
+    const section = read("src/features/results/CheckpointComparisonSection.tsx")
     const presentation = read("src/domain/analysis/checkpointComparisonPresentation.ts")
     const visibility = read("src/domain/results/keyFigureVisibility.ts")
     expect(section).toContain("listVisibleComparableKeyFigureRowIds")

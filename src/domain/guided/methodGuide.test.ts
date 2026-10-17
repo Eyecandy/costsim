@@ -75,20 +75,20 @@ describe("Method Guide chronological content", () => {
   })
 
   it("reuses the existing Guide Play icon in Method Guide UI", () => {
-    const header = readSrc("src/components/GlobalHeaderUtilities.tsx")
+    const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain('import { Play, X } from "lucide-react"')
     expect(header).toContain("METHOD_GUIDE_SECTION_IDS")
     expect(header).toContain("data-method-guide-intro")
     expect(header).toContain("data-method-guide-guide-icon")
     expect(header).toContain("fill-[#1d868c]")
     // Same icon family as Cost Items / Drivers Guide control.
-    const table = readSrc("src/components/ScenarioPercentTable.tsx")
+    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
     expect(table).toContain("fill-[#1d868c]")
     expect(table).toContain("<Play")
   })
 
   it("portals Method Guide / About Model to the overlay container (not sticky header)", () => {
-    const header = readSrc("src/components/GlobalHeaderUtilities.tsx")
+    const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain("useOverlayPortalContainer")
     expect(header).toContain("createPortal")
     expect(header).toContain("portalContainer")
@@ -133,7 +133,7 @@ describe("Method Guide chronological content", () => {
     expect(METHOD_GUIDE_SECTION_IDS).not.toContain(
       "perspectives" as (typeof METHOD_GUIDE_SECTION_IDS)[number],
     )
-    const header = readSrc("src/components/GlobalHeaderUtilities.tsx")
+    const header = readSrc("src/shared/GlobalHeaderUtilities.tsx")
     expect(header).toContain('data-method-guide-tip="perspectives"')
   })
 })

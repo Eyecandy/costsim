@@ -23,16 +23,16 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
 }
 
 function costTableSource() {
-  return readFileSync(join(repoRoot, "src/components/CostTable.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/features/scenario-tables/CostTable.tsx"), "utf8")
 }
 
 function assumptionsEditorSource() {
   return readFileSync(
-    join(repoRoot, "src/components/AssumptionsEditor.tsx"),
+    join(repoRoot, "src/features/scenario-tables/AssumptionsEditor.tsx"),
     "utf8",
   )
 }

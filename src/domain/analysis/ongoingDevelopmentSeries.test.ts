@@ -153,7 +153,7 @@ describe("buildOngoingDevelopmentSeries", () => {
 
   it("ResultsPanel wires Ongoing-only development section", () => {
     const panel = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(panel).toContain("buildOngoingDevelopmentSeries")

@@ -408,7 +408,7 @@ describe("Analysis Library repository", () => {
 
   it("new-analysis dialog includes analysis mode choice", () => {
     const nav = readFileSync(
-      join(repoRoot, "src/components/AnalysisLibraryNav.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
       "utf8",
     )
     expect(nav).toContain("analysisMode")
@@ -418,7 +418,7 @@ describe("Analysis Library repository", () => {
   })
 
   it("ongoing mode uses CheckpointNav timeline and hides multi-alternative controls", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("CheckpointNav")
     expect(app).toContain("CreateNextCheckpointDialog")
     expect(app).toContain("archiveActiveCheckpoint")
@@ -430,14 +430,14 @@ describe("Analysis Library repository", () => {
     expect(app).toMatch(/handleCopyExistingAlternative[\s\S]*isOngoingAnalysis/)
     expect(app).toMatch(/handleDeleteProject[\s\S]*isOngoingAnalysis/)
     const nav = readFileSync(
-      join(repoRoot, "src/components/CheckpointNav.tsx"),
+      join(repoRoot, "src/features/checkpoints/CheckpointNav.tsx"),
       "utf8",
     )
     expect(nav).toContain('data-checkpoint-nav="timeline"')
     expect(nav).not.toContain("border-b-[1.5px] border-[#1d868c]")
     expect(nav).not.toContain("rounded-t-lg")
     const session = readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(session).toContain("checkpointReadOnly")

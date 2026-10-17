@@ -358,13 +358,13 @@ describe("start ongoing name UX wiring", () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
     const dialog = readFileSync(
-      join(root, "src/components/StartOngoingFromArchiveDialog.tsx"),
+      join(root, "src/features/analysis-library/StartOngoingFromArchiveDialog.tsx"),
       "utf8",
     )
-    const app = readFileSync(join(root, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
     const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
     const session = readFileSync(
-      join(root, "src/lib/useLibraryAnalysisSession.ts"),
+      join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
 

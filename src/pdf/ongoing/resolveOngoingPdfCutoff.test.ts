@@ -17,7 +17,7 @@ import {
 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { PRODUCT_NAME } from "@/lib/brand"
+import { PRODUCT_NAME } from "@/shared/brand"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
@@ -280,7 +280,7 @@ describe("Ongoing PDF cutoff A–J", () => {
   })
 
   it("I: Single PDF path unchanged (smoke)", () => {
-    const panel = readSrc("src/components/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("planOngoingPdfExport")
     expect(panel).toContain("ConfirmDialog")
@@ -337,7 +337,7 @@ describe("Ongoing PDF cutoff A–J", () => {
     )
     expect(en.message).not.toContain("checkpoint.sequenceLabel")
 
-    const panel = readSrc("src/components/ResultsPanel.tsx")
+    const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(panel).toContain("buildOngoingPdfDraftConfirmCopy")
     expect(panel).not.toContain('t("checkpoint.sequenceLabel")')
   })

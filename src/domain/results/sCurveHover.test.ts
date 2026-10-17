@@ -22,7 +22,7 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 
 function sCurveSource() {
-  return readFileSync(join(repoRoot, "src/components/ResultsSCurve.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/features/results/ResultsSCurve.tsx"), "utf8")
 }
 
 function hoverSource() {
@@ -30,7 +30,7 @@ function hoverSource() {
 }
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/components/ResultsPanel.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 describe("expanded S-curve hover", () => {

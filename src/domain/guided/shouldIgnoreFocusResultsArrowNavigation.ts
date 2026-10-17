@@ -1,4 +1,4 @@
 export {
   shouldIgnoreFocusArrowNavigation,
   shouldIgnoreFocusResultsArrowNavigation,
-} from "@/lib/shouldIgnoreFocusArrowNavigation"
+} from "@/features/focus-mode/shouldIgnoreFocusArrowNavigation"

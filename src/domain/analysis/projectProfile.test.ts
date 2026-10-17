@@ -103,7 +103,7 @@ describe("ProjectProfile taxonomy v1", () => {
       PROJECT_PROFILE_CATEGORIES.some((c) => c.id === ("projectEnvironment" as string)),
     ).toBe(false)
     const section = readFileSync(
-      join(repoRoot, "src/components/ProjectProfileSection.tsx"),
+      join(repoRoot, "src/features/workspace/ProjectProfileSection.tsx"),
       "utf8",
     )
     expect(section).not.toContain("projectEnvironment")
@@ -746,7 +746,7 @@ describe("ProjectProfile model", () => {
     p.incurredCosts = 25
     expect(deriveProjectProfileBaseCost(p)).toBe(125)
     const section = readFileSync(
-      join(repoRoot, "src/components/ProjectProfileSection.tsx"),
+      join(repoRoot, "src/features/workspace/ProjectProfileSection.tsx"),
       "utf8",
     )
     expect(section).not.toContain("deriveProjectProfileBaseCost")
@@ -785,7 +785,7 @@ describe("ProjectProfile collapsed summary", () => {
 describe("ProjectProfile UI disclosure wiring", () => {
   it("uses a left-aligned title trigger with summary and outside-click close", () => {
     const section = readFileSync(
-      join(repoRoot, "src/components/ProjectProfileSection.tsx"),
+      join(repoRoot, "src/features/workspace/ProjectProfileSection.tsx"),
       "utf8",
     )
     expect(section).toContain("defaultOpen = false")
@@ -809,7 +809,7 @@ describe("ProjectProfile UI disclosure wiring", () => {
   })
 
   it("sits between tabs and Cost Items with matching md+ Results offset", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     // Single Analysis: profile+Focus row remains between project tabs and Cost Items.
     const tablistIdx = app.indexOf('role="tablist"')
     const singleProfileIdx = app.indexOf(

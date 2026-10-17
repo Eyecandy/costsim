@@ -22,12 +22,12 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
 }
 
 function scenarioTableSource() {
   return readFileSync(
-    join(repoRoot, "src/components/ScenarioPercentTable.tsx"),
+    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
     "utf8",
   )
 }

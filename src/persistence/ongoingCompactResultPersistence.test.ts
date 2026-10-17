@@ -110,15 +110,15 @@ describe("Ongoing compact result persistence A–K", () => {
     const { compact } = fixture()
     expect(compact.contribution).toBeNull()
     expect(readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )).toContain("ongoingCompactResult.contribution")
     expect(readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )).toContain("onContributionReady")
     expect(readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )).toContain("attachOngoingDraftContribution")
   })
@@ -187,7 +187,7 @@ describe("Ongoing compact result persistence A–K", () => {
 
   it("H: rejects wrong checkpoint ownership during session hydration", () => {
     const source = readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(source).toContain(
@@ -200,7 +200,7 @@ describe("Ongoing compact result persistence A–K", () => {
 
   it("I: leave paths remain non-blocking after save failure", () => {
     const source = readFileSync(
-      join(repoRoot, "src/lib/useLibraryAnalysisSession.ts"),
+      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",
     )
     expect(source).toContain("/* still switch — last save may have failed */")

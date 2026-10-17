@@ -272,7 +272,7 @@ describe("Focus phase navigation helpers", () => {
 
 describe("Focus phase navigation wiring", () => {
   it("App owns ephemeral furthestReached + phase nav in header aux", () => {
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("furthestReachedFocusPhase")
     expect(app).toContain("advanceFurthestFocusPhase")
     expect(app).toContain("FocusPhaseNav")
@@ -287,7 +287,7 @@ describe("Focus phase navigation wiring", () => {
   })
 
   it("Guided publishes workflowPhase; goToFocusUserPhase uses shared helper", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain("workflowPhase: phase ?? null")
     expect(guided).toContain("goToFocusUserPhase")
     expect(guided).toContain("findGuidedStepIndexForFocusPhase")
@@ -295,7 +295,7 @@ describe("Focus phase navigation wiring", () => {
   })
 
   it("N: item progress remains available beside phase nav", () => {
-    const nav = readSrc("src/components/FocusPhaseNav.tsx")
+    const nav = readSrc("src/features/focus-mode/FocusPhaseNav.tsx")
     expect(nav).toContain("itemProgressLabel")
     expect(nav).toContain('data-guided-progress=""')
     expect(nav).toContain('aria-current={current ? "step" : undefined}')
@@ -303,13 +303,13 @@ describe("Focus phase navigation wiring", () => {
     // True center: equal side columns so trailing progress cannot shift the nav.
     expect(nav).toContain("grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]")
     expect(nav).toContain("justify-self-center")
-    const app = readSrc("src/App.tsx")
+    const app = readSrc("src/app/App.tsx")
     expect(app).toContain("itemProgressLabel=")
     expect(app).toContain("guidedFocusChromeMeta?.progressLabel")
   })
 
   it("O: same Focus shell header aux hosts phase nav in contained + fullscreen", () => {
-    const shell = readSrc("src/components/FocusModeShell.tsx")
+    const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(shell).toContain("headerAuxiliary")
     expect(shell).toContain("FOCUS_SESSION_HEADER_AUX_CLASS")
     expect(shell).toContain("data-focus-mode-header-aux")

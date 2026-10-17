@@ -28,26 +28,26 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
 }
 
 function scenarioTableSource() {
   return readFileSync(
-    join(repoRoot, "src/components/ScenarioPercentTable.tsx"),
+    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
     "utf8",
   )
 }
 
 function defineEditorSource() {
   return readFileSync(
-    join(repoRoot, "src/components/DefineRowEditor.tsx"),
+    join(repoRoot, "src/features/scenario-tables/DefineRowEditor.tsx"),
     "utf8",
   )
 }
 
 function guidedSource() {
   return readFileSync(
-    join(repoRoot, "src/components/GuidedInputDialog.tsx"),
+    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
     "utf8",
   )
 }

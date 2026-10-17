@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { createProject, type Project } from "@/domain/analysis/project"
-import { PRODUCT_NAME } from "@/lib/brand"
+import { PRODUCT_NAME } from "@/shared/brand"
 import { messages } from "@/i18n/messages"
 import {
   PDF_CORRELATION_MATRIX_MAX_COST_ITEMS,
@@ -31,7 +31,7 @@ function pdfDocSource() {
 }
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/components/ResultsPanel.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
 }
 
 function richProject(): Project {

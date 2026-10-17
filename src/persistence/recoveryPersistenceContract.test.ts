@@ -16,8 +16,8 @@ describe("checkpoint recovery persistence contract", () => {
       "src/domain/analysis/analysisDocument.ts",
       "src/domain/analysis/draftResultSeed.ts",
       "src/persistence/localAnalysisLibraryRepository.ts",
-      "src/lib/useLibraryAnalysisSession.ts",
-      "src/App.tsx",
+      "src/features/analysis-library/useLibraryAnalysisSession.ts",
+      "src/app/App.tsx",
     ]
     const source = productionFiles
       .map((path) => readFileSync(join(repoRoot, path), "utf8"))

@@ -664,7 +664,7 @@ describe("checkpoint comparison presentation helpers", () => {
     expect(getCostDeltaClass(0, "p50")).toContain("text-foreground")
     expect(getPercentageDeltaClass(0)).toContain("text-foreground")
 
-    const section = read("src/components/CheckpointComparisonSection.tsx")
+    const section = read("src/features/results/CheckpointComparisonSection.tsx")
     expect(section).toContain("getCostDeltaClass")
     expect(section).toContain("getPercentageDeltaClass")
     expect(section).toContain("absoluteDelta")
@@ -679,7 +679,7 @@ describe("checkpoint comparison presentation helpers", () => {
 
 describe("checkpoint comparison UI wiring", () => {
   it("shows comparison above shared result sections for Ongoing only", () => {
-    const panel = read("src/components/ResultsPanel.tsx")
+    const panel = read("src/features/results/ResultsPanel.tsx")
     expect(panel).toContain("CheckpointComparisonSection")
     expect(panel).toContain("ongoingCheckpoints")
     expect(panel).toContain("resultPreferences={resultPreferences}")
@@ -698,7 +698,7 @@ describe("checkpoint comparison UI wiring", () => {
     expect(comparisonChange).toBeGreaterThan(keyFigures)
     expect(comparisonChange).toBeLessThan(sCurve)
 
-    const app = read("src/App.tsx")
+    const app = read("src/app/App.tsx")
     expect(app).toContain("ongoingCheckpoints={")
     expect(app).toMatch(
       /isOngoingAnalysis\s*\?\s*librarySession\.ongoing\?\.checkpoints/,
@@ -707,7 +707,7 @@ describe("checkpoint comparison UI wiring", () => {
   })
 
   it("comparison section has context header + expander; S-curve supports reference emphasis", () => {
-    const section = read("src/components/CheckpointComparisonSection.tsx")
+    const section = read("src/features/results/CheckpointComparisonSection.tsx")
     expect(section).toContain("listVisibleComparableKeyFigureRowIds")
     expect(section).toContain("selectComparisonKeyFigures")
     expect(section).toContain("SectionExpander")
@@ -733,7 +733,7 @@ describe("checkpoint comparison UI wiring", () => {
     expect(section).not.toContain("deltaGroupClass")
     expect(section).not.toContain("translateX")
 
-    const metricValue = read("src/components/KeyFigureMetricValue.tsx")
+    const metricValue = read("src/features/results/KeyFigureMetricValue.tsx")
     expect(metricValue).toContain("KeyFigureMetricColumnHeader")
     expect(metricValue).toContain("KEY_FIGURES_METRIC_GRID_INLINE")
     expect(metricValue).toContain("data-key-figure-metric-column-header")
@@ -743,7 +743,7 @@ describe("checkpoint comparison UI wiring", () => {
     expect(presentation).toContain("getPercentageDeltaClass")
     expect(presentation).not.toContain("rounded-sm bg-")
 
-    const scurve = read("src/components/ResultsSCurve.tsx")
+    const scurve = read("src/features/results/ResultsSCurve.tsx")
     expect(scurve).toContain('emphasis?: "primary" | "reference"')
     expect(scurve).toContain('data-scurve-emphasis={c.emphasis}')
     expect(scurve).toContain("strokeDasharray={isReference")

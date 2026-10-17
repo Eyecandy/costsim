@@ -390,7 +390,7 @@ describe("checkpoint lifecycle", () => {
   })
 
   it("Single Analysis UI paths remain gated away from checkpoint lifecycle", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("archiveActiveCheckpoint")
     expect(app).toContain("CreateNextCheckpointDialog")
     expect(app).toContain('isOngoingAnalysis')

@@ -4,8 +4,8 @@ import { createElement, type ReactElement } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
-import { AnalysisModeIndicator } from "@/components/AnalysisModeIndicator"
-import { CheckpointNav } from "@/components/CheckpointNav"
+import { AnalysisModeIndicator } from "@/features/analysis-library/AnalysisModeIndicator"
+import { CheckpointNav } from "@/features/checkpoints/CheckpointNav"
 import { I18nProvider } from "@/i18n/I18nProvider"
 import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import { toAnalysisSummary } from "@/domain/analysis/analysisDocument"
@@ -114,11 +114,11 @@ describe("analysis mode presentation", () => {
 
   it("Library surfaces share AnalysisModeIndicator", () => {
     const page = readFileSync(
-      join(repoRoot, "src/AnalysisLibraryPage.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
       "utf8",
     )
     const nav = readFileSync(
-      join(repoRoot, "src/components/AnalysisLibraryNav.tsx"),
+      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
       "utf8",
     )
     expect(page).toContain("AnalysisModeIndicator")
@@ -128,7 +128,7 @@ describe("analysis mode presentation", () => {
   })
 
   it("Single Analysis App branch still uses project tablist chrome", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("projects.selectProjectTablist")
     expect(app).toContain("border-b-[1.5px] border-[#1d868c]")
     expect(app).toContain("rounded-t-lg")
@@ -142,7 +142,7 @@ describe("analysis mode presentation", () => {
   })
 
   it("Ongoing Analysis uses shared desktop grid rows instead of padding hacks", () => {
-    const app = readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
     expect(app).toContain("ONGOING_WORKSPACE_LAYOUT_CLASS")
     expect(app).toContain("md:grid-rows-[auto_auto_auto]")
     expect(app).toContain("md:gap-y-7")

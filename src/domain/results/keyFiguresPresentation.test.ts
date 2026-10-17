@@ -21,7 +21,7 @@ import { repoRoot as root } from "@/test-utils/repoRoot"
 
 function tableSource() {
   return readFileSync(
-    join(root, "src/components/ResultsKeyFiguresTable.tsx"),
+    join(root, "src/features/results/ResultsKeyFiguresTable.tsx"),
     "utf8",
   )
 }

@@ -98,9 +98,9 @@ describe("driver uncertainty notes", () => {
   })
 
   it("B: Guide uses Assumptions-style card notes with add/confirm/remove", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const editor = readSrc(
-      "src/components/DriverUncertaintyNotesEditor.tsx",
+      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
     )
     expect(guided).toContain("DriverUncertaintyNotesEditor")
     expect(guided).toContain("data-guided-driver-uncertainty-notes")
@@ -148,7 +148,7 @@ describe("driver uncertainty notes", () => {
     expect(parseDriverUncertaintyNote("  Mild market  ")).toBe("Mild market")
 
     const editor = readSrc(
-      "src/components/DriverUncertaintyNotesEditor.tsx",
+      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
     )
     // Confirm is gated on parse success (empty → disabled / no-op path).
     expect(editor).toContain("draftCanCommit")
@@ -162,8 +162,8 @@ describe("driver uncertainty notes", () => {
   })
 
   it("C: cost items have no structured note UI", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
-    const define = readSrc("src/components/DefineRowEditor.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const define = readSrc("src/features/scenario-tables/DefineRowEditor.tsx")
     // Driver notes editor only referenced from driver phase, not cost.
     const costPhaseIdx = guided.indexOf('data-guided-phase="cost"')
     const driverPhaseIdx = guided.indexOf('data-guided-phase="driver"')
@@ -309,17 +309,17 @@ describe("driver uncertainty notes", () => {
 
   it("F: two-column layout stacks on narrow screens", () => {
     const editor = readSrc(
-      "src/components/DriverUncertaintyNotesEditor.tsx",
+      "src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx",
     )
     expect(editor).toContain("grid-cols-1")
     expect(editor).toContain("sm:grid-cols-2")
   })
 
   it("G: obsolete uncertaintyAssessment removed from active editing paths", () => {
-    expect(readSrc("src/components/DefineRowEditor.tsx")).not.toContain(
+    expect(readSrc("src/features/scenario-tables/DefineRowEditor.tsx")).not.toContain(
       "uncertaintyAssessment",
     )
-    expect(readSrc("src/components/GuidedInputDialog.tsx")).not.toContain(
+    expect(readSrc("src/features/guided-input/GuidedInputDialog.tsx")).not.toContain(
       "uncertaintyAssessment",
     )
     expect(readSrc("src/domain/results/tableRows.ts")).not.toContain(
@@ -333,7 +333,7 @@ describe("driver uncertainty notes", () => {
   })
 
   it("Guide modal default size was increased for the two-column notes", () => {
-    const guided = readSrc("src/components/GuidedInputDialog.tsx")
+    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     expect(guided).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(guided).not.toContain("h-[min(92vh,42rem)] w-[min(96vw,52rem)]")
   })

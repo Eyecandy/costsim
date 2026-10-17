@@ -281,7 +281,7 @@ describe("share-state v3", () => {
 
   it("P: Share and PDF use the same v3 URL builder", () => {
     const src = readFileSync(
-      join(repoRoot, "src/components/ResultsPanel.tsx"),
+      join(repoRoot, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     expect(src).toContain('from "@/persistence/shareLink"')

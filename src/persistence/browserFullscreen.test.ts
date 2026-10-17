@@ -20,7 +20,7 @@ describe("browserFullscreen helpers", () => {
 
   it("Guided Focus mode requests fullscreen from the user gesture", () => {
     const dialog = readFileSync(
-      join(root, "src/components/GuidedInputDialog.tsx"),
+      join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
       "utf8",
     )
     expect(dialog).toContain("requestElementFullscreen")
@@ -42,7 +42,7 @@ describe("browserFullscreen helpers", () => {
 
   it("Focus Results shell reuses the same fullscreen helpers", () => {
     const shell = readFileSync(
-      join(root, "src/components/FocusModeShell.tsx"),
+      join(root, "src/features/focus-mode/FocusModeShell.tsx"),
       "utf8",
     )
     expect(shell).toContain("requestElementFullscreen")

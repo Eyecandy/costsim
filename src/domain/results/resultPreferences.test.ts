@@ -326,25 +326,25 @@ describe("Result Preferences UI wiring", () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
     const panel = readFileSync(
-      join(root, "src/components/ResultsPanel.tsx"),
+      join(root, "src/features/results/ResultsPanel.tsx"),
       "utf8",
     )
     const share = readFileSync(join(root, "src/persistence/shareLink.ts"), "utf8")
     const expander = readFileSync(
-      join(root, "src/components/SectionExpander.tsx"),
+      join(root, "src/shared/SectionExpander.tsx"),
       "utf8",
     )
     const keyFigures = readFileSync(
-      join(root, "src/components/ResultsKeyFiguresTable.tsx"),
+      join(root, "src/features/results/ResultsKeyFiguresTable.tsx"),
       "utf8",
     )
     const expandHost = readFileSync(
-      join(root, "src/components/ChartExpandButton.tsx"),
+      join(root, "src/features/results/ChartExpandButton.tsx"),
       "utf8",
     )
     expect(panel).toContain("ResultPreferencesPanel")
     expect(panel).toContain("liveResultPreferences")
-    const app = readFileSync(join(root, "src/App.tsx"), "utf8")
+    const app = readFileSync(join(root, "src/app/App.tsx"), "utf8")
     expect(app).toContain("useResultPreferences")
     expect(app).toContain("liveResultPreferences={resultPreferences}")
     expect(panel).toContain("headerTrailing=")
@@ -358,7 +358,7 @@ describe("Result Preferences UI wiring", () => {
     expect(expandHost).toContain("toolbarLeading")
     expect(expandHost).toContain("data-chart-expand-toolbar-leading")
     const scurve = readFileSync(
-      join(root, "src/components/ResultsSCurve.tsx"),
+      join(root, "src/features/results/ResultsSCurve.tsx"),
       "utf8",
     )
     expect(scurve).not.toContain("toolbarLeading")
@@ -416,7 +416,7 @@ describe("Result Preferences UI wiring", () => {
       /id: "probBelowCostLevel"[\s\S]*?formatKeyFigurePercent\(pct, language\)[\s\S]*?undefined/,
     )
     const prefsPanel = readFileSync(
-      join(root, "src/components/ResultPreferencesPanel.tsx"),
+      join(root, "src/features/results/ResultPreferencesPanel.tsx"),
       "utf8",
     )
     expect(prefsPanel).toContain("showProbabilityBelowCostLevel")

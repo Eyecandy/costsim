@@ -16,13 +16,13 @@ import { repoRoot } from "@/test-utils/repoRoot"
 
 function dialogSource() {
   return readFileSync(
-    join(repoRoot, "src/components/GuidedInputDialog.tsx"),
+    join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
     "utf8",
   )
 }
 
 function appSource() {
-  return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")
+  return readFileSync(join(repoRoot, "src/app/App.tsx"), "utf8")
 }
 
 function cost(

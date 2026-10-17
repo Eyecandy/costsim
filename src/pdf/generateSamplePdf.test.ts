@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest"
 import { pdf } from "@react-pdf/renderer"
 
 import { createProject, type Project } from "@/domain/analysis/project"
-import { PRODUCT_NAME } from "@/lib/brand"
+import { PRODUCT_NAME } from "@/shared/brand"
 import { appFeatures } from "@/config/appVariant"
 import { ProjectReportDocument } from "@/pdf/ProjectReportDocument"
 import {
