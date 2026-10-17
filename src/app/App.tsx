@@ -15,7 +15,6 @@ import {
 } from "@/features/analysis-library/AnalysisSidebar"
 import { CheckpointNav } from "@/features/checkpoints/CheckpointNav"
 import { ProjectProfileSection } from "@/features/workspace/ProjectProfileSection"
-import { GuidedInputDialog } from "@/features/guided-input/GuidedInputDialog"
 import { ResultsPanel } from "@/features/results/ResultsPanel"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import {
@@ -30,10 +29,6 @@ import {
 import {
   addProjectIfAllowed,
   maxProjectsReached,
-  patchProjectAddAssumption,
-  patchProjectUpdateAssumption,
-  patchProjectRemoveAssumption,
-  patchProjectIncurredCosts,
   patchProjectName,
   patchProjectProfile,
   projectFromTemplateEmptyRows,
@@ -105,8 +100,6 @@ import {
 import { PrimaryFocusModeEntry } from "@/app/workspace/PrimaryFocusModeEntry"
 import {
   VALIDATION_ERROR_KEYS,
-  patchProjectCostRows,
-  patchProjectDriverRows,
   runValidationErrorKey,
   type RunErrorKey,
 } from "@/app/workspace/workspaceHelpers"
@@ -125,6 +118,7 @@ import { useGuidedFocusState } from "@/app/workspace/useGuidedFocusState"
 import { useGuidedFocusSession } from "@/app/workspace/useGuidedFocusSession"
 import { FocusSession } from "@/app/workspace/FocusSession"
 import { InputPanels } from "@/app/workspace/InputPanels"
+import { GuidedInputHost } from "@/app/workspace/GuidedInputHost"
 export default function App() {
   const { t } = useI18n()
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -503,18 +497,8 @@ export default function App() {
 
   const guidedFocusState = useGuidedFocusState()
   const {
-    focusPortalTarget,
-    focusShellRef,
     focusView,
     focusViewRef,
-    guidedDialogRef,
-    guidedInputKind,
-    guidedInputStartIndex,
-    guidedLandFocusPhase,
-    guidedResumePhase,
-    guidedSemanticResume,
-    guidedStartPhase,
-    handleGuidedFocusChromeMeta,
     pendingFocusResultsAfterGuidedRunRef,
     setFocusResultStepIndex,
     setFocusView,
@@ -725,16 +709,6 @@ export default function App() {
     showStaleInputNotice,
   })
   const {
-    closeGuidedInput,
-    continueFromSimulationToResults,
-    handleFocusShowChanges,
-    handleGuidedLandFocusPhaseApplied,
-    handleGuidedResumeApplied,
-    handleGuidedSemanticResumeApplied,
-    handoffGuidedToAddCostItems,
-    handoffGuidedToAddDrivers,
-    handoffGuidedToCorrelation,
-    handoffGuidedToImpact,
     openFocusModePrimary,
     openFocusResults,
   } = guidedFocusSession
@@ -924,138 +898,19 @@ export default function App() {
           showArchiveBlockedNotice={showArchiveBlockedNotice}
           showFinishOngoingNotice={showFinishOngoingNotice}
         />
-        {activeProject && guidedInputKind && !analysisReadOnly ? (
-          <GuidedInputDialog
-            ref={guidedDialogRef}
-            open
-            suspend={focusView === "results"}
-            ensureFocusMode={focusView === "input"}
-            focusPortalTarget={
-              focusView !== null ? focusPortalTarget : null
-            }
-            onFocusChromeMetaChange={handleGuidedFocusChromeMeta}
-            onRequestFocusFullscreen={() => {
-              focusShellRef.current?.requestFullscreen()
-            }}
-            onExitFocusFullscreen={() => {
-              focusShellRef.current?.exitFullscreen()
-            }}
-            entry={guidedInputKind}
-            project={activeProject}
-            projectIndex={Math.max(
-              0,
-              projects.findIndex((p) => p.id === activeProject.id),
-            )}
-            startIndex={guidedInputStartIndex}
-            startPhase={guidedStartPhase}
-            resumePhase={guidedResumePhase}
-            onResumeApplied={handleGuidedResumeApplied}
-            resumeFocusUserPhase={guidedLandFocusPhase}
-            onResumeFocusUserPhaseApplied={handleGuidedLandFocusPhaseApplied}
-            resumeSemanticStep={guidedSemanticResume}
-            onResumeSemanticStepApplied={handleGuidedSemanticResumeApplied}
-            onClose={closeGuidedInput}
-            onFocusModeChange={(active) => {
-              if (active) setFocusView("input")
-              else setFocusView((prev) => (prev === "input" ? null : prev))
-            }}
-            onRunSimulation={() => {
-              pendingFocusResultsAfterGuidedRunRef.current = true
-              handleRun()
-              if (!runningRef.current) {
-                pendingFocusResultsAfterGuidedRunRef.current = false
-              }
-            }}
-            runSimulationDisabled={analysisReadOnly || isRunning}
-            runSimulationBusy={isRunning}
-            simulationResultStatus={
-              liveResultValidity.kind === "valid"
-                ? "valid"
-                : liveResultValidity.kind === "stale"
-                  ? "stale"
-                  : "none"
-            }
-            onContinueToResults={continueFromSimulationToResults}
-            onShowStaleChanges={handleFocusShowChanges}
-            onRevertStaleChanges={handleRevertInputsToLastSimulation}
-            showStaleInputChanges={showStaleInputChanges}
-            onPatchRow={(rowId, patch) => {
-              if (analysisReadOnly) return
-              const inCost = activeProject.costRows.some((r) => r.id === rowId)
-              if (inCost) {
-                setProjects((prev) =>
-                  patchProjectCostRows(prev, activeProject.id, (rows) =>
-                    rows.map((row) =>
-                      row.id === rowId ? { ...row, ...patch } : row,
-                    ),
-                  ),
-                )
-                return
-              }
-              setProjects((prev) =>
-                patchProjectDriverRows(prev, activeProject.id, (rows) =>
-                  rows.map((row) => {
-                    if (row.id !== rowId) return row
-                    const next = { ...row, ...patch }
-                    if (
-                      Object.prototype.hasOwnProperty.call(
-                        patch,
-                        "uncertaintyNotes",
-                      ) &&
-                      patch.uncertaintyNotes === undefined
-                    ) {
-                      delete next.uncertaintyNotes
-                    }
-                    return next
-                  }),
-                ),
-              )
-            }}
-            onAddAssumption={(text) => {
-              if (analysisReadOnly) return
-              setProjects((prev) =>
-                patchProjectAddAssumption(prev, activeProject.id, text),
-              )
-            }}
-            onUpdateAssumption={(assumptionId, text) => {
-              if (analysisReadOnly) return
-              setProjects((prev) =>
-                patchProjectUpdateAssumption(
-                  prev,
-                  activeProject.id,
-                  assumptionId,
-                  text,
-                ),
-              )
-            }}
-            onRemoveAssumption={(assumptionId) => {
-              if (analysisReadOnly) return
-              setProjects((prev) =>
-                patchProjectRemoveAssumption(
-                  prev,
-                  activeProject.id,
-                  assumptionId,
-                ),
-              )
-            }}
-            onIncurredCostsChange={(value) => {
-              if (analysisReadOnly) return
-              setProjects((prev) =>
-                patchProjectIncurredCosts(prev, activeProject.id, value),
-              )
-            }}
-            onPatchProfile={(next) => {
-              if (analysisReadOnly) return
-              setProjects((prev) =>
-                patchProjectProfile(prev, activeProject.id, next),
-              )
-            }}
-            onAddCostItems={handoffGuidedToAddCostItems}
-            onAddDrivers={handoffGuidedToAddDrivers}
-            onAdjustCorrelation={handoffGuidedToCorrelation}
-            onAdjustImpact={handoffGuidedToImpact}
-          />
-        ) : null}
+        <GuidedInputHost
+          activeProject={activeProject}
+          analysisReadOnly={analysisReadOnly}
+          guidedFocusSession={guidedFocusSession}
+          guidedFocusState={guidedFocusState}
+          handleRevertInputsToLastSimulation={handleRevertInputsToLastSimulation}
+          handleRun={handleRun}
+          isRunning={isRunning}
+          liveResultValidity={liveResultValidity}
+          projects={projects}
+          runningRef={runningRef}
+          setProjects={setProjects}
+        />
         <AnalysisHeader
           dialogs={dialogs}
           analysisReadOnly={analysisReadOnly}
