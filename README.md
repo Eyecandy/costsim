@@ -2,12 +2,20 @@
 
 Monte Carlo cost-risk simulator. React + TypeScript + Vite, Tailwind, Vitest.
 
+Needs Node 22 (`.nvmrc`). Conventions for contributors and AI sessions are in `CLAUDE.md`.
+
 ```
+npm install
 npm run dev         # dev server
-npm run check       # tsc + eslint + tests + layer rules (run before committing)
+npm run check       # typecheck + lint + tests + layer rules + build (run before committing)
+npm run typecheck   # tsc only
+npm run lint        # eslint (lint:fix to auto-fix)
+npm test            # vitest (test:watch for watch mode)
 npm run check:deps  # only the layer rules
-npm test            # vitest
 ```
+
+### Environment
+Copy `.env.example` to `.env.local`. `VITE_APP_VARIANT` selects `public_mvp` (default, open) or `pilot` (login gate, all features, uses `VITE_APP_PASSWORD`). Every `VITE_` variable is inlined into the public bundle, so the password is a gate, not real authentication.
 
 ## Where things live
 
