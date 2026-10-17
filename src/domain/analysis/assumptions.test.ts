@@ -191,7 +191,7 @@ describe("project assumptions", () => {
     expect(editorSrc).toContain("readOnly = false")
     expect(editorSrc).toContain('data-readonly={readOnly ? "" : undefined}')
     expect(editorSrc).toContain("if (readOnly || !onAdd) return")
-    expect(appSource()).toContain("analysisReadOnly\n                                ? undefined")
+    expect(appSource()).toMatch(/analysisReadOnly\s*\? undefined/)
   })
 
   it("O: Impact and Define wiring remain unchanged", () => {

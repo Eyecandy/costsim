@@ -14,13 +14,9 @@ import {
   AnalysisSidebar,
 } from "@/features/analysis-library/AnalysisSidebar"
 import { CheckpointNav } from "@/features/checkpoints/CheckpointNav"
-import { CostTable } from "@/features/scenario-tables/CostTable"
 import { ProjectProfileSection } from "@/features/workspace/ProjectProfileSection"
-import { DriversTable } from "@/features/scenario-tables/DriversTable"
 import { GuidedInputDialog } from "@/features/guided-input/GuidedInputDialog"
 import { ResultsPanel } from "@/features/results/ResultsPanel"
-import { SectionExpander } from "@/shared/SectionExpander"
-import { Card, CardContent } from "@/shared/ui/card"
 import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import {
   buildSimulationInputSignature,
@@ -34,7 +30,6 @@ import {
 import {
   addProjectIfAllowed,
   maxProjectsReached,
-  patchProjectDriverImpact,
   patchProjectAddAssumption,
   patchProjectUpdateAssumption,
   patchProjectRemoveAssumption,
@@ -99,14 +94,12 @@ import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 
 import {
   RESULTS_COLUMN_CLASS,
-  PROJECT_PROFILE_SECTION_SPACING_CLASS,
   RESULTS_ALIGN_WITH_COST_ITEMS_CLASS,
   ONGOING_WORKSPACE_LAYOUT_CLASS,
   ONGOING_WORKSPACE_LEFT_CLASS,
   ONGOING_WORKSPACE_RIGHT_CLASS,
   ONGOING_TIMELINE_CELL_CLASS,
   ONGOING_PROJECT_PROFILE_CELL_CLASS,
-  ONGOING_COST_CELL_CLASS,
   ONGOING_RESULTS_CELL_CLASS,
 } from "@/app/workspace/layoutClasses"
 import { PrimaryFocusModeEntry } from "@/app/workspace/PrimaryFocusModeEntry"
@@ -131,6 +124,7 @@ import { useSimulationRun } from "@/app/workspace/useSimulationRun"
 import { useGuidedFocusState } from "@/app/workspace/useGuidedFocusState"
 import { useGuidedFocusSession } from "@/app/workspace/useGuidedFocusSession"
 import { FocusSession } from "@/app/workspace/FocusSession"
+import { InputPanels } from "@/app/workspace/InputPanels"
 export default function App() {
   const { t } = useI18n()
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -509,15 +503,6 @@ export default function App() {
 
   const guidedFocusState = useGuidedFocusState()
   const {
-    correlationEditBlocked,
-    correlationFeedbackKind,
-    correlationModeActive,
-    correlationPendingMixed,
-    correlationPendingRho,
-    correlationSaveConfirmVisible,
-    correlationSelectedCostIds,
-    defineModeActive,
-    defineSelectedRowId,
     focusPortalTarget,
     focusShellRef,
     focusView,
@@ -526,18 +511,13 @@ export default function App() {
     guidedInputKind,
     guidedInputStartIndex,
     guidedLandFocusPhase,
-    guidedResume,
     guidedResumePhase,
     guidedSemanticResume,
     guidedStartPhase,
     handleGuidedFocusChromeMeta,
-    impactEditingAreaRef,
-    impactModeActive,
     pendingFocusResultsAfterGuidedRunRef,
-    setDefineSelectedRowId,
     setFocusResultStepIndex,
     setFocusView,
-    setImpactSelectedDriverId,
     setShowStaleInputChanges,
     showStaleInputChanges,
   } = guidedFocusState
@@ -745,31 +725,18 @@ export default function App() {
     showStaleInputNotice,
   })
   const {
-    activeCostCorrelationPrep,
     closeGuidedInput,
     continueFromSimulationToResults,
-    handleCorrelationModeToggle,
-    handleCorrelationPendingChange,
-    handleCostCorrelationGroupApply,
-    handleDefineModeToggle,
     handleFocusShowChanges,
     handleGuidedLandFocusPhaseApplied,
     handleGuidedResumeApplied,
     handleGuidedSemanticResumeApplied,
-    handleImpactModeToggle,
-    handleOpenCorrelationSummary,
-    handleRemoveCorrelationSummary,
-    handleToggleCorrelationCost,
     handoffGuidedToAddCostItems,
     handoffGuidedToAddDrivers,
     handoffGuidedToCorrelation,
     handoffGuidedToImpact,
-    impactSelectedDriverRow,
     openFocusModePrimary,
     openFocusResults,
-    openGuidedInput,
-    returnToGuidedReview,
-    savedCorrelationSummaries,
   } = guidedFocusSession
   const {
     staleProjectNameTabIds,
@@ -1190,283 +1157,18 @@ export default function App() {
             />
             )}
 
-            <div
-              className={
-                isOngoingAnalysis ? ONGOING_COST_CELL_CLASS : "pb-7"
-              }
-            >
-              {activeProject ? (
-                <div
-                  key={`${librarySession.activeCheckpoint?.id ?? "single"}:${activeProject.id}`}
-                  id={`panel-${activeProject.id}`}
-                  role="tabpanel"
-                  aria-labelledby={`tab-${activeProject.id}`}
-                  tabIndex={0}
-                  className="relative min-w-0 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-reduce:animate-none"
-                >
-                  {!isOngoingAnalysis ? (
-                  <div
-                    className={cn(
-                      PROJECT_PROFILE_FOCUS_ROW_CLASS,
-                      PROJECT_PROFILE_SECTION_SPACING_CLASS,
-                    )}
-                    data-project-profile-focus-row=""
-                  >
-                    <div className="min-w-0">
-                      <ProjectProfileSection
-                        profile={activeProject.profile}
-                        readOnly={analysisReadOnly}
-                        onChange={
-                          analysisReadOnly
-                            ? undefined
-                            : (next) =>
-                                setProjects((prev) =>
-                                  patchProjectProfile(
-                                    prev,
-                                    activeProject.id,
-                                    next,
-                                  ),
-                                )
-                        }
-                      />
-                    </div>
-                    {!analysisReadOnly ? (
-                      <PrimaryFocusModeEntry onClick={openFocusModePrimary} />
-                    ) : null}
-                  </div>
-                  ) : null}
-                  <div
-                    ref={impactEditingAreaRef}
-                    className="flex min-w-0 flex-col gap-6"
-                  >
-                    <Card
-                      data-cost-items-card=""
-                      className="overflow-visible border border-border bg-[var(--km-surface)] ring-0 [--km-surface:color-mix(in_oklab,var(--color-muted)_35%,var(--color-background))]"
-                    >
-                      <CardContent className="p-4">
-                        <SectionExpander title={t("expanders.costElements")} defaultOpen>
-                          <CostTable
-                            rows={activeProject.costRows}
-                            incurredCosts={activeProject.incurredCosts}
-                            assumptions={activeProject.assumptions ?? []}
-                            readOnly={analysisReadOnly}
-                            onAddAssumption={
-                              analysisReadOnly
-                                ? undefined
-                                : (text) =>
-                                    setProjects((prev) =>
-                                      patchProjectAddAssumption(
-                                        prev,
-                                        activeProject.id,
-                                        text,
-                                      ),
-                                    )
-                            }
-                            onUpdateAssumption={
-                              analysisReadOnly
-                                ? undefined
-                                : (assumptionId, text) =>
-                                    setProjects((prev) =>
-                                      patchProjectUpdateAssumption(
-                                        prev,
-                                        activeProject.id,
-                                        assumptionId,
-                                        text,
-                                      ),
-                                    )
-                            }
-                            onRemoveAssumption={
-                              analysisReadOnly
-                                ? undefined
-                                : (assumptionId) =>
-                                    setProjects((prev) =>
-                                      patchProjectRemoveAssumption(
-                                        prev,
-                                        activeProject.id,
-                                        assumptionId,
-                                      ),
-                                    )
-                            }
-                            onIncurredCostsChange={(value) => {
-                              if (analysisReadOnly) return
-                              setProjects((prev) =>
-                                patchProjectIncurredCosts(
-                                  prev,
-                                  activeProject.id,
-                                  value,
-                                ),
-                              )
-                            }}
-                            changedCellKeys={visibleStaleChangedCellKeys.cost}
-                            invalidCellKeys={
-                              showValidationFeedback
-                                ? validationInvalidCellKeys.cost
-                                : undefined
-                            }
-                            costImpactSliders={
-                              impactModeActive && impactSelectedDriverRow
-                                ? {
-                                    active: true,
-                                    selectedDriverRowId: impactSelectedDriverRow.row.id,
-                                    selectedDriverLabel: impactSelectedDriverRow.label,
-                                    driverImpacts: activeProject.driverImpacts,
-                                    changedCellKeys:
-                                      visibleStaleChangedCellKeys.driverImpacts,
-                                    onImpactChange: (
-                                      driverRowId,
-                                      costRowId,
-                                      value,
-                                    ) => {
-                                      if (analysisReadOnly) return
-                                      setProjects((prev) =>
-                                        patchProjectDriverImpact(
-                                          prev,
-                                          activeProject.id,
-                                          driverRowId,
-                                          costRowId,
-                                          String(value),
-                                        ),
-                                      )
-                                    },
-                                  }
-                                : undefined
-                            }
-                            onRowsChange={(updater) => {
-                              if (analysisReadOnly) return
-                              setProjects((prev) =>
-                                patchProjectCostRows(
-                                  prev,
-                                  activeProject.id,
-                                  updater,
-                                ),
-                              )
-                            }}
-                            costCorrelationMode={{
-                              active: correlationModeActive,
-                              onToggle: handleCorrelationModeToggle,
-                              selectedCostRowIds: correlationModeActive
-                                ? correlationSelectedCostIds
-                                : [],
-                              onToggleCostSelection: handleToggleCorrelationCost,
-                              onOpenSummary: handleOpenCorrelationSummary,
-                              onRemoveSummary: handleRemoveCorrelationSummary,
-                              pendingRho: correlationPendingRho,
-                              pendingMixed: correlationPendingMixed,
-                              onPendingRhoChange: handleCorrelationPendingChange,
-                              onApplyGroupCorrelation:
-                                handleCostCorrelationGroupApply,
-                              savedSummaries: savedCorrelationSummaries,
-                              saveConfirmVisible: correlationSaveConfirmVisible,
-                              saveConfirmKind: correlationFeedbackKind,
-                              prepStatus: activeCostCorrelationPrep?.status,
-                              incompatibleEditWarning: correlationEditBlocked,
-                              onReturnToGuided:
-                                guidedResume?.after === "correlation" &&
-                                guidedResume.projectId === activeProject.id
-                                  ? returnToGuidedReview
-                                  : undefined,
-                            }}
-                            defineMode={{
-                              active: defineModeActive,
-                              onToggle: handleDefineModeToggle,
-                              selectedRowId: defineModeActive
-                                ? defineSelectedRowId
-                                : null,
-                              onSelectRow: (rowId) => {
-                                if (!defineModeActive) return
-                                setDefineSelectedRowId(rowId)
-                              },
-                              onClearSelection: () => setDefineSelectedRowId(null),
-                            }}
-                            guidedInputMode={
-                              analysisReadOnly
-                                ? undefined
-                                : {
-                                    active: guidedInputKind === "cost",
-                                    onOpen: () => openGuidedInput("cost"),
-                                    onReturnToGuided:
-                                      guidedResume?.after === "costItems" &&
-                                      guidedResume.projectId === activeProject.id
-                                        ? returnToGuidedReview
-                                        : undefined,
-                                  }
-                            }
-                          />
-                        </SectionExpander>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="overflow-visible border border-border bg-[var(--km-surface)] ring-0 [--km-surface:color-mix(in_oklab,var(--color-muted)_35%,var(--color-background))]">
-                      <CardContent className="p-4">
-                        <SectionExpander title={t("expanders.drivers")} defaultOpen>
-                          <DriversTable
-                            rows={activeProject.driverRows}
-                            readOnly={analysisReadOnly}
-                            changedCellKeys={visibleStaleChangedCellKeys.drivers}
-                            invalidCellKeys={
-                              showValidationFeedback
-                                ? validationInvalidCellKeys.drivers
-                                : undefined
-                            }
-                            driverImpactMode={{
-                              active: impactModeActive,
-                              onToggle: handleImpactModeToggle,
-                              selectedDriverRowId: impactModeActive
-                                ? (impactSelectedDriverRow?.row.id ?? null)
-                                : null,
-                              onSelectDriver: (driverRowId) => {
-                                if (!impactModeActive) return
-                                setImpactSelectedDriverId(driverRowId)
-                              },
-                              onReturnToGuided:
-                                guidedResume?.after === "impact" &&
-                                guidedResume.projectId === activeProject.id
-                                  ? returnToGuidedReview
-                                  : undefined,
-                            }}
-                            defineMode={{
-                              active: defineModeActive,
-                              onToggle: handleDefineModeToggle,
-                              selectedRowId: defineModeActive
-                                ? defineSelectedRowId
-                                : null,
-                              onSelectRow: (rowId) => {
-                                if (!defineModeActive) return
-                                setDefineSelectedRowId(rowId)
-                              },
-                              onClearSelection: () => setDefineSelectedRowId(null),
-                            }}
-                            guidedInputMode={
-                              analysisReadOnly
-                                ? undefined
-                                : {
-                                    active: guidedInputKind === "driver",
-                                    onOpen: () => openGuidedInput("driver"),
-                                    onReturnToGuided:
-                                      guidedResume?.after === "drivers" &&
-                                      guidedResume.projectId === activeProject.id
-                                        ? returnToGuidedReview
-                                        : undefined,
-                                  }
-                            }
-                            onRowsChange={(updater) => {
-                              if (analysisReadOnly) return
-                              setProjects((prev) =>
-                                patchProjectDriverRows(
-                                  prev,
-                                  activeProject.id,
-                                  updater,
-                                ),
-                              )
-                            }}
-                          />
-                        </SectionExpander>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              ) : null}
-            </div>
+            <InputPanels
+              activeProject={activeProject}
+              analysisReadOnly={analysisReadOnly}
+              guidedFocusSession={guidedFocusSession}
+              guidedFocusState={guidedFocusState}
+              isOngoingAnalysis={isOngoingAnalysis}
+              librarySession={librarySession}
+              setProjects={setProjects}
+              showValidationFeedback={showValidationFeedback}
+              validationInvalidCellKeys={validationInvalidCellKeys}
+              visibleStaleChangedCellKeys={visibleStaleChangedCellKeys}
+            />
           </div>
 
           <div
