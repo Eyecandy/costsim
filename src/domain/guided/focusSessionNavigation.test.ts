@@ -197,7 +197,7 @@ describe("unified Focus session ownership", () => {
   it("I: Simulation → Results still requires viewable results", () => {
     const app = readAppSource()
     const cont = app.match(
-      /const continueFromSimulationToResults = useCallback\(\(\) => \{([\s\S]*?)\}, \[hasViewableResults\]\)/,
+      /const continueFromSimulationToResults = useCallback\(\(\) => \{([\s\S]*?)\}, \[hasViewableResults[^\]]*\]\)/,
     )
     expect(cont?.[1] ?? "").toContain("if (!hasViewableResults) return")
     expect(cont?.[1] ?? "").toContain('setFocusView("results")')
