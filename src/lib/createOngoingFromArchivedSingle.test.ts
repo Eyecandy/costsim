@@ -26,6 +26,7 @@ import {
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { resolveResultView } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
 function heavyCheckpointSnapshot(
   snapshot: AnalysisCheckpoint["archivedSnapshot"],
@@ -421,7 +422,6 @@ describe("start ongoing UI wiring", () => {
   it("exposes archived-single action and selection dialog", async () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
-    const root = join(import.meta.dirname, "../..")
     const menu = readFileSync(
       join(root, "src/components/AnalysisActionsMenu.tsx"),
       "utf8",

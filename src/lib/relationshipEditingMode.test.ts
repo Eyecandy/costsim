@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
@@ -18,9 +17,8 @@ import {
   getSelectedGroupCorrelationState,
   isCostCorrelationGroupPatchValid,
 } from "@/lib/project"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function scenarioTableSource() {
   return readFileSync(

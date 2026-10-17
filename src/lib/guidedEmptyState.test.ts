@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import {
@@ -11,9 +10,8 @@ import {
 } from "@/lib/guidedWorkflow"
 import { listGuidedInputRows } from "@/lib/guidedInput"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function appSource() {
   return readFileSync(join(repoRoot, "src/App.tsx"), "utf8")

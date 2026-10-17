@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   clearLocalAnalysisLibraryStorageForTests,
@@ -24,9 +23,8 @@ import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
 import { messages } from "@/i18n/messages"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function fakeShapley(id: string): ShapleyAttributionResult {
   return {

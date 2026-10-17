@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { positionDefinePopover } from "@/components/DefineRowPopover"
 import {
@@ -12,9 +11,8 @@ import {
 } from "@/lib/rowDefinitions"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
 import { shouldShowDefineSelectHint } from "@/components/ScenarioPercentTable"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function scenarioTableSource() {
   return readFileSync(

@@ -30,6 +30,7 @@ import {
   formatKeyFigurePct,
   formatKeyFigurePctDecimal,
 } from "@/lib/keyFiguresDisplay"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
 describe("Result Preferences model", () => {
   it("defaults preserve current Key Figures / S-curve experience", () => {
@@ -323,9 +324,7 @@ describe("Result metric helpers", () => {
 describe("Result Preferences UI wiring", () => {
   it("panel and consumers are wired without touching share/project schema", async () => {
     const { readFileSync } = await import("node:fs")
-    const { join, dirname } = await import("node:path")
-    const { fileURLToPath } = await import("node:url")
-    const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
+    const { join } = await import("node:path")
     const panel = readFileSync(
       join(root, "src/components/ResultsPanel.tsx"),
       "utf8",

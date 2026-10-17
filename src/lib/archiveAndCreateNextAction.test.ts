@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")

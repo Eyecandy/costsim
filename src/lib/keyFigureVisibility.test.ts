@@ -11,8 +11,8 @@ import {
   listVisibleKeyFigureRowIds,
 } from "@/lib/keyFigureVisibility"
 import { selectComparisonKeyFigures } from "@/lib/checkpointComparisonPresentation"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")

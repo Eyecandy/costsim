@@ -8,8 +8,8 @@ import {
   type ShapleyCacheEntry,
 } from "@/lib/lazyShapleyAttribution"
 import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 const result = {
   contributions: [{ id: "cost", name: "Cost", contribution: 10 }],
 } as unknown as ShapleyAttributionResult

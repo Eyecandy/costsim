@@ -22,11 +22,9 @@ import {
 } from "@/lib/resultPreferences"
 import { messages } from "@/i18n/messages"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")

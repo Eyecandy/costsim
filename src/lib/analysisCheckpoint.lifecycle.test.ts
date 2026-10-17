@@ -30,8 +30,8 @@ import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"
 import type { Project } from "@/lib/project"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function snapshotFor(projects: Project[], activeProjectId: string) {
   const fakeResults: ProjectResult[] = projects.map((p) => ({

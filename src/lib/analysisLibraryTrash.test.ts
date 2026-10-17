@@ -18,8 +18,8 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 async function createDraft(name: string, folderId: string | null = null) {
   const repo = getAnalysisLibraryRepository()

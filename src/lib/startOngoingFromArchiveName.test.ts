@@ -24,6 +24,7 @@ import {
   validateStartOngoingSubmit,
 } from "@/lib/startOngoingFromArchiveName"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
 function makeSnapshot(
   projects: AnalysisDocument["workspace"]["projects"],
@@ -356,7 +357,6 @@ describe("start ongoing name UX wiring", () => {
   it("dialog exposes analysis name field and create CTA", async () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
-    const root = join(import.meta.dirname, "../..")
     const dialog = readFileSync(
       join(root, "src/components/StartOngoingFromArchiveDialog.tsx"),
       "utf8",

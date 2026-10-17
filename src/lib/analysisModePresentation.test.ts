@@ -15,8 +15,8 @@ import {
   nowIso,
   type AnalysisDocument,
 } from "@/lib/analysisDocument"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function renderWithI18n(node: ReactElement) {
   return renderToStaticMarkup(createElement(I18nProvider, null, node))

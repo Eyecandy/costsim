@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   applyGuidedDefinitionDraftChange,
@@ -18,8 +17,8 @@ import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
 } from "@/lib/rowDefinitions"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 function dialogSource() {
   return readFileSync(

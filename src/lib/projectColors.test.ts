@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   getProjectColorCssVar,
@@ -10,8 +9,8 @@ import {
   PROJECT_COLOR_HEX,
   projectColorIndex,
 } from "@/lib/projectColors"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 describe("projectColors", () => {
   it("assigns Project 1 to the blue scurve token", () => {

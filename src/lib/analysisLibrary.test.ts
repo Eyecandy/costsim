@@ -20,8 +20,8 @@ import {
 } from "@/lib/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 describe("Analysis Library repository", () => {
   beforeEach(() => {

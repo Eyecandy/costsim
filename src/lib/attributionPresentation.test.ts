@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
@@ -8,9 +7,8 @@ import { isShapleyCacheEntryValid } from "@/lib/lazyShapleyAttribution"
 import { runShapleyAttributionForPayload } from "@/lib/shapleyWorkerMessages"
 import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
 import { createProject } from "@/lib/project"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function sampleProject() {
   const base = createProject({ id: "p1", name: "Project A" })

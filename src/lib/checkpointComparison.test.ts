@@ -35,8 +35,8 @@ import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import { newId } from "@/lib/tableRows"
 import type { Project } from "@/lib/project"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")

@@ -12,6 +12,7 @@ import { buildArchivedAnalysisSnapshot } from "@/lib/buildArchivedAnalysisSnapsh
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
 function makeResults(
   projectId: string,
@@ -171,7 +172,6 @@ describe("archive persistence", () => {
   })
 
   it("session archiveCurrent serializes behind save chain and skips next autosave", () => {
-    const root = join(import.meta.dirname, "../..")
     const session = readFileSync(
       join(root, "src/lib/useLibraryAnalysisSession.ts"),
       "utf8",

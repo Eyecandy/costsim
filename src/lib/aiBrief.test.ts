@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   AI_BRIEF_SCHEMA_VERSION,
@@ -35,9 +34,8 @@ import {
   resolveResultView,
 } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 const defaultResultView = resolveResultView(DEFAULT_RESULT_PREFERENCES)
 
 function resultsPanelSource() {

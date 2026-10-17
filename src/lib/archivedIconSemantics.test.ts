@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(import.meta.dirname, "../..")
 
 describe("archived state uses Archive icon (not Lock)", () => {
   it("Library / workspace archived indicators use lucide Archive", () => {

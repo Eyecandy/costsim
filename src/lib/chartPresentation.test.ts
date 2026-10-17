@@ -26,8 +26,8 @@ import {
   SCURVE_ASPECT_RATIO,
 } from "@/lib/sCurveDisplay"
 import { SCURVE_PROJECT_DIM_OPACITY } from "@/lib/sCurveProjectEmphasis"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(__dirname, "../..")
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")

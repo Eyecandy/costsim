@@ -7,8 +7,8 @@ import { describe, expect, it } from "vitest"
 import { UserFolderBlock } from "@/components/AnalysisLibraryNav"
 import { I18nProvider } from "@/i18n/I18nProvider"
 import type { AnalysisSummary } from "@/lib/analysisDocument"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 const sampleItems: AnalysisSummary[] = [
   {

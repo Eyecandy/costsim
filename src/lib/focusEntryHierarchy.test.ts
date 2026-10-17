@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   COLUMN_HEADER_BOTTOM_GAP_CLASS,
@@ -14,8 +13,8 @@ import {
 } from "@/lib/guidedWorkflow"
 import { messages } from "@/i18n/messages"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")

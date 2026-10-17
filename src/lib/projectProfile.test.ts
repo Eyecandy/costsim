@@ -41,8 +41,8 @@ import {
   buildShareCompactPayload,
   compactPayloadToProjects,
 } from "@/lib/shareLink"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 describe("ProjectProfile taxonomy v1", () => {
   it("exposes exactly five top-level categories with expected selection modes", () => {

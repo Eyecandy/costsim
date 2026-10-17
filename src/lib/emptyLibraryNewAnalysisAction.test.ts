@@ -10,8 +10,8 @@ import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
 import { navigateTo } from "@/lib/auth"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function stubWindowLocation(href = "http://localhost/library") {
   const url = new URL(href)

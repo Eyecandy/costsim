@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 describe("overlayPortalContainer", () => {
   it("GuidedPhaseInfo uses the fullscreen-aware portal container", () => {

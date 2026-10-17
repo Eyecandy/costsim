@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import {
@@ -25,9 +24,8 @@ import { parseProjectsPayload } from "@/lib/storage"
 import type { DriverRow } from "@/lib/tableRows"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")

@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 describe("library user-folder collapse vs nav sections", () => {
   it("user folders use empty expandedUserFolderIds; Recent/Archived are not sidebar sections", () => {

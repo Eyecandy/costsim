@@ -26,8 +26,8 @@ import {
   planOngoingPdfExport,
   resolveOngoingPdfCutoff,
 } from "@/pdf/ongoing/resolveOngoingPdfCutoff"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../../..")
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")

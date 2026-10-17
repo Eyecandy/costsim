@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   buildWaterfallChartLayout,
   valueToX,
 } from "@/lib/waterfallLayout"
 import { groupWaterfallContributors } from "@/lib/waterfallContributors"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 function attributionSource() {
   return readFileSync(

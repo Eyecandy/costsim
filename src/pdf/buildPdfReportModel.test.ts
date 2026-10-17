@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { existsSync, readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { createProject, type Project } from "@/lib/project"
 import { PRODUCT_NAME } from "@/lib/brand"
@@ -21,9 +20,8 @@ import {
   resolvePdfAmountScale,
 } from "@/pdf/buildPdfReportModel"
 import { groupWaterfallContributors } from "@/lib/waterfallContributors"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function pdfDocSource() {
   return readFileSync(

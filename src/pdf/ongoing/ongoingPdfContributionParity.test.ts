@@ -39,8 +39,8 @@ import {
   preparePdfWaterfallPresentation,
 } from "@/pdf/pdfWaterfallChart"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../../..")
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")

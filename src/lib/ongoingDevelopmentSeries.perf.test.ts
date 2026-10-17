@@ -22,8 +22,8 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { percentile, sortedFiniteValues } from "@/lib/stats"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function results(projectId: string, values: number[]): ProjectResult[] {
   return [

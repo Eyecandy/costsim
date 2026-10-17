@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
@@ -8,9 +7,8 @@ import {
   plotXFromCost,
   togglePinnedCost,
 } from "@/lib/sCurveHover"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 function sCurveSource() {
   return readFileSync(join(repoRoot, "src/components/ResultsSCurve.tsx"), "utf8")

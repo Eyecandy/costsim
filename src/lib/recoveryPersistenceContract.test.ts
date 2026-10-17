@@ -7,8 +7,8 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 describe("checkpoint recovery persistence contract", () => {
   it("has no production API for persisting live draft Monte Carlo totals", () => {

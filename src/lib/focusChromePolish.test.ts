@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import {
@@ -11,8 +10,8 @@ import {
   FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
 } from "@/lib/focusSessionFrame"
 import { focusResultHelpCopyKeys } from "@/lib/focusResultSteps"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")

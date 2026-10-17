@@ -17,8 +17,8 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 import { messages } from "@/i18n/messages"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function results(
   projectId: string,

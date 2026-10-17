@@ -34,8 +34,8 @@ import {
 } from "@/pdf/ongoing/ongoingPdfTypes"
 import { buildPdfReportModelForMode } from "@/pdf/exportPdfReport"
 import { messages } from "@/i18n/messages"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../../..")
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")

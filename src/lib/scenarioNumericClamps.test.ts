@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   clampCostLikelyAbs,
@@ -11,8 +10,8 @@ import {
 } from "@/lib/scenarioNumericClamps"
 import { normalizeGuidedNumericField } from "@/lib/guidedInput"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
+import { repoRoot as root } from "@/test-utils/repoRoot"
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..")
 
 function costRow(partial: Partial<CostElementRow> = {}): CostElementRow {
   return {

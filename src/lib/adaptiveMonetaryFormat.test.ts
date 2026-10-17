@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import {
   formatAdaptiveMonetarySignedDelta,
@@ -9,9 +8,8 @@ import {
   formatTornadoSignedDeltaWithScale,
   resolveAdaptiveMonetaryScale,
 } from "@/lib/formatWaterfallValue"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = join(__dirname, "../..")
 
 describe("Contribution Analysis adaptive monetary formatting", () => {
   it("picks unit by magnitude", () => {

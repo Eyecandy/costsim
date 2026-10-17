@@ -31,8 +31,8 @@ import {
 import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 function fixture() {
   const blank = createBlankWorkspaceRuntimeState()

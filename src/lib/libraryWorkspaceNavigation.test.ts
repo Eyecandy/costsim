@@ -7,8 +7,8 @@ import {
   readLibraryFilterFromLocation,
   runBeforeLeaveWithoutBlocking,
 } from "@/components/AnalysisLibraryNav"
+import { repoRoot } from "@/test-utils/repoRoot"
 
-const repoRoot = join(import.meta.dirname, "../..")
 
 describe("Library direct destinations (URL-authoritative)", () => {
   it("buildLibraryPath encodes Home / All / Deleted / folder canonically", () => {
