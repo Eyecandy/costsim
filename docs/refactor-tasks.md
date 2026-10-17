@@ -38,8 +38,13 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 | 2026-10-17 | 22:21 | `App`: hoist derived validity / result values above the guided and focus logic (no behaviour change) | c7a80b6 |
 | 2026-10-17 | 22:33 | `App`: `useGuidedFocusSession` (about 1,100 lines of guided input, focus mode and editing-mode logic, 10 parameters). Tests read the workspace files before `App.tsx`. | 66c6846 |
 | 2026-10-17 | 22:25-22:37 (approx) | Browser check of the step above against original `costsim`: editing-mode toggles (Definer, Korrelasjon, Påvirkning), all 6 guided-input screens, run from guided input and landing on focus results, Escape. All identical (same text hash per screen, same button counts). | - |
+| 2026-10-17 | 22:38 | Update this task log; push to `origin/main` (up to b1eaa56) | b1eaa56 |
+| 2026-10-17 | 22:46 | `App`: `FocusSession` (focus-mode shell with input and results views; 48 props became 31 by taking the two state objects) | f9cc9f9 |
+| 2026-10-17 | 22:52 | `App`: `InputPanels` (cost items and drivers; 37 props became 10) | 7a843c7 |
+| 2026-10-17 | 22:56 | `App`: `GuidedInputHost` (guided-input dialog and its table patches; 11 props) | 8b7bc62 |
+| 2026-10-17 | 22:50-22:57 (approx) | Browser check of the three steps above against the values recorded from original `costsim`: simulation results page (text hash, element counts), editing-mode toggles, all 6 guided screens, run from guided input to focus results. All identical. | - |
 
-`App.tsx`: 4,459 lines at start, 2,054 after the last commit above.
+`App.tsx`: 4,459 lines at start, 1,208 after the last commit above.
 
 Checks after each commit: `tsc -b` clean, lint no worse than the previous commit (88 at start, 80 now), tests 1,332 of 1,333 pass, `check:deps` clean.
 
@@ -47,8 +52,9 @@ Checks after each commit: `tsc -b` clean, lint no worse than the previous commit
 
 | Task | Notes |
 |---|---|
-| `InputPanels` and `FocusSession` components | Props can now collapse into `guidedFocusState` and a few values (hooks exist). Biggest remaining JSX in `App.tsx`. |
+| `ResultsColumn` (112 lines, 29 props) and the duplicated `ResultsPanel` props in `App` and `FocusSession` | Skipped on purpose: would move 112 lines but need 29 props. Better solved by a shared host that builds the props once. |
 | Split `useGuidedFocusSession` (about 1,100 lines) | Possible later: editing modes, guided handoffs, focus session as separate hooks. |
+| Remaining logic in `App.tsx` (about 700 lines) | Result store (`apply*` functions), project editing handlers, library session wiring. Candidates for a `useLiveResults` and a `useProjectEditing` hook. |
 | Browser-check flows not yet covered | Archive, checkpoints / ongoing, PDF, share link, correlation group apply / summaries. |
 | Pre-existing: `checkpointComparison.test.ts` expects `"17 (12.4 %)"`, code returns `"Locked"` | Real logic mismatch, not caused by the refactor. |
 | Pre-existing: 80 lint errors | Mostly `react-hooks/refs`, `set-state-in-effect`, `only-export-components`. |
