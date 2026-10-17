@@ -54,7 +54,7 @@ import {
   replaceDraftResultField,
 } from "@/lib/draftResultPersist"
 import type { AnalysisDocument } from "@/lib/analysisDocument"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   canStartOngoingFromArchivedSingle,
   planCreateOngoingFromArchivedSingle,
@@ -64,8 +64,8 @@ import {
 import {
   buildShapleyWorkerRequest,
   runShapleyAttributionForPayload,
-} from "@/lib/shapleyWorkerMessages"
-import { percentile } from "@/lib/stats"
+} from "@/domain/simulation/shapleyWorkerMessages"
+import { percentile } from "@/domain/simulation/stats"
 import type { ProjectResult } from "@/simulation.worker"
 import {
   buildOngoingCheckpointResultSnapshot,
@@ -77,7 +77,7 @@ import {
   ongoingDraftResultIdentityMatches,
   pickAuthoritativeOngoingDraftResult,
 } from "@/lib/ongoingDraftResultCommit"
-import { getSimulationRunIdForProject } from "@/lib/simulationRunId"
+import { getSimulationRunIdForProject } from "@/domain/simulation/simulationRunId"
 import {
   buildSingleArchivedResultSnapshot,
   type SingleAnalysisArchivedSnapshot,

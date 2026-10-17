@@ -12,7 +12,7 @@ import {
 import {
   percentileFromSorted,
   sortedFiniteValues,
-} from "@/lib/stats"
+} from "@/domain/simulation/stats"
 import {
   isLegacyHeavyArchivedSnapshot,
   isOngoingCheckpointResultSnapshot,

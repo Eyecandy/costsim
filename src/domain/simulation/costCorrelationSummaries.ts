@@ -1,4 +1,4 @@
-import { parseCorrelationCoefficient } from "@/lib/costCorrelation"
+import { parseCorrelationCoefficient } from "@/domain/simulation/costCorrelation"
 import type { CostCorrelationsByRowId } from "@/lib/project"
 
 export type SavedCorrelationSummary = {

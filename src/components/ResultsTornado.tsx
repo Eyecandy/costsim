@@ -2,7 +2,7 @@ import { Fragment, useMemo } from "react"
 
 import { ChartExpandHost, shouldShowChartExpand } from "@/components/ChartExpandButton"
 import { useI18n } from "@/i18n/useI18n"
-import type { DeterministicTornadoRow } from "@/lib/deterministicTornado"
+import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
 import { formatNumber } from "@/lib/formatNumber"
 import {
   collectTornadoDisplayValues,

@@ -13,7 +13,7 @@ import {
   type ResolvedResultView,
   type ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 
 export const SINGLE_ARCHIVED_RESULT_KIND = "single_archived_result_v1" as const

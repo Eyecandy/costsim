@@ -14,7 +14,7 @@ import {
   mapShapleyToPdfContribution,
 } from "@/pdf/buildPdfReportModel"
 import type { AppLanguage } from "@/lib/formatNumber"
-import { mean } from "@/lib/stats"
+import { mean } from "@/domain/simulation/stats"
 import { computeSCurveDisplaySeries } from "@/lib/sCurveDisplay"
 import { getProjectColorHex } from "@/lib/projectColors"
 import type { Project } from "@/lib/project"

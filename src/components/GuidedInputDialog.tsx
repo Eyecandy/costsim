@@ -33,7 +33,7 @@ import {
 import {
   deriveSavedCorrelationSummaries,
   formatSavedCorrelationSummaryLabel,
-} from "@/lib/costCorrelationSummaries"
+} from "@/domain/simulation/costCorrelationSummaries"
 import {
   GUIDED_COST_P10_SLIDER,
   GUIDED_COST_P90_SLIDER,

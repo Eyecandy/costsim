@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
-import { getLiveResultValidity } from "@/lib/liveSimulationState"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
+import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,

@@ -1,21 +1,21 @@
 import {
   computeDeterministicTornadoRows,
   type DeterministicTornadoRow,
-} from "@/lib/deterministicTornado"
+} from "@/domain/simulation/deterministicTornado"
 import { computeUncertainDeltaWithPct, type Project } from "@/lib/project"
 import type { ResolvedResultView } from "@/lib/resultPreferences"
 import {
   computeSCurveDisplaySeries,
   SCURVE_DISPLAY_POINT_TARGET,
 } from "@/lib/sCurveDisplay"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   mean,
   percentile,
   probabilityAtOrBelowPercent,
   relativeStandardDeviationPercent,
   standardDeviation,
-} from "@/lib/stats"
+} from "@/domain/simulation/stats"
 import type { ProjectResult } from "@/simulation.worker"
 
 export type CompactFrozenKeyFiguresV1 = {

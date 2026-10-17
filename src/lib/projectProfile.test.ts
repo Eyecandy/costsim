@@ -831,7 +831,7 @@ describe("ProjectProfile UI disclosure wiring", () => {
     expect(app).toContain("md:col-start-2 md:row-start-3")
     // Profile is omitted from stale-input signature (metadata only).
     const signatureSrc = readFileSync(
-      join(repoRoot, "src/lib/simulationInputSignature.ts"),
+      join(repoRoot, "src/domain/simulation/simulationInputSignature.ts"),
       "utf8",
     )
     expect(signatureSrc).toContain("profile: _p")

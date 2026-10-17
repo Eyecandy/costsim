@@ -9,9 +9,9 @@ import {
   buildArchivedAnalysisSnapshot,
   canArchiveCurrentResults,
 } from "@/lib/buildArchivedAnalysisSnapshot"
-import { computeDeterministicTornadoRows } from "@/lib/deterministicTornado"
+import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 import {
   computeShapleyAttribution,
   costActive,
@@ -12,7 +12,7 @@ import {
   percentileOfNumbers,
   playerBit,
   type ShapleyAttributionInput,
-} from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/shapleyAttribution"
 import {
   computeTotalFromSampledValues,
   type TriangularParams,

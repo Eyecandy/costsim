@@ -23,10 +23,10 @@ import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import {
   emptyLiveSimulationState,
   getLiveResultValidity,
-} from "@/lib/liveSimulationState"
+} from "@/domain/simulation/liveSimulationState"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { Project } from "@/lib/project"
 import type { ProjectResult } from "@/simulation.worker"

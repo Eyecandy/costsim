@@ -7,20 +7,20 @@ import {
   ShapleyRequestQueue,
   type ShapleyCacheEntry,
   type ShapleyProjectStatus,
-} from "@/lib/lazyShapleyAttribution"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
-import { shapleyInputSignature } from "@/lib/shapleyInputSignature"
+} from "@/domain/simulation/lazyShapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
+import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import {
   buildShapleyWorkerRequest,
   type ShapleyWorkerResponse,
-} from "@/lib/shapleyWorkerMessages"
+} from "@/domain/simulation/shapleyWorkerMessages"
 import {
   getSimulationRunIdForProject,
   simulationRunKeyForProjects,
   type SimulationRunIdByProjectId,
-} from "@/lib/simulationRunId"
+} from "@/domain/simulation/simulationRunId"
 import type { Project } from "@/lib/project"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 import type { ProjectResult } from "@/simulation.worker"
 import ShapleyWorker from "@/shapley.worker.ts?worker"
 

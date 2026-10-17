@@ -12,7 +12,7 @@ import {
   groupWaterfallContributors,
   type WaterfallDisplayRow,
 } from "@/lib/waterfallContributors"
-import type { ShapleyContribution } from "@/lib/shapleyAttribution"
+import type { ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
 import {
   ChartExpandHost,
   shouldShowChartExpand,

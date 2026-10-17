@@ -12,7 +12,7 @@ import {
   type ResolvedResultView,
   type ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 import {
   SINGLE_ARCHIVED_RESULT_KIND,

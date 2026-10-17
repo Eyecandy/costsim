@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { computeShapleyAttribution } from "@/lib/shapleyAttribution"
-import { percentile } from "@/lib/stats"
+import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
+import { percentile } from "@/domain/simulation/stats"
 import {
   simulateAggregateCostWithDriversValuesAndSeries,
   type TriangularParams,

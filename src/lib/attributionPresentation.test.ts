@@ -3,9 +3,9 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
-import { isShapleyCacheEntryValid } from "@/lib/lazyShapleyAttribution"
-import { runShapleyAttributionForPayload } from "@/lib/shapleyWorkerMessages"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
+import { isShapleyCacheEntryValid } from "@/domain/simulation/lazyShapleyAttribution"
+import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWorkerMessages"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import { createProject } from "@/lib/project"
 import { repoRoot } from "@/test-utils/repoRoot"
 

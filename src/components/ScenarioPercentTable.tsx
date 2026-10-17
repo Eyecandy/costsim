@@ -30,7 +30,7 @@ import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/lib/project
 import {
   snapCorrelationCoefficient,
   type CostCorrelationPrepStatus,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   driverImpactCellKey,
   INCURRED_COSTS_CELL_KEY,
@@ -38,7 +38,7 @@ import {
 import {
   formatSavedCorrelationSummaryLabel,
   type SavedCorrelationSummary,
-} from "@/lib/costCorrelationSummaries"
+} from "@/domain/simulation/costCorrelationSummaries"
 import { buttonVariants } from "@/components/ui/button"
 import type { Language } from "@/i18n/I18nProvider"
 import { useI18n } from "@/i18n/useI18n"

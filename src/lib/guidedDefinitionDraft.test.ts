@@ -11,7 +11,7 @@ import {
   syncGuidedDefinitionDraft,
   type GuidedDefinitionDraftState,
 } from "@/lib/guidedDefinitionDraft"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { Project } from "@/lib/project"
 import {
   COST_DESCRIPTION_MAX_LENGTH,

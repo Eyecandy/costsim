@@ -1,4 +1,4 @@
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 
 export type ShapleyProjectStatus = "idle" | "calculating" | "ready" | "error"
 

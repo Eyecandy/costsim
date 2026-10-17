@@ -1,5 +1,5 @@
 import { AttributionWaterfall } from "@/components/AttributionWaterfall"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 
 type ResultsReserveWaterfallProps = {
   result: ShapleyAttributionResult

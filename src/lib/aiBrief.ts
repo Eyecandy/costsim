@@ -10,8 +10,8 @@ import { getPrecedingCheckpointPair } from "@/lib/checkpointDiff"
 import type { CompactProjectResultV1 } from "@/lib/compactAnalysisResult"
 import {
   parseCorrelationCoefficient,
-} from "@/lib/costCorrelation"
-import { computeDeterministicTornadoRows } from "@/lib/deterministicTornado"
+} from "@/domain/simulation/costCorrelation"
+import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
 import {
   buildOngoingDevelopmentSeries,
@@ -28,8 +28,8 @@ import {
   formatPercentileLabel,
   shouldShowProbabilityBelowCostLevel,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
-import { percentile, probabilityAtOrBelowPercent } from "@/lib/stats"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
+import { percentile, probabilityAtOrBelowPercent } from "@/domain/simulation/stats"
 import {
   parseNumberField,
   resolveDriverImpactPercent,
@@ -40,7 +40,7 @@ import {
 import {
   uncertaintyModelConfig,
   type UncertaintyMarginalDistribution,
-} from "@/lib/uncertaintyModelConfig"
+} from "@/domain/simulation/uncertaintyModelConfig"
 import { summarizeSamples } from "@/simulation"
 import type { ProjectResult } from "@/simulation.worker"
 

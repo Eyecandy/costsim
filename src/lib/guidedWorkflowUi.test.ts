@@ -7,7 +7,7 @@ import {
   buildGuidedWorkflowSteps,
   initialGuidedWorkflowStepIndex,
 } from "@/lib/guidedWorkflow"
-import { deriveSavedCorrelationSummaries } from "@/lib/costCorrelationSummaries"
+import { deriveSavedCorrelationSummaries } from "@/domain/simulation/costCorrelationSummaries"
 import { createProject, type Project } from "@/lib/project"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"

@@ -23,7 +23,7 @@ import {
   probabilityAtOrBelowPercent,
   relativeStandardDeviationPercent,
   standardDeviation,
-} from "@/lib/stats"
+} from "@/domain/simulation/stats"
 import type { ScenarioRow } from "@/lib/tableRows"
 import type { ProjectResult } from "@/simulation.worker"
 import {

@@ -1,4 +1,4 @@
-import { computeEmpiricalCdf, type CdfPoint } from "@/lib/cdf"
+import { computeEmpiricalCdf, type CdfPoint } from "@/domain/simulation/cdf"
 
 /** Display-only point count per S-curve (full Monte Carlo arrays stay runtime-only). */
 export const SCURVE_DISPLAY_POINT_TARGET = 800

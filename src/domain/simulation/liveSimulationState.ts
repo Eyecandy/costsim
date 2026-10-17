@@ -6,7 +6,7 @@
  */
 
 import type { ProjectResult } from "@/simulation.worker"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { Project } from "@/lib/project"
 import { parseProjectsPayload } from "@/lib/storage"
 import {

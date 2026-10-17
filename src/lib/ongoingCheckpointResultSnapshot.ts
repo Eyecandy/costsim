@@ -8,16 +8,16 @@ import {
   type CompactFrozenKeyFiguresV1,
   type CompactSCurveV1,
 } from "@/lib/compactAnalysisResult"
-import type { DeterministicTornadoRow } from "@/lib/deterministicTornado"
+import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
 import type { Project } from "@/lib/project"
 import {
   resolveResultView,
   type ResolvedResultView,
   type ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export const ONGOING_CHECKPOINT_RESULT_SCHEMA_VERSION = 1 as const
 export const ONGOING_CHECKPOINT_RESULT_KIND =

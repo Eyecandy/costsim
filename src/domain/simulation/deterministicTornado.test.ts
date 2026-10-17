@@ -3,20 +3,20 @@ import { describe, expect, it } from "vitest"
 import {
   computeDeterministicTornado,
   computeDeterministicTornadoRows,
-} from "@/lib/deterministicTornado"
+} from "@/domain/simulation/deterministicTornado"
 import { computeBaseCostSum, type Project } from "@/lib/project"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
-import { createSeededRng } from "@/lib/shapleyAttribution"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
+import { createSeededRng } from "@/domain/simulation/shapleyAttribution"
 import {
   prepareCostCorrelationCholesky,
   sampleCorrelatedUniforms,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   computeTotalFromSampledValues,
   summarizeSamples,
   triangularQuantile,
 } from "@/simulation"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 
 function cost(
   id: string,

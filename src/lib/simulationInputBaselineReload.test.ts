@@ -9,16 +9,16 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { getLiveResultValidity } from "@/lib/liveSimulationState"
+import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import {
   buildOngoingCheckpointResultSnapshot,
 } from "@/lib/ongoingCheckpointResultSnapshot"
 import {
   changedCostTableCellKeySet,
 } from "@/lib/simInputSnapshotDiff"
-import { createSimulationRunIdsForProjects } from "@/lib/simulationRunId"
+import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleDraftResultSnapshot,
   freezeSingleDraftForArchive,

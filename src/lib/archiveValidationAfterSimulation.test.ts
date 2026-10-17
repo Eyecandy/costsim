@@ -17,7 +17,7 @@ import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"
 
 function resultsFor(projectId: string): ProjectResult[] {

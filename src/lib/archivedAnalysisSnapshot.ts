@@ -1,10 +1,10 @@
-import type { DeterministicTornadoRow } from "@/lib/deterministicTornado"
+import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
 import type { Project } from "@/lib/project"
 import type {
   ResolvedResultView,
   ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 
 export const ARCHIVED_ANALYSIS_SNAPSHOT_VERSION = 1 as const

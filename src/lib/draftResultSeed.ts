@@ -8,7 +8,7 @@ import type {
   ResolvedResultView,
   ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult, ShapleyContribution } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult, ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 
 export const DRAFT_RESULT_SEED_VERSION = 1 as const

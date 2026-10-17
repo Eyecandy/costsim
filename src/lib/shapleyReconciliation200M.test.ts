@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest"
 
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
 } from "@/lib/formatWaterfallValue"
 import { computeBaseCostSum, createProject } from "@/lib/project"
-import { computeShapleyAttribution } from "@/lib/shapleyAttribution"
+import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
 import { newId } from "@/lib/tableRows"
 
 /** Representative ~200 M example project matching reported key-figure scale. */

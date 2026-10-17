@@ -12,14 +12,14 @@ import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
-import { getLiveResultValidity } from "@/lib/liveSimulationState"
+import { getLiveResultValidity } from "@/domain/simulation/liveSimulationState"
 import { buildOngoingCheckpointResultSnapshot } from "@/lib/ongoingCheckpointResultSnapshot"
 import { pickAuthoritativeOngoingDraftResult } from "@/lib/ongoingDraftResultCommit"
 import {
   DEFAULT_RESULT_PREFERENCES,
   cloneResultPreferences,
 } from "@/lib/resultPreferences"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleDraftResultSnapshot,
   isSingleDraftResultSnapshot,

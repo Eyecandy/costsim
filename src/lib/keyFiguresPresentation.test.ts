@@ -15,7 +15,7 @@ import {
   cloneResultPreferences,
   resolveResultView,
 } from "@/lib/resultPreferences"
-import { probabilityAtOrBelowPercent } from "@/lib/stats"
+import { probabilityAtOrBelowPercent } from "@/domain/simulation/stats"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 

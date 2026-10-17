@@ -30,7 +30,7 @@ import {
   type SingleAnalysisArchivedSnapshot,
 } from "@/lib/singleArchivedResultSnapshot"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export type StartOngoingFromArchivedSingleBlockReason =
   | "not_found"

@@ -1,5 +1,5 @@
 import { costAbsoluteLikelyToTriangular, type TriangularParams } from "@/simulation"
-import { triangularParamsFromPercentiles } from "@/lib/triangularCalibration"
+import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
 
 /**
  * Driver: alle tre felt er % (prosentpoeng).

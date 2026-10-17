@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import {
   computeDeterministicTornadoRows,
   type DeterministicTornadoRow,
-} from "@/lib/deterministicTornado"
+} from "@/domain/simulation/deterministicTornado"
 import { ResultsDevelopmentChart } from "@/components/ResultsDevelopmentChart"
 import { ResultsSCurve } from "@/components/ResultsSCurve"
 import { CheckpointComparisonSection } from "@/components/CheckpointComparisonSection"
@@ -55,8 +55,8 @@ import { formatNumber } from "@/lib/formatNumber"
 import {
   firstPersistedSimulationCount,
   resolveReportedSimulationCount,
-} from "@/lib/simulationConfig"
-import { fillUncertaintyModelCopy } from "@/lib/uncertaintyModelConfig"
+} from "@/domain/simulation/simulationConfig"
+import { fillUncertaintyModelCopy } from "@/domain/simulation/uncertaintyModelConfig"
 import { resolveTornadoDisplayScales } from "@/lib/formatWaterfallValue"
 import { useLazyShapleyAttribution } from "@/lib/useLazyShapleyAttribution"
 import {
@@ -70,7 +70,7 @@ import {
 } from "@/lib/resultSettingsPresentation"
 import type { ArchivedAnalysisSnapshotV1 } from "@/lib/archivedAnalysisSnapshot"
 import type { DraftResultSeedV1 } from "@/lib/draftResultSeed"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { buildOngoingDevelopmentSeries } from "@/lib/ongoingDevelopmentSeries"
 import { buildKeyFigureMetricTableRows } from "@/lib/keyFiguresMetricRows"
 import { buildKeyFigureMetricTableRowsFromFrozen } from "@/lib/keyFiguresMetricRows"
@@ -98,7 +98,7 @@ import {
 } from "@/lib/aiBrief"
 import { SectionExpander } from "@/components/SectionExpander"
 import { SpotlightLoadingText } from "@/components/SpotlightLoadingText"
-import { simulationRunKeyForProjects } from "@/lib/simulationRunId"
+import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"
 import type { FocusResultSectionId } from "@/lib/focusResultSteps"
 
 /** Auto-dismiss for stale-input notices under PDF / share / AI brief actions. */

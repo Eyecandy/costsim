@@ -2,7 +2,7 @@
  * Builds archived analysis snapshots and canonical archive eligibility.
  */
 
-import { computeDeterministicTornadoRows } from "@/lib/deterministicTornado"
+import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import {
   ARCHIVE_MODEL_VERSION,
   ARCHIVED_ANALYSIS_SNAPSHOT_VERSION,
@@ -14,7 +14,7 @@ import {
   resolveResultView,
   type ResultPreferencesV1,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/simulation.worker"
 import {
   coerceSimulationInputSignature,
@@ -22,7 +22,7 @@ import {
   getLiveResultValidity,
   type LiveResultValidityKind,
   type LiveSimulationState,
-} from "@/lib/liveSimulationState"
+} from "@/domain/simulation/liveSimulationState"
 import {
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
@@ -35,7 +35,7 @@ import {
   compactFrozenKeyFiguresSupportPreferences,
   hasLiveProjectResultArrays,
 } from "@/lib/resultSettingsPresentation"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 
 export type BuildArchiveSnapshotInput = {
   projects: readonly Project[]

@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest"
 
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 import {
   computeShapleyAttribution,
   percentileOfNumbers,
   quantilesFromSampleTotals,
   reserveValueFromQuantiles,
   type ShapleyAttributionInput,
-} from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/shapleyAttribution"
 import { simulateAggregateCostWithDriversValuesAndSeries } from "@/simulation"
 
 const RESERVE_CONFIG = {

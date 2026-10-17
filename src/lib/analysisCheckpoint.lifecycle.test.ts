@@ -27,7 +27,7 @@ import {
 } from "@/lib/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/simulation.worker"
 import type { Project } from "@/lib/project"
 import { repoRoot } from "@/test-utils/repoRoot"

@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { computeEmpiricalCdf } from "@/lib/cdf"
-import { percentile } from "@/lib/stats"
+import { computeEmpiricalCdf } from "@/domain/simulation/cdf"
+import { percentile } from "@/domain/simulation/stats"
 import {
   SCURVE_ASPECT_RATIO,
   SCURVE_CURVE_STROKE_LINECAP,
@@ -42,7 +42,7 @@ function makeSortedValues(n: number): number[] {
 describe("S-curve display series", () => {
   it("A: App wires main simulation from simulationConfig.mainRuns", () => {
     expect(appSource()).toContain(
-      'import { simulationConfig } from "@/lib/simulationConfig"',
+      'import { simulationConfig } from "@/domain/simulation/simulationConfig"',
     )
     expect(appSource()).toContain("const runs = simulationConfig.mainRuns")
     expect(appSource()).not.toContain("useState(20_000)")

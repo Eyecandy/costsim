@@ -9,7 +9,7 @@ import {
   triangularQuantile,
   type TriangularParams,
 } from "@/simulation"
-import { mean, percentile } from "@/lib/stats"
+import { mean, percentile } from "@/domain/simulation/stats"
 
 const fullImpact = (costs: number, drivers: number): number[][] =>
   Array.from({ length: costs }, () => Array.from({ length: drivers }, () => 100))

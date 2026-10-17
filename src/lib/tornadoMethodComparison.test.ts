@@ -3,12 +3,12 @@ import { describe, expect, it } from "vitest"
 import {
   computeCrystalBallTornadoReference,
   costUserPercentileAbsolutes,
-} from "@/lib/crystalBallTornadoReference"
-import { computeMonteCarloConditionalTornadoRows } from "@/lib/monteCarloConditionalTornado"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
-import { createSeededRng } from "@/lib/shapleyAttribution"
-import { sampleCorrelatedUniforms, prepareCostCorrelationCholesky } from "@/lib/costCorrelation"
-import { percentile } from "@/lib/stats"
+} from "@/domain/simulation/crystalBallTornadoReference"
+import { computeMonteCarloConditionalTornadoRows } from "@/domain/simulation/monteCarloConditionalTornado"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
+import { createSeededRng } from "@/domain/simulation/shapleyAttribution"
+import { sampleCorrelatedUniforms, prepareCostCorrelationCholesky } from "@/domain/simulation/costCorrelation"
+import { percentile } from "@/domain/simulation/stats"
 import type { Project } from "@/lib/project"
 import {
   computeTotalFromSampledValues,

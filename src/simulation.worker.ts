@@ -3,11 +3,11 @@
 import {
   simulateAggregateCostWithDriversValuesAndSeries,
   type SimulationInputSeriesItem,
-} from "./simulation"
-import type { CostCorrelationPrepResult } from "./lib/costCorrelation"
+} from "@/simulation"
+import type { CostCorrelationPrepResult } from "@/domain/simulation/costCorrelation"
 
-export type SimulationCostInput = import("./simulation").TriangularParams
-export type SimulationDriverInput = import("./simulation").TriangularParams
+export type SimulationCostInput = import("@/simulation").TriangularParams
+export type SimulationDriverInput = import("@/simulation").TriangularParams
 
 export type SimulationProjectPayload = {
   projectId: string

@@ -37,7 +37,7 @@ async function createNamed(args: {
       "@/lib/resultPreferences"
     )
     const { buildSimulationInputSignature } = await import(
-      "@/lib/simulationInputSignature"
+      "@/domain/simulation/simulationInputSignature"
     )
     await repo.archive({
       analysisId: doc.id,

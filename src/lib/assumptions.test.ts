@@ -18,7 +18,7 @@ import {
 } from "@/lib/project"
 import { parseProjectsPayload } from "@/lib/storage"
 import { messages } from "@/i18n/messages"
-import { shapleyInputSignature } from "@/lib/shapleyInputSignature"
+import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -203,7 +203,7 @@ describe("project assumptions", () => {
   it("J/K: assumption changes are excluded from stale comparable + Shapley signatures", () => {
     // Canonical signature omits descriptive context (bindings may rename).
     const signatureSrc = readFileSync(
-      join(repoRoot, "src/lib/simulationInputSignature.ts"),
+      join(repoRoot, "src/domain/simulation/simulationInputSignature.ts"),
       "utf8",
     )
     expect(signatureSrc).toMatch(/assumptions:\s*_\w+/)

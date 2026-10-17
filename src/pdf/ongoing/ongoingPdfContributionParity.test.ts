@@ -17,10 +17,10 @@ import {
   isOngoingCheckpointResultSnapshot,
 } from "@/lib/ongoingCheckpointResultSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { PRODUCT_NAME } from "@/lib/brand"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
   formatAdaptiveMonetarySignedDelta,
   formatAdaptiveMonetaryValue,

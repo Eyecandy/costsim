@@ -1,5 +1,5 @@
 import type { OngoingCheckpointResultSnapshotV1 } from "@/lib/ongoingCheckpointResultSnapshot"
-import { getSimulationRunIdForProject } from "@/lib/simulationRunId"
+import { getSimulationRunIdForProject } from "@/domain/simulation/simulationRunId"
 
 export function simulationRunIdForSnapshot(
   snapshot: OngoingCheckpointResultSnapshotV1,

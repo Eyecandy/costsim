@@ -10,7 +10,7 @@ import {
   resolveTornadoDisplayScales,
   resolveWaterfallDisplayScale,
 } from "@/lib/formatWaterfallValue"
-import { computeDeterministicTornadoRows } from "@/lib/deterministicTornado"
+import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 
 describe("tornado k-scale formatting", () => {
   const kScale = { kind: "thousands" as const, unitSuffix: "k" as const }

@@ -12,11 +12,11 @@ import {
   isShapleyCacheEntryValid,
   ShapleyRequestQueue,
   type ShapleyCacheEntry,
-} from "@/lib/lazyShapleyAttribution"
+} from "@/domain/simulation/lazyShapleyAttribution"
 import { createProject, type Project } from "@/lib/project"
-import { runShapleyAttributionForPayload } from "@/lib/shapleyWorkerMessages"
-import { shapleyInputSignature } from "@/lib/shapleyInputSignature"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
+import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWorkerMessages"
+import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   groupWaterfallContributors,
   sumWaterfallDisplayContributions,

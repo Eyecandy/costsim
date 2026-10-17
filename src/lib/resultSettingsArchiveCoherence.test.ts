@@ -32,7 +32,7 @@ import {
   compactFrozenKeyFiguresSupportPreferences,
   compactSnapshotSupportsResultPreferences,
 } from "@/lib/resultSettingsPresentation"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { Project } from "@/lib/project"
 import type { ProjectResult } from "@/simulation.worker"

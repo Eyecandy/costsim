@@ -2,7 +2,7 @@ import {
   parseCorrelationCoefficient,
   identityCorrelationMatrix,
   isValidCorrelationMatrix,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   type ProjectAssumption,
   createAssumption,

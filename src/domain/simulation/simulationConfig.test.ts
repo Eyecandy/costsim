@@ -5,13 +5,13 @@ import { describe, expect, it } from "vitest"
 import { messages } from "@/i18n/messages"
 import { formatNumber } from "@/lib/formatNumber"
 import { createProject } from "@/lib/project"
-import { DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG } from "@/lib/shapleyAttribution"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG } from "@/domain/simulation/shapleyAttribution"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   firstPersistedSimulationCount,
   resolveReportedSimulationCount,
   simulationConfig,
-} from "@/lib/simulationConfig"
+} from "@/domain/simulation/simulationConfig"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -26,7 +26,7 @@ describe("simulationConfig product architecture", () => {
 
   it("B: App wires main simulation request from simulationConfig.mainRuns", () => {
     const app = readSrc("src/App.tsx")
-    expect(app).toContain("import { simulationConfig } from \"@/lib/simulationConfig\"")
+    expect(app).toContain("import { simulationConfig } from \"@/domain/simulation/simulationConfig\"")
     expect(app).toContain("const runs = simulationConfig.mainRuns")
     expect(app).toContain("w.postMessage({ runs, projects: payloads })")
     expect(app).not.toContain("useState(20_000)")
@@ -42,7 +42,7 @@ describe("simulationConfig product architecture", () => {
     expect(DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG.runsPerSubset).not.toBe(
       simulationConfig.mainRuns,
     )
-    const shapleySrc = readSrc("src/lib/shapleyAttribution.ts")
+    const shapleySrc = readSrc("src/domain/simulation/shapleyAttribution.ts")
     expect(shapleySrc).not.toContain("simulationConfig")
   })
 
@@ -57,7 +57,7 @@ describe("simulationConfig product architecture", () => {
     expect(sig).not.toContain("20_000")
     expect(sig).not.toContain("mainRuns")
     expect(sig).not.toContain("simulationCount")
-    const signatureSrc = readSrc("src/lib/simulationInputSignature.ts")
+    const signatureSrc = readSrc("src/domain/simulation/simulationInputSignature.ts")
     expect(signatureSrc).not.toContain("simulationConfig")
     expect(signatureSrc).not.toContain("simulationCount")
     expect(signatureSrc).not.toContain("mainRuns")

@@ -8,11 +8,11 @@ import {
   useState,
   type SetStateAction,
 } from "react"
-import SimulationWorker from "./simulation.worker.ts?worker"
+import SimulationWorker from "@/simulation.worker.ts?worker"
 import type {
   ProjectResult,
   SimulationWorkerResult,
-} from "./simulation.worker"
+} from "@/simulation.worker"
 
 import { AnalysisActionsMenu } from "@/components/AnalysisActionsMenu"
 import { AddAlternativeDialog } from "@/components/AddAlternativeDialog"
@@ -41,21 +41,21 @@ import { SectionExpander } from "@/components/SectionExpander"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   CORRELATION_SAVE_CONFIRM_MS,
   deriveSavedCorrelationSummaries,
-} from "@/lib/costCorrelationSummaries"
-import { createSimulationRunIdsForProjects } from "@/lib/simulationRunId"
+} from "@/domain/simulation/costCorrelationSummaries"
+import { createSimulationRunIdsForProjects } from "@/domain/simulation/simulationRunId"
 import {
   buildSimulationInputSignature,
   staleComparableProjects,
-} from "@/lib/simulationInputSignature"
-import { simulationConfig } from "@/lib/simulationConfig"
+} from "@/domain/simulation/simulationInputSignature"
+import { simulationConfig } from "@/domain/simulation/simulationConfig"
 import {
   getLiveResultValidity,
   type LiveSimulationState,
-} from "@/lib/liveSimulationState"
+} from "@/domain/simulation/liveSimulationState"
 import type { ArchiveBlockReason } from "@/lib/buildArchivedAnalysisSnapshot"
 import type { GuidedInputKind } from "@/lib/guidedInput"
 import type { GuidedResumeAfter, GuidedResumeState } from "@/lib/guidedWorkflow"

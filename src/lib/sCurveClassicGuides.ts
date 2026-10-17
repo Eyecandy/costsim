@@ -4,7 +4,7 @@ import {
   plotYFromProbability,
 } from "@/lib/sCurveHover"
 import { formatPercentileLabel } from "@/lib/resultPreferences"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 
 /** Minimum plot-space gap before custom Y labels share a secondary outer lane. */
 export const CLASSIC_Y_LABEL_MIN_GAP = 4.2

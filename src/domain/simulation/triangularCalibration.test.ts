@@ -6,7 +6,7 @@ import {
   calibrateTriangularFromPercentiles,
   triangularCdf,
   triangularParamsFromPercentiles,
-} from "@/lib/triangularCalibration"
+} from "@/domain/simulation/triangularCalibration"
 import {
   costAbsoluteLikelyToTriangular,
   triangularQuantile,
@@ -19,7 +19,7 @@ import {
   driverCalibratedSupportInvalid,
   type ScenarioRow,
 } from "@/lib/tableRows"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -305,14 +305,14 @@ describe("sampling uses calibrated marginals", () => {
 
   it("G: Shapley path imports triangularQuantile on TriangularParams (shared marginal)", () => {
     const shapley = readFileSync(
-      join(repoRoot, "src/lib/shapleyAttribution.ts"),
+      join(repoRoot, "src/domain/simulation/shapleyAttribution.ts"),
       "utf8",
     )
     expect(shapley).toContain("triangularQuantile(tri.min, tri.mode, tri.max")
     expect(shapley).toContain('from "@/simulation"')
     // Payload build must go through calibrated parsers
     const payload = readFileSync(
-      join(repoRoot, "src/lib/buildSimulationProjectPayload.ts"),
+      join(repoRoot, "src/domain/simulation/buildSimulationProjectPayload.ts"),
       "utf8",
     )
     expect(payload).toMatch(/parseCostForSimulation|parseDriverForSimulation/)

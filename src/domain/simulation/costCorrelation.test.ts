@@ -11,7 +11,7 @@ import {
   sampleCorrelatedUniforms,
   sanitizeCorrelationMatrix,
   standardNormalCdf,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   buildSimulationCostCorrelationMatrix,
   isCostCorrelationPatchValid,

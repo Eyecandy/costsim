@@ -1,4 +1,4 @@
-import type { ShapleyContribution } from "@/lib/shapleyAttribution"
+import type { ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
 
 export const DEFAULT_WATERFALL_TOP_N = 6
 

@@ -10,7 +10,7 @@ import {
   formatGuidedApproxImpactLabel,
   listGuidedInputRows,
 } from "@/lib/guidedInput"
-import { computeDeterministicTornado } from "@/lib/deterministicTornado"
+import { computeDeterministicTornado } from "@/domain/simulation/deterministicTornado"
 import { createProject, type Project } from "@/lib/project"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
 import { emptyScenarioRow } from "@/lib/tableRows"

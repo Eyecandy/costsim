@@ -25,7 +25,7 @@ import {
   getLocalAnalysisLibraryRepository,
 } from "@/lib/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   buildSingleArchivedResultSnapshot,
   isSingleArchivedResultSnapshot,

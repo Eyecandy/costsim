@@ -6,8 +6,8 @@ import {
   resolveShapleyProjectStatus,
   shouldAutoRequestShapleyCalculation,
   type ShapleyCacheEntry,
-} from "@/lib/lazyShapleyAttribution"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/lazyShapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 const result = {

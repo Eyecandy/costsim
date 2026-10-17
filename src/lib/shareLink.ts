@@ -18,7 +18,7 @@ import { appFeatures } from "@/config/appVariant"
 import {
   clampCorrelationCoefficient,
   parseCorrelationCoefficient,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   parseCostDescription,
   parseDriverDescription,

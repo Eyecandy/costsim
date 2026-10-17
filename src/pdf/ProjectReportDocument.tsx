@@ -21,7 +21,7 @@ import {
   computeSCurveDisplaySeries,
 } from "@/lib/sCurveDisplay"
 import { formatNumber, type AppLanguage } from "@/lib/formatNumber"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 import {
   formatPdfAbsoluteAmount,
   formatPdfCorrelationGroupSummary,

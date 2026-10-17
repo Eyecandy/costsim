@@ -7,8 +7,8 @@ import {
   ShapleyRequestQueue,
   shouldAutoRequestShapleyCalculation,
   type ShapleyCacheEntry,
-} from "@/lib/lazyShapleyAttribution"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/lazyShapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -120,7 +120,7 @@ describe("automatic Contribution Analysis after simulation", () => {
     expect(worker).toContain("simulationRunId: msg.simulationRunId")
 
     const messages = readFileSync(
-      join(repoRoot, "src/lib/shapleyWorkerMessages.ts"),
+      join(repoRoot, "src/domain/simulation/shapleyWorkerMessages.ts"),
       "utf8",
     )
     expect(messages).toContain("simulationRunId: string")

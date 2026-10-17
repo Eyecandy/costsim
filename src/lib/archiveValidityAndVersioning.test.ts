@@ -18,9 +18,9 @@ import {
   normalizeResultPreferences,
   resolveResultView,
 } from "@/lib/resultPreferences"
-import type { ShapleyAttributionResult } from "@/lib/shapleyAttribution"
+import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { messages } from "@/i18n/messages"
 import type { ProjectResult } from "@/simulation.worker"
 import { repoRoot } from "@/test-utils/repoRoot"
@@ -267,7 +267,7 @@ describe("create new version inherits archived results", () => {
 
   it("seeds remapped results + Result View without invoking workers", async () => {
     const shapleySpy = vi.spyOn(
-      await import("@/lib/shapleyWorkerMessages"),
+      await import("@/domain/simulation/shapleyWorkerMessages"),
       "runShapleyAttributionForPayload",
     )
     const blank = createBlankWorkspaceRuntimeState()

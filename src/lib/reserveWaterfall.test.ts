@@ -5,16 +5,16 @@ import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
 } from "@/lib/formatWaterfallValue"
-import { buildSimulationProjectPayload } from "@/lib/buildSimulationProjectPayload"
+import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   groupWaterfallContributors,
   sumWaterfallDisplayContributions,
 } from "@/lib/waterfallContributors"
 import { buildWaterfallChartLayout } from "@/lib/waterfallLayout"
-import { computeShapleyAttribution } from "@/lib/shapleyAttribution"
-import { runShapleyAttributionForPayload } from "@/lib/shapleyWorkerMessages"
+import { computeShapleyAttribution } from "@/domain/simulation/shapleyAttribution"
+import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWorkerMessages"
 import { createProject } from "@/lib/project"
-import { isShapleyCacheEntryValid } from "@/lib/lazyShapleyAttribution"
+import { isShapleyCacheEntryValid } from "@/domain/simulation/lazyShapleyAttribution"
 
 const TEST_CONFIG = {
   permutations: 60,

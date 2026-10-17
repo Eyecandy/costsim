@@ -24,7 +24,7 @@ import {
   probabilityAtOrBelowPercent,
   relativeStandardDeviationPercent,
   standardDeviation,
-} from "@/lib/stats"
+} from "@/domain/simulation/stats"
 import type { OngoingFrozenKeyFiguresV1 } from "@/lib/ongoingCheckpointResultSnapshot"
 
 export type KeyFigureMetricTableRow = {

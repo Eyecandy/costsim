@@ -1,10 +1,10 @@
-import { mean, median, percentile } from "@/lib/stats"
+import { mean, median, percentile } from "@/domain/simulation/stats"
 import {
   type CostCorrelationPrepResult,
   prepareCostCorrelationCholesky,
   sampleCorrelatedUniforms,
-} from "@/lib/costCorrelation"
-import { triangularParamsFromPercentiles } from "@/lib/triangularCalibration"
+} from "@/domain/simulation/costCorrelation"
+import { triangularParamsFromPercentiles } from "@/domain/simulation/triangularCalibration"
 
 /** Inverse CDF of a triangular distribution from uniform probability u ∈ [0, 1]. */
 export function triangularQuantile(

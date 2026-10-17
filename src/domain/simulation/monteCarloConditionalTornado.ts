@@ -5,7 +5,7 @@
  * `computeDeterministicTornadoRows` in `deterministicTornado.ts`.
  */
 import type { SimulationInputSeriesItem } from "@/simulation"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 
 export type MonteCarloConditionalTornadoRow = {
   name: string

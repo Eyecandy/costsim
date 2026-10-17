@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest"
 import {
   computeShapleyAttribution,
   type ShapleyAttributionInput,
-} from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/shapleyAttribution"
 import {
   formatWaterfallValueWithScale,
   resolveWaterfallDisplayScale,
 } from "@/lib/formatWaterfallValue"
 import { simulateAggregateCostWithDriversValuesAndSeries } from "@/simulation"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 
 const RECON_CONFIG = {
   permutations: 100,

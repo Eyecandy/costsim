@@ -24,7 +24,7 @@ import {
   probabilityAtOrBelowPercent,
   relativeStandardDeviationPercent,
   standardDeviation,
-} from "@/lib/stats"
+} from "@/domain/simulation/stats"
 import {
   formatKeyFigurePercent,
   formatKeyFigurePct,

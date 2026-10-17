@@ -5,7 +5,7 @@ import {
   deriveSavedCorrelationSummaries,
   formatSavedCorrelationSummaryLabel,
   isUniformCorrelationClique,
-} from "@/lib/costCorrelationSummaries"
+} from "@/domain/simulation/costCorrelationSummaries"
 import {
   applyCostCorrelationGroupPatch,
   applyCostCorrelationPairPatch,
@@ -135,7 +135,7 @@ describe("deriveSavedCorrelationSummaries", () => {
 
   it("N: pairwise matrix remains source of truth (no separate group store)", () => {
     const src = readFileSync(
-      join(repoRoot, "src/lib/costCorrelationSummaries.ts"),
+      join(repoRoot, "src/domain/simulation/costCorrelationSummaries.ts"),
       "utf8",
     )
     expect(src).toContain("deriveSavedCorrelationSummaries")

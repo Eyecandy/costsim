@@ -4,8 +4,8 @@ import {
   medianOfNumbers,
   percentileOfNumbers,
   quantilesFromSampleTotals,
-} from "@/lib/shapleyAttribution"
-import { percentile } from "@/lib/stats"
+} from "@/domain/simulation/shapleyAttribution"
+import { percentile } from "@/domain/simulation/stats"
 
 describe("subset quantile extraction benchmark", () => {
   it("reports incremental cost of P85 on top of P50 from the same totals", () => {

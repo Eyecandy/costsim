@@ -21,7 +21,7 @@ import {
   buildPdfImpactOverrides,
 } from "@/pdf/buildPdfReportModel"
 import { ensurePdfFonts } from "@/pdf/pdfFonts"
-import { computeDeterministicTornadoRows } from "@/lib/deterministicTornado"
+import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import { getProjectColorHex } from "@/lib/projectColors"
 import {
   PDF_A4_PAGE_SIZE,

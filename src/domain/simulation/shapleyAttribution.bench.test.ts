@@ -4,7 +4,7 @@ import {
   computeShapleyAttribution,
   DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG,
   type ShapleyAttributionInput,
-} from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/shapleyAttribution"
 import type { TriangularParams } from "@/simulation"
 
 function makeCost(index: number): TriangularParams {

@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 
-import { computeHistogram, suggestedBinCount } from "@/lib/histogram"
+import { computeHistogram, suggestedBinCount } from "@/domain/simulation/histogram"
 import { cn } from "@/lib/utils"
 
 type ResultsHistogramProps = {

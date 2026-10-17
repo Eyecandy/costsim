@@ -3,17 +3,17 @@ import { describe, expect, it } from "vitest"
 import {
   computeShapleyAttribution,
   type ShapleyAttributionResult,
-} from "@/lib/shapleyAttribution"
+} from "@/domain/simulation/shapleyAttribution"
 import {
   isShapleyCacheEntryValid,
   resolveShapleyProjectStatus,
   type ShapleyCacheEntry,
-} from "@/lib/lazyShapleyAttribution"
+} from "@/domain/simulation/lazyShapleyAttribution"
 import {
   createSimulationRunIdsForProjects,
   simulationRunKeyForProjects,
-} from "@/lib/simulationRunId"
-import { shapleyInputSignature } from "@/lib/shapleyInputSignature"
+} from "@/domain/simulation/simulationRunId"
+import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import { createProject } from "@/lib/project"
 
 function mockCacheEntry(

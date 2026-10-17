@@ -23,7 +23,7 @@ import {
   buildSingleArchivedResultSnapshot,
   isSingleArchivedResultSnapshot,
 } from "@/lib/singleArchivedResultSnapshot"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/lib/workspaceReset"
 import type { ProjectResult } from "@/simulation.worker"
 

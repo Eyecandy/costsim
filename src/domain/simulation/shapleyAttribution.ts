@@ -3,7 +3,7 @@ import {
   prepareCostCorrelationCholesky,
   sampleStandardNormals,
   standardNormalCdf,
-} from "@/lib/costCorrelation"
+} from "@/domain/simulation/costCorrelation"
 import {
   computeTotalFromSampledValues,
   triangularQuantile,

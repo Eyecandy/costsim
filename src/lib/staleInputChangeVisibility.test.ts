@@ -6,7 +6,7 @@ import { messages } from "@/i18n/messages"
 import {
   buildSimulationInputSignature,
   staleComparableProjects,
-} from "@/lib/simulationInputSignature"
+} from "@/domain/simulation/simulationInputSignature"
 import {
   changedCostTableCellKeySet,
   changedScenarioCellKeySet,
@@ -178,7 +178,7 @@ describe("stale input change visibility (presentation-only)", () => {
       buildSimulationInputSignature([edited]),
     )
     const signatureSrc = readFileSync(
-      join(repoRoot, "src/lib/simulationInputSignature.ts"),
+      join(repoRoot, "src/domain/simulation/simulationInputSignature.ts"),
       "utf8",
     )
     expect(signatureSrc).toContain("export function buildSimulationInputSignature")

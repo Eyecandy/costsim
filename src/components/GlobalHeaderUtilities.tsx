@@ -9,8 +9,8 @@ import { useI18n } from "@/i18n/useI18n"
 import { formatNumber } from "@/lib/formatNumber"
 import { METHOD_GUIDE_SECTION_IDS } from "@/lib/methodGuide"
 import { useOverlayPortalContainer } from "@/lib/overlayPortalContainer"
-import { simulationConfig } from "@/lib/simulationConfig"
-import { fillUncertaintyModelCopy } from "@/lib/uncertaintyModelConfig"
+import { simulationConfig } from "@/domain/simulation/simulationConfig"
+import { fillUncertaintyModelCopy } from "@/domain/simulation/uncertaintyModelConfig"
 import { cn } from "@/lib/utils"
 
 /** Same Play mark as the Guided Analysis control in Cost Items / Drivers toolbars. */

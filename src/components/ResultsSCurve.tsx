@@ -73,7 +73,7 @@ import {
 } from "@/lib/sCurveHover"
 import { sCurveProjectLayerOpacity } from "@/lib/sCurveProjectEmphasis"
 import type { ProjectColorCssVar } from "@/lib/projectColors"
-import { percentile } from "@/lib/stats"
+import { percentile } from "@/domain/simulation/stats"
 
 type CurveSeries = {
   id: string

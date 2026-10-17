@@ -19,7 +19,7 @@ import {
   parseDriverUncertaintyNote,
   withDriverUncertaintyNotes,
 } from "@/lib/rowDefinitions"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { parseProjectsPayload } from "@/lib/storage"
 import type { DriverRow } from "@/lib/tableRows"
 import { DEFAULT_RESULT_PREFERENCES } from "@/lib/resultPreferences"

@@ -4,14 +4,14 @@ import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
 import { createProject } from "@/lib/project"
-import { DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG } from "@/lib/shapleyAttribution"
-import { buildSimulationInputSignature } from "@/lib/simulationInputSignature"
+import { DEFAULT_SHAPLEY_ATTRIBUTION_CONFIG } from "@/domain/simulation/shapleyAttribution"
+import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import {
   fillUncertaintyModelCopy,
   formatMarginalDistributionLabel,
   formatMarginalDistributionPlural,
   uncertaintyModelConfig,
-} from "@/lib/uncertaintyModelConfig"
+} from "@/domain/simulation/uncertaintyModelConfig"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -89,7 +89,7 @@ describe("uncertaintyModelConfig product architecture", () => {
 
   it("E/F: main MC and Shapley still use explicit triangular implementation", () => {
     const sim = readSrc("src/simulation.ts")
-    const shapley = readSrc("src/lib/shapleyAttribution.ts")
+    const shapley = readSrc("src/domain/simulation/shapleyAttribution.ts")
     expect(sim).toContain("triangularQuantile")
     expect(sim).toContain("triangularParamsFromPercentiles")
     expect(shapley).toContain("triangularQuantile(tri.min, tri.mode, tri.max")
@@ -109,7 +109,7 @@ describe("uncertaintyModelConfig product architecture", () => {
     expect(sig).not.toContain("marginalDistribution")
     expect(sig).not.toContain("inputInterpretation")
     expect(sig).not.toContain("p10_mode_p90")
-    const signatureSrc = readSrc("src/lib/simulationInputSignature.ts")
+    const signatureSrc = readSrc("src/domain/simulation/simulationInputSignature.ts")
     expect(signatureSrc).not.toContain("uncertaintyModelConfig")
     expect(signatureSrc).not.toContain("marginalDistribution")
   })

@@ -22,7 +22,7 @@ import {
   withDriverUncertaintyNotes,
 } from "@/lib/rowDefinitions"
 import { parseProjectsPayload } from "@/lib/storage"
-import { shapleyInputSignature } from "@/lib/shapleyInputSignature"
+import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import type { CostElementRow, DriverRow } from "@/lib/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -226,7 +226,7 @@ describe("Define mode", () => {
 
   it("J: Definition changes do NOT invalidate simulation (staleComparable strips them)", () => {
     const signatureSrc = readFileSync(
-      join(repoRoot, "src/lib/simulationInputSignature.ts"),
+      join(repoRoot, "src/domain/simulation/simulationInputSignature.ts"),
       "utf8",
     )
     expect(signatureSrc).toContain("stripRowDefinitions")

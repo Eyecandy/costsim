@@ -6,7 +6,7 @@ import {
   computeDeterministicTornado,
   costUserPercentileAbsolutes,
   driverUserPercentiles,
-} from "@/lib/deterministicTornado"
+} from "@/domain/simulation/deterministicTornado"
 import {
   buildSimulationCostCorrelationMatrix,
   type Project,
@@ -16,7 +16,7 @@ import { parseCostForSimulation } from "@/lib/tableRows"
 export {
   costUserPercentileAbsolutes,
   driverUserPercentiles,
-} from "@/lib/deterministicTornado"
+} from "@/domain/simulation/deterministicTornado"
 
 export type CrystalBallTornadoRow = {
   name: string
