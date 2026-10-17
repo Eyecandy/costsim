@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
-import { useAuth } from "@/app/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/AuthProvider"
 import { useI18n } from "@/i18n/useI18n"
 import { cn } from "@/shared/utils"
 

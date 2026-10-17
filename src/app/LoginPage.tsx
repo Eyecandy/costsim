@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 
 import { LoginCard } from "@/app/LoginCard"
-import { useAuth } from "@/app/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/AuthProvider"
 import { appFeatures } from "@/config/appVariant"
-import { readPostLoginPath, useNavigate } from "@/app/auth/auth"
+import { readPostLoginPath, useNavigate } from "@/shared/auth/auth"
 import { cn } from "@/shared/utils"
 
 export function LoginPage() {

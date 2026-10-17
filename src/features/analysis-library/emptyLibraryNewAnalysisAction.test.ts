@@ -8,7 +8,7 @@ import {
 } from "@/persistence/analysisLibraryRoutes"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
-import { navigateTo } from "@/app/auth/auth"
+import { navigateTo } from "@/shared/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
 

@@ -4,14 +4,14 @@ import App from "@/app/App"
 import { AnalysisLibraryPage } from "@/features/analysis-library/AnalysisLibraryPage"
 import { LandingPage } from "@/app/LandingPage"
 import { LoginPage } from "@/app/LoginPage"
-import { useAuth } from "@/app/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/AuthProvider"
 import { appFeatures } from "@/config/appVariant"
 import {
   getLocationPathKey,
   isLibraryPath,
   subscribeLocation,
 } from "@/persistence/analysisLibraryRoutes"
-import { buildLoginUrl, captureCurrentAppUrl } from "@/app/auth/auth"
+import { buildLoginUrl, captureCurrentAppUrl } from "@/shared/auth/auth"
 
 function getPathname() {
   return window.location.pathname

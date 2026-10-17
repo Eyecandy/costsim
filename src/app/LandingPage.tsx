@@ -1,5 +1,5 @@
 import { useI18n } from "@/i18n/useI18n"
-import { useNavigate } from "@/app/auth/auth"
+import { useNavigate } from "@/shared/auth/auth"
 import { cn } from "@/shared/utils"
 
 const HEADER_NAV_LINK_CLASS =

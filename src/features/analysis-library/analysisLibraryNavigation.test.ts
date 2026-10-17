@@ -16,7 +16,7 @@ import {
   canArchiveCurrentResults,
 } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
-import { navigateTo } from "@/app/auth/auth"
+import { navigateTo } from "@/shared/auth/auth"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 
 function stubWindowLocation(href = "http://localhost/") {

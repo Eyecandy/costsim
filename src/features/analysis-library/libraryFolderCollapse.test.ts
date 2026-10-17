@@ -55,7 +55,7 @@ describe("library user-folder collapse vs nav sections", () => {
 
   it("does not couple folder disclosure to auth", () => {
     const auth = readFileSync(
-      join(repoRoot, "src/app/auth/AuthProvider.tsx"),
+      join(repoRoot, "src/shared/auth/AuthProvider.tsx"),
       "utf8",
     )
     expect(auth).not.toContain("expandedUserFolder")

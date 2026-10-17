@@ -305,7 +305,7 @@ describe("createOngoingFromArchivedSingle", () => {
 
     const { buildAnalysisWorkspacePath, readAnalysisIdFromLocation } =
       await import("@/persistence/analysisLibraryRoutes")
-    const { navigateTo } = await import("@/app/auth/auth")
+    const { navigateTo } = await import("@/shared/auth/auth")
 
     // Minimal location stub for navigateTo
     const locationState = {

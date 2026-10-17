@@ -163,7 +163,7 @@ import {
   changedDriverImpactCellKeySet,
   changedScenarioCellKeySet,
 } from "@/domain/analysis/simInputSnapshotDiff"
-import { navigateTo } from "@/app/auth/auth"
+import { navigateTo } from "@/shared/auth/auth"
 import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,

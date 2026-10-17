@@ -39,7 +39,7 @@ import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,
 } from "@/persistence/analysisLibraryRoutes"
-import { navigateTo } from "@/app/auth/auth"
+import { navigateTo } from "@/shared/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { cn } from "@/shared/utils"
 

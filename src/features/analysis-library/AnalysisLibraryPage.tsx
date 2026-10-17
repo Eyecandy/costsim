@@ -39,7 +39,7 @@ import {
   LIBRARY_PATH,
   subscribeLocation,
 } from "@/persistence/analysisLibraryRoutes"
-import { navigateTo } from "@/app/auth/auth"
+import { navigateTo } from "@/shared/auth/auth"
 import { cn } from "@/shared/utils"
 
 const HOME_RECENT_LIMIT = 5
