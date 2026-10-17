@@ -43,6 +43,9 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 | 2026-10-17 | 22:52 | `App`: `InputPanels` (cost items and drivers; 37 props became 10) | 7a843c7 |
 | 2026-10-17 | 22:56 | `App`: `GuidedInputHost` (guided-input dialog and its table patches; 11 props) | 8b7bc62 |
 | 2026-10-17 | 22:50-22:57 (approx) | Browser check of the three steps above against the values recorded from original `costsim`: simulation results page (text hash, element counts), editing-mode toggles, all 6 guided screens, run from guided input to focus results. All identical. | - |
+| 2026-10-17 | 23:26 | Phase 1: `CLAUDE.md`, `engines`/`packageManager`/`.nvmrc`, `typecheck`/`lint:fix`/`test:watch` scripts, env typing + `.env.example`, `.editorconfig`, VS Code files, `.gitignore`; removed unused deps (`lodash`, `marked`, `react-responsive-carousel`, `autoprefixer`, empty `tailwind.config.js`). Only CSS change: legacy `-moz-column-gap` prefix gone. | 69cc018 |
+| 2026-10-18 | 00:05 | Phase 2: 80 lint errors to 0 (underscore-unused convention, dead code removed, 15 non-component exports moved out of component files with a reusable split tool, `prefer-const`); compiler-only React rules kept as warnings under a `--max-warnings 45` ratchet; TypeScript `noUnusedLocals/Parameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `noImplicitOverride`, `noUncheckedIndexedAccess` on; CI workflow, Dependabot, PR template; tests pinned to the `pilot` variant (that was the "failing" test); benchmarks moved to `npm run test:bench` (they tripped the Vitest worker timeout). A fresh-clone `npm ci` + `npm run check` passes. | d3326b5 |
+| 2026-10-18 | 00:10 (approx) | `shadcn` moved to devDependencies and `npm audit fix`: production audit from 25 findings to 0. | following commit |
 
 `App.tsx`: 4,459 lines at start, 1,208 after the last commit above.
 
@@ -56,5 +59,4 @@ Checks after each commit: `tsc -b` clean, lint no worse than the previous commit
 | Split `useGuidedFocusSession` (about 1,100 lines) | Possible later: editing modes, guided handoffs, focus session as separate hooks. |
 | Remaining logic in `App.tsx` (about 700 lines) | Result store (`apply*` functions), project editing handlers, library session wiring. Candidates for a `useLiveResults` and a `useProjectEditing` hook. |
 | Browser-check flows not yet covered | Archive, checkpoints / ongoing, PDF, share link, correlation group apply / summaries. |
-| Pre-existing: `checkpointComparison.test.ts` expects `"17 (12.4 %)"`, code returns `"Locked"` | Real logic mismatch, not caused by the refactor. |
-| Pre-existing: 80 lint errors | Mostly `react-hooks/refs`, `set-state-in-effect`, `only-export-components`. |
+| Lint warnings: 45 (12 `refs`, 14 `set-state-in-effect`, 9 `exhaustive-deps`, 9 stale `eslint-disable`, 1 memoization) | Ratchet in `package.json`; lower the number as they are fixed. |
