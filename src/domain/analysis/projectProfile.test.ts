@@ -812,7 +812,9 @@ describe("ProjectProfile UI disclosure wiring", () => {
   it("sits between tabs and Cost Items with matching md+ Results offset", () => {
     const app = readAppSource()
     // Single Analysis: profile+Focus row remains between project tabs and Cost Items.
-    const tablistIdx = app.indexOf('role="tablist"')
+    // The tab strip is rendered by <ProjectTabs> (role="tablist" lives in that file).
+    expect(app).toContain('role="tablist"')
+    const tablistIdx = app.indexOf("<ProjectTabs")
     const singleProfileIdx = app.indexOf(
       "data-project-profile-focus-row=\"\"",
       tablistIdx,
