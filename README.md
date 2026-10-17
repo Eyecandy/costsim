@@ -25,6 +25,8 @@ src/
     focus-mode/  checkpoints/  workspace/
   shared/        UI building blocks and helpers used by several features (ui/, auth/)
   app/           the shell: App, routing, landing and login pages
+    workspace/   pieces of the workspace screen (App.tsx composes them): dialogs, header, tabs,
+                 simulation strip, and the hooks for simulation runs, notices and dialog state
   pdf/           PDF report model and rendering
   i18n/  config/ translations and app variant flags
 ```
