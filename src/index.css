@@ -1,0 +1,440 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --histogram-bar: oklch(0.58 0.07 250);
+    --histogram-bar-hover: oklch(0.48 0.08 250);
+    /* Shared project identity (order index 0…3). Project 1 = blue. */
+    --scurve-line-1: oklch(0.54 0.08 248);
+    --scurve-line-2: oklch(0.62 0.08 146);
+    --scurve-line-3: oklch(0.56 0.09 26);
+    --scurve-line-4: oklch(0.51 0.07 315);
+    --tornado-bar-negative: oklch(0.45 0.09 155 / 0.82);
+    --tornado-bar-positive: oklch(0.52 0.07 265 / 0.78);
+    --waterfall-total: oklch(0.58 0.02 260 / 0.55);
+    --waterfall-reference: oklch(0.55 0.02 260 / 0.72);
+    --waterfall-span: oklch(0.58 0.03 260 / 0.45);
+    --waterfall-positive: var(--tornado-bar-positive);
+    --waterfall-negative: var(--tornado-bar-negative);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --histogram-bar: oklch(0.62 0.08 250);
+    --histogram-bar-hover: oklch(0.72 0.07 250);
+    --scurve-line-1: oklch(0.72 0.08 248);
+    --scurve-line-2: oklch(0.73 0.09 146);
+    --scurve-line-3: oklch(0.76 0.11 26);
+    --scurve-line-4: oklch(0.72 0.1 315);
+    --tornado-bar-negative: oklch(0.72 0.1 155 / 0.75);
+    --tornado-bar-positive: oklch(0.68 0.09 265 / 0.72);
+    --waterfall-total: oklch(0.62 0.02 260 / 0.5);
+    --waterfall-reference: oklch(0.68 0.02 260 / 0.65);
+    --waterfall-span: oklch(0.65 0.03 260 / 0.42);
+    --waterfall-positive: var(--tornado-bar-positive);
+    --waterfall-negative: var(--tornado-bar-negative);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+  /**
+   * Tailwind v4 preflight no longer sets pointer on buttons (browser default).
+   * Restore app expectation for interactive controls; keep disabled non-pointer.
+   */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+@layer components {
+  .section-heading {
+    @apply text-xs font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  .section-body {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .ui-label {
+    @apply font-sans text-sm font-medium tracking-normal normal-case;
+  }
+
+  .table-value {
+    @apply font-sans text-xs font-normal tracking-normal text-muted-foreground;
+  }
+
+  /**
+   * Explicit Impact/Correlation slider chrome.
+   * Native accent-color / range progress is not used: Chromium often paints a
+   * left-to-right filled track, while macOS WebKit typically tints only the thumb.
+   */
+  .inline-magnitude-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    background: transparent;
+  }
+
+  .inline-magnitude-slider:focus {
+    outline: none;
+  }
+
+  .inline-magnitude-slider::-webkit-slider-runnable-track {
+    height: 3px;
+    background: transparent;
+    border: none;
+  }
+
+  .inline-magnitude-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 11px;
+    margin-top: -4px;
+    border: none;
+    border-radius: 9999px;
+    background: #1d868c;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.85);
+    cursor: pointer;
+  }
+
+  .inline-magnitude-slider:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.85),
+      0 0 0 3px color-mix(in oklab, #1d868c 35%, transparent);
+  }
+
+  .inline-magnitude-slider::-moz-range-track {
+    height: 3px;
+    background: transparent;
+    border: none;
+  }
+
+  .inline-magnitude-slider::-moz-range-progress {
+    height: 3px;
+    background: transparent;
+    border: none;
+  }
+
+  .inline-magnitude-slider::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+    border: none;
+    border-radius: 9999px;
+    background: #1d868c;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.85);
+    cursor: pointer;
+  }
+
+  .inline-magnitude-slider:focus-visible::-moz-range-thumb {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.85),
+      0 0 0 3px color-mix(in oklab, #1d868c 35%, transparent);
+  }
+}
+
+/* Unlayered so the shimmer is not dropped by Tailwind component layers. */
+/* Positions keep the band just outside the glyphs at both ends so the
+   100%→0% loop jump is invisible and there is no off-screen dwell. */
+@keyframes spotlight-loading-text {
+  0% {
+    background-position: 105% center;
+  }
+  100% {
+    background-position: -5% center;
+  }
+}
+
+.spotlight-loading-text {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  /* Base text stays permanently visible; highlight is a separate overlay. */
+  color: color-mix(in oklab, var(--muted-foreground) 85%, transparent);
+}
+
+.spotlight-loading-text[data-tone="primary"] {
+  /* Brand color comes from the same utility class as the logo (currentColor). */
+  --spotlight-brand: currentColor;
+}
+
+.spotlight-loading-text-base {
+  position: relative;
+  z-index: 0;
+}
+
+.spotlight-loading-text-highlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 44%,
+    color-mix(in oklab, var(--foreground) 55%, var(--muted-foreground)) 50%,
+    transparent 56%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: spotlight-loading-text 1.1s linear infinite;
+  animation-delay: 0s;
+  pointer-events: none;
+  user-select: none;
+}
+
+.spotlight-loading-text[data-tone="primary"] .spotlight-loading-text-highlight {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 44%,
+    color-mix(in oklab, var(--spotlight-brand) 45%, white) 50%,
+    transparent 56%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-loading-text-highlight {
+    display: none;
+    animation: none;
+  }
+}
+
+.chart-expand-control {
+  opacity: 0.4;
+  transition: opacity 200ms ease-out;
+}
+
+.group\/chart-expand:hover .chart-expand-control {
+  opacity: 0.9;
+}
+
+.chart-expand-control:hover,
+.chart-expand-control:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .chart-expand-control {
+    opacity: 0.9;
+  }
+}
+
+/** S-curve legend-driven project emphasis (dim non-hovered projects). */
+.scurve-project-layer {
+  transition: opacity 150ms ease-out;
+}
+
+.scurve-legend-item {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition:
+    color 150ms ease-out,
+    font-weight 150ms ease-out,
+    text-decoration-color 150ms ease-out;
+}
+
+/** ~12–13 typical characters; presentation-only — full name stays on title/aria-label. */
+.scurve-legend-label {
+  display: block;
+  max-width: 13ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scurve-legend-item:hover,
+.scurve-legend-item:focus-visible {
+  color: var(--foreground);
+}
+
+.scurve-legend-item--selected {
+  color: var(--foreground);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+}
+
+.scurve-legend-item:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scurve-project-layer,
+  .scurve-legend-item {
+    transition: none;
+  }
+}
+
+.corr-summary-remove {
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.group\/corr-summary:hover .corr-summary-remove,
+.corr-summary-remove:focus-visible {
+  opacity: 1;
+}
+
+.assumption-chip-remove {
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.group\/assumption-chip:hover .assumption-chip-remove,
+.assumption-chip-remove:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .corr-summary-remove {
+    opacity: 0.75;
+  }
+
+  .assumption-chip-remove {
+    opacity: 0.75;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-expand-control {
+    transition: none;
+  }
+
+  .corr-summary-remove {
+    transition: none;
+  }
+
+  .assumption-chip-remove {
+    transition: none;
+  }
+}
