@@ -1,10 +1,8 @@
 import { type CSSProperties, type ReactElement, type ReactNode } from "react"
 
 import { appFeatures } from "@/config/appVariant"
-import {
-  ChartExpandHost,
-  shouldShowChartExpand,
-} from "@/features/results/ChartExpandButton"
+import { ChartExpandHost } from "@/features/results/ChartExpandButton"
+import { shouldShowChartExpand } from "@/features/results/chartExpand"
 import {
   KEY_FIGURES_METRIC_GRID_EXPANDED,
   KEY_FIGURES_METRIC_GRID_INLINE,

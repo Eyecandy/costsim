@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 
-import { useI18n as useI18nContext } from "@/i18n/I18nProvider"
+import { useI18n as useI18nContext } from "@/i18n/i18nContext"
 import { messages } from "@/i18n/messages"
 
 function getNestedValue(

@@ -9,8 +9,9 @@ U·SKOP: a Monte Carlo cost-risk simulator. React + TypeScript + Vite, Tailwind 
 
 ## Commands
 - `npm run dev`: dev server. `npm run build`: typecheck + production build.
-- `npm run check`: typecheck, lint, tests, layer rules, build. Run before every commit.
+- `npm run check`: typecheck, lint (max-warnings ratchet), tests, layer rules, build. Run before every commit. CI (`.github/workflows/ci.yml`) runs the same steps.
 - `npm run typecheck`, `npm run lint` (`lint:fix`), `npm test` (`test:watch`), `npm run check:deps`.
+- `npm run test:bench`: slow Shapley benchmarks (`*.bench.test.ts`, about 2 minutes), excluded from `npm test` because a single test over 60 s trips Vitest's worker heartbeat.
 
 ## Layers (enforced by `npm run check:deps`, config in `.dependency-cruiser.cjs`)
 ```
@@ -42,7 +43,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 ## Tests
 - Vitest, test file next to the code (`thing.test.ts`). Prefer behavioural tests (call the function, render the component).
 - Many older tests read source files as text (`readFileSync`, `readSrc`, `readAppSource`). Do not add new ones. They locate files through `src/test-utils/repoRoot.ts` and read the workspace screen through `src/test-utils/appSource.ts` (hook files first, then `App.tsx`, then components); moving code means updating those paths or patterns.
-- Line endings are LF (`.gitattributes`); several tests depend on it.
+- Tests run with `VITE_APP_VARIANT=pilot` (set in `vitest.config.ts`), i.e. all features on. Line endings are LF (`.gitattributes`); several tests depend on it.
 
 ## Workflow
 - Behaviour-preserving changes unless asked otherwise. After each step: typecheck, lint (no new errors), tests, `check:deps`, build.
@@ -52,4 +53,4 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 
 ## Known debt (see `docs/refactor-tasks.md` for the live list)
 - Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`, `i18n/messages.ts`.
-- Lint has existing `react-hooks/refs` and `set-state-in-effect` findings from older code.
+- Lint: 0 errors, 45 warnings (React-Compiler rules `refs` / `set-state-in-effect` flagging older patterns, plus a few stale `eslint-disable` lines). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.

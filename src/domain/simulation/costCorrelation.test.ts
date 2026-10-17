@@ -9,7 +9,6 @@ import {
   prepareCostCorrelationCholesky,
   repairCorrelationMatrixToPsd,
   sampleCorrelatedUniforms,
-  sanitizeCorrelationMatrix,
   standardNormalCdf,
 } from "@/domain/simulation/costCorrelation"
 import {

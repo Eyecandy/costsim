@@ -40,8 +40,8 @@ function finiteValues(points: readonly OngoingDevelopmentPoint[]): number[] {
 
 function niceDomain(values: number[]): { min: number; max: number } {
   if (values.length === 0) return { min: 0, max: 1 }
-  let min = Math.min(...values)
-  let max = Math.max(...values)
+  const min = Math.min(...values)
+  const max = Math.max(...values)
   if (min === max) {
     const pad = Math.abs(min) * 0.05 || 1
     return { min: min - pad, max: max + pad }

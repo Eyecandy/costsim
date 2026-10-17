@@ -13,10 +13,8 @@ import {
   type WaterfallDisplayRow,
 } from "@/domain/results/waterfallContributors"
 import type { ShapleyContribution } from "@/domain/simulation/shapleyAttribution"
-import {
-  ChartExpandHost,
-  shouldShowChartExpand,
-} from "@/features/results/ChartExpandButton"
+import { ChartExpandHost } from "@/features/results/ChartExpandButton"
+import { shouldShowChartExpand } from "@/features/results/chartExpand"
 import { useI18n } from "@/i18n/useI18n"
 import { cn } from "@/shared/utils"
 

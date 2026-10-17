@@ -66,7 +66,7 @@ export function FocusSession({
   singleArchivedCompact,
   singleDraftCompact,
 }: {
-  activeProject: Project
+  activeProject: Project | null
   activeProjectId: string
   addKeyFigurePercentile: (p: number) => void
   addSCurvePercentile: (p: number) => void

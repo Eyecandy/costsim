@@ -1,40 +1,16 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react"
+import { AuthContext, type AuthContextValue, type SignInCredentials, type SignOutOptions } from "@/shared/auth/authContext"
 
 const AUTH_STORAGE_KEY = "cost-simulator:v1:isAuthenticated"
 const AUTH_CHANGED_EVENT = "cost-simulator:auth-changed"
 
 const LOCAL_USER_ID = "local"
-
-export type AuthUser = {
-  id: string
-}
-
-export type SignInCredentials = {
-  password: string
-}
-
-export type SignOutOptions = {
-  /** Full-page redirect without notifying subscribers (avoids route-guard races). */
-  redirectTo?: string
-}
-
-type AuthContextValue = {
-  user: AuthUser | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  signIn: (credentials: SignInCredentials) => Promise<boolean>
-  signOut: (options?: SignOutOptions) => Promise<void>
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 function readIsAuthenticated(): boolean {
   if (typeof window === "undefined") return false
@@ -109,10 +85,3 @@ export function AuthProvider({ children }: AuthProviderProps) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext)
-  if (!ctx) {
-    throw new Error("useAuth must be used within AuthProvider")
-  }
-  return ctx
-}

@@ -38,7 +38,7 @@ export function InputPanels({
   validationInvalidCellKeys,
   visibleStaleChangedCellKeys,
 }: {
-  activeProject: Project
+  activeProject: Project | null
   analysisReadOnly: boolean
   guidedFocusSession: ReturnType<typeof useGuidedFocusSession>
   guidedFocusState: ReturnType<typeof useGuidedFocusState>

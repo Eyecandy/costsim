@@ -4,7 +4,7 @@ import App from "@/app/App"
 import { AnalysisLibraryPage } from "@/features/analysis-library/AnalysisLibraryPage"
 import { LandingPage } from "@/app/LandingPage"
 import { LoginPage } from "@/app/LoginPage"
-import { useAuth } from "@/shared/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/authContext"
 import { appFeatures } from "@/config/appVariant"
 import {
   getLocationPathKey,

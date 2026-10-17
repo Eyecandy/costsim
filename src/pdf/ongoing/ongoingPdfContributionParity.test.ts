@@ -32,12 +32,7 @@ import {
   type PdfContributionWaterfall,
 } from "@/pdf/buildPdfReportModel"
 import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import {
-  PDF_WATERFALL_PLOT_WIDTH,
-  pdfWaterfallTotalSpanBar,
-  pdfWaterfallValueToX,
-  preparePdfWaterfallPresentation,
-} from "@/pdf/pdfWaterfallChart"
+import { PDF_WATERFALL_PLOT_WIDTH, pdfWaterfallTotalSpanBar, pdfWaterfallValueToX, preparePdfWaterfallPresentation } from "@/pdf/pdfWaterfallLayout"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -394,7 +389,9 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
     expect(singleDoc).toContain("PdfWaterfallChart")
     // Default chart-level format — no adaptive override on Single.
     expect(singleDoc).not.toContain('valueFormat="adaptive"')
-    const shared = readSrc("src/pdf/pdfWaterfallChart.tsx")
+    const shared =
+      readSrc("src/pdf/pdfWaterfallChart.tsx") +
+      readSrc("src/pdf/pdfWaterfallLayout.ts")
     expect(shared).toContain('valueFormat = "chart"')
     expect(shared).toContain("PDF_WATERFALL_PLOT_WIDTH")
     expect(PDF_WATERFALL_PLOT_WIDTH).toBe(96)

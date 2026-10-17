@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react"
 import { pdf } from "@react-pdf/renderer"
 
-import type { Language } from "@/i18n/I18nProvider"
+import type { Language } from "@/i18n/i18nContext"
 import type { useI18n } from "@/i18n/useI18n"
 import type { Project } from "@/domain/analysis/project"
 import { ProjectReportDocument } from "@/pdf/ProjectReportDocument"

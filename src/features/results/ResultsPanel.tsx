@@ -7,7 +7,6 @@ import { buildShareUrl } from "@/persistence/shareLink"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { useI18n } from "@/i18n/useI18n"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { summarizeSamples, type SampleSummary } from "@/domain/simulation/simulation"
 import { Card, CardContent } from "@/shared/ui/card"
 import {
   computeDeterministicTornadoRows,
@@ -45,11 +44,8 @@ import {
   getProjectColorCssVar,
   getProjectColorHex,
 } from "@/domain/results/projectColors"
-import {
-  buildTornadoSharedLayout,
-  computeTornadoSharedSymmetricMaxAbs,
-  ResultsTornado,
-} from "@/features/results/ResultsTornado"
+import { ResultsTornado } from "@/features/results/ResultsTornado"
+import { buildTornadoSharedLayout, computeTornadoSharedSymmetricMaxAbs } from "@/features/results/tornadoShared"
 import { ExpandedChartDialog } from "@/features/results/ExpandedChartDialog"
 import { formatNumber } from "@/domain/results/formatNumber"
 import {
@@ -100,23 +96,6 @@ type ExpandedResultChart =
   | { kind: "tornado"; projectId: string; projectName: string }
   | { kind: "expectedAddition"; projectId: string; projectName: string }
   | { kind: "uncertaintyReserve"; projectId: string; projectName: string }
-
-const emptySummary: SampleSummary = {
-  mean: null,
-  median: null,
-  p85: null,
-  min: null,
-  max: null,
-}
-
-function summaryForProject(
-  projectId: string,
-  projectResults: ProjectResult[],
-): SampleSummary {
-  const pr = projectResults.find((r) => r.projectId === projectId)
-  if (!pr || pr.values.length === 0) return emptySummary
-  return summarizeSamples(pr.values)
-}
 
 type ResultsPanelProps = {
   projects: Project[]
@@ -396,14 +375,6 @@ export function ResultsPanel({
     ReturnType<typeof setTimeout> | null
   >(null)
   const aiBriefStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const summaryByProjectId = useMemo(() => {
-    const m = new Map<string, SampleSummary>()
-    for (const p of projects) {
-      m.set(p.id, summaryForProject(p.id, projectResults))
-    }
-    return m
-  }, [projects, projectResults])
-
   const baseCostByProjectId = useMemo(() => {
     const m = new Map<string, number | null>()
     for (const p of projects) {

@@ -198,7 +198,7 @@ export default function App() {
   /** True after a failed simulate click with invalid/incomplete input; cleared when input is valid. */
   const [validationFeedbackActive, setValidationFeedbackActive] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
-  const [runProgress, setRunProgress] = useState(0)
+  const [, setRunProgress] = useState(0)
   const [, setSimulationStartTime] = useState<number | null>(
     null,
   )

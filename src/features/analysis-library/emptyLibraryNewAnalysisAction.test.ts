@@ -158,7 +158,7 @@ describe("shared New Analysis create path after empty / delete-all", () => {
     await createBlankNamed("One")
     const active = await repo.listSummaries()
     expect(active).toHaveLength(1)
-    const isEmptyLibrary = !false && active.length === 0
+    const isEmptyLibrary = active.length === 0
     expect(isEmptyLibrary).toBe(false)
   })
 

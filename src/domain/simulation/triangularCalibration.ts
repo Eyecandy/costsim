@@ -46,7 +46,7 @@ function solveLeftSupportWidth(
 
   const dLMin = leftSpan / minFactor
   // Find the smallest dL where implied dR > rightSpan (strict).
-  let lo = dLMin * (1 + 1e-12)
+  const lo = dLMin * (1 + 1e-12)
   let hi = Math.max(dLMin, leftSpan, rightSpan) * 8
   const impliedDr = (dL: number) => {
     const num = (dL - leftSpan) ** 2
@@ -79,7 +79,7 @@ function solveLeftSupportWidth(
   // g(dLAtDrEqualsR) < 0; seek a bracket where g changes sign.
   let left = dLAtDrEqualsR
   let right = hi
-  let gLeft = g(left)
+  const gLeft = g(left)
   let gRight = g(right)
   if (!Number.isFinite(gLeft) || !Number.isFinite(gRight)) return null
 

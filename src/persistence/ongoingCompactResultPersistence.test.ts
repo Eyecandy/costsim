@@ -8,10 +8,7 @@ import {
   createNextCheckpoint,
 } from "@/domain/analysis/analysisCheckpoint"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
-import {
-  compareCheckpoints,
-  resultSourceFromArchivedSnapshot,
-} from "@/domain/analysis/checkpointComparison"
+import { compareCheckpoints } from "@/domain/analysis/checkpointComparison"
 import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import {
   assertNoHeavyValuesInOngoingSnapshot,

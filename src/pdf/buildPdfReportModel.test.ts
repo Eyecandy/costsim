@@ -445,7 +445,7 @@ describe("PDF document contracts", () => {
 
   it("all pages share explicit A4 dimensions (cover does not shrink)", () => {
     expect(pdfDocSource()).toContain("size={PDF_A4_PAGE_SIZE}")
-    expect(pdfDocSource()).not.toMatch(/size=\"A4\"/)
+    expect(pdfDocSource()).not.toMatch(/size="A4"/)
     // Cover uses wrap so MediaBox stays full A4; content is unbreakable
     expect(pdfDocSource()).toMatch(
       /Cover[\s\S]*?<Page size=\{PDF_A4_PAGE_SIZE\} wrap/,
@@ -491,10 +491,10 @@ describe("PDF document contracts", () => {
 
   it("contribution PDF uses shared waterfall grouping/layout helpers", () => {
     expect(pdfDocSource()).toContain("PdfWaterfallChart")
-    const shared = readFileSync(
-      join(repoRoot, "src/pdf/pdfWaterfallChart.tsx"),
-      "utf8",
-    )
+    // The chart component and its layout helpers live in two files.
+    const shared =
+      readFileSync(join(repoRoot, "src/pdf/pdfWaterfallChart.tsx"), "utf8") +
+      readFileSync(join(repoRoot, "src/pdf/pdfWaterfallLayout.ts"), "utf8")
     expect(shared).toContain("groupWaterfallContributors")
     expect(shared).toContain("buildWaterfallChartLayout")
     expect(shared).toContain("DEFAULT_WATERFALL_TOP_N")

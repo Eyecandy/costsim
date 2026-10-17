@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { Play, X } from "lucide-react"
 
-import { useAuth } from "@/shared/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/authContext"
 import { ConfirmDialog } from "@/shared/ConfirmDialog"
 import { appFeatures } from "@/config/appVariant"
 import { useI18n } from "@/i18n/useI18n"

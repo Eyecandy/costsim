@@ -1,12 +1,12 @@
 import { Fragment, useMemo } from "react"
 
-import { ChartExpandHost, shouldShowChartExpand } from "@/features/results/ChartExpandButton"
+import { ChartExpandHost } from "@/features/results/ChartExpandButton"
+import { shouldShowChartExpand } from "@/features/results/chartExpand"
 import { useI18n } from "@/i18n/useI18n"
 import type { DeterministicTornadoRow } from "@/domain/simulation/deterministicTornado"
 import { formatNumber } from "@/domain/results/formatNumber"
 import {
   collectTornadoDisplayValues,
-  formatTornadoSignedDeltaWithScale,
   resolveTornadoDisplayScale,
   type WaterfallDisplayScale,
 } from "@/domain/results/formatWaterfallValue"
@@ -22,6 +22,7 @@ import {
   tornadoModeMetrics,
   tornadoSidePadUnits,
 } from "@/domain/results/tornadoLayout"
+import { type TornadoSharedLayout, buildTornadoSharedLayout, formatTornadoImpactLabel } from "@/features/results/tornadoShared"
 
 type ResultsTornadoProps = {
   rows: readonly DeterministicTornadoRow[]
@@ -38,53 +39,6 @@ type ResultsTornadoProps = {
 
 const LABEL_GAP = 0.8
 const LABEL_PAD = 0.4
-
-export type TornadoSharedLayout = {
-  rightMarginPx: number
-}
-
-function formatTornadoImpactLabel(
-  value: number,
-  scale: WaterfallDisplayScale,
-  language: "no" | "en",
-): string {
-  return formatTornadoSignedDeltaWithScale(value, scale, language)
-}
-
-export function computeTornadoSharedSymmetricMaxAbs(
-  rowsGroups: readonly (readonly DeterministicTornadoRow[])[],
-): number {
-  let m = 0
-  for (const rows of rowsGroups) {
-    for (const r of rows) {
-      m = Math.max(m, Math.abs(r.lowImpact), Math.abs(r.highImpact))
-    }
-  }
-  return Math.max(m, 1e-12)
-}
-
-export function buildTornadoSharedLayout(
-  rowsGroups: readonly (readonly DeterministicTornadoRow[])[],
-  displayScales?: readonly WaterfallDisplayScale[],
-): TornadoSharedLayout {
-  let longestValueLabelLen = 0
-  for (let i = 0; i < rowsGroups.length; i++) {
-    const rows = rowsGroups[i]!
-    const scale =
-      displayScales?.[i] ??
-      resolveTornadoDisplayScale(collectTornadoDisplayValues(rows))
-    for (const r of rows) {
-      longestValueLabelLen = Math.max(
-        longestValueLabelLen,
-        formatTornadoImpactLabel(r.lowImpact, scale, "no").length,
-        formatTornadoImpactLabel(r.highImpact, scale, "no").length,
-      )
-    }
-  }
-  return {
-    rightMarginPx: Math.max(40, Math.ceil(longestValueLabelLen * 8)),
-  }
-}
 
 export function ResultsTornado({
   rows,

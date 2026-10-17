@@ -133,7 +133,6 @@ describe("archive validation after simulation", () => {
   it("ongoing: active draft checkpoint archives from live results; prior archived CP unchanged", async () => {
     const repo = getAnalysisLibraryRepository()
     const blank = createBlankWorkspaceRuntimeState()
-    const project = blank.projects[0]!
 
     const created = await repo.create({
       name: "Ongoing archive eligibility",

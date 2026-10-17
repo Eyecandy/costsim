@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { computeTornadoSharedSymmetricMaxAbs } from "@/features/results/ResultsTornado"
+import { computeTornadoSharedSymmetricMaxAbs } from "@/features/results/tornadoShared"
 import {
   TORNADO_BALANCED_GRID_TEMPLATE_COLUMNS,
   TORNADO_CENTER_X,

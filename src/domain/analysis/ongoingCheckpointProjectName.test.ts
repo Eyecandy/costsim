@@ -8,10 +8,6 @@ import {
   createNextCheckpoint,
 } from "@/domain/analysis/analysisCheckpoint"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
-import {
-  getLiveResultValidity,
-  isLiveResultValid,
-} from "@/domain/simulation/liveSimulationState"
 import type { Project } from "@/domain/analysis/project"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"

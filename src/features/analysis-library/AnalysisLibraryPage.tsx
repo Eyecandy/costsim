@@ -10,12 +10,8 @@ import {
 import { createPortal } from "react-dom"
 import { ChevronDown, Archive, Menu, MoreHorizontal, Plus } from "lucide-react"
 
-import {
-  AnalysisLibraryNav,
-  buildLibraryPath,
-  readLibraryFilterFromLocation,
-  type LibraryNavFilter,
-} from "@/features/analysis-library/AnalysisLibraryNav"
+import { AnalysisLibraryNav } from "@/features/analysis-library/AnalysisLibraryNav"
+import { buildLibraryPath, readLibraryFilterFromLocation, type LibraryNavFilter } from "@/features/analysis-library/libraryNavigation"
 import { BrandWordmark } from "@/shared/BrandWordmark"
 import { PRODUCT_NAME } from "@/shared/brand"
 import { AnalysisModeIndicator } from "@/features/analysis-library/AnalysisModeIndicator"

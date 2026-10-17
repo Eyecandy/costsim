@@ -1050,7 +1050,6 @@ export const GuidedInputDialog = forwardRef<
   onContinueToResults,
   onShowStaleChanges,
   onRevertStaleChanges,
-  showStaleInputChanges = false,
   ensureFocusMode = false,
 }: GuidedInputDialogProps,
   ref,
@@ -1278,17 +1277,6 @@ export const GuidedInputDialog = forwardRef<
     const root = focusRootRef.current
     if (!root || !canRequestFullscreen(root)) return
     void requestElementFullscreen(root).catch(() => {})
-  }
-
-  const exitFocusMode = () => {
-    if (onExitFocusFullscreen) onExitFocusFullscreen()
-    else void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
-    setFocusMode(false)
-    setBrowserFullscreen(false)
-    onFocusModeChange?.(false)
-    window.requestAnimationFrame(() => {
-      focusToggleRef.current?.focus()
-    })
   }
 
   const handleCloseGuided = () => {

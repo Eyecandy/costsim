@@ -40,7 +40,6 @@ import {
   type SavedCorrelationSummary,
 } from "@/domain/simulation/costCorrelationSummaries"
 import { buttonVariants } from "@/shared/ui/button"
-import type { Language } from "@/i18n/I18nProvider"
 import { useI18n } from "@/i18n/useI18n"
 import { applyPastedGrid } from "@/domain/results/tsvPaste"
 import { cn } from "@/shared/utils"
@@ -723,6 +722,15 @@ export function ScenarioPercentTable({
         }
       }
       const key = SCENARIO_COLUMN_KEYS[col]
+      if (key === undefined) {
+        return {
+          kind: GridCellKind.Text,
+          displayData: "",
+          data: "",
+          allowOverlay: false,
+          readonly: true,
+        }
+      }
       const value = dataRow[key] ?? ""
       const hideNameForImpactSlider =
         variant === "costMixed" &&
@@ -810,6 +818,7 @@ export function ScenarioPercentTable({
         return
       }
       const key = SCENARIO_COLUMN_KEYS[col]
+      if (key === undefined) return
       const raw = newValue.data
       const nextVal =
         key === "name"
@@ -823,6 +832,7 @@ export function ScenarioPercentTable({
           normalizedVal = clampCostPessimisticPercent(nextVal)
       } else if (variant === "driverMixed") {
         const dataRow = rows[row]
+        if (dataRow === undefined) return
         if (key === "optimistic") normalizedVal = clampCostOptimisticPercent(nextVal)
         else if (key === "likely")
           normalizedVal = clampDriverLikelyPercent(

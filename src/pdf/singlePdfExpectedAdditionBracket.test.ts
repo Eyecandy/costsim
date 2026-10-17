@@ -14,11 +14,7 @@ import {
   collectWaterfallDisplayValues,
 } from "@/domain/results/formatWaterfallValue"
 import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
-import {
-  preparePdfWaterfallPresentation,
-  pdfWaterfallTotalSpanBar,
-  pdfWaterfallValueToX,
-} from "@/pdf/pdfWaterfallChart"
+import { preparePdfWaterfallPresentation, pdfWaterfallTotalSpanBar, pdfWaterfallValueToX } from "@/pdf/pdfWaterfallLayout"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

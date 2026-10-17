@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { positionDefinePopover } from "@/features/scenario-tables/DefineRowPopover"
+import { positionDefinePopover } from "@/features/scenario-tables/definePopoverPosition"
 import {
   costRowHasDefinition,
   driverRowHasDefinition,

@@ -27,7 +27,6 @@ describe("browserFullscreen helpers", () => {
     expect(dialog).toContain("exitFullscreenIfNeeded")
     expect(dialog).toContain("subscribeFullscreenChange")
     expect(dialog).toContain("enterFocusMode")
-    expect(dialog).toContain("exitFocusMode")
     expect(dialog).toContain("focusRootRef")
     // Escape while browser fullscreen keeps in-app Focus.
     // Prefer shared Focus host when embedded; fall back to Guided's own root.

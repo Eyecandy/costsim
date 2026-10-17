@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/AnalysisLibraryNav"
+import { runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
 import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { assertNoHeavyValuesInCompact } from "@/domain/analysis/compactAnalysisResult"
 import {

@@ -26,7 +26,7 @@ export function GuidedInputHost({
   runningRef,
   setProjects,
 }: {
-  activeProject: Project
+  activeProject: Project | null
   analysisReadOnly: boolean
   guidedFocusSession: ReturnType<typeof useGuidedFocusSession>
   guidedFocusState: ReturnType<typeof useGuidedFocusState>
@@ -52,7 +52,6 @@ export function GuidedInputHost({
     handleGuidedFocusChromeMeta,
     pendingFocusResultsAfterGuidedRunRef,
     setFocusView,
-    showStaleInputChanges,
   } = guidedFocusState
   const {
     closeGuidedInput,
@@ -122,7 +121,6 @@ export function GuidedInputHost({
           onContinueToResults={continueFromSimulationToResults}
           onShowStaleChanges={handleFocusShowChanges}
           onRevertStaleChanges={handleRevertInputsToLastSimulation}
-          showStaleInputChanges={showStaleInputChanges}
           onPatchRow={(rowId, patch) => {
             if (analysisReadOnly) return
             const inCost = activeProject.costRows.some((r) => r.id === rowId)

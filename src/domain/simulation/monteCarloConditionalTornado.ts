@@ -73,6 +73,7 @@ function collectTotalsForBand(
   for (let i = 0; i < variable.length; i++) {
     const v = variable[i]
     const t = totals[i]
+    if (v === undefined || t === undefined) continue
     if (!Number.isFinite(v) || !Number.isFinite(t)) continue
     if (v >= minInclusive && v <= maxInclusive) out.push(t)
   }

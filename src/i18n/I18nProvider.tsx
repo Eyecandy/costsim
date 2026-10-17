@@ -1,22 +1,12 @@
 import {
-  createContext,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react"
-
-export type Language = "no" | "en"
-
-type I18nContextValue = {
-  language: Language
-  setLanguage: (language: Language) => void
-}
+import { I18nContext, type I18nContextValue, type Language } from "@/i18n/i18nContext"
 
 const STORAGE_KEY = "language"
-
-const I18nContext = createContext<I18nContextValue | undefined>(undefined)
 
 function getInitialLanguage(): Language {
   if (typeof window === "undefined") return "no"
@@ -50,10 +40,3 @@ export function I18nProvider({ children }: I18nProviderProps) {
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }
 
-export function useI18n() {
-  const ctx = useContext(I18nContext)
-  if (!ctx) {
-    throw new Error("useI18n must be used within I18nProvider")
-  }
-  return ctx
-}

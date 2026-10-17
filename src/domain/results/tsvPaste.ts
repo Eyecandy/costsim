@@ -19,8 +19,10 @@ export function applyPastedGrid<T extends Record<string, string>>(
       const targetCol = startCol + ci
       if (targetCol >= 0 && targetCol < nCols) {
         const key = columnKeys[targetCol]
+        const current = next[targetRow]
+        if (key === undefined || current === undefined) continue
         next[targetRow] = {
-          ...next[targetRow],
+          ...current,
           [key]: line[ci] ?? "",
         }
       }

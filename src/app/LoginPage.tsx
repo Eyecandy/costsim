@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 
 import { LoginCard } from "@/app/LoginCard"
-import { useAuth } from "@/shared/auth/AuthProvider"
+import { useAuth } from "@/shared/auth/authContext"
 import { appFeatures } from "@/config/appVariant"
 import { readPostLoginPath, useNavigate } from "@/shared/auth/auth"
 import { cn } from "@/shared/utils"

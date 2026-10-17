@@ -12,7 +12,7 @@ import { newId } from "@/domain/results/tableRows"
 /** Representative ~200 M example project matching reported key-figure scale. */
 function build200MExampleProject() {
   const project = createProject({ name: "Alternativ A" })
-  const costs = [
+  const costs: [string, string, string, string][] = [
     ["Felleskostnader", "18000000", "-15", "20"],
     ["Bygning", "95000000", "-10", "15"],
     ["VVS", "24000000", "-12", "18"],
@@ -23,7 +23,7 @@ function build200MExampleProject() {
     ["Generelle kostnader", "14000000", "-10", "15"],
     ["Spesielle kostnader", "9000000", "-10", "20"],
   ]
-  const drivers = [
+  const drivers: [string, string, string, string][] = [
     ["Marked", "0", "-16", "16"],
     ["Prosjektutvikling", "0", "-5", "14"],
     ["Prosjektledelse", "0", "-15", "15"],

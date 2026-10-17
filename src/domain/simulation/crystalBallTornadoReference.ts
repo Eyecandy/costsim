@@ -2,11 +2,7 @@
  * Thin compatibility wrapper around production deterministic Tornado.
  * Comparison tests and older call sites may use these names.
  */
-import {
-  computeDeterministicTornado,
-  costUserPercentileAbsolutes,
-  driverUserPercentiles,
-} from "@/domain/simulation/deterministicTornado"
+import { computeDeterministicTornado } from "@/domain/simulation/deterministicTornado"
 import {
   buildSimulationCostCorrelationMatrix,
   type Project,

@@ -2,11 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import {
-  buildLibraryPath,
-  readLibraryFilterFromLocation,
-  runBeforeLeaveWithoutBlocking,
-} from "@/features/analysis-library/AnalysisLibraryNav"
+import { buildLibraryPath, readLibraryFilterFromLocation, runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 

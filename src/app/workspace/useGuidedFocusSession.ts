@@ -51,7 +51,7 @@ export function useGuidedFocusSession({
   setProjects,
   showStaleInputNotice,
 }: {
-  activeProject: Project
+  activeProject: Project | null
   activeProjectId: string
   analysisReadOnly: boolean
   guidedFocusState: ReturnType<typeof useGuidedFocusState>
