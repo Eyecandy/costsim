@@ -17,17 +17,20 @@ function listSorted(dir: string): string[] {
 }
 
 /**
- * Source text of the workspace screen: the files extracted from `App.tsx` into
- * `src/app/workspace/` (sorted by path) followed by `src/app/App.tsx` itself.
- * Source-text tests read this instead of App.tsx alone, so moving code between
- * those files does not change what they assert on. The extracted files come first
- * so that `indexOf("someHandler")` finds a definition before App's destructuring
- * of the same name.
+ * Source text of the workspace screen. Source-text tests read this instead of
+ * App.tsx alone, so moving code between App.tsx and `src/app/workspace/` does not
+ * change what they assert on. Order: the hook files (`use*.ts`) first, then
+ * `src/app/App.tsx`, then the component files. Hooks come first so that
+ * `indexOf("someHandler")` finds a definition before any destructuring of the same
+ * name; components come last so App's own JSX keeps its original position.
  */
 export function readAppSource(): string {
+  const extracted = listSorted(join(repoRoot, "src/app/workspace"))
+  const isHook = (f: string) => /[\\/]use[A-Z][^\\/]*$/.test(f)
   const files = [
-    ...listSorted(join(repoRoot, "src/app/workspace")),
+    ...extracted.filter(isHook),
     join(repoRoot, "src/app/App.tsx"),
+    ...extracted.filter((f) => !isHook(f)),
   ]
   return files.map((f) => readFileSync(f, "utf8")).join("\n")
 }
