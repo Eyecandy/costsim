@@ -6,7 +6,8 @@ import {
   isShareV2Hash,
   isShareV2Search,
 } from "@/persistence/shareLink"
-import { parseProjectsPayload, STORAGE_KEYS } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
+import { STORAGE_KEYS } from "@/persistence/storage"
 
 export const LAST_SIMULATION_SNAPSHOT_VERSION = 1 as const
 

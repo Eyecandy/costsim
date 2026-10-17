@@ -123,7 +123,6 @@ import {
 } from "@/persistence/shareLink"
 import {
   loadAppInputStateFromStorage,
-  parseProjectsPayload,
   saveToStorage,
   STORAGE_KEYS,
 } from "@/persistence/storage"
@@ -192,6 +191,7 @@ import {
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,
 } from "@/domain/analysis/analysisNameUniqueness"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 
 /** App branding + nav — sticks at viewport top (py-3 + logo line-height ≈ 3.1875rem). */
 const APP_HEADER_CLASSNAME = cn(

@@ -31,7 +31,7 @@ import {
   type DriverRow,
   type ScenarioRow,
 } from "@/domain/results/tableRows"
-import { parseProjectsPayload } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import LZString from "lz-string"
 
 /** Legacy uncompressed full-state links (still decoded on load). */

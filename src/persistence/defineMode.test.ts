@@ -21,7 +21,7 @@ import {
   withDriverDescription,
   withDriverUncertaintyNotes,
 } from "@/domain/results/rowDefinitions"
-import { parseProjectsPayload } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"

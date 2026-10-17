@@ -1,7 +1,5 @@
 import type { ProjectResult } from "@/simulation.worker"
 import { initialProjects, type Project } from "@/domain/analysis/project"
-import { clearWorkspacePersistedKeys } from "@/persistence/storage"
-import { resetInitialRestoredSimulationCache } from "@/persistence/lastSimulationSnapshot"
 
 export type BlankWorkspaceRuntimeState = {
   projects: Project[]
@@ -21,13 +19,4 @@ export function createBlankWorkspaceRuntimeState(): BlankWorkspaceRuntimeState {
     simulatedBaseCostByProjectId: {},
     lastSimulatedInputSignature: "",
   }
-}
-
-/**
- * Clears persisted workspace data (projects, active tab, last simulation snapshot)
- * and invalidates loaders’ one-shot caches. Call before applying blank runtime state.
- */
-export function clearWorkspacePersistence(): void {
-  clearWorkspacePersistedKeys()
-  resetInitialRestoredSimulationCache()
 }

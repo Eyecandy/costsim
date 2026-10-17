@@ -36,7 +36,7 @@ import {
   type Project,
 } from "@/domain/analysis/project"
 import { duplicateProject } from "@/domain/analysis/cloneAnalysisWorkspace"
-import { parseProjectsPayload } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import {
   buildShareCompactPayload,
   compactPayloadToProjects,

@@ -20,7 +20,7 @@ import {
   withDriverUncertaintyNotes,
 } from "@/domain/results/rowDefinitions"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
-import { parseProjectsPayload } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import type { DriverRow } from "@/domain/results/tableRows"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"

@@ -16,7 +16,7 @@ import {
   patchProjectUpdateAssumption,
   type Project,
 } from "@/domain/analysis/project"
-import { parseProjectsPayload } from "@/persistence/storage"
+import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 import { messages } from "@/i18n/messages"
 import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature"
 import { repoRoot } from "@/test-utils/repoRoot"
