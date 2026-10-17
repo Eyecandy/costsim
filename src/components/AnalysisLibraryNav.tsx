@@ -23,7 +23,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog"
 import { AnalysisModeIndicator } from "@/components/AnalysisModeIndicator"
 import { MoveAnalysisDialog } from "@/components/MoveAnalysisDialog"
 import { useI18n } from "@/i18n/useI18n"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   hasAnalysisNameConflict,
   isAnalysisNameConflictError,
@@ -38,7 +38,7 @@ import { DEFAULT_ANALYSIS_MODE } from "@/domain/analysis/analysisDocument"
 import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,
-} from "@/lib/analysisLibraryRoutes"
+} from "@/persistence/analysisLibraryRoutes"
 import { navigateTo } from "@/lib/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { cn } from "@/lib/utils"

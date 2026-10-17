@@ -86,7 +86,7 @@ import {
   writeFocusSessionResume,
   type FocusSessionResumeV1,
   type GuidedSemanticResume,
-} from "@/lib/focusSessionResume"
+} from "@/persistence/focusSessionResume"
 import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/domain/guided/focusSessionFrame"
 import { shouldShowResultSettingsEditor } from "@/domain/results/resultSettingsPresentation"
 import {
@@ -120,13 +120,13 @@ import {
   isShareV2Search,
   isShareV2Hash,
   SHARE_QUERY_PARAM,
-} from "@/lib/shareLink"
+} from "@/persistence/shareLink"
 import {
   loadAppInputStateFromStorage,
   parseProjectsPayload,
   saveToStorage,
   STORAGE_KEYS,
-} from "@/lib/storage"
+} from "@/persistence/storage"
 import {
   COLUMN_HEADER_BOTTOM_GAP_CLASS,
   PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS,
@@ -158,7 +158,7 @@ import {
   getInitialRestoredSimulationState,
   LAST_SIMULATION_SNAPSHOT_VERSION,
   persistLastSimulationSnapshot,
-} from "@/lib/lastSimulationSnapshot"
+} from "@/persistence/lastSimulationSnapshot"
 import {
   changedCostTableCellKeySet,
   changedDriverImpactCellKeySet,
@@ -169,8 +169,8 @@ import {
   buildAnalysisWorkspacePath,
   LIBRARY_PATH,
   readAnalysisIdFromLocation,
-} from "@/lib/analysisLibraryRoutes"
-import { loadSidebarPinned } from "@/lib/sidebarUiPreferences"
+} from "@/persistence/analysisLibraryRoutes"
+import { loadSidebarPinned } from "@/persistence/sidebarUiPreferences"
 import { useLibraryAnalysisSession } from "@/lib/useLibraryAnalysisSession"
 import { canCreateNextCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import { canStartOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"

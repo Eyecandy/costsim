@@ -3,7 +3,7 @@ import { useCallback } from "react"
 import {
   isShareDeepLink,
   LIBRARY_PATH,
-} from "@/lib/analysisLibraryRoutes"
+} from "@/persistence/analysisLibraryRoutes"
 
 /** Query param on `/login` carrying the post-auth destination (path + search + hash). */
 export const LOGIN_REDIRECT_PARAM = "redirect"

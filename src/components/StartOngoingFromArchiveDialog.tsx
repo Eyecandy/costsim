@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useI18n } from "@/i18n/useI18n"
 import {
   getAnalysisLibraryRepository,
-} from "@/lib/analysisLibraryRepository"
+} from "@/persistence/analysisLibraryRepository"
 import {
   isAnalysisNameConflictError,
   type AnalysisNameOccupant,

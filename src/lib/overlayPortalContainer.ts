@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import {
   getFullscreenElement,
   subscribeFullscreenChange,
-} from "@/lib/browserFullscreen"
+} from "@/persistence/browserFullscreen"
 
 /**
  * Mount node for overlays that must stay visible above Focus / fullscreen.

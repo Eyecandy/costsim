@@ -27,16 +27,16 @@ import {
   type DeleteActiveDraftCheckpointBlockReason,
   type OngoingAnalysisState,
 } from "@/domain/analysis/analysisCheckpoint"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   librarySaveStatusFromError,
-} from "@/lib/localAnalysisLibraryRepository"
+} from "@/persistence/localAnalysisLibraryRepository"
 import {
   getLocationPathKey,
   readAnalysisIdFromLocation,
   shouldAutosaveLibraryDraft,
   subscribeLocation,
-} from "@/lib/analysisLibraryRoutes"
+} from "@/persistence/analysisLibraryRoutes"
 import {
   canArchiveCurrentResults,
   getArchiveBlockReason,

@@ -206,7 +206,7 @@ describe("Guided Input pause/resume", () => {
       projectId: "p1",
     }
     expect(resume.after).toBe("correlation")
-    const share = readFileSync(join(repoRoot, "src/lib/shareLink.ts"), "utf8")
+    const share = readFileSync(join(repoRoot, "src/persistence/shareLink.ts"), "utf8")
     expect(share).not.toContain("GuidedResumeState")
     expect(share).not.toContain("guidedResume")
   })

@@ -17,7 +17,7 @@ import {
   loadResultPreferences,
   resetResultPreferences,
   saveResultPreferences,
-} from "@/lib/resultPreferencesStorage"
+} from "@/persistence/resultPreferencesStorage"
 import {
   mean,
   percentile,
@@ -329,7 +329,7 @@ describe("Result Preferences UI wiring", () => {
       join(root, "src/components/ResultsPanel.tsx"),
       "utf8",
     )
-    const share = readFileSync(join(root, "src/lib/shareLink.ts"), "utf8")
+    const share = readFileSync(join(root, "src/persistence/shareLink.ts"), "utf8")
     const expander = readFileSync(
       join(root, "src/components/SectionExpander.tsx"),
       "utf8",

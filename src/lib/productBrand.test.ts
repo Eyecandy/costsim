@@ -149,7 +149,7 @@ describe("product brand U·SKOP", () => {
     const pkg = JSON.parse(readSrc("package.json")) as { name: string }
     expect(pkg.name).toBe("cost-simulator")
     // Representative persistence keys must not have been rewritten for the brand.
-    const localRepo = readSrc("src/lib/localAnalysisLibraryRepository.ts")
+    const localRepo = readSrc("src/persistence/localAnalysisLibraryRepository.ts")
     expect(localRepo).not.toMatch(/U·SKOP|USKOP|U-SKOP/)
   })
 })

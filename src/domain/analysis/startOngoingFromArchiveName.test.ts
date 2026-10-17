@@ -7,13 +7,13 @@ import type { ArchivedAnalysisSnapshotV1 } from "@/domain/analysis/archivedAnaly
 import {
   getAnalysisLibraryRepository,
   setAnalysisLibraryRepositoryForTests,
-} from "@/lib/analysisLibraryRepository"
+} from "@/persistence/analysisLibraryRepository"
 import { ANALYSIS_NAME_CONFLICT_ERROR } from "@/domain/analysis/analysisNameUniqueness"
 import { planCreateOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
-} from "@/lib/localAnalysisLibraryRepository"
+} from "@/persistence/localAnalysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { resolveResultView } from "@/domain/results/resultPreferences"
 import {

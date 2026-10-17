@@ -8,7 +8,7 @@
 import type { ProjectResult } from "@/simulation.worker"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { Project } from "@/domain/analysis/project"
-import { parseProjectsPayload } from "@/lib/storage"
+import { parseProjectsPayload } from "@/persistence/storage"
 import {
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,

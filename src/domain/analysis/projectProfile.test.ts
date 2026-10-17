@@ -36,11 +36,11 @@ import {
   type Project,
 } from "@/domain/analysis/project"
 import { duplicateProject } from "@/domain/analysis/cloneAnalysisWorkspace"
-import { parseProjectsPayload } from "@/lib/storage"
+import { parseProjectsPayload } from "@/persistence/storage"
 import {
   buildShareCompactPayload,
   compactPayloadToProjects,
-} from "@/lib/shareLink"
+} from "@/persistence/shareLink"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

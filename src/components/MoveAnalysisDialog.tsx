@@ -3,7 +3,7 @@ import { createPortal } from "react-dom"
 import { ChevronDown } from "lucide-react"
 
 import { useI18n } from "@/i18n/useI18n"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   isAnalysisNameConflictError,
   isAnalysisNameConflictOnMoveError,

@@ -5,11 +5,11 @@ import {
   getLocationPathKey,
   readAnalysisIdFromLocation,
   shouldAutosaveLibraryDraft,
-} from "@/lib/analysisLibraryRoutes"
+} from "@/persistence/analysisLibraryRoutes"
 import {
   clearLocalAnalysisLibraryStorageForTests,
-} from "@/lib/localAnalysisLibraryRepository"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+} from "@/persistence/localAnalysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import {
   buildArchivedAnalysisSnapshot,

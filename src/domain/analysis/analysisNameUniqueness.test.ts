@@ -4,14 +4,14 @@
 
 import { beforeEach, describe, expect, it } from "vitest"
 
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
   ANALYSIS_NAME_CONFLICT_ERROR,
   ANALYSIS_NAME_CONFLICT_ON_MOVE_ERROR,
   hasAnalysisNameConflict,
   normalizeAnalysisName,
 } from "@/domain/analysis/analysisNameUniqueness"
-import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 
 async function createNamed(args: {

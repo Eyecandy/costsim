@@ -10,7 +10,7 @@ import {
   getLocationPathKey,
   isLibraryPath,
   subscribeLocation,
-} from "@/lib/analysisLibraryRoutes"
+} from "@/persistence/analysisLibraryRoutes"
 import { buildLoginUrl, captureCurrentAppUrl } from "@/lib/auth"
 
 function getPathname() {

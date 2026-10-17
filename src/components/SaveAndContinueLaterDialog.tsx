@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 import { useI18n } from "@/i18n/useI18n"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import type { AnalysisFolder } from "@/domain/analysis/analysisDocument"
 
 type SaveAndContinueLaterDialogProps = {

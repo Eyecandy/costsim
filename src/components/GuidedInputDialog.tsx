@@ -61,7 +61,7 @@ import {
   isElementFullscreen,
   requestElementFullscreen,
   subscribeFullscreenChange,
-} from "@/lib/browserFullscreen"
+} from "@/persistence/browserFullscreen"
 import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
 import {
   findGuidedStepIndexForFocusPhase,
@@ -70,7 +70,7 @@ import {
 import {
   resolveGuidedStepIndexForResume,
   type GuidedSemanticResume,
-} from "@/lib/focusSessionResume"
+} from "@/persistence/focusSessionResume"
 import {
   buildGuidedWorkflowSteps,
   clampGuidedWorkflowStepIndex,

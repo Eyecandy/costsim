@@ -5,9 +5,9 @@ import { join } from "node:path"
 import {
   buildAnalysisWorkspacePath,
   readAnalysisIdFromLocation,
-} from "@/lib/analysisLibraryRoutes"
-import { getAnalysisLibraryRepository } from "@/lib/analysisLibraryRepository"
-import { clearLocalAnalysisLibraryStorageForTests } from "@/lib/localAnalysisLibraryRepository"
+} from "@/persistence/analysisLibraryRoutes"
+import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
+import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { navigateTo } from "@/lib/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"

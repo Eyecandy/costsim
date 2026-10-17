@@ -1,7 +1,7 @@
 import type { ProjectResult } from "@/simulation.worker"
 import { initialProjects, type Project } from "@/domain/analysis/project"
-import { clearWorkspacePersistedKeys } from "@/lib/storage"
-import { resetInitialRestoredSimulationCache } from "@/lib/lastSimulationSnapshot"
+import { clearWorkspacePersistedKeys } from "@/persistence/storage"
+import { resetInitialRestoredSimulationCache } from "@/persistence/lastSimulationSnapshot"
 
 export type BlankWorkspaceRuntimeState = {
   projects: Project[]

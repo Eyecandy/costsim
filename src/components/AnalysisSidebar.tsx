@@ -6,7 +6,7 @@ import { useI18n } from "@/i18n/useI18n"
 import {
   loadSidebarPinned,
   saveSidebarPinned,
-} from "@/lib/sidebarUiPreferences"
+} from "@/persistence/sidebarUiPreferences"
 import { cn } from "@/lib/utils"
 
 const SIDEBAR_WIDTH_PX = 240

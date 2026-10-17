@@ -14,7 +14,7 @@ import {
   loadResultPreferences,
   resetResultPreferences,
   saveResultPreferences,
-} from "@/lib/resultPreferencesStorage"
+} from "@/persistence/resultPreferencesStorage"
 
 /**
  * Session draft vs persisted device default.

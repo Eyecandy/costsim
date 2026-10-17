@@ -18,7 +18,7 @@ import {
   isElementFullscreen,
   requestElementFullscreen,
   subscribeFullscreenChange,
-} from "@/lib/browserFullscreen"
+} from "@/persistence/browserFullscreen"
 import { cn } from "@/lib/utils"
 import { shouldIgnoreFocusArrowNavigation } from "@/lib/shouldIgnoreFocusArrowNavigation"
 import {

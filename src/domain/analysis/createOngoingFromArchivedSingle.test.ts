@@ -18,11 +18,11 @@ import {
 import {
   clearLocalAnalysisLibraryStorageForTests,
   getLocalAnalysisLibraryRepository,
-} from "@/lib/localAnalysisLibraryRepository"
+} from "@/persistence/localAnalysisLibraryRepository"
 import {
   getAnalysisLibraryRepository,
   setAnalysisLibraryRepositoryForTests,
-} from "@/lib/analysisLibraryRepository"
+} from "@/persistence/analysisLibraryRepository"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { resolveResultView } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
@@ -304,7 +304,7 @@ describe("createOngoingFromArchivedSingle", () => {
     expect(JSON.stringify(await repo.get(archived.id))).toBe(sourceBefore)
 
     const { buildAnalysisWorkspacePath, readAnalysisIdFromLocation } =
-      await import("@/lib/analysisLibraryRoutes")
+      await import("@/persistence/analysisLibraryRoutes")
     const { navigateTo } = await import("@/lib/auth")
 
     // Minimal location stub for navigateTo
