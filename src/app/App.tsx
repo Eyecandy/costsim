@@ -3,10 +3,8 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
-  type ReactNode,
   useRef,
   useState,
-  type SetStateAction,
 } from "react"
 import SimulationWorker from "@/workers/simulation.worker.ts?worker"
 import type {
@@ -92,7 +90,6 @@ import { shouldShowResultSettingsEditor } from "@/domain/results/resultSettingsP
 import {
   addProjectIfAllowed,
   maxProjectsReached,
-  normalizeIncurredCosts,
   patchProjectDriverImpact,
   patchProjectCostCorrelationGroup,
   isCostCorrelationGroupPatchValid,
@@ -128,16 +125,12 @@ import {
 } from "@/persistence/storage"
 import {
   COLUMN_HEADER_BOTTOM_GAP_CLASS,
-  PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS,
   PROJECT_PROFILE_FOCUS_ROW_CLASS,
 } from "@/domain/results/columnHeaderLayout"
 import { cn } from "@/shared/utils"
 import { ProjectColorSwatch } from "@/shared/ProjectColorSwatch"
-import { Archive, Play, Plus, X } from "lucide-react"
+import { Archive, Plus, X } from "lucide-react"
 import {
-  type CostElementRow,
-  type DriverRow,
-  parseNumberField,
   isMeaningfullyFilledRow,
   invalidCostRowCellKeys,
   invalidDriverRowCellKeys,
@@ -193,222 +186,39 @@ import {
 } from "@/domain/analysis/analysisNameUniqueness"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 
-/** App branding + nav — sticks at viewport top (py-3 + logo line-height ≈ 3.1875rem). */
-const APP_HEADER_CLASSNAME = cn(
-  "sticky top-0 z-50 min-w-0 shrink-0",
-  "bg-background/95 backdrop-blur-sm",
-  "mb-[7.84rem] md:mb-[8.96rem]",
-)
-
-/** Sticky offset for controls directly below the app header row. */
-const STICKY_BELOW_APP_HEADER_CLASS = "top-[3.1875rem]"
-
-/** Sticky strip above project tabs and simulation control (identical layout/stacking). */
-const STICKY_CONTROL_STRIP_CLASSNAME = cn(
-  "sticky z-40 min-w-0 shrink-0 isolate pt-2",
-  STICKY_BELOW_APP_HEADER_CLASS,
-  "bg-background",
-)
-
-/** Right results column — sticks on md+ while the page scrolls (e.g. long left table). */
-const RESULTS_COLUMN_CLASS = cn(
-  "flex min-w-0 flex-col gap-0 md:sticky md:z-30 md:self-start md:bg-background",
-  STICKY_BELOW_APP_HEADER_CLASS,
-)
-
-/** Bottom breathing room under Single Analysis tabs (mirrors simulation notice zone). */
-const STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS =
-  "pb-[calc(0.6375rem+4.25rem)]"
-
-/**
- * Project Profile sits in the left column only (Single Analysis). Modest top
- * gap under the tabs (`mt-4`), space below (`mb-5`), and mirror the closed
- * block height onto Results (md+) so Cost Items and the Results card tops
- * align. Collapsed profile ≈ title + one summary line (~2.5rem including
- * line boxes). Primary Focus mode sits on this same row.
- */
-const PROJECT_PROFILE_SECTION_SPACING_CLASS = "mt-4 mb-5"
-const RESULTS_ALIGN_WITH_COST_ITEMS_CLASS =
-  "md:pt-[calc(1rem+2.5rem+1.25rem)]"
-
-/**
- * Ongoing Analysis (md+): three shared grid rows. Sticky timeline and simulation
- * strips are their own grid items (via `md:contents` wrappers), so the sticky
- * containing block is the tall workspace grid — they stay sticky through Cost
- * Items, Drivers, and Results. Cost Items and Results share row 3.
- *
- * Row 1: checkpoint timeline | simulation strip (both sticky)
- * Row 2: Project Profile     | (empty)
- * Row 3: Cost Items/Drivers  | Results
- *
- * Shared `md:gap-y-7` is the single desktop spacing between rows (modest room
- * under both sticky controls and before Cost Items / Results). Mobile keeps
- * stacked left/right columns via non-contents flex wrappers.
- *
- * Row 1 height is set by the taller simulation strip (button + notice zone).
- * Both sticky cells use `md:self-stretch` so they share that same effective
- * height — equal sticky bottom gutter without extra pad or negative margins.
- */
-const ONGOING_WORKSPACE_LAYOUT_CLASS = cn(
-  "grid grid-cols-1 gap-8 md:grid-cols-2 md:grid-rows-[auto_auto_auto] md:items-start md:gap-x-8 md:gap-y-7",
-)
-const ONGOING_WORKSPACE_LEFT_CLASS = "flex min-w-0 flex-col gap-6 md:contents"
-const ONGOING_WORKSPACE_RIGHT_CLASS = "flex min-w-0 flex-col gap-0 md:contents"
-/** Sticky timeline cell — stretch to shared row-1 height (simulation side). */
-const ONGOING_TIMELINE_CELL_CLASS = cn(
+import {
+  APP_HEADER_CLASSNAME,
   STICKY_CONTROL_STRIP_CLASSNAME,
-  "min-w-0 md:col-start-1 md:row-start-1 md:self-stretch",
-)
-const ONGOING_PROJECT_PROFILE_CELL_CLASS =
-  "min-w-0 md:col-start-1 md:row-start-2"
-const ONGOING_COST_CELL_CLASS =
-  "min-w-0 pb-7 md:col-start-1 md:row-start-3"
-/** Sticky simulation cell — same stretch so both controls share row height. */
-const ONGOING_SIMULATION_CELL_CLASS = cn(
-  STICKY_CONTROL_STRIP_CLASSNAME,
-  "min-w-0 md:col-start-2 md:row-start-1 md:self-stretch",
-)
-const ONGOING_RESULTS_CELL_CLASS = cn(
-  "min-w-0 pb-7 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-reduce:animate-none",
-  "md:col-start-2 md:row-start-3",
-)
-
-/** Padded zone under run button; inline notices render inside this area. */
-const SIMULATION_NOTICE_ZONE_CLASS = cn(
-  "mt-[0.1125rem] flex min-h-[calc(0.6375rem+4.25rem)] shrink-0 flex-col gap-1",
-)
-
-const SIMULATION_NOTICE_TEXT_CLASS =
-  "font-sans text-xs leading-snug text-muted-foreground"
-
-/** Text tint for the color word in validation notices (aligned with invalid cell highlights). */
-const NOTICE_WORD_RED_CLASS = "text-[#c24141]"
-/** Accent tint for the “green/grønne” word when changed fields are shown (matches changed-cell accent). */
-const NOTICE_WORD_GREEN_CLASS = "text-[#1d868c]"
-
-/** Project tab: name differs from last simulation snapshot (matches changed-cell tint). */
-const STALE_PROJECT_TAB_BG_CLASS = "bg-[rgba(29,134,140,0.05)]"
-
-/** Primary Focus mode entry beside Project Profile (~75% across on md+). */
-function PrimaryFocusModeEntry({ onClick }: { onClick: () => void }) {
-  const { t } = useI18n()
-  return (
-    <div className={PROJECT_PROFILE_FOCUS_ENTRY_CELL_CLASS}>
-      <button
-        type="button"
-        data-focus-mode-primary-entry=""
-        onClick={onClick}
-        className={buttonVariants({
-          variant: "outline",
-          size: "sm",
-          className:
-            "h-7 gap-1.5 px-2.5 text-[12px] font-medium text-muted-foreground hover:text-foreground",
-        })}
-        aria-label={t("inputs.guidedFocusMode")}
-        title={t("inputs.guidedFocusMode")}
-      >
-        <Play
-          className={cn("size-3.5 fill-current", brandPrimaryTextClass)}
-          aria-hidden
-        />
-        {t("inputs.guidedFocusMode")}
-      </button>
-    </div>
-  )
-}
-
-function noticeWithColorWord(
-  text: string,
-  word: string,
-  wordClassName: string,
-): ReactNode {
-  const index = text.indexOf(word)
-  if (index === -1) return text
-  return (
-    <>
-      {text.slice(0, index)}
-      <span className={wordClassName}>{word}</span>
-      {text.slice(index + word.length)}
-    </>
-  )
-}
-
-const EMPTY_STALE_CELL_KEYS: ReadonlySet<string> = new Set()
-const VALIDATION_ERROR_KEYS = [
-  "projects.invalidInputForRun",
-  "projects.emptyCostBasisForRun",
-] as const
-type ValidationErrorKey = (typeof VALIDATION_ERROR_KEYS)[number]
-type RunErrorKey = ValidationErrorKey | "projects.workerError"
-
-function patchProjectCostRows(
-  projects: Project[],
-  projectId: string,
-  updater: SetStateAction<CostElementRow[]>,
-): Project[] {
-  return projects.map((p) => {
-    if (p.id !== projectId) return p
-    const costRows = typeof updater === "function" ? updater(p.costRows) : updater
-    return { ...p, costRows }
-  })
-}
-
-function patchProjectDriverRows(
-  projects: Project[],
-  projectId: string,
-  updater: SetStateAction<DriverRow[]>,
-): Project[] {
-  return projects.map((p) => {
-    if (p.id !== projectId) return p
-    const driverRows =
-      typeof updater === "function" ? updater(p.driverRows) : updater
-    return { ...p, driverRows }
-  })
-}
-
-function baseCostSumForProject(project: Project): number | null {
-  let sum = normalizeIncurredCosts(project.incurredCosts)
-  let hasAny = sum > 0
-  for (const row of project.costRows) {
-    const value = parseNumberField(row.likely)
-    if (value !== null) {
-      sum += value
-      hasAny = true
-    }
-  }
-  return hasAny ? sum : null
-}
-
-function projectHasMeaningfulTableInput(project: Project): boolean {
-  if (normalizeIncurredCosts(project.incurredCosts) > 0) return true
-  return (
-    project.costRows.some(isMeaningfullyFilledRow) ||
-    project.driverRows.some(isMeaningfullyFilledRow)
-  )
-}
-
-function runValidationErrorKey(projects: readonly Project[]): ValidationErrorKey | null {
-  const hasIncompleteStartedCosts = projects.some((proj) =>
-    proj.costRows.some(
-      (row) => isMeaningfullyFilledRow(row) && parseCostForSimulation(row) === null,
-    ),
-  )
-  const hasIncompleteStartedDrivers = projects.some((proj) =>
-    proj.driverRows.some(
-      (row) => isMeaningfullyFilledRow(row) && parseDriverForSimulation(row) === null,
-    ),
-  )
-  const anyProjectWithoutCosts = projects.some((proj) =>
-    proj.costRows.every((row) => parseCostForSimulation(row) === null),
-  )
-  if (hasIncompleteStartedCosts || hasIncompleteStartedDrivers) {
-    return "projects.invalidInputForRun"
-  }
-  if (anyProjectWithoutCosts) {
-    return "projects.emptyCostBasisForRun"
-  }
-  return null
-}
+  RESULTS_COLUMN_CLASS,
+  STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS,
+  PROJECT_PROFILE_SECTION_SPACING_CLASS,
+  RESULTS_ALIGN_WITH_COST_ITEMS_CLASS,
+  ONGOING_WORKSPACE_LAYOUT_CLASS,
+  ONGOING_WORKSPACE_LEFT_CLASS,
+  ONGOING_WORKSPACE_RIGHT_CLASS,
+  ONGOING_TIMELINE_CELL_CLASS,
+  ONGOING_PROJECT_PROFILE_CELL_CLASS,
+  ONGOING_COST_CELL_CLASS,
+  ONGOING_SIMULATION_CELL_CLASS,
+  ONGOING_RESULTS_CELL_CLASS,
+  SIMULATION_NOTICE_ZONE_CLASS,
+  SIMULATION_NOTICE_TEXT_CLASS,
+  NOTICE_WORD_RED_CLASS,
+  NOTICE_WORD_GREEN_CLASS,
+  STALE_PROJECT_TAB_BG_CLASS,
+} from "@/app/workspace/layoutClasses"
+import { PrimaryFocusModeEntry } from "@/app/workspace/PrimaryFocusModeEntry"
+import {
+  noticeWithColorWord,
+  EMPTY_STALE_CELL_KEYS,
+  VALIDATION_ERROR_KEYS,
+  patchProjectCostRows,
+  patchProjectDriverRows,
+  baseCostSumForProject,
+  projectHasMeaningfulTableInput,
+  runValidationErrorKey,
+  type RunErrorKey,
+} from "@/app/workspace/workspaceHelpers"
 
 export default function App() {
   const { language, t } = useI18n()
