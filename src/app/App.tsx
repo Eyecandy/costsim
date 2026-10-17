@@ -6,10 +6,8 @@ import {
   useRef,
   useState,
 } from "react"
-import SimulationWorker from "@/workers/simulation.worker.ts?worker"
 import type {
   ProjectResult,
-  SimulationWorkerResult,
 } from "@/domain/simulation/simulationTypes"
 
 import {
@@ -30,7 +28,6 @@ import { ResultPreferencesPanel } from "@/features/results/ResultPreferencesPane
 import { SectionExpander } from "@/shared/SectionExpander"
 import { Button, buttonVariants } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
-import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import {
   CORRELATION_SAVE_CONFIRM_MS,
   deriveSavedCorrelationSummaries,
@@ -128,8 +125,6 @@ import {
 } from "@/shared/brand"
 import {
   getInitialRestoredSimulationState,
-  LAST_SIMULATION_SNAPSHOT_VERSION,
-  persistLastSimulationSnapshot,
 } from "@/persistence/lastSimulationSnapshot"
 import { navigateTo } from "@/shared/auth/auth"
 import {
@@ -173,7 +168,6 @@ import {
   VALIDATION_ERROR_KEYS,
   patchProjectCostRows,
   patchProjectDriverRows,
-  baseCostSumForProject,
   runValidationErrorKey,
   type RunErrorKey,
 } from "@/app/workspace/workspaceHelpers"
@@ -187,6 +181,7 @@ import { WorkspaceDialogs } from "@/app/workspace/WorkspaceDialogs"
 import { AnalysisHeader } from "@/app/workspace/AnalysisHeader"
 import { ProjectTabs } from "@/app/workspace/ProjectTabs"
 import { SimulationStrip } from "@/app/workspace/SimulationStrip"
+import { useSimulationRun } from "@/app/workspace/useSimulationRun"
 export default function App() {
   const { language, t } = useI18n()
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -714,94 +709,41 @@ export default function App() {
     }
   }, [])
 
-  const runningRef = useRef(false)
-  const pendingRunBaseCostByProjectIdRef = useRef<Record<string, number | null>>({})
-  const pendingRunInputSignatureRef = useRef("")
-  const pendingRunActiveProjectIdRef = useRef("")
-  const pendingRunAnalysisIdRef = useRef<string | null>(null)
-  const pendingRunCheckpointIdRef = useRef<string | null>(null)
-  const pendingRunProjectsRef = useRef<Project[]>([])
-  const pendingRunSimulationCountRef = useRef(0)
-  const pendingRunResultPreferencesRef = useRef(resultPreferences)
-  /** Current editor context for discarding late worker responses. */
-  const currentAnalysisIdRef = useRef<string | null>(null)
-  const currentCheckpointIdRef = useRef<string | null>(null)
-  currentAnalysisIdRef.current = librarySession.docMeta?.id ?? null
-  currentCheckpointIdRef.current = isOngoingAnalysis
-    ? librarySession.activeCheckpoint?.id ?? null
-    : null
-  const setLiveSimOwnershipRef = useRef({
+  const {
+    handleBeforeSignOut,
+    handleRun,
+    runningRef,
+  } = useSimulationRun({
+    activeProjectId,
+    analysisReadOnly,
+    clearDraftResultSeedRef,
+    commitOngoingDraftResultRef,
+    commitSingleDraftResultRef,
+    focusViewRef,
+    isOngoingAnalysis,
+    librarySession,
+    pendingFocusResultsAfterGuidedRunRef,
+    projects,
+    resultPreferences,
+    runs,
+    setFocusResultStepIndex,
+    setFocusView,
+    setIsRunning,
+    setLastSimulatedInputSignature,
+    setLastSimulatedProjects,
     setLiveSimAnalysisId,
     setLiveSimCheckpointId,
-    setLastSimulatedProjects,
+    setOngoingCompactResult,
+    setProjectResults,
+    setRunErrorKey,
+    setRunProgress,
+    setSimulatedBaseCostByProjectId,
+    setSimulationRunIdByProjectId,
+    setSimulationStartTime,
+    setSingleArchivedCompact,
+    setSingleDraftCompact,
+    setValidationFeedbackActive,
   })
-  setLiveSimOwnershipRef.current = {
-    setLiveSimAnalysisId,
-    setLiveSimCheckpointId,
-    setLastSimulatedProjects,
-  }
-  const workerRef = useRef<Worker | null>(null)
-  const runSeqRef = useRef(0)
-  const runStartedAtRef = useRef(0)
-  const progressRafRef = useRef<number | null>(null)
-  const completeMinWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-  const completeHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-
-  const MIN_RUN_UI_MS = 2000
-  const FAKE_PROGRESS_CAP = 92
-  const SLOW_PROGRESS_MAX = 95
-  const COMPLETE_HOLD_MS = 450
-
-  const stopProgressAnimation = () => {
-    if (progressRafRef.current !== null) {
-      cancelAnimationFrame(progressRafRef.current)
-      progressRafRef.current = null
-    }
-  }
-
-  const clearCompletionTimers = () => {
-    if (completeMinWaitTimerRef.current !== null) {
-      clearTimeout(completeMinWaitTimerRef.current)
-      completeMinWaitTimerRef.current = null
-    }
-    if (completeHideTimerRef.current !== null) {
-      clearTimeout(completeHideTimerRef.current)
-      completeHideTimerRef.current = null
-    }
-  }
-
-  const startProgressAnimation = (seq: number) => {
-    stopProgressAnimation()
-    const tick = () => {
-      if (runSeqRef.current !== seq || !runningRef.current) {
-        progressRafRef.current = null
-        return
-      }
-      const elapsed = performance.now() - runStartedAtRef.current
-      let next: number
-      if (elapsed < MIN_RUN_UI_MS) {
-        const t = Math.min(1, elapsed / MIN_RUN_UI_MS)
-        const eased = 1 - (1 - t) * (1 - t)
-        next = FAKE_PROGRESS_CAP * eased
-      } else {
-        const slowSpan = 10000
-        const extra = Math.min(
-          SLOW_PROGRESS_MAX - FAKE_PROGRESS_CAP,
-          ((elapsed - MIN_RUN_UI_MS) / slowSpan) *
-            (SLOW_PROGRESS_MAX - FAKE_PROGRESS_CAP),
-        )
-        next = FAKE_PROGRESS_CAP + extra
-      }
-      setRunProgress((p) => (next > p ? next : p))
-      progressRafRef.current = requestAnimationFrame(tick)
-    }
-    progressRafRef.current = requestAnimationFrame(tick)
-  }
-
   useEffect(() => {
     if (projects.length === 0) return
     if (!projects.some((p) => p.id === activeProjectId)) {
@@ -823,186 +765,6 @@ export default function App() {
     if (librarySession.analysisId && !librarySession.ready) return
     saveToStorage(STORAGE_KEYS.activeProjectId, activeProjectId)
   }, [activeProjectId, librarySession.analysisId, librarySession.ready])
-
-  useEffect(() => {
-    const worker = new SimulationWorker()
-    workerRef.current = worker
-
-    const scheduleRunCompletion = (
-      finishedSeq: number,
-      applyResult: () => void,
-    ) => {
-      clearCompletionTimers()
-      const elapsed = performance.now() - runStartedAtRef.current
-      const waitMin = Math.max(0, MIN_RUN_UI_MS - elapsed)
-
-      const goComplete = () => {
-        if (finishedSeq !== runSeqRef.current) return
-        stopProgressAnimation()
-        setRunProgress(100)
-        completeHideTimerRef.current = setTimeout(() => {
-          completeHideTimerRef.current = null
-          if (finishedSeq !== runSeqRef.current) return
-          applyResult()
-          runningRef.current = false
-          setIsRunning(false)
-          setRunProgress(0)
-          setSimulationStartTime(null)
-        }, COMPLETE_HOLD_MS)
-      }
-
-      if (waitMin > 0) {
-        completeMinWaitTimerRef.current = setTimeout(() => {
-          completeMinWaitTimerRef.current = null
-          goComplete()
-        }, waitMin)
-      } else {
-        goComplete()
-      }
-    }
-
-    worker.onmessage = (e: MessageEvent<SimulationWorkerResult>) => {
-      const finishedSeq = runSeqRef.current
-      scheduleRunCompletion(finishedSeq, () => {
-        // Late response: do not attach results to a different analysis/checkpoint.
-        if (
-          pendingRunAnalysisIdRef.current !== currentAnalysisIdRef.current ||
-          pendingRunCheckpointIdRef.current !== currentCheckpointIdRef.current
-        ) {
-          return
-        }
-        const inputSig = pendingRunInputSignatureRef.current
-        const baseCosts = { ...pendingRunBaseCostByProjectIdRef.current }
-        setOngoingCompactResult(null)
-        setSingleArchivedCompact(null)
-        setSingleDraftCompact(null)
-        setProjectResults(e.data.projectResults)
-        setSimulatedBaseCostByProjectId(baseCosts)
-        setLastSimulatedInputSignature(inputSig)
-        setLiveSimOwnershipRef.current.setLastSimulatedProjects(
-          pendingRunProjectsRef.current,
-        )
-        setLiveSimOwnershipRef.current.setLiveSimAnalysisId(
-          pendingRunAnalysisIdRef.current,
-        )
-        setLiveSimOwnershipRef.current.setLiveSimCheckpointId(
-          pendingRunCheckpointIdRef.current,
-        )
-        const runIds = createSimulationRunIdsForProjects(
-          e.data.projectResults.map((result) => result.projectId),
-          finishedSeq,
-        )
-        setSimulationRunIdByProjectId(runIds)
-        setRunErrorKey(null)
-        void clearDraftResultSeedRef.current()
-        const runAnalysisId = pendingRunAnalysisIdRef.current
-        const runCheckpointId = pendingRunCheckpointIdRef.current
-        if (runAnalysisId && runCheckpointId) {
-          void commitOngoingDraftResultRef.current?.({
-            analysisId: runAnalysisId,
-            checkpointId: runCheckpointId,
-            projects: pendingRunProjectsRef.current,
-            activeProjectId: pendingRunActiveProjectIdRef.current,
-            projectResults: e.data.projectResults,
-            simulatedBaseCostByProjectId: baseCosts,
-            inputSignature: inputSig,
-            simulationCount: pendingRunSimulationCountRef.current,
-            resultPreferences: pendingRunResultPreferencesRef.current,
-            simulationRunIdByProjectId: runIds,
-          })
-        } else if (runAnalysisId && runCheckpointId === null) {
-          void commitSingleDraftResultRef.current?.({
-            analysisId: runAnalysisId,
-            projects: pendingRunProjectsRef.current,
-            activeProjectId: pendingRunActiveProjectIdRef.current,
-            projectResults: e.data.projectResults,
-            simulatedBaseCostByProjectId: baseCosts,
-            inputSignature: inputSig,
-            simulationCount: pendingRunSimulationCountRef.current,
-            resultPreferences: pendingRunResultPreferencesRef.current,
-            simulationRunIdByProjectId: runIds,
-          })
-        }
-        persistLastSimulationSnapshot({
-          v: LAST_SIMULATION_SNAPSHOT_VERSION,
-          inputSignature: inputSig,
-          projectResults: e.data.projectResults,
-          simulatedBaseCostByProjectId: baseCosts,
-          activeProjectIdAtRun: pendingRunActiveProjectIdRef.current,
-        })
-        // Guided Simulation / Focus Input → first Focus result step on success.
-        if (
-          pendingFocusResultsAfterGuidedRunRef.current ||
-          focusViewRef.current === "input"
-        ) {
-          pendingFocusResultsAfterGuidedRunRef.current = false
-          setFocusResultStepIndex(0)
-          setFocusView("results")
-        }
-      })
-    }
-
-    worker.onerror = () => {
-      const finishedSeq = runSeqRef.current
-      scheduleRunCompletion(finishedSeq, () => {
-        pendingFocusResultsAfterGuidedRunRef.current = false
-        setRunErrorKey("projects.workerError")
-        setProjectResults([])
-        setSimulationRunIdByProjectId({})
-      })
-    }
-
-    return () => {
-      clearCompletionTimers()
-      stopProgressAnimation()
-      worker.terminate()
-      workerRef.current = null
-    }
-  }, [])
-
-  const handleRun = () => {
-    if (analysisReadOnly) return
-    const w = workerRef.current
-    if (!w || runningRef.current) return
-
-    if (projects.length === 0) return
-
-    const validationError = runValidationErrorKey(projects)
-    if (validationError !== null) {
-      setRunErrorKey(validationError)
-      setValidationFeedbackActive(true)
-      return
-    }
-
-    const payloads = projects
-      .map((proj) => buildSimulationProjectPayload(proj))
-      .filter((payload): payload is NonNullable<typeof payload> => payload !== null)
-
-    runSeqRef.current += 1
-    const seq = runSeqRef.current
-    runStartedAtRef.current = performance.now()
-    clearCompletionTimers()
-    stopProgressAnimation()
-    runningRef.current = true
-    pendingRunBaseCostByProjectIdRef.current = Object.fromEntries(
-      projects.map((project) => [project.id, baseCostSumForProject(project)]),
-    )
-    pendingRunInputSignatureRef.current = buildSimulationInputSignature(projects)
-    pendingRunActiveProjectIdRef.current = activeProjectId
-    pendingRunProjectsRef.current = structuredClone(projects) as Project[]
-    pendingRunSimulationCountRef.current = runs
-    pendingRunResultPreferencesRef.current = resultPreferences
-    pendingRunAnalysisIdRef.current = currentAnalysisIdRef.current
-    pendingRunCheckpointIdRef.current = currentCheckpointIdRef.current
-    setIsRunning(true)
-    setRunErrorKey(null)
-    setValidationFeedbackActive(false)
-    setRunProgress(0)
-    setSimulationStartTime(Date.now())
-    startProgressAnimation(seq)
-
-    w.postMessage({ runs, projects: payloads })
-  }
 
   const atMaxProjects = maxProjectsReached(projects, appFeatures.maxProjects)
   const maxProjectsTooltip = t("projects.maxProjectsTooltip").replace(
@@ -2162,18 +1924,6 @@ export default function App() {
     deleteProjectConfirmTargetRef.current = projectId
     setDeleteProjectConfirmOpen(true)
     return
-  }
-
-  const handleBeforeSignOut = () => {
-    runSeqRef.current += 1
-    clearCompletionTimers()
-    stopProgressAnimation()
-    runningRef.current = false
-    setRunErrorKey(null)
-    setValidationFeedbackActive(false)
-    setIsRunning(false)
-    setRunProgress(0)
-    setSimulationStartTime(null)
   }
 
   const confirmDeleteProject = () => {
