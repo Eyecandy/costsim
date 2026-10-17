@@ -84,13 +84,20 @@ describe("stale input change visibility (presentation-only)", () => {
     expect(src).toContain('t("projects.staleInputsNotice")')
     expect(src).toContain("NOTICE_WORD_GREEN_CLASS")
     expect(src).toMatch(
-      /noticeWithColorWord\(\s*t\("projects\.staleInputsNoticeWithChanges"\),\s*language === "no" \? "Grønne" : "Green",\s*NOTICE_WORD_GREEN_CLASS/,
+      /noticeWithColorWord\(\s*t\("projects\.staleInputsNoticeWithChanges"\),\s*t\("projects\.noticeWordGreen"\),\s*NOTICE_WORD_GREEN_CLASS/,
     )
     expect(messages.no.projects.staleInputsNoticeWithChanges).toBe(
       "Resultatene er basert på tidligere input. Grønne felt viser hva som er endret.",
     )
     expect(messages.en.projects.staleInputsNoticeWithChanges).toBe(
       "The results are based on previous input. Green fields show what has changed.",
+    )
+    // The highlighted word is looked up per language and must occur in that language's notice.
+    expect(messages.no.projects.staleInputsNoticeWithChanges).toContain(
+      messages.no.projects.noticeWordGreen,
+    )
+    expect(messages.en.projects.staleInputsNoticeWithChanges).toContain(
+      messages.en.projects.noticeWordGreen,
     )
     expect(messages.no.projects.staleInputsNoticeWithChanges).toMatch(/Grønne felt/)
     expect(messages.en.projects.staleInputsNoticeWithChanges).toMatch(/Green fields/)

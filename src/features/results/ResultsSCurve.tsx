@@ -435,7 +435,7 @@ export function ResultsSCurve({
               preserveAspectRatio="xMidYMid meet"
               className="h-full w-full"
               role="img"
-              aria-label="S-kurve for simuleringsresultater"
+              aria-label={t("charts.sCurveAriaLabel")}
             >
               <defs>
                 <clipPath id={curveClipPathId}>

@@ -15,7 +15,7 @@ import {
   buildLibraryPath,
   readLibraryFilterFromLocation,
   type LibraryNavFilter,
-} from "@/features/analysis-library/libraryNavigation"
+} from "@/persistence/libraryNavigation"
 import { BrandWordmark } from "@/shared/BrandWordmark"
 import { PRODUCT_NAME } from "@/shared/brand"
 import { AnalysisModeIndicator } from "@/features/analysis-library/AnalysisModeIndicator"
@@ -38,6 +38,7 @@ import {
 } from "@/persistence/analysisLibraryRoutes"
 import { navigateTo } from "@/shared/auth/auth"
 import { cn } from "@/shared/utils"
+import type { Translate } from "@/i18n/messages"
 
 const HOME_RECENT_LIMIT = 5
 
@@ -60,7 +61,7 @@ function formatShortDate(iso: string, language: "no" | "en"): string {
 function resolveLibraryHeading(
   filter: LibraryNavFilter,
   folders: AnalysisFolder[],
-  t: (key: string) => string,
+  t: Translate,
 ): string {
   if (filter.kind === "home") return ""
   if (filter.kind === "trash") return t("library.trashHeading")

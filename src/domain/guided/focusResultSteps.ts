@@ -1,3 +1,4 @@
+import type { MessageKey } from "@/i18n/messages"
 /**
  * Presentation-only Focus Results step ids.
  * Order mirrors the normal ResultsPanel analytical section order,
@@ -20,7 +21,7 @@ export function buildFocusResultSteps(args: {
   return steps
 }
 
-export function focusResultSectionTitleKey(id: FocusResultSectionId): string {
+export function focusResultSectionTitleKey(id: FocusResultSectionId): MessageKey {
   switch (id) {
     case "keyFigures":
       return "results.keyMetricsTitle"

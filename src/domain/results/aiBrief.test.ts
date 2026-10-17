@@ -287,18 +287,16 @@ describe("ai-brief-v3", () => {
   })
 
   it("displayName E/F/H: instructions use displayName; never surface ids; NO/EN work", () => {
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("Bruk `displayName`")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
-      "skal aldri vises eller forkortes",
-    )
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain(
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("Bruk `displayName`")
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("skal aldri vises eller forkortes")
+    expect(messages.no.results.aiBriefClipboardPrompt).not.toContain(
       "Bruk prosjekt-id som stabil identitet",
     )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("Use `displayName`")
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain("Use `displayName`")
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain(
       "must never be shown or abbreviated",
     )
-    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain(
+    expect(messages.en.results.aiBriefClipboardPrompt).not.toContain(
       "Treat project id as stable identity",
     )
 
@@ -438,8 +436,8 @@ describe("ai-brief-v3", () => {
   })
 
   it("quality I: prompt no longer references obsolete uncertaintyAssessment field", () => {
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("uncertaintyAssessment")
-    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain("uncertaintyAssessment")
+    expect(messages.no.results.aiBriefClipboardPrompt).not.toContain("uncertaintyAssessment")
+    expect(messages.en.results.aiBriefClipboardPrompt).not.toContain("uncertaintyAssessment")
     expect(
       buildAiBriefV3({
         resultView: defaultResultView,
@@ -472,7 +470,7 @@ describe("ai-brief-v3", () => {
         simulationCount: 20_000,
       }).interpretationHints.emptyDriverImpactOverridesMeansDefaultOnAllCostItems,
     ).toBe(true)
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain('not "no impact"')
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain('not "no impact"')
   })
 
   it("quality K: AI Brief generation does not trigger simulation or Shapley", () => {
@@ -487,8 +485,8 @@ describe("ai-brief-v3", () => {
   })
 
   it("quality L/M + first-response A–K: concise conversational structure; safeguards kept", () => {
-    const no = messages.no.results.aiBriefClipboardPromptNo
-    const en = messages.en.results.aiBriefClipboardPromptEn
+    const no = messages.no.results.aiBriefClipboardPrompt
+    const en = messages.en.results.aiBriefClipboardPrompt
 
     // A: old five-section structure removed
     expect(no).not.toContain("1. Kort konklusjon")
@@ -719,16 +717,16 @@ describe("ai-brief-v3", () => {
   })
 
   it("N/O/P: instruction distinguishes tornado vs contribution; overlap caution; label safeguards", () => {
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("ai-brief-v3")
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("ai-brief-v3")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("Bland ikke disse")
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("Do not conflate them")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("kan være overlappende")
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("may be overlapping")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain(
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("ai-brief-v3")
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain("ai-brief-v3")
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("Bland ikke disse")
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain("Do not conflate them")
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("kan være overlappende")
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain("may be overlapping")
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain(
       "ikke finn på detaljert faglig betydning",
     )
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain(
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain(
       "do not invent detailed technical meaning",
     )
     const brief = buildAiBriefV3({
@@ -889,9 +887,9 @@ describe("ai-brief Ongoing development context", () => {
       simulationCount: 20_000,
     })
     expect(brief).not.toHaveProperty("ongoingDevelopment")
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("ongoingDevelopment")
-    expect(messages.en.results.aiBriefClipboardPromptEn).not.toContain("ongoingDevelopment")
-    expect(messages.no.results.aiBriefClipboardPromptNo).not.toContain("løpende analyse")
+    expect(messages.no.results.aiBriefClipboardPrompt).not.toContain("ongoingDevelopment")
+    expect(messages.en.results.aiBriefClipboardPrompt).not.toContain("ongoingDevelopment")
+    expect(messages.no.results.aiBriefClipboardPrompt).not.toContain("løpende analyse")
     const src = resultsPanelSource()
     expect(src).toContain("aiBriefClipboardPromptOngoingAddendum")
     expect(src).toContain('analysisMode === "ongoing"')
@@ -1010,14 +1008,14 @@ describe("ai-brief Ongoing development context", () => {
   })
 
   it("G: prompt tells the AI to distinguish cost level from uncertainty", () => {
-    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain("kostnadsnivå")
-    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain("usikkerhet")
-    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendumNo).toContain(
+    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendum).toContain("kostnadsnivå")
+    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendum).toContain("usikkerhet")
+    expect(messages.no.results.aiBriefClipboardPromptOngoingAddendum).toContain(
       "uncertaintySpanP85MinusBase",
     )
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain("cost level")
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toContain("uncertainty")
-    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendumEn).toMatch(/distinguish/i)
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendum).toContain("cost level")
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendum).toContain("uncertainty")
+    expect(messages.en.results.aiBriefClipboardPromptOngoingAddendum).toMatch(/distinguish/i)
     const ongoing = buildFiveCheckpointTimeline()
     const cp2 = ongoing.checkpoints.find((c) => c.sequence === 2)!
     const development = buildAiBriefOngoingDevelopment({

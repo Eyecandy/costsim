@@ -107,6 +107,7 @@ import {
   FOCUS_SESSION_FOOTER_CLASS,
   FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
 } from "@/domain/guided/focusSessionFrame"
+import type { Translate } from "@/i18n/messages"
 
 export type GuidedInputDialogProps = {
   open: boolean
@@ -879,7 +880,7 @@ function GuidedIncurredPhase({
   )
 }
 
-function phaseTitle(step: GuidedWorkflowStep, t: (key: string) => string): string {
+function phaseTitle(step: GuidedWorkflowStep, t: Translate): string {
   switch (step.phase) {
     case "focusIntro":
       return t("inputs.guidedPhaseFocusIntro")

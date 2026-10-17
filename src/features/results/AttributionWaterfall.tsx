@@ -63,7 +63,7 @@ export function AttributionWaterfall({
   expandLabel,
   onExpand,
 }: AttributionWaterfallProps) {
-  const { language } = useI18n()
+  const { language, t } = useI18n()
 
   const displayRows = useMemo(
     () =>
@@ -281,7 +281,7 @@ export function AttributionWaterfall({
             })
           ) : (
             <p className="section-body col-span-3 text-[11px] text-muted-foreground/80">
-              {language === "no" ? "Ingen bidrag å vise." : "No contributions to display."}
+              {t("charts.noContributions")}
             </p>
           )}
         </div>

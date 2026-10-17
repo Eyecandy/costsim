@@ -72,6 +72,31 @@ export default defineConfig([
     },
   },
   {
+    // Browser storage lives in src/persistence/ only (see CLAUDE.md); everything else calls those modules.
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/persistence/**", "**/*.test.ts"],
+    rules: {
+      "no-restricted-globals": [
+        "error",
+        { name: "localStorage", message: "Use a module in src/persistence/ instead." },
+        { name: "sessionStorage", message: "Use a module in src/persistence/ instead." },
+      ],
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "window",
+          property: "localStorage",
+          message: "Use a module in src/persistence/ instead.",
+        },
+        {
+          object: "window",
+          property: "sessionStorage",
+          message: "Use a module in src/persistence/ instead.",
+        },
+      ],
+    },
+  },
+  {
     // shadcn/ui files export a component together with its variants helper by design.
     files: ["src/shared/ui/**/*.{ts,tsx}"],
     rules: { "react-refresh/only-export-components": "off" },

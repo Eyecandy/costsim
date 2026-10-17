@@ -43,7 +43,7 @@ import {
   type LibraryNavFilter,
   buildLibraryPath,
   runBeforeLeaveWithoutBlocking,
-} from "@/features/analysis-library/libraryNavigation"
+} from "@/persistence/libraryNavigation"
 
 /** Disclosure key for the synthetic "no folder" row under Mapper — not a nav section. */
 const UNGROUPED_FOLDER_KEY = "__ungrouped__"

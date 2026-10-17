@@ -41,6 +41,7 @@ import {
   type ArchiveBlockReason,
 } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
+import { logError } from "@/shared/logError"
 import type { Project } from "@/domain/analysis/project"
 import {
   cloneResultPreferences,
@@ -260,6 +261,7 @@ export function useLibraryAnalysisSession(args: {
   const saveChainRef = useRef(Promise.resolve())
   /** Always recover from a prior rejection so later archive/save work still runs. */
   const enqueueSave = useCallback((op: () => Promise<void>) => {
+    // intentional: a failed save is reported to its own caller; the chain only has to keep running
     const next = saveChainRef.current.catch(() => undefined).then(op)
     saveChainRef.current = next.catch(() => undefined)
     return next
@@ -760,7 +762,8 @@ export function useLibraryAnalysisSession(args: {
         )
         if (cancelled || loadGenerationRef.current !== generation) return
         setReady(true)
-      } catch {
+      } catch (error) {
+        logError("load analysis", error)
         if (!cancelled && loadGenerationRef.current === generation) {
           setLoadError("load_failed")
           setReady(true)
@@ -897,7 +900,8 @@ export function useLibraryAnalysisSession(args: {
           snapshot,
         })
       })
-    } catch {
+    } catch (error) {
+      logError("archive current analysis", error)
       /* archiveHolder.doc stays null */
     }
 
@@ -1027,7 +1031,8 @@ export function useLibraryAnalysisSession(args: {
         const { draftResultSeed: _removed, ...rest } = existing
         await repo.saveDraft(rest)
       })
-    } catch {
+    } catch (error) {
+      logError("clear persisted draft result seed", error)
       /* non-fatal — in-memory seed already cleared */
     }
   }, [enqueueSave, repo])
@@ -1045,7 +1050,8 @@ export function useLibraryAnalysisSession(args: {
         }
         await repo.saveDraft(omitDraftResultFields(existing, "ongoingDraftResult"))
       })
-    } catch {
+    } catch (error) {
+      logError("clear persisted ongoing draft result", error)
       /* non-fatal — in-memory compact result already cleared */
     }
   }, [enqueueSave, repo])
@@ -1063,7 +1069,8 @@ export function useLibraryAnalysisSession(args: {
         }
         await repo.saveDraft(omitDraftResultFields(existing, "singleDraftResult"))
       })
-    } catch {
+    } catch (error) {
+      logError("clear persisted single draft result", error)
       /* non-fatal — in-memory compact result already cleared */
     }
   }, [enqueueSave, repo])
@@ -1161,7 +1168,8 @@ export function useLibraryAnalysisSession(args: {
 
     try {
       await flushPendingSave()
-    } catch {
+    } catch (error) {
+      logError("flush pending save before archiving the checkpoint", error)
       /* continue with current App state */
     }
 
@@ -1263,7 +1271,8 @@ export function useLibraryAnalysisSession(args: {
           ),
         )
       })
-    } catch {
+    } catch (error) {
+      logError("archive active checkpoint", error)
       return { ok: false, reason: "persistence_failed" }
     }
     setOngoing(nextOngoing)
@@ -1318,7 +1327,8 @@ export function useLibraryAnalysisSession(args: {
           }
           holder.doc = await repo.completeOngoingAnalysis(analysisIdToComplete)
         })
-      } catch {
+      } catch (error) {
+        logError("complete ongoing analysis", error)
         /* holder.doc stays null */
       }
 
@@ -1381,7 +1391,8 @@ export function useLibraryAnalysisSession(args: {
       }
       try {
         await flushPendingSave()
-      } catch {
+      } catch (error) {
+        logError("flush pending save before creating the next checkpoint", error)
         /* still attempt from live session state */
       }
       if (saveTimerRef.current) {
@@ -1487,7 +1498,8 @@ export function useLibraryAnalysisSession(args: {
       }
       try {
         await flushPendingSave()
-      } catch {
+      } catch (error) {
+        logError("flush pending save before deleting the draft checkpoint", error)
         /* still attempt from live session state */
       }
       if (saveTimerRef.current) {
@@ -1538,7 +1550,8 @@ export function useLibraryAnalysisSession(args: {
             activeProjectId: nextWorkspace.activeProjectId,
           }
         })
-      } catch {
+      } catch (error) {
+        logError("delete active draft checkpoint", error)
         if (loadedIdRef.current === saveDocId) {
           setSaveStatusSafe("error")
         }
@@ -1581,7 +1594,8 @@ export function useLibraryAnalysisSession(args: {
 
       try {
         await flushPendingSave()
-      } catch {
+      } catch (error) {
+        logError("flush pending save before switching checkpoint", error)
         /* still switch — last save may have failed */
       }
 
@@ -1663,7 +1677,8 @@ export function useLibraryAnalysisSession(args: {
     }
     try {
       await flushPendingSave()
-    } catch {
+    } catch (error) {
+      logError("flush pending save before moving to trash", error)
       /* still move to trash */
     }
     await repo.moveToTrash(docMeta.id)
@@ -1806,7 +1821,7 @@ export function useLibraryAnalysisSession(args: {
       if (!saveDocId) return
       void enqueueSave(async () => {
         await saveDraftFromLiveState(saveDocId)
-      }).catch(() => undefined)
+      }).catch((error) => logError("save draft after attaching ongoing contribution", error))
     },
     attachSingleDraftContribution: (
       projectId: string,
@@ -1848,7 +1863,7 @@ export function useLibraryAnalysisSession(args: {
       if (!saveDocId) return
       void enqueueSave(async () => {
         await saveDraftFromLiveState(saveDocId)
-      }).catch(() => undefined)
+      }).catch((error) => logError("save draft after attaching single contribution", error))
     },
     renameAnalysis,
     setFolderId,

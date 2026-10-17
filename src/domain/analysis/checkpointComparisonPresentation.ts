@@ -26,6 +26,7 @@ import {
 } from "@/domain/results/keyFigureVisibility"
 import { formatPercentileLabel, type ResultPreferencesV1 } from "@/domain/results/resultPreferences"
 import { defaultCheckpointName } from "@/domain/analysis/analysisCheckpoint"
+import type { Translate } from "@/i18n/messages"
 
 function pickPlural(n: number, one: string, other: string): string {
   return n === 1 ? one.replace("{n}", "1") : other.replace("{n}", String(n))
@@ -312,7 +313,7 @@ export function getPercentageDeltaClass(percentagePointDelta: number | null): st
  */
 export function comparisonMetricLabel(
   metricId: KeyFigureRowId,
-  t: (key: string) => string,
+  t: Translate,
   language: AppLanguage,
   probabilityBelowAmount?: number | null,
 ): string {

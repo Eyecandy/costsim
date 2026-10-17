@@ -1,30 +1,23 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react"
 import { I18nContext, type I18nContextValue, type Language } from "@/i18n/i18nContext"
-
-const STORAGE_KEY = "language"
-
-function getInitialLanguage(): Language {
-  if (typeof window === "undefined") return "no"
-  const saved = window.localStorage.getItem(STORAGE_KEY)
-  return saved === "en" ? "en" : "no"
-}
+import { loadLanguage, saveLanguage } from "@/persistence/languagePreference"
 
 type I18nProviderProps = {
   children: ReactNode
 }
 
 export function I18nProvider({ children }: I18nProviderProps) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage)
+  const [language, setLanguageState] = useState<Language>(loadLanguage)
 
   const setLanguage = (next: Language) => {
     setLanguageState(next)
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, next)
-    }
+    saveLanguage(next)
   }
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, language)
+    saveLanguage(language)
+    // Screen readers and spell-checkers pick the page language from <html lang>.
+    document.documentElement.lang = language
   }, [language])
 
   const value = useMemo<I18nContextValue>(() => ({ language, setLanguage }), [language])

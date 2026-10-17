@@ -40,7 +40,7 @@ export function SimulationStrip({
   showStaleInputNotice: boolean
   showValidationFeedback: boolean
 }) {
-  const { language, t } = useI18n()
+  const { t } = useI18n()
   return (
     <>
       <div
@@ -104,7 +104,7 @@ export function SimulationStrip({
               {noticeWithColorWord(
                 // showValidationFeedback implies a non-null validation error.
                 t(currentValidationError!),
-                language === "no" ? "rødt" : "red",
+                t("projects.noticeWordRed"),
                 NOTICE_WORD_RED_CLASS,
               )}
             </p>
@@ -123,7 +123,7 @@ export function SimulationStrip({
                 {showStaleInputChanges
                   ? noticeWithColorWord(
                       t("projects.staleInputsNoticeWithChanges"),
-                      language === "no" ? "Grønne" : "Green",
+                      t("projects.noticeWordGreen"),
                       NOTICE_WORD_GREEN_CLASS,
                     )
                   : t("projects.staleInputsNotice")}

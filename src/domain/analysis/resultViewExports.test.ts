@@ -203,7 +203,7 @@ describe("resolveResultView + export consumers", () => {
 
     expect(messages.no.results.pdfSCurveFootnote).toContain("{percentiles}")
     expect(messages.en.results.pdfSCurveFootnote).toContain("{percentiles}")
-    expect(messages.no.results.aiBriefClipboardPromptNo).toContain("currentResultView")
-    expect(messages.en.results.aiBriefClipboardPromptEn).toContain("currentResultView")
+    expect(messages.no.results.aiBriefClipboardPrompt).toContain("currentResultView")
+    expect(messages.en.results.aiBriefClipboardPrompt).toContain("currentResultView")
   })
 })

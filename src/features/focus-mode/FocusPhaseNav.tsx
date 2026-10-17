@@ -5,8 +5,7 @@ import {
   isFocusPhaseReached,
   type FocusUserPhase,
 } from "@/domain/guided/focusPhaseNav"
-
-type Translate = (key: string) => string
+import type { Translate } from "@/i18n/messages"
 
 /**
  * Focus phase overview — optically centered in the header aux row.

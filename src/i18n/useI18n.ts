@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 
 import { useI18n as useI18nContext } from "@/i18n/i18nContext"
-import { messages } from "@/i18n/messages"
+import { messages, type MessageKey } from "@/i18n/messages"
 
 function getNestedValue(obj: Record<string, unknown>, path: string): string | null {
   const parts = path.split(".")
@@ -20,7 +20,7 @@ export function useI18n() {
 
   const t = useMemo(
     () =>
-      (key: string): string =>
+      (key: MessageKey): string =>
         getNestedValue(messages[language] as Record<string, unknown>, key) ?? key,
     [language],
   )

@@ -1184,7 +1184,7 @@ export function ScenarioPercentTable({
                             rows.map((row, index) => [
                               row.id,
                               row.name.trim() ||
-                                (language === "no" ? `Kost ${index + 1}` : `Cost ${index + 1}`),
+                                t("inputs.costFallbackName").replace("{n}", String(index + 1)),
                             ]),
                           )
                           return costCorrelationMode.savedSummaries.map((summary) => {
@@ -1836,10 +1836,7 @@ export function ScenarioPercentTable({
                 kind="cost"
                 readOnly={readOnly}
                 rowId={defineSelectedRow.id}
-                rowLabel={
-                  defineSelectedRow.name.trim() ||
-                  (language === "no" ? "Kostnadspost" : "Cost item")
-                }
+                rowLabel={defineSelectedRow.name.trim() || t("inputs.costItemFallbackLabel")}
                 description={(defineSelectedRow as CostElementRow).description ?? ""}
                 onCancel={() => defineMode.onClearSelection()}
                 onSave={
@@ -1862,9 +1859,7 @@ export function ScenarioPercentTable({
                 kind="driver"
                 readOnly={readOnly}
                 rowId={defineSelectedRow.id}
-                rowLabel={
-                  defineSelectedRow.name.trim() || (language === "no" ? "Driver" : "Driver")
-                }
+                rowLabel={defineSelectedRow.name.trim() || t("inputs.driverFallbackLabel")}
                 description={(defineSelectedRow as DriverRow).description ?? ""}
                 uncertaintyNotes={(defineSelectedRow as DriverRow).uncertaintyNotes}
                 onCancel={() => defineMode.onClearSelection()}

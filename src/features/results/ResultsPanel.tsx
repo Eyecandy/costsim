@@ -4,7 +4,7 @@ import { Button, buttonVariants } from "@/shared/ui/button"
 import { type Project } from "@/domain/analysis/project"
 import { appFeatures } from "@/config/appVariant"
 import { buildShareUrl } from "@/persistence/shareLink"
-import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
+import { projectsFromLegacySignature } from "@/domain/analysis/projectsPayload"
 import { useI18n } from "@/i18n/useI18n"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { Card, CardContent } from "@/shared/ui/card"
@@ -80,6 +80,7 @@ import { SectionExpander } from "@/shared/SectionExpander"
 import { SpotlightLoadingText } from "@/shared/SpotlightLoadingText"
 import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"
 import type { FocusResultSectionId } from "@/domain/guided/focusResultSteps"
+import { profileOptionKey } from "@/i18n/messages"
 
 /** Auto-dismiss for stale-input notices under PDF / share / AI brief actions. */
 const STALE_ACTION_NOTICE_DISMISS_MS = 4000
@@ -269,12 +270,8 @@ export function ResultsPanel({
     }
     // Legacy: signature held full projects JSON.
     if (lastSimulatedInputSignature === "") return projects
-    try {
-      const baseline = parseProjectsPayload(JSON.parse(lastSimulatedInputSignature))
-      if (baseline) return baseline
-    } catch {
-      /* canonical signature is not full projects */
-    }
+    const baseline = projectsFromLegacySignature(lastSimulatedInputSignature)
+    if (baseline) return baseline
     return projects
   }, [projects, projectResults.length, lastSimulatedProjects, lastSimulatedInputSignature])
   const [shareCopied, setShareCopied] = useState(false)
@@ -702,28 +699,6 @@ export function ResultsPanel({
     compactResultByProjectId,
   ])
 
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    if (!sessionStorage.getItem("DEBUG_TORNADO")) return
-    for (const p of displayProjects) {
-      const rows = tornadoRowsByProjectId.get(p.id) ?? []
-      // eslint-disable-next-line no-console -- opt-in debug output (sessionStorage DEBUG_TORNADO)
-      console.info("[DEBUG_TORNADO]", {
-        projectId: p.id,
-        projectName: p.name,
-        method: "deterministic-one-at-a-time",
-        tornadoRowLabels: rows.map((r) => ({
-          name: r.name,
-          type: r.type,
-          sourceSeriesIndex: r.sourceSeriesIndex,
-          lowImpact: r.lowImpact,
-          highImpact: r.highImpact,
-          spread: r.spread,
-        })),
-      })
-    }
-  }, [displayProjects, tornadoRowsByProjectId])
-
   const handleCopyShareLink = async () => {
     if (pdfExportBlockedStaleInputs) {
       setShowShareOversizedNotice(false)
@@ -847,7 +822,7 @@ export function ResultsPanel({
         t("results.pdfMethodParagraph2"),
         t("results.pdfMethodParagraph3"),
       ],
-      resolveProfileOptionLabel: (optionId) => t(`projectProfile.options.${optionId}`),
+      resolveProfileOptionLabel: (optionId) => t(profileOptionKey(optionId)),
     })
     if (!built.ok) {
       setShowOngoingPdfBlockedNotice(true)
@@ -1111,16 +1086,10 @@ export function ResultsPanel({
       compactByProjectId: Object.fromEntries(compactResultByProjectId),
       ongoingDevelopment,
     })
-    const promptKey =
-      language === "no" ? "results.aiBriefClipboardPromptNo" : "results.aiBriefClipboardPromptEn"
-    const promptBase = t(promptKey)
+    const promptBase = t("results.aiBriefClipboardPrompt")
     const prompt =
       analysisMode === "ongoing"
-        ? `${promptBase}\n\n${t(
-            language === "no"
-              ? "results.aiBriefClipboardPromptOngoingAddendumNo"
-              : "results.aiBriefClipboardPromptOngoingAddendumEn",
-          )}`
+        ? `${promptBase}\n\n${t("results.aiBriefClipboardPromptOngoingAddendum")}`
         : promptBase
     const json = JSON.stringify(brief, null, 2)
     const payload = `${prompt}\n\n\`\`\`json\n${json}\n\`\`\``

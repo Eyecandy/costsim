@@ -8,6 +8,12 @@ export const messages = {
       confirm: "Bekreft",
       close: "Lukk",
     },
+    errorBoundary: {
+      title: "Noe gikk galt",
+      body: "Siden kunne ikke vises. Prøv igjen, eller last siden på nytt.",
+      tryAgain: "Prøv igjen",
+      reload: "Last siden på nytt",
+    },
     buttons: {
       runSimulation: "Kjør simulering",
       simulating: "Simulerer…",
@@ -109,6 +115,8 @@ export const messages = {
         "Viser hvordan forventet tillegg bygges opp fra basiskostnad til P50, fordelt på kostnadsposter og drivere.",
     },
     charts: {
+      sCurveAriaLabel: "S-kurve for simuleringsresultater",
+      noContributions: "Ingen bidrag å vise.",
       axisY: "P",
       axisX: "K",
       sCurveTitle: "S-KURVE",
@@ -246,7 +254,7 @@ export const messages = {
       aiAnalyzeHelper:
         "Lim inn i en KI-tjeneste for tolkning, kvalitetssjekk og forbedringsforslag.",
       copyAiBrief: "Kopier KI-brief",
-      aiBriefClipboardPromptNo: `Du er en erfaren rådgiver innen usikkerhetsanalyse og beslutningsstøtte i prosjekter.
+      aiBriefClipboardPrompt: `Du er en erfaren rådgiver innen usikkerhetsanalyse og beslutningsstøtte i prosjekter.
 
 Nedenfor får du et strukturert analysegrunnlag (ai-brief-v3). Bruk det til å orientere brukeren raskt, peke på det viktigste signalet, og åpne en nyttig videre samtale. Første svar er et startpunkt for videre analyse — ikke en fullstendig sluttrapport. Forsøk ikke å avdekke alle mulige svakheter eller gi alle anbefalinger med en gang. La sekundære observasjoner vente til oppfølging, med mindre de påvirker hovedkonklusjonen.
 
@@ -306,7 +314,7 @@ Tone og stil:
 - unngå lang rapportprosa, uttømmende sjekklister, gjentakelse av alle metrikker, generiske avslutninger og tilbud om «mer detaljert rapport»
 
 Analysegrunnlag:`,
-      aiBriefClipboardPromptOngoingAddendumNo: `Tillegg for løpende analyse:
+      aiBriefClipboardPromptOngoingAddendum: `Tillegg for løpende analyse:
 
 Denne briefen gjelder en løpende analyse. Det strukturerte grunnlaget inneholder \`ongoingDevelopment\` i tillegg til den vanlige sjekkpunktanalysen i \`projects\`.
 
@@ -360,6 +368,9 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       p85: "P85",
     },
     inputs: {
+      costFallbackName: "Kost {n}",
+      costItemFallbackLabel: "Kostnadspost",
+      driverFallbackLabel: "Driver",
       addRow: "Legg til rad",
       deleteSelectedRow: "Slett valgt rad",
       clearTableAction: "Tøm",
@@ -666,6 +677,8 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       comparisonNoStructural: "Ingen strukturelle endringer i input.",
     },
     projects: {
+      noticeWordRed: "rødt",
+      noticeWordGreen: "Grønne",
       languageGroup: "Språk",
       inputColumnLabel: "INPUT",
       resultsColumnLabel: "OUTPUT",
@@ -949,6 +962,12 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       confirm: "Confirm",
       close: "Close",
     },
+    errorBoundary: {
+      title: "Something went wrong",
+      body: "The page could not be shown. Try again, or reload the page.",
+      tryAgain: "Try again",
+      reload: "Reload the page",
+    },
     buttons: {
       runSimulation: "Run simulation",
       simulating: "Simulating…",
@@ -1050,6 +1069,8 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
         "Shows how expected addition is built from base cost to P50, distributed across cost items and drivers.",
     },
     charts: {
+      sCurveAriaLabel: "S-curve of the simulation results",
+      noContributions: "No contributions to display.",
       axisY: "P",
       axisX: "C",
       sCurveTitle: "S-CURVE",
@@ -1188,7 +1209,7 @@ Resonneringsrekkefølge for løpende analyse: nåværende situasjon først → v
       aiAnalyzeHelper:
         "Paste into an AI service for interpretation, input review, and improvement suggestions.",
       copyAiBrief: "Copy AI brief",
-      aiBriefClipboardPromptEn: `You are an experienced adviser in uncertainty analysis and project decision support.
+      aiBriefClipboardPrompt: `You are an experienced adviser in uncertainty analysis and project decision support.
 
 Below is a structured analysis basis (ai-brief-v3). Use it to orient the user quickly, highlight the most important signal, and open a useful follow-up discussion. The first response is a starting point for further analysis — not a final assessment. Do not try to identify every possible weakness or give every recommendation at once. Leave secondary observations for follow-up unless they affect the main conclusion.
 
@@ -1248,7 +1269,7 @@ Tone and style:
 - avoid long report prose, exhaustive checklists, repeating every metric, generic closings, and offers of a "more detailed report"
 
 Analysis basis:`,
-      aiBriefClipboardPromptOngoingAddendumEn: `Addendum for ongoing analysis:
+      aiBriefClipboardPromptOngoingAddendum: `Addendum for ongoing analysis:
 
 This brief covers an ongoing analysis. The structured basis includes \`ongoingDevelopment\` in addition to the usual checkpoint analysis in \`projects\`.
 
@@ -1303,6 +1324,9 @@ Reasoning order for ongoing analysis: current situation first → important unce
       p85: "P85",
     },
     inputs: {
+      costFallbackName: "Cost {n}",
+      costItemFallbackLabel: "Cost item",
+      driverFallbackLabel: "Driver",
       addRow: "Add row",
       deleteSelectedRow: "Delete selected row",
       clearTableAction: "Clear",
@@ -1606,6 +1630,8 @@ Reasoning order for ongoing analysis: current situation first → important unce
       comparisonNoStructural: "No structural input changes.",
     },
     projects: {
+      noticeWordRed: "red",
+      noticeWordGreen: "Green",
       languageGroup: "Language",
       inputColumnLabel: "INPUT",
       resultsColumnLabel: "OUTPUT",
@@ -1885,4 +1911,31 @@ Reasoning order for ongoing analysis: current situation first → important unce
       noTornadoData: "No tornado data for this alternative.",
     },
   },
+}
+
+type Shape<T> = { [K in keyof T]: T[K] extends string ? string : Shape<T[K]> }
+type Assert<T extends true> = T
+
+/** Compile-time guard: Norwegian and English must have exactly the same keys. */
+export type MessagesParityCheck = [
+  Assert<typeof messages.en extends Shape<typeof messages.no> ? true : false>,
+  Assert<typeof messages.no extends Shape<typeof messages.en> ? true : false>,
+]
+
+type DotPaths<T> = {
+  [K in keyof T & string]: T[K] extends string ? K : `${K}.${DotPaths<T[K]>}`
+}[keyof T & string]
+
+/** Every translation key, as a dotted path (`"common.cancel"`). */
+export type MessageKey = DotPaths<typeof messages.no>
+
+/** The translate function `useI18n()` returns. */
+export type Translate = (key: MessageKey) => string
+
+/**
+ * Profile option ids (area, type, phase, ...) are persisted as plain strings, so their label keys cannot be
+ * checked at compile time. This is the one place that builds a `projectProfile.options.*` key from an id.
+ */
+export function profileOptionKey(optionId: string): MessageKey {
+  return `projectProfile.options.${optionId}` as MessageKey
 }

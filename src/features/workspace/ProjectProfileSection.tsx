@@ -22,6 +22,8 @@ import {
   type ProjectQuantityDefinition,
 } from "@/domain/analysis/projectProfile"
 import { cn } from "@/shared/utils"
+import { profileOptionKey, type MessageKey } from "@/i18n/messages"
+import type { ProjectQuantityType, ProjectQuantityUnit } from "@/domain/analysis/projectProfile"
 
 /**
  * Shared vertical rhythm between Project Profile category / quantity groups
@@ -53,19 +55,15 @@ type ProjectProfileSectionProps = {
   embedded?: boolean
 }
 
-function optionLabelKey(optionId: string): string {
-  return `projectProfile.options.${optionId}`
-}
-
-function categoryLabelKey(categoryId: ProjectProfileCategoryId): string {
+function categoryLabelKey(categoryId: ProjectProfileCategoryId): MessageKey {
   return `projectProfile.categories.${categoryId}`
 }
 
-function quantityTypeLabelKey(type: string): string {
+function quantityTypeLabelKey(type: ProjectQuantityType): MessageKey {
   return `projectProfile.quantityTypes.${type}`
 }
 
-function quantityUnitLabelKey(unit: string): string {
+function quantityUnitLabelKey(unit: ProjectQuantityUnit): MessageKey {
   return `projectProfile.quantityUnits.${unit}`
 }
 
@@ -238,7 +236,7 @@ export function ProjectProfileSection({
 
   const summaryOptionIds = collectProjectProfileSummaryOptionIds(profile)
   const summaryText = hasSelection
-    ? formatProjectProfileSummaryText(summaryOptionIds.map((id) => t(optionLabelKey(id))))
+    ? formatProjectProfileSummaryText(summaryOptionIds.map((id) => t(profileOptionKey(id))))
     : t("projectProfile.collapsedEmptyHint")
 
   // Shared outside-click + Escape pattern (mousedown on document, root contains).
@@ -471,7 +469,7 @@ export function ProjectProfileSection({
                                 ),
                           )}
                         >
-                          {t(optionLabelKey(optionId))}
+                          {t(profileOptionKey(optionId))}
                         </button>
                       )
                     })

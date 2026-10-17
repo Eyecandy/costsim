@@ -27,6 +27,7 @@ import { SectionExpander } from "@/shared/SectionExpander"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table"
 import { useState } from "react"
 import { cn } from "@/shared/utils"
+import type { Translate } from "@/i18n/messages"
 
 type CheckpointComparisonSectionProps = {
   checkpoints: readonly AnalysisCheckpoint[]
@@ -138,7 +139,7 @@ function ComparisonPairBody({
 }: {
   comparison: Extract<CheckpointComparison, { kind: "comparison" }>
   resultPreferences: ResultPreferencesV1
-  t: (key: string) => string
+  t: Translate
   language: "no" | "en"
 }) {
   const structuralPhrases = formatStructuralChangeSummary(comparison.structural, language)

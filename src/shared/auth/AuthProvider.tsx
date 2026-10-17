@@ -5,31 +5,15 @@ import {
   type SignInCredentials,
   type SignOutOptions,
 } from "@/shared/auth/authContext"
-
-const AUTH_STORAGE_KEY = "cost-simulator:v1:isAuthenticated"
-const AUTH_CHANGED_EVENT = "cost-simulator:auth-changed"
+import {
+  AUTH_CHANGED_EVENT,
+  clearSession,
+  notifyAuthChanged,
+  readIsAuthenticated,
+  signInWithPassword,
+} from "@/persistence/authSession"
 
 const LOCAL_USER_ID = "local"
-
-function readIsAuthenticated(): boolean {
-  if (typeof window === "undefined") return false
-  return localStorage.getItem(AUTH_STORAGE_KEY) === "1"
-}
-
-function notifyAuthChanged() {
-  window.dispatchEvent(new Event(AUTH_CHANGED_EVENT))
-}
-
-function clearSession() {
-  localStorage.removeItem(AUTH_STORAGE_KEY)
-}
-
-function signInWithPassword(password: string, expectedPassword: string): boolean {
-  if (password !== expectedPassword) return false
-  localStorage.setItem(AUTH_STORAGE_KEY, "1")
-  notifyAuthChanged()
-  return true
-}
 
 type AuthProviderProps = {
   children: ReactNode

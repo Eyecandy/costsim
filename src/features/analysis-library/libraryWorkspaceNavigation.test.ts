@@ -6,7 +6,7 @@ import {
   buildLibraryPath,
   readLibraryFilterFromLocation,
   runBeforeLeaveWithoutBlocking,
-} from "@/features/analysis-library/libraryNavigation"
+} from "@/persistence/libraryNavigation"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 

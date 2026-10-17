@@ -18,7 +18,7 @@ import {
   singleDraftResultIdentityMatches,
 } from "@/domain/analysis/singleDraftResultSnapshot"
 import { isSingleArchivedResultSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
-import { runBeforeLeaveWithoutBlocking } from "@/features/analysis-library/libraryNavigation"
+import { runBeforeLeaveWithoutBlocking } from "@/persistence/libraryNavigation"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"

@@ -62,7 +62,7 @@ import {
   type SingleArchivedResultSnapshotV1,
 } from "@/domain/analysis/singleArchivedResultSnapshot"
 import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
-import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
+import { projectsFromLegacySignature } from "@/domain/analysis/projectsPayload"
 
 import {
   RESULTS_COLUMN_CLASS,
@@ -154,11 +154,7 @@ export default function App() {
   const [lastSimulatedProjects, setLastSimulatedProjects] = useState<Project[]>(() => {
     const sig = getInitialRestoredSimulationState().lastSimulatedInputSignature
     if (!sig) return []
-    try {
-      return parseProjectsPayload(JSON.parse(sig)) ?? []
-    } catch {
-      return []
-    }
+    return projectsFromLegacySignature(sig) ?? []
   })
   /** Ownership of the live result set (captured at run/seed apply). */
   const [liveSimAnalysisId, setLiveSimAnalysisId] = useState<string | null>(null)

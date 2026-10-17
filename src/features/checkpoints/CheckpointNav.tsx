@@ -7,6 +7,7 @@ import {
   type AnalysisCheckpoint,
 } from "@/domain/analysis/analysisCheckpoint"
 import { useI18n } from "@/i18n/useI18n"
+import { profileOptionKey } from "@/i18n/messages"
 
 export type CheckpointNavProps = {
   checkpoints: readonly AnalysisCheckpoint[]
@@ -60,7 +61,7 @@ export function CheckpointNav({
           const isArchived = cp.status === "archived"
           const isDraft = cp.status === "draft"
           const stageId = checkpointPrimaryStageId(cp)
-          const stageLabel = stageId ? t(`projectProfile.options.${stageId}`) : null
+          const stageLabel = stageId ? t(profileOptionKey(stageId)) : null
           const hasNext = index < ordered.length - 1
           return (
             <div

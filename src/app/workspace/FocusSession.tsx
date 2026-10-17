@@ -103,7 +103,7 @@ export function FocusSession({
   singleArchivedCompact: SingleArchivedResultSnapshotV1 | null
   singleDraftCompact: SingleDraftResultSnapshotV1 | null
 }) {
-  const { language, t } = useI18n()
+  const { t } = useI18n()
   const {
     focusResultStepIndex,
     focusShellRef,
@@ -250,7 +250,7 @@ export function FocusSession({
                   {showStaleInputChanges
                     ? noticeWithColorWord(
                         t("projects.staleInputsNoticeWithChanges"),
-                        language === "no" ? "Grønne" : "Green",
+                        t("projects.noticeWordGreen"),
                         NOTICE_WORD_GREEN_CLASS,
                       )
                     : t("projects.staleInputsNotice")}

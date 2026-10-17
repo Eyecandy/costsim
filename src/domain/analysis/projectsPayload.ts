@@ -61,3 +61,16 @@ export function parseProjectsPayload(data: unknown): Project[] | null {
   }
   return out
 }
+
+/**
+ * Older saved input signatures were the full projects as JSON. Returns those projects, or null when the
+ * string is not such a payload (for example the current canonical signature).
+ */
+export function projectsFromLegacySignature(signature: string): Project[] | null {
+  try {
+    return parseProjectsPayload(JSON.parse(signature))
+  } catch {
+    // intentional: not JSON, so it is a canonical signature rather than a legacy projects payload
+    return null
+  }
+}
