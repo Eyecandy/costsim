@@ -171,7 +171,10 @@ export function GlobalHeaderUtilities({
               className={INFO_MODAL_BACKDROP_CLASS}
               role="presentation"
               data-method-guide-backdrop=""
-              onClick={() => setMethodGuideOpen(false)}
+              onClick={(e) => {
+                if (e.target !== e.currentTarget) return
+                setMethodGuideOpen(false)
+              }}
             >
               <div
                 role="dialog"
@@ -179,7 +182,6 @@ export function GlobalHeaderUtilities({
                 aria-labelledby="method-guide-title"
                 className={INFO_MODAL_PANEL_CLASS}
                 data-method-guide-panel=""
-                onClick={(e) => e.stopPropagation()}
               >
                 <div className={INFO_MODAL_HEADER_CLASS}>
                   <h2
@@ -262,7 +264,10 @@ export function GlobalHeaderUtilities({
               className={INFO_MODAL_BACKDROP_CLASS}
               role="presentation"
               data-about-model-backdrop=""
-              onClick={() => setAboutModelOpen(false)}
+              onClick={(e) => {
+                if (e.target !== e.currentTarget) return
+                setAboutModelOpen(false)
+              }}
             >
               <div
                 role="dialog"
@@ -270,7 +275,6 @@ export function GlobalHeaderUtilities({
                 aria-labelledby="about-model-title"
                 className={INFO_MODAL_PANEL_CLASS}
                 data-about-model-panel=""
-                onClick={(e) => e.stopPropagation()}
               >
                 <div className={INFO_MODAL_HEADER_CLASS}>
                   <h2

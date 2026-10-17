@@ -285,6 +285,7 @@ export const FocusModeShell = forwardRef<FocusModeShellHandle, FocusModeShellPro
         data-focus-host-dormant={dormant ? "true" : undefined}
         data-focus-browser-fullscreen={!dormant && browserFullscreen ? "true" : undefined}
       >
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events -- stops clicks inside this portal bubbling to React ancestors */}
         <div
           role={dormant ? undefined : "dialog"}
           aria-modal={dormant ? undefined : true}

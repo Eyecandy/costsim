@@ -59,7 +59,10 @@ export function ExpandedChartDialog({
     <div
       className="fixed inset-0 z-[220] flex items-center justify-center bg-black/40 p-3 sm:p-5"
       role="presentation"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return
+        onClose()
+      }}
       data-expanded-chart-dialog=""
     >
       <div
@@ -70,7 +73,6 @@ export function ExpandedChartDialog({
           "flex max-h-[min(92vh,56rem)] w-[min(92vw,72rem)] flex-col overflow-hidden",
           "rounded-lg border border-border/60 bg-background shadow-md",
         )}
-        onClick={(e) => e.stopPropagation()}
         data-expanded-chart-surface=""
       >
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border/50 px-4 py-3">

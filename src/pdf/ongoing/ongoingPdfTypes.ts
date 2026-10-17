@@ -62,7 +62,7 @@ export type OngoingPdfKeyFigureChange = {
 export type OngoingPdfTocEntry = {
   id: OngoingPdfSectionId
   label: string
-  subsections?: Array<{ id: OngoingPdfSectionId; label: string }>
+  subsections?: { id: OngoingPdfSectionId; label: string }[]
 }
 
 export type OngoingPdfComparisonSection = {
@@ -97,11 +97,11 @@ export type OngoingPdfCover = {
 }
 
 export type OngoingPdfSCurve = {
-  points: Array<{ x: number; y: number }>
+  points: { x: number; y: number }[]
   color: string
   label: string
   markerPercentiles: number[]
-  markers: Array<{ percentile: number; value: number }>
+  markers: { percentile: number; value: number }[]
 }
 
 export type OngoingPdfTornadoRow = {

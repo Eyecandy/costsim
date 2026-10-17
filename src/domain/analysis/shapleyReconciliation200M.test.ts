@@ -98,7 +98,6 @@ describe("reported 202.8 M reconciliation example", () => {
       formattedWaterfallNo: formatWaterfallValueWithScale(result.estimatedP50, scale, "no"),
     }
 
-     
     console.table(report)
 
     expect(result.estimatedP50).toBe(userMainP50)

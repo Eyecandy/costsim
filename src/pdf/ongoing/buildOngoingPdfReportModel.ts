@@ -147,7 +147,7 @@ function labelFor(labels: OngoingPdfKeyFigureLabels, id: OngoingPdfKeyFigureMetr
 }
 
 function scaleForFigures(
-  ...figureSets: Array<OngoingPdfKeyFigures | null | undefined>
+  ...figureSets: (OngoingPdfKeyFigures | null | undefined)[]
 ): PdfAmountScale {
   const amounts: number[] = []
   for (const figures of figureSets) {
@@ -424,10 +424,10 @@ function buildTocEntries(
   sectionLabels: OngoingPdfSectionLabels,
   detail: OngoingPdfLatestDetail,
 ): OngoingPdfTocEntry[] {
-  const latestSubs: Array<{
+  const latestSubs: {
     id: (typeof ONGOING_PDF_SECTION_IDS)[keyof typeof ONGOING_PDF_SECTION_IDS]
     label: string
-  }> = []
+  }[] = []
   if (detail.sCurve) {
     latestSubs.push({
       id: ONGOING_PDF_SECTION_IDS.sCurve,

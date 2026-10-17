@@ -2374,6 +2374,7 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
 
     // Non-embedded suspend: standalone Guided returns null before portal (embedded stays mounted).
     const dialogSurface = (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- stops clicks inside this portal bubbling to React ancestors
       <div
         role="dialog"
         aria-modal="true"

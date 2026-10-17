@@ -173,7 +173,7 @@ describe("compact Single Analysis archives", () => {
       resultPreferences: DEFAULT_RESULT_PREFERENCES,
     })
     expect(JSON.stringify(compact).length).toBeLessThan(JSON.stringify(heavy).length / 5)
-     
+
     console.log("single archive bytes", {
       compact: JSON.stringify(compact).length,
       heavy: JSON.stringify(heavy).length,

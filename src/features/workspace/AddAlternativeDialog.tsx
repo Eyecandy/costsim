@@ -67,14 +67,16 @@ export function AddAlternativeDialog({
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4"
       role="presentation"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return
+        onClose()
+      }}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
-        onClick={(e) => e.stopPropagation()}
       >
         <h2 id={titleId} className="m-0 mb-3 font-sans text-[15px] font-medium text-foreground">
           {t("projects.addAlternativeTitle")}

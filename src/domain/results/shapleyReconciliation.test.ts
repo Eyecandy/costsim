@@ -155,7 +155,6 @@ describe("Shapley full-coalition reconciliation", () => {
       formattedWaterfall,
     }
 
-     
     console.table(report)
 
     expect(formattedWaterfall).toBe(formattedMain)

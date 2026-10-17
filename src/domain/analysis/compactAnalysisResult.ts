@@ -36,7 +36,7 @@ export type CompactFrozenKeyFiguresV1 = {
 export type CompactSCurveV1 = {
   representation: "display_cdf_v1"
   pointCount: number
-  points: Array<{ x: number; y: number }>
+  points: { x: number; y: number }[]
 }
 
 export type CompactProjectResultV1 = {

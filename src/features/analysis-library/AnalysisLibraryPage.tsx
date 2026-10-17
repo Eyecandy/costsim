@@ -588,7 +588,8 @@ export function AnalysisLibraryPage() {
             <div
               className="fixed inset-0 z-[220] flex items-center justify-center bg-black/40 p-4"
               role="presentation"
-              onClick={() => {
+              onClick={(e) => {
+                if (e.target !== e.currentTarget) return
                 setRenameTarget(null)
                 setRenameValue("")
                 setRenameError(null)
@@ -599,7 +600,6 @@ export function AnalysisLibraryPage() {
                 aria-modal="true"
                 aria-labelledby="rename-library-analysis-title"
                 className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
-                onClick={(e) => e.stopPropagation()}
               >
                 <h2
                   id="rename-library-analysis-title"

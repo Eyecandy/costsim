@@ -35,7 +35,8 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 ## Code style
 - Prettier formats everything except Markdown (no semicolons, double quotes, width 100, trailing commas). A pre-commit hook (Husky + lint-staged) runs Prettier and `eslint --fix` on staged files; `npm run format` formats the repo.
 - Files: components `PascalCase.tsx`, hooks `useThing.ts`, everything else `camelCase.ts`. Named exports only (`App` is the one default export). Props types are called `XxxProps`.
-- TypeScript is strict. No `any`, `@ts-ignore`, `as unknown as`. Avoid `!` unless the line before guarantees non-null.
+- TypeScript is strict (plus `noUncheckedIndexedAccess`, `noUnused*`, `noImplicitReturns`). No `any`, `@ts-ignore`, `as unknown as`. Avoid `!` unless the line before guarantees non-null. Use `type` (not `interface`) and `import type`.
+- ESLint (`eslint.config.js`): typescript-eslint strict + stylistic, react-hooks, jsx-a11y, and type-aware promise rules. Promises are awaited, returned or `void`-ed. Unused `eslint-disable` comments are errors. `console.log`/`info` is not allowed in app code (tests may). Dialog backdrops close on `e.target === e.currentTarget`, not by `stopPropagation` on the dialog.
 - No empty `catch`. Either handle it, log it, or write `// intentional: <why>`.
 - Components stay presentational where possible: put state and effects in hooks (`useXxx`) next to the component, and calculations in `domain/`.
 - React hooks: keep hook call order stable; effects declare all dependencies. Extracted hooks are called at the position of the code they replaced.

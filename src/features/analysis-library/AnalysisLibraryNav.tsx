@@ -1518,13 +1518,15 @@ function DialogShell({ children, onClose }: { children: ReactNode; onClose: () =
     <div
       className="fixed inset-0 z-[220] flex items-center justify-center bg-black/40 p-4"
       role="presentation"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return
+        onClose()
+      }}
     >
       <div
         role="dialog"
         aria-modal="true"
         className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
-        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>

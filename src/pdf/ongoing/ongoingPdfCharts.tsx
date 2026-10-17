@@ -116,11 +116,7 @@ const DEV_COLORS = {
   p85: "#7680ac",
 } as const
 
-function pathFromPoints(
-  points: Array<{ x: number; y: number }>,
-  minX: number,
-  maxX: number,
-): string {
+function pathFromPoints(points: { x: number; y: number }[], minX: number, maxX: number): string {
   if (points.length === 0) return ""
   const spanX = maxX - minX || 1
   return points
@@ -497,7 +493,7 @@ export function OngoingPdfDevelopmentChart({
   const yAt = (v: number) => DEV_PAD_T + plotH - ((v - minY) / (maxY - minY || 1)) * plotH
 
   const linePath = (key: "baseCost" | "p50" | "p85"): string | null => {
-    const coords: Array<{ x: number; y: number }> = []
+    const coords: { x: number; y: number }[] = []
     points.forEach((p, i) => {
       const v = p[key]
       if (v === null || !Number.isFinite(v)) return

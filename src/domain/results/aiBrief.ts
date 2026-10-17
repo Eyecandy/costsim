@@ -257,10 +257,10 @@ export type AiBriefLabelSemantics = {
 }
 
 export type AiBriefInterpretationHints = {
-  primarySignals: ReadonlyArray<"metrics" | "distribution" | "tornado" | "contributionAnalysis">
-  contextualInputsForRobustness: ReadonlyArray<
+  primarySignals: readonly ("metrics" | "distribution" | "tornado" | "contributionAnalysis")[]
+  contextualInputsForRobustness: readonly (
     "assumptions" | "costItems" | "drivers" | "driverImpacts" | "correlations"
-  >
+  )[]
   tornadoMeansSensitivityNotAttribution: true
   contributionMeansAttributionOfExpectedAdditionAndReserve: true
   doNotConflateTornadoAndContribution: true

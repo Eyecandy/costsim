@@ -43,7 +43,6 @@ describe("subset quantile extraction benchmark", () => {
       statsP85: percentile(totals, 85),
     }
 
-     
     console.table(report)
 
     expect(report.p50MatchesStats).toBeCloseTo(report.statsP50!, 9)

@@ -182,7 +182,7 @@ describe("share-state v3", () => {
     const json = JSON.stringify(payload)
     const bytes = new TextEncoder().encode(json)
     let binary = ""
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!)
+    for (const byte of bytes) binary += String.fromCharCode(byte)
     const b64 = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")
     const decoded = decodeShareV1FromHash(`#share=${b64}`)
     expect(decoded).not.toBeNull()

@@ -52,7 +52,10 @@ export function ConfirmDialog({
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4"
       role="presentation"
-      onClick={onCancel}
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return
+        onCancel()
+      }}
     >
       <div
         role="dialog"
@@ -63,7 +66,6 @@ export function ConfirmDialog({
           "w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md",
         )}
         data-confirm-dialog=""
-        onClick={(e) => e.stopPropagation()}
       >
         {title ? (
           <h2 className="m-0 mb-2 font-sans text-[15px] font-medium text-foreground">{title}</h2>

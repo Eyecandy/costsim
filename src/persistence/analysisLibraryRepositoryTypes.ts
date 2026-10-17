@@ -30,7 +30,7 @@ export type CreateOngoingFromArchivedSingleArgs = {
  * Backend-replaceable Analysis Library API.
  * UI must depend on this interface only — never localStorage.
  */
-export interface AnalysisLibraryRepository {
+export type AnalysisLibraryRepository = {
   /** Active (non-trashed) analyses only. May purge expired Trash first. */
   listSummaries(): Promise<AnalysisSummary[]>
   /** Soft-deleted analyses only. May purge expired Trash first. */

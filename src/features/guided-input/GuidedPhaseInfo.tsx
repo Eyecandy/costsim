@@ -117,6 +117,7 @@ export function GuidedPhaseInfo({ content, topic, className }: GuidedPhaseInfoPr
       </button>
       {open && portalContainer
         ? createPortal(
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- stops clicks inside this portal bubbling to React ancestors
             <div
               ref={panelRef}
               role="dialog"

@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import type { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
 import {
   archiveCheckpoint,
-  createInitialOngoingState,
   createNextCheckpoint,
   getActiveCheckpoint,
 } from "@/domain/analysis/analysisCheckpoint"

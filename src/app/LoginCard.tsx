@@ -59,7 +59,7 @@ export function LoginCard({
           ) : null}
         </div>
 
-        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+        <form className="mt-6 space-y-4" onSubmit={(event) => void handleSubmit(event)}>
           <div className="space-y-2">
             <Input
               id={passwordInputId}

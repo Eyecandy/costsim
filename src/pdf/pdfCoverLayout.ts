@@ -160,7 +160,7 @@ export function splitPdfMetricValueParts(value: string): {
 export type PdfTocChapter = {
   id: string
   label: string
-  subsections?: Array<{ id: string; label: string }>
+  subsections?: { id: string; label: string }[]
 }
 
 /** Chapter-based TOC with fixed subsection structure (project-count independent). */

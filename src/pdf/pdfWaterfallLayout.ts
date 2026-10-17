@@ -45,7 +45,7 @@ export type PreparedPdfWaterfallPresentation = {
     start: string
     end: string
     span: string
-    rows: Array<{ id: string; name: string; delta: string }>
+    rows: { id: string; name: string; delta: string }[]
   }
 }
 

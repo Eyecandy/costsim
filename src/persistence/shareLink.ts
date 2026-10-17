@@ -91,14 +91,12 @@ export type ShareCompactV2 = {
 export type ShareCompactV3 = {
   v: 3
   ai: number
-  p: Array<
-    ShareProjectCompactBase & {
-      /** Sparse non-default driver impacts. */
-      di?: ShareDriverImpactTriple[]
-      /** Sparse unique non-zero cost correlations. */
-      cr?: ShareCorrelationTriple[]
-    }
-  >
+  p: (ShareProjectCompactBase & {
+    /** Sparse non-default driver impacts. */
+    di?: ShareDriverImpactTriple[]
+    /** Sparse unique non-zero cost correlations. */
+    cr?: ShareCorrelationTriple[]
+  })[]
 }
 
 export type ShareCompactPayload = ShareCompactV2 | ShareCompactV3
@@ -385,8 +383,8 @@ export function decodeShareCompactPayload(parsed: unknown): ShareInputState | nu
 
 function bytesToBase64Url(bytes: Uint8Array): string {
   let binary = ""
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]!)
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte)
   }
   const base64 = btoa(binary)
   return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")

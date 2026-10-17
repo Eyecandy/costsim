@@ -1409,9 +1409,7 @@ export function useLibraryAnalysisSession(args: {
         projectsAtRun:
           created.inheritedResult.projectsAtRun && created.inheritedResult.projectsAtRun.length > 0
             ? created.inheritedResult.projectsAtRun
-            : (structuredClone(
-                created.newCheckpoint.workspace.projects,
-              ) as import("@/domain/analysis/project").Project[]),
+            : (structuredClone(created.newCheckpoint.workspace.projects) as Project[]),
       }
 
       const nextWorkspace = ensureSingleProjectWorkspace(created.newCheckpoint.workspace)

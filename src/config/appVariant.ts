@@ -36,6 +36,6 @@ export const featureConfigByVariant: Record<AppVariant, AppFeatureConfig> = {
 export const appFeatures = featureConfigByVariant[appVariant]
 
 if (import.meta.env.DEV) {
-   
+  // eslint-disable-next-line no-console -- useful dev visibility only
   console.info("[appVariant]", appVariant)
 }

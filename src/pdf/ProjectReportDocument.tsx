@@ -94,13 +94,13 @@ type ProjectReportDocumentProps = {
   rows: ReportRow[]
   sCurveTitle: string
   sCurveFootnote: string
-  sCurveSeries: Array<{
+  sCurveSeries: {
     id: string
     label: string
     values?: readonly number[]
     displayPoints?: readonly { x: number; y: number }[]
     color: string
-  }>
+  }[]
   /**
    * Active S-curve marker percentiles from the current Result View snapshot.
    * Defaults to P50/P85 for older call sites / sample PDFs.
@@ -109,14 +109,14 @@ type ProjectReportDocumentProps = {
   uncertaintyPictureTitle: string
   tornadoTitle: string
   tornadoExplanation: string
-  tornadoProjects: Array<{
+  tornadoProjects: {
     projectName: string
-    rows: Array<{
+    rows: {
       name: string
       lowImpact: number
       highImpact: number
-    }>
-  }>
+    }[]
+  }[]
   contributionTitle: string
   contributionExpectedLabel: string
   contributionReserveLabel: string
@@ -705,11 +705,7 @@ export const PDF_COVER_ALWAYS_ONE_PAGE = true
 /** @deprecated S-curve is never on the cover; kept only if external imports remain. */
 export const PDF_SCURVE_ON_PAGE1_MAX_PROJECTS = 0
 
-function pathFromPoints(
-  points: Array<{ x: number; y: number }>,
-  minX: number,
-  maxX: number,
-): string {
+function pathFromPoints(points: { x: number; y: number }[], minX: number, maxX: number): string {
   if (points.length === 0) return ""
   const spanX = maxX - minX || 1
   return points
@@ -1049,13 +1045,13 @@ function SCurveSection({
 }: {
   title: string
   footnote: string
-  curves: Array<{
+  curves: {
     id: string
     label: string
     color: string
-    points: Array<{ x: number; y: number }>
-    markers: Array<{ percentile: number; value: number }>
-  }>
+    points: { x: number; y: number }[]
+    markers: { percentile: number; value: number }[]
+  }[]
   minX: number
   maxX: number
   sCurveXAxisTicks: number[]

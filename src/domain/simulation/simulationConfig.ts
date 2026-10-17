@@ -29,7 +29,7 @@ type SimulationCountCarrier = {
 
 /** First finite positive `simulationCount` among snapshot-like sources. */
 export function firstPersistedSimulationCount(
-  ...sources: ReadonlyArray<SimulationCountCarrier | null | undefined>
+  ...sources: readonly (SimulationCountCarrier | null | undefined)[]
 ): number | undefined {
   for (const source of sources) {
     const n = source?.simulationCount

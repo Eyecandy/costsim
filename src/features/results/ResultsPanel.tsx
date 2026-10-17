@@ -707,7 +707,7 @@ export function ResultsPanel({
     if (!sessionStorage.getItem("DEBUG_TORNADO")) return
     for (const p of displayProjects) {
       const rows = tornadoRowsByProjectId.get(p.id) ?? []
-       
+      // eslint-disable-next-line no-console -- opt-in debug output (sessionStorage DEBUG_TORNADO)
       console.info("[DEBUG_TORNADO]", {
         projectId: p.id,
         projectName: p.name,

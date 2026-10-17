@@ -39,7 +39,7 @@ function makeProject(
   opts: {
     withCorr?: boolean
     costCount?: number
-    assumptions?: Array<{ id: string; text: string }>
+    assumptions?: { id: string; text: string }[]
   } = {},
 ): Project {
   const n = opts.costCount ?? 6

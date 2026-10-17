@@ -44,6 +44,10 @@ import { getInitialRestoredSimulationState } from "@/persistence/lastSimulationS
 import { navigateTo } from "@/shared/auth/auth"
 import { LIBRARY_PATH, readAnalysisIdFromLocation } from "@/persistence/analysisLibraryRoutes"
 import { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
+import type {
+  CommitOngoingDraftResultInput,
+  CommitSingleDraftResultInput,
+} from "@/features/analysis-library/useLibraryAnalysisSession"
 import { useResultPreferences } from "@/features/results/useResultPreferences"
 import {
   isOngoingCheckpointResultSnapshot,
@@ -343,16 +347,10 @@ export default function App() {
     setSimulationRunIdByProjectId({})
   }, [])
   const commitOngoingDraftResultRef = useRef<
-    | ((
-        input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitOngoingDraftResultInput,
-      ) => Promise<{ ok: true } | { ok: false }>)
-    | null
+    ((input: CommitOngoingDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
   >(null)
   const commitSingleDraftResultRef = useRef<
-    | ((
-        input: import("@/features/analysis-library/useLibraryAnalysisSession").CommitSingleDraftResultInput,
-      ) => Promise<{ ok: true } | { ok: false }>)
-    | null
+    ((input: CommitSingleDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
   >(null)
   const librarySession = useLibraryAnalysisSession({
     projects,

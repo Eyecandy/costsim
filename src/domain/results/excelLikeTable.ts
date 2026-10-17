@@ -5,7 +5,7 @@ export const SCENARIO_COLUMN_KEYS = [
   "optimistic",
   "likely",
   "pessimistic",
-] as const satisfies Readonly<(keyof ScenarioRow)[]>
+] as const satisfies readonly (keyof ScenarioRow)[]
 
 /** Tillater desimaltall under redigering; tom streng bevares (ikke 0) */
 export function sanitizeScenarioNumericInput(value: string): string {

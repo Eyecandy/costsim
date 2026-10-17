@@ -92,6 +92,7 @@ export function DefineRowEditor(props: DefineRowEditorProps) {
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- Ctrl/Cmd+Enter shortcut for the whole form; the controls inside are the interactive elements
     <div
       className="space-y-2"
       onKeyDown={onKeyDown}

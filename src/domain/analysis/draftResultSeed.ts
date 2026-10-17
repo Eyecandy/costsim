@@ -10,6 +10,7 @@ import type {
   ShapleyContribution,
 } from "@/domain/simulation/shapleyAttribution"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
+import type { SingleArchivedResultSnapshotV1 } from "@/domain/analysis/singleArchivedResultSnapshot"
 
 export const DRAFT_RESULT_SEED_VERSION = 1 as const
 
@@ -65,7 +66,7 @@ export function remapShapleyResult(
 }
 
 export function buildDraftCompactSeedFromSingleArchive(args: {
-  snapshot: import("@/domain/analysis/singleArchivedResultSnapshot").SingleArchivedResultSnapshotV1
+  snapshot: SingleArchivedResultSnapshotV1
   projectIdMap: ReadonlyMap<string, string>
   rowIdMap: ReadonlyMap<string, string>
   inputSignature: string

@@ -358,7 +358,7 @@ function KeyFiguresTable({
   metricLabel,
   valueLabel,
 }: {
-  rows: Array<{ label: string; value: string }>
+  rows: { label: string; value: string }[]
   metricLabel: string
   valueLabel: string
 }) {

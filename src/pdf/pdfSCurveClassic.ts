@@ -44,7 +44,7 @@ export type PdfSCurveGuideInput = {
   color: string
   /** Project index — selects the dash pattern. */
   index: number
-  markers: ReadonlyArray<{ percentile: number; value: number }>
+  markers: readonly { percentile: number; value: number }[]
 }
 
 export type PdfSCurveGuide = {
@@ -124,7 +124,7 @@ export function pdfSCurveLGuidePath(x: number, y: number, geometry: PdfSCurveGeo
 
 /** Unique marker percentiles across curves, ascending. */
 export function uniquePdfMarkerPercentiles(
-  curves: ReadonlyArray<{ markers: ReadonlyArray<{ percentile: number }> }>,
+  curves: readonly { markers: readonly { percentile: number }[] }[],
 ): number[] {
   const set = new Set<number>()
   for (const c of curves) {
@@ -270,7 +270,7 @@ export function layoutPdfClassicXCostLabels(args: {
   const sorted = [...args.guides].sort(
     (a, b) => a.x - b.x || a.percentile - b.percentile || a.projectId.localeCompare(b.projectId),
   )
-  const placed: Array<{ x: number; width: number; row: number }> = []
+  const placed: { x: number; width: number; row: number }[] = []
   const out: PdfSCurveXCostLabel[] = []
   for (const g of sorted) {
     const text = formatPdfSCurveCost(g.cost, args.scale, args.language)

@@ -140,7 +140,6 @@ describe("Shapley P50 vs main simulation comparison", () => {
       }
     }
 
-     
     console.table(
       rows.map((row) => ({
         project: row.project,

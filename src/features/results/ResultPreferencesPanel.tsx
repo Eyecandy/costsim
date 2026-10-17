@@ -306,7 +306,10 @@ export function ResultPreferencesPanel({
               className="fixed inset-0 z-[220] flex items-center justify-center bg-black/40 p-3 sm:p-5"
               role="presentation"
               data-result-preferences-backdrop=""
-              onClick={close}
+              onClick={(e) => {
+                if (e.target !== e.currentTarget) return
+                close()
+              }}
             >
               <div
                 ref={panelRef}
@@ -315,7 +318,6 @@ export function ResultPreferencesPanel({
                 aria-labelledby={titleId}
                 className={PANEL_CLASS}
                 data-result-preferences-panel=""
-                onClick={(e) => e.stopPropagation()}
               >
                 <div className="mb-2 flex items-start justify-between gap-2">
                   <h4

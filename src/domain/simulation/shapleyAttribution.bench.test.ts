@@ -88,7 +88,6 @@ describe("Shapley performance benchmark", () => {
   it("benchmarks 10 / 20 / 32 player synthetic projects", () => {
     const rows = [runBench(6, 4), runBench(12, 8), runBench(20, 12)]
 
-     
     console.table(rows)
 
     for (const row of rows) {
