@@ -13,19 +13,15 @@ import type {
 } from "@/domain/simulation/simulationTypes"
 
 import { AnalysisActionsMenu } from "@/features/analysis-library/AnalysisActionsMenu"
-import { AddAlternativeDialog } from "@/features/workspace/AddAlternativeDialog"
 import {
   AnalysisSidebar,
   AnalysisSidebarMenuButton,
 } from "@/features/analysis-library/AnalysisSidebar"
 import { BrandWordmark } from "@/shared/BrandWordmark"
 import { CheckpointNav } from "@/features/checkpoints/CheckpointNav"
-import { CreateNextCheckpointDialog } from "@/features/checkpoints/CreateNextCheckpointDialog"
-import { StartOngoingFromArchiveDialog } from "@/features/analysis-library/StartOngoingFromArchiveDialog"
 import { CostTable } from "@/features/scenario-tables/CostTable"
 import { GlobalHeaderUtilities } from "@/shared/GlobalHeaderUtilities"
 import { ProjectProfileSection } from "@/features/workspace/ProjectProfileSection"
-import { SaveAndContinueLaterDialog } from "@/features/analysis-library/SaveAndContinueLaterDialog"
 import { DriversTable } from "@/features/scenario-tables/DriversTable"
 import { GuidedInputDialog } from "@/features/guided-input/GuidedInputDialog"
 import type { GuidedInputDialogHandle } from "@/features/guided-input/GuidedInputDialog"
@@ -135,7 +131,6 @@ import {
 } from "@/domain/results/tableRows"
 import { useI18n } from "@/i18n/useI18n"
 import { appFeatures } from "@/config/appVariant"
-import { ConfirmDialog } from "@/shared/ConfirmDialog"
 import { SpotlightLoadingText } from "@/shared/SpotlightLoadingText"
 import {
   brandPrimaryTextClass,
@@ -154,7 +149,6 @@ import {
   readAnalysisIdFromLocation,
 } from "@/persistence/analysisLibraryRoutes"
 import { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
-import { canCreateNextCheckpoint } from "@/domain/analysis/analysisCheckpoint"
 import { canStartOngoingFromArchivedSingle } from "@/domain/analysis/createOngoingFromArchivedSingle"
 import { useResultPreferences } from "@/features/results/useResultPreferences"
 import {
@@ -170,10 +164,6 @@ import {
   type SingleArchivedResultSnapshotV1,
 } from "@/domain/analysis/singleArchivedResultSnapshot"
 import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
-import {
-  isAnalysisNameConflictError,
-  isAnalysisNameConflictOnMoveError,
-} from "@/domain/analysis/analysisNameUniqueness"
 import { parseProjectsPayload } from "@/domain/analysis/projectsPayload"
 
 import {
@@ -213,6 +203,7 @@ import { useActionNotices } from "@/app/workspace/useActionNotices"
 import { useAnalysisDialogs } from "@/app/workspace/useAnalysisDialogs"
 import { useStaleInputDiffs } from "@/app/workspace/useStaleInputDiffs"
 
+import { WorkspaceDialogs } from "@/app/workspace/WorkspaceDialogs"
 export default function App() {
   const { language, t } = useI18n()
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -305,34 +296,22 @@ export default function App() {
     finishOngoingNotice,
     showFinishOngoingNotice,
   } = useActionNotices()
+  const dialogs = useAnalysisDialogs()
   const {
-    archiveConfirmOpen,
     setArchiveConfirmOpen,
-    finishOngoingConfirmOpen,
     setFinishOngoingConfirmOpen,
-    deleteCheckpointConfirmOpen,
     setDeleteCheckpointConfirmOpen,
-    nextCheckpointOpen,
     setNextCheckpointOpen,
-    trashConfirmOpen,
     setTrashConfirmOpen,
-    renameOpen,
     setRenameOpen,
-    startOngoingDialogOpen,
     setStartOngoingDialogOpen,
-    startOngoingAlternatives,
     setStartOngoingAlternatives,
     startOngoingError,
     setStartOngoingError,
-    renameValue,
     setRenameValue,
-    renameError,
     setRenameError,
-    saveContinueOpen,
     setSaveContinueOpen,
-    saveContinueError,
-    setSaveContinueError,
-  } = useAnalysisDialogs()
+  } = dialogs
   const {
     sidebarOpenRequest,
     setSidebarOpenRequest,
@@ -2295,276 +2274,22 @@ export default function App() {
             ? "md:px-5 lg:px-6"
             : "md:pl-14 md:pr-5 lg:pl-14 lg:pr-6",
         )}
-      >        <ConfirmDialog
-          open={archiveConfirmOpen}
-          message={
-            isOngoingAnalysis
-              ? t("checkpoints.archiveCheckpointConfirm")
-              : t("library.archiveConfirm")
-          }
-          cancelLabel={t("common.cancel")}
-          confirmLabel={
-            isOngoingAnalysis
-              ? t("checkpoints.archiveCheckpointConfirmAction")
-              : t("library.archiveConfirmAction")
-          }
-          onCancel={() => setArchiveConfirmOpen(false)}
-          onConfirm={() => {
-            setArchiveConfirmOpen(false)
-            if (isOngoingAnalysis) {
-              void librarySession.archiveActiveCheckpoint().then((result) => {
-                if (!result.ok) {
-                  showArchiveBlockedNotice(result.reason)
-                  return
-                }
-                // Same post-archive step as Results shortcut: open create-next when allowed.
-                if (canCreateNextCheckpoint(result.ongoing)) {
-                  setNextCheckpointOpen(true)
-                }
-              })
-              return
-            }
-            void librarySession.archiveCurrent().then((result) => {
-              if (!result.ok) {
-                showArchiveBlockedNotice(result.reason)
-              }
-            })
-          }}
-        />
-        <ConfirmDialog
-          open={deleteCheckpointConfirmOpen}
-          title={t("checkpoints.deleteCheckpointConfirmTitle")}
-          message={t("checkpoints.deleteCheckpointConfirm")}
-          cancelLabel={t("common.cancel")}
-          confirmLabel={t("checkpoints.deleteCheckpointConfirmAction")}
-          confirmVariant="destructive"
-          onCancel={() => setDeleteCheckpointConfirmOpen(false)}
-          onConfirm={() => {
-            setDeleteCheckpointConfirmOpen(false)
-            // Checkpoint-only: never moveCurrentToTrash / analysis delete.
-            void librarySession.deleteActiveDraftCheckpoint()
-          }}
-        />
-        <ConfirmDialog
-          open={finishOngoingConfirmOpen}
-          title={t("checkpoints.finishOngoingConfirmTitle")}
-          message={t("checkpoints.finishOngoingConfirm")}
-          cancelLabel={t("common.cancel")}
-          confirmLabel={t("checkpoints.finishOngoingConfirmAction")}
-          onCancel={() => setFinishOngoingConfirmOpen(false)}
-          onConfirm={() => {
-            setFinishOngoingConfirmOpen(false)
-            void librarySession.completeOngoingAnalysis().then((result) => {
-              if (result.ok) return
-              if (
-                result.reason === "has_draft" ||
-                result.reason === "latest_not_archived"
-              ) {
-                showFinishOngoingNotice("need_archive_checkpoint")
-                return
-              }
-              showFinishOngoingNotice("failed")
-            })
-          }}
-        />
-        <CreateNextCheckpointDialog
-          open={nextCheckpointOpen}
-          nextSequence={
-            (librarySession.latestCheckpoint?.sequence ?? 0) + 1
-          }
-          sourceSequence={librarySession.latestCheckpoint?.sequence ?? 1}
-          sourceName={
-            librarySession.latestCheckpoint?.name ??
-            t("checkpoints.nextDialogTitle").replace("{n}", "1")
-          }
-          onCancel={() => setNextCheckpointOpen(false)}
-          onCreate={(name) => {
-            setNextCheckpointOpen(false)
-            void librarySession.createNextCheckpoint(name)
-          }}
-        />
-        <StartOngoingFromArchiveDialog
-          open={startOngoingDialogOpen}
-          alternatives={startOngoingAlternatives}
-          folderId={librarySession.docMeta?.folderId ?? null}
-          onCancel={() => {
-            setStartOngoingDialogOpen(false)
-            setStartOngoingAlternatives([])
-          }}
-          onConfirm={async (selectedProjectId, name) => {
-            setStartOngoingError(null)
-            const result =
-              await librarySession.beginStartOngoingFromArchived(
-                selectedProjectId,
-                name,
-              )
-            if (result.ok) {
-              setStartOngoingDialogOpen(false)
-              setStartOngoingAlternatives([])
-              navigateTo(buildAnalysisWorkspacePath(result.doc.id))
-              return
-            }
-            // Known validation should already be blocked in the dialog; surface unexpected failures.
-            throw new Error(result.reason)
-          }}
-        />
-        <ConfirmDialog
-          open={trashConfirmOpen}
-          title={t("library.deleteConfirmTitle")}
-          message={t("library.deleteConfirm")}
-          cancelLabel={t("common.cancel")}
-          confirmLabel={t("library.deleteConfirmAction")}
-          onCancel={() => setTrashConfirmOpen(false)}
-          onConfirm={() => {
-            setTrashConfirmOpen(false)
-            void (async () => {
-              await librarySession.moveCurrentToTrash()
-              navigateTo(LIBRARY_PATH)
-            })()
-          }}
-        />
-        {renameOpen ? (
-          <div
-            className="fixed inset-0 z-[220] flex items-center justify-center bg-black/40 p-4"
-            role="presentation"
-            onClick={() => {
-              setRenameOpen(false)
-              setRenameError(null)
-            }}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="rename-analysis-title"
-              className="w-full max-w-sm rounded-lg border border-border/60 bg-background p-4 shadow-md"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2
-                id="rename-analysis-title"
-                className="m-0 mb-3 font-sans text-[15px] font-medium"
-              >
-                {t("library.renameTitle")}
-              </h2>
-              <input
-                autoFocus
-                className="mb-2 h-9 w-full rounded-md border border-border bg-background px-2 font-sans text-[13px]"
-                value={renameValue}
-                onChange={(e) => {
-                  setRenameValue(e.target.value)
-                  if (renameError) setRenameError(null)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && renameValue.trim()) {
-                    void (async () => {
-                      try {
-                        await librarySession.renameAnalysis(renameValue)
-                        setRenameOpen(false)
-                        setRenameError(null)
-                      } catch (error) {
-                        setRenameError(
-                          isAnalysisNameConflictError(error)
-                            ? t("library.duplicateNameInFolder")
-                            : t("library.saveError"),
-                        )
-                      }
-                    })()
-                  }
-                }}
-              />
-              {renameError ? (
-                <p
-                  className="m-0 mb-3 font-sans text-[12px] text-destructive"
-                  role="alert"
-                >
-                  {renameError}
-                </p>
-              ) : (
-                <div className="mb-3" />
-              )}
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  className="h-8 rounded-md px-3 font-sans text-[12px] text-muted-foreground hover:bg-muted"
-                  onClick={() => {
-                    setRenameOpen(false)
-                    setRenameError(null)
-                  }}
-                >
-                  {t("common.cancel")}
-                </button>
-                <button
-                  type="button"
-                  className="h-8 rounded-md bg-[#1d868c] px-3 font-sans text-[12px] text-white hover:bg-[#1d868c]/90 disabled:opacity-50"
-                  disabled={!renameValue.trim()}
-                  onClick={() => {
-                    void (async () => {
-                      try {
-                        await librarySession.renameAnalysis(renameValue)
-                        setRenameOpen(false)
-                        setRenameError(null)
-                      } catch (error) {
-                        setRenameError(
-                          isAnalysisNameConflictError(error)
-                            ? t("library.duplicateNameInFolder")
-                            : t("library.saveError"),
-                        )
-                      }
-                    })()
-                  }}
-                >
-                  {t("common.confirm")}
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : null}
-        <SaveAndContinueLaterDialog
-          open={saveContinueOpen}
-          initialFolderId={librarySession.docMeta?.folderId ?? null}
-          error={saveContinueError}
-          onCancel={() => {
-            setSaveContinueOpen(false)
-            setSaveContinueError(null)
-          }}
-          onConfirm={async (folderId) => {
-            setSaveContinueError(null)
-            try {
-              if (librarySession.docMeta?.status === "draft") {
-                await librarySession.setFolderId(folderId)
-                await librarySession.flushPendingSave().catch(() => undefined)
-              }
-              setSaveContinueOpen(false)
-              setSaveContinueError(null)
-              navigateTo(LIBRARY_PATH)
-            } catch (error) {
-              if (
-                isAnalysisNameConflictOnMoveError(error) ||
-                isAnalysisNameConflictError(error)
-              ) {
-                setSaveContinueError(t("library.duplicateNameOnMove"))
-              } else {
-                setSaveContinueError(t("library.saveError"))
-              }
-            }
-          }}
-        />
-        <ConfirmDialog
-          open={deleteProjectConfirmOpen}
-          message={t("projects.confirmDelete")}
-          cancelLabel={t("common.cancel")}
-          confirmLabel={t("common.confirm")}
-          onCancel={() => {
-            deleteProjectConfirmTargetRef.current = null
-            setDeleteProjectConfirmOpen(false)
-          }}
-          onConfirm={confirmDeleteProject}
-        />
-        <AddAlternativeDialog
-          open={addAlternativeOpen}
-          sources={projects.map((p) => ({ id: p.id, name: p.name }))}
-          onClose={() => setAddAlternativeOpen(false)}
-          onCreateBlank={handleCreateBlankAlternative}
-          onCopyExisting={handleCopyExistingAlternative}
+      >
+        <WorkspaceDialogs
+          dialogs={dialogs}
+          addAlternativeOpen={addAlternativeOpen}
+          confirmDeleteProject={confirmDeleteProject}
+          deleteProjectConfirmOpen={deleteProjectConfirmOpen}
+          deleteProjectConfirmTargetRef={deleteProjectConfirmTargetRef}
+          handleCopyExistingAlternative={handleCopyExistingAlternative}
+          handleCreateBlankAlternative={handleCreateBlankAlternative}
+          isOngoingAnalysis={isOngoingAnalysis}
+          librarySession={librarySession}
+          projects={projects}
+          setAddAlternativeOpen={setAddAlternativeOpen}
+          setDeleteProjectConfirmOpen={setDeleteProjectConfirmOpen}
+          showArchiveBlockedNotice={showArchiveBlockedNotice}
+          showFinishOngoingNotice={showFinishOngoingNotice}
         />
         {activeProject && guidedInputKind && !analysisReadOnly ? (
           <GuidedInputDialog
