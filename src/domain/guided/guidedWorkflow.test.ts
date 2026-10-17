@@ -5,7 +5,7 @@ import {
   clampGuidedWorkflowStepIndex,
   formatGuidedPhaseProgress,
   initialGuidedWorkflowStepIndex,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 
 function cost(

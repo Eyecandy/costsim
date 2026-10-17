@@ -11,11 +11,11 @@ import {
   getFocusUserPhase,
   isFocusPhaseReached,
   shouldShowFocusPhaseNav,
-} from "@/lib/focusPhaseNav"
+} from "@/domain/guided/focusPhaseNav"
 import {
   buildGuidedWorkflowSteps,
   initialGuidedWorkflowStepIndex,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 

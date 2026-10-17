@@ -3,12 +3,12 @@ import {
   FOCUS_USER_PHASES,
   getFocusPhaseForGuidedStep,
   type FocusUserPhase,
-} from "@/lib/focusPhaseNav"
-import type { FocusResultSectionId } from "@/lib/focusResultSteps"
+} from "@/domain/guided/focusPhaseNav"
+import type { FocusResultSectionId } from "@/domain/guided/focusResultSteps"
 import type {
   GuidedWorkflowPhase,
   GuidedWorkflowStep,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 
 /** Versioned Focus UI resume blob (sessionStorage only). */
 export type FocusSessionResumeV1 = {

@@ -11,7 +11,7 @@ import {
   FOCUS_SESSION_HEADER_AUX_CLASS,
   FOCUS_SESSION_HEADER_CLASS,
   FOCUS_SESSION_HEADER_TITLE_CLASS,
-} from "@/lib/focusSessionFrame"
+} from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 

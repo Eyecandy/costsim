@@ -1,5 +1,5 @@
 import type { AppLanguage } from "@/domain/results/formatNumber"
-import { listGuidedInputRows, type GuidedInputKind } from "@/lib/guidedInput"
+import { listGuidedInputRows, type GuidedInputKind } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 
 /**

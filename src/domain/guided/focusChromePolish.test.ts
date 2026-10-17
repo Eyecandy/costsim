@@ -8,8 +8,8 @@ import {
   FOCUS_NEXT_STEPS_ACTION_COL_CLASS,
   FOCUS_SESSION_FOOTER_CLASS,
   FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
-} from "@/lib/focusSessionFrame"
-import { focusResultHelpCopyKeys } from "@/lib/focusResultSteps"
+} from "@/domain/guided/focusSessionFrame"
+import { focusResultHelpCopyKeys } from "@/domain/guided/focusResultSteps"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 

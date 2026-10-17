@@ -10,7 +10,7 @@ import {
 import {
   buildGuidedWorkflowSteps,
   initialGuidedWorkflowStepIndex,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import { messages } from "@/i18n/messages"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"

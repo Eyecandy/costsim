@@ -6,8 +6,8 @@ import { messages } from "@/i18n/messages"
 import {
   buildFocusResultSteps,
   focusResultSectionTitleKey,
-} from "@/lib/focusResultSteps"
-import { buildGuidedWorkflowSteps } from "@/lib/guidedWorkflow"
+} from "@/domain/guided/focusResultSteps"
+import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 
@@ -180,7 +180,7 @@ describe("Focus Results stepwise workflow", () => {
   it("L: Focus Results share Guided Focus frame dimensions", () => {
     const shell = readSrc("src/components/FocusModeShell.tsx")
     const guided = readSrc("src/components/GuidedInputDialog.tsx")
-    const frame = readSrc("src/lib/focusSessionFrame.ts")
+    const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     expect(frame).toContain(
       'FOCUS_SESSION_CARD_CLASS =\n  "h-[min(92vh,48rem)] w-[min(96vw,60rem)]"',
     )

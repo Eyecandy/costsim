@@ -1,5 +1,5 @@
 import type { GuidedPhaseInfoContent } from "@/components/GuidedPhaseInfo"
-import type { GuidedWorkflowPhase } from "@/lib/guidedWorkflow"
+import type { GuidedWorkflowPhase } from "@/domain/guided/guidedWorkflow"
 
 /**
  * Header/footer metadata Guided publishes to the shared Focus session shell

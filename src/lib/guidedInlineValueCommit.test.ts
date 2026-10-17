@@ -13,7 +13,7 @@ function guidedDialogSource() {
 
 function arrowNavSource() {
   return readFileSync(
-    join(root, "src/lib/shouldIgnoreGuidedArrowNavigation.ts"),
+    join(root, "src/domain/guided/shouldIgnoreGuidedArrowNavigation.ts"),
     "utf8",
   )
 }

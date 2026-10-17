@@ -13,8 +13,8 @@ import {
   writeFocusSessionResume,
   type FocusSessionResumeV1,
 } from "@/lib/focusSessionResume"
-import { buildFocusResultSteps } from "@/lib/focusResultSteps"
-import { buildGuidedWorkflowSteps } from "@/lib/guidedWorkflow"
+import { buildFocusResultSteps } from "@/domain/guided/focusResultSteps"
+import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
@@ -278,7 +278,7 @@ describe("Focus session resume wiring", () => {
     expect(guided).toContain("workflowRowId")
     expect(guided).toContain("resumeSemanticStep")
     expect(guided).toContain("resolveGuidedStepIndexForResume")
-    const chrome = readSrc("src/lib/guidedFocusChrome.ts")
+    const chrome = readSrc("src/domain/guided/guidedFocusChrome.ts")
     expect(chrome).toContain("workflowRowId")
   })
 

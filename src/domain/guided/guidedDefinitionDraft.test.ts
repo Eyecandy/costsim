@@ -10,7 +10,7 @@ import {
   guidedDefinitionDraftNeedsCommit,
   syncGuidedDefinitionDraft,
   type GuidedDefinitionDraftState,
-} from "@/lib/guidedDefinitionDraft"
+} from "@/domain/guided/guidedDefinitionDraft"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { Project } from "@/domain/analysis/project"
 import {

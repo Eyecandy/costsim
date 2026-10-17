@@ -39,7 +39,7 @@ import { ProjectColorSwatch } from "@/components/ProjectColorSwatch"
 import {
   FOCUS_NEXT_STEPS_ACTION_CLASS,
   FOCUS_NEXT_STEPS_ACTION_COL_CLASS,
-} from "@/lib/focusSessionFrame"
+} from "@/domain/guided/focusSessionFrame"
 import { toggleSelectedProjectId } from "@/domain/results/sCurveProjectEmphasis"
 import {
   getProjectColorCssVar,
@@ -99,7 +99,7 @@ import {
 import { SectionExpander } from "@/components/SectionExpander"
 import { SpotlightLoadingText } from "@/components/SpotlightLoadingText"
 import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"
-import type { FocusResultSectionId } from "@/lib/focusResultSteps"
+import type { FocusResultSectionId } from "@/domain/guided/focusResultSteps"
 
 /** Auto-dismiss for stale-input notices under PDF / share / AI brief actions. */
 const STALE_ACTION_NOTICE_DISMISS_MS = 4000

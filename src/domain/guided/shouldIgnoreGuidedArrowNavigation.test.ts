@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { shouldIgnoreGuidedArrowNavigation } from "@/lib/shouldIgnoreGuidedArrowNavigation"
+import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 
@@ -14,7 +14,7 @@ describe("shouldIgnoreGuidedArrowNavigation", () => {
 
   it("covers native editors, guided markers, and ARIA editable roles", () => {
     const src = readFileSync(
-      join(root, "src/lib/shouldIgnoreGuidedArrowNavigation.ts"),
+      join(root, "src/domain/guided/shouldIgnoreGuidedArrowNavigation.ts"),
       "utf8",
     )
     expect(src).toContain('"text"')

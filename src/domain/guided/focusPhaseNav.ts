@@ -2,7 +2,7 @@ import {
   findGuidedWorkflowPhaseIndex,
   type GuidedWorkflowPhase,
   type GuidedWorkflowStep,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 
 /** Broad user-facing Focus phases (not every internal Guided step). */
 export type FocusUserPhase =

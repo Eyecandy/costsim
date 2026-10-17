@@ -9,7 +9,7 @@ import {
   deriveGuidedCostEffect,
   formatGuidedApproxImpactLabel,
   listGuidedInputRows,
-} from "@/lib/guidedInput"
+} from "@/domain/guided/guidedInput"
 import { computeDeterministicTornado } from "@/domain/simulation/deterministicTornado"
 import { createProject, type Project } from "@/domain/analysis/project"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
@@ -287,7 +287,7 @@ describe("Guided driver monetary effects vs common 0% reference", () => {
   })
 
   it("no simulation is required (pure deterministic helper)", () => {
-    const src = readFileSync(join(repoRoot, "src/lib/guidedInput.ts"), "utf8")
+    const src = readFileSync(join(repoRoot, "src/domain/guided/guidedInput.ts"), "utf8")
     expect(src).toContain("computeTotalFromSampledValues")
     expect(src).not.toMatch(/runSimulation|monteCarlo|sampleTriangular/i)
     // Driver effect helper wiring stays deterministic; Focus may expose App Run separately.

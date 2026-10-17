@@ -54,7 +54,7 @@ describe("Focus presentation refinements", () => {
     // Embedded portal fills height only on Simulation — not a global alignment style.
     expect(guided).toContain('step?.phase === "simulation" && "min-h-full"')
     // Shared shell / frame tokens remain untouched by this layout.
-    expect(readSrc("src/lib/focusSessionFrame.ts")).toContain(
+    expect(readSrc("src/domain/guided/focusSessionFrame.ts")).toContain(
       "FOCUS_SESSION_CARD_CLASS",
     )
     expect(readSrc("src/components/FocusModeShell.tsx")).toContain(

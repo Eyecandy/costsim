@@ -7,8 +7,8 @@ import {
   buildGuidedWorkflowSteps,
   findGuidedWorkflowPhaseIndex,
   type GuidedResumeState,
-} from "@/lib/guidedWorkflow"
-import { listGuidedInputRows } from "@/lib/guidedInput"
+} from "@/domain/guided/guidedWorkflow"
+import { listGuidedInputRows } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 

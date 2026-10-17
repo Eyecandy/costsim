@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
-import { METHOD_GUIDE_SECTION_IDS } from "@/lib/methodGuide"
+import { METHOD_GUIDE_SECTION_IDS } from "@/domain/guided/methodGuide"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 

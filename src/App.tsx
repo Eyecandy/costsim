@@ -57,19 +57,19 @@ import {
   type LiveSimulationState,
 } from "@/domain/simulation/liveSimulationState"
 import type { ArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
-import type { GuidedInputKind } from "@/lib/guidedInput"
-import type { GuidedResumeAfter, GuidedResumeState } from "@/lib/guidedWorkflow"
-import type { GuidedFocusChromeMeta } from "@/lib/guidedFocusChrome"
+import type { GuidedInputKind } from "@/domain/guided/guidedInput"
+import type { GuidedResumeAfter, GuidedResumeState } from "@/domain/guided/guidedWorkflow"
+import type { GuidedFocusChromeMeta } from "@/domain/guided/guidedFocusChrome"
 import {
   buildFocusResultSteps,
   focusResultSectionTitleKey,
   type FocusResultSectionId,
-} from "@/lib/focusResultSteps"
+} from "@/domain/guided/focusResultSteps"
 import {
   canFocusNavigateNextResults,
   resolveFocusNext,
   resolveFocusPrevious,
-} from "@/lib/focusSessionNavigation"
+} from "@/domain/guided/focusSessionNavigation"
 import {
   advanceFurthestFocusPhase,
   getFocusUserPhase,
@@ -77,7 +77,7 @@ import {
   shouldShowFocusPhaseNav,
   type FocusUserPhase,
   type FocusUserPhaseInput,
-} from "@/lib/focusPhaseNav"
+} from "@/domain/guided/focusPhaseNav"
 import {
   clearFocusSessionResume,
   focusSessionResumeMatchesContext,
@@ -87,7 +87,7 @@ import {
   type FocusSessionResumeV1,
   type GuidedSemanticResume,
 } from "@/lib/focusSessionResume"
-import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/lib/focusSessionFrame"
+import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/domain/guided/focusSessionFrame"
 import { shouldShowResultSettingsEditor } from "@/domain/results/resultSettingsPresentation"
 import {
   addProjectIfAllowed,

@@ -8,7 +8,7 @@ import {
   clampGuidedWorkflowStepIndex,
   formatGuidedPhaseProgress,
   initialGuidedWorkflowStepIndex,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import {
   normalizeIncurredCosts,
   patchProjectIncurredCosts,
@@ -151,7 +151,7 @@ describe("guided incurred costs step", () => {
     )
     expect(steps.find((s) => s.phase === "impact")?.phase).toBe("impact")
     const workflow = readFileSync(
-      join(repoRoot, "src/lib/guidedWorkflow.ts"),
+      join(repoRoot, "src/domain/guided/guidedWorkflow.ts"),
       "utf8",
     )
     expect(workflow).toContain('phase: GuidedResumeAfter')

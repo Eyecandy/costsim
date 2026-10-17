@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
-import { FOCUS_SESSION_FOOTER_CLASS } from "@/lib/focusSessionFrame"
+import { FOCUS_SESSION_FOOTER_CLASS } from "@/domain/guided/focusSessionFrame"
 import { repoRoot } from "@/test-utils/repoRoot"
 
 
@@ -105,7 +105,7 @@ describe("Guided Input dialog stability and exit", () => {
     expect(src).toContain('data-guided-dialog-frame="stable"')
     expect(src).toContain("FOCUS_SESSION_CARD_CLASS")
     const frame = readFileSync(
-      join(repoRoot, "src/lib/focusSessionFrame.ts"),
+      join(repoRoot, "src/domain/guided/focusSessionFrame.ts"),
       "utf8",
     )
     expect(frame).toContain("h-[min(92vh,48rem)]")
@@ -223,7 +223,7 @@ describe("Guided Input dialog stability and exit", () => {
     expect(src).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")
     // Contained Focus card matches Guided modal — fullscreen is explicit.
     const frame = readFileSync(
-      join(repoRoot, "src/lib/focusSessionFrame.ts"),
+      join(repoRoot, "src/domain/guided/focusSessionFrame.ts"),
       "utf8",
     )
     expect(frame).toContain("h-[min(92vh,48rem)]")

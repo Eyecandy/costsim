@@ -29,7 +29,7 @@ import {
   FOCUS_SESSION_HEADER_AUX_CLASS,
   FOCUS_SESSION_HEADER_CLASS,
   FOCUS_SESSION_HEADER_TITLE_CLASS,
-} from "@/lib/focusSessionFrame"
+} from "@/domain/guided/focusSessionFrame"
 
 export type FocusModeShellHandle = {
   /** Outer fullscreen-capable host element (stable across Input → Results). */

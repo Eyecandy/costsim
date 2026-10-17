@@ -1,4 +1,4 @@
-import { shouldIgnoreGuidedArrowNavigation } from "@/lib/shouldIgnoreGuidedArrowNavigation"
+import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
 
 /**
  * Whether Left/Right should be ignored while a Focus session is active.

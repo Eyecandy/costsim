@@ -8,7 +8,7 @@ import {
   FOCUS_SESSION_HEADER_AUX_CLASS,
   FOCUS_SESSION_HEADER_CLASS,
   FOCUS_SESSION_HEADER_TITLE_CLASS,
-} from "@/lib/focusSessionFrame"
+} from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 
@@ -106,7 +106,7 @@ describe("Focus shared session chrome ownership", () => {
   it("Guided publishes chrome metadata; App does not redefine Guided steps", () => {
     const guided = readSrc("src/components/GuidedInputDialog.tsx")
     const app = readSrc("src/App.tsx")
-    const meta = readSrc("src/lib/guidedFocusChrome.ts")
+    const meta = readSrc("src/domain/guided/guidedFocusChrome.ts")
     expect(meta).toContain("GuidedFocusChromeMeta")
     expect(guided).toContain("onFocusChromeMetaChange")
     expect(guided).toContain("focusChromeMeta")

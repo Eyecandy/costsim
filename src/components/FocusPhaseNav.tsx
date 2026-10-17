@@ -4,7 +4,7 @@ import {
   focusUserPhaseMessageKey,
   isFocusPhaseReached,
   type FocusUserPhase,
-} from "@/lib/focusPhaseNav"
+} from "@/domain/guided/focusPhaseNav"
 
 type Translate = (key: string) => string
 

@@ -6,7 +6,7 @@ import {
   canFocusNavigateNextResults,
   resolveFocusNext,
   resolveFocusPrevious,
-} from "@/lib/focusSessionNavigation"
+} from "@/domain/guided/focusSessionNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 
 
@@ -150,7 +150,7 @@ describe("unified Focus session ownership", () => {
   it("G: Shared Focus frame contract is phase-invariant", () => {
     const shell = readSrc("src/components/FocusModeShell.tsx")
     const guided = readSrc("src/components/GuidedInputDialog.tsx")
-    const frame = readSrc("src/lib/focusSessionFrame.ts")
+    const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     expect(shell).toContain('data-focus-frame-contract={dormant ? undefined : "session"}')
     expect(frame).toContain("h-[min(92vh,48rem)] w-[min(96vw,60rem)]")
     expect(shell).toContain("FOCUS_SESSION_CARD_CLASS")
@@ -166,7 +166,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("A–G presentation: normal Focus card vs explicit fullscreen", () => {
-    const frame = readSrc("src/lib/focusSessionFrame.ts")
+    const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     const shell = readSrc("src/components/FocusModeShell.tsx")
     expect(frame).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(frame).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")

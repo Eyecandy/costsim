@@ -11,7 +11,7 @@ import {
   isGuidedDriverValueOutsideWorkingRange,
   normalizeGuidedNumericField,
   pinGuidedSliderDisplayValue,
-} from "@/lib/guidedInput"
+} from "@/domain/guided/guidedInput"
 import {
   clampCostOptimisticPercent,
   clampCostPessimisticPercent,

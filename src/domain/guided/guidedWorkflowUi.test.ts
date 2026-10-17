@@ -6,7 +6,7 @@ import { messages } from "@/i18n/messages"
 import {
   buildGuidedWorkflowSteps,
   initialGuidedWorkflowStepIndex,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import { deriveSavedCorrelationSummaries } from "@/domain/simulation/costCorrelationSummaries"
 import { createProject, type Project } from "@/domain/analysis/project"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"

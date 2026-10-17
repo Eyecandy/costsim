@@ -8,7 +8,7 @@ import {
   clampCostPessimisticPercent,
   clampDriverLikelyPercent,
 } from "@/domain/results/scenarioNumericClamps"
-import { normalizeGuidedNumericField } from "@/lib/guidedInput"
+import { normalizeGuidedNumericField } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 

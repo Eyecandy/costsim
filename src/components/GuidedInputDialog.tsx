@@ -20,7 +20,7 @@ import {
   GuidedPhaseInfo,
   type GuidedPhaseInfoContent,
 } from "@/components/GuidedPhaseInfo"
-import type { GuidedFocusChromeMeta } from "@/lib/guidedFocusChrome"
+import type { GuidedFocusChromeMeta } from "@/domain/guided/guidedFocusChrome"
 import { DriverUncertaintyNotesEditor } from "@/components/DriverUncertaintyNotesEditor"
 import { SpotlightLoadingText } from "@/components/SpotlightLoadingText"
 import { brandPrimaryButtonClass, brandPrimaryTextClass } from "@/lib/brand"
@@ -54,7 +54,7 @@ import {
   snapGuidedSliderValue,
   type GuidedInputKind,
   type GuidedNumericField,
-} from "@/lib/guidedInput"
+} from "@/domain/guided/guidedInput"
 import {
   canRequestFullscreen,
   exitFullscreenIfNeeded,
@@ -62,11 +62,11 @@ import {
   requestElementFullscreen,
   subscribeFullscreenChange,
 } from "@/lib/browserFullscreen"
-import { shouldIgnoreGuidedArrowNavigation } from "@/lib/shouldIgnoreGuidedArrowNavigation"
+import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
 import {
   findGuidedStepIndexForFocusPhase,
   type FocusUserPhaseInput,
-} from "@/lib/focusPhaseNav"
+} from "@/domain/guided/focusPhaseNav"
 import {
   resolveGuidedStepIndexForResume,
   type GuidedSemanticResume,
@@ -79,7 +79,7 @@ import {
   initialGuidedWorkflowStepIndex,
   type GuidedResumeAfter,
   type GuidedWorkflowStep,
-} from "@/lib/guidedWorkflow"
+} from "@/domain/guided/guidedWorkflow"
 import type { Project } from "@/domain/analysis/project"
 import { normalizeIncurredCosts } from "@/domain/analysis/project"
 import type { ProjectProfile } from "@/domain/analysis/projectProfile"
@@ -91,7 +91,7 @@ import {
   commitGuidedDefinitionDraft,
   syncGuidedDefinitionDraft,
   type GuidedDefinitionDraftState,
-} from "@/lib/guidedDefinitionDraft"
+} from "@/domain/guided/guidedDefinitionDraft"
 import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
@@ -106,7 +106,7 @@ import {
   FOCUS_SESSION_CARD_FULLSCREEN_CLASS,
   FOCUS_SESSION_FOOTER_CLASS,
   FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS,
-} from "@/lib/focusSessionFrame"
+} from "@/domain/guided/focusSessionFrame"
 
 export type GuidedInputDialogProps = {
   open: boolean
