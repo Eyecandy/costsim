@@ -20,16 +20,14 @@ import {
 } from "@/domain/results/scenarioTableModes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function appSource() {
   return readAppSource()
 }
 
 function scenarioTableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 const rows = [

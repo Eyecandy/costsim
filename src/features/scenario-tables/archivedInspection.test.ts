@@ -12,6 +12,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -19,7 +20,7 @@ function readSrc(rel: string) {
 
 describe("archived analysis inspection (read-only)", () => {
   it("A: cost/driver Define inspection opens while Save is omitted", () => {
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     const editor = readSrc("src/features/scenario-tables/DefineRowEditor.tsx")
     const app = readAppSource()
 
@@ -56,7 +57,7 @@ describe("archived analysis inspection (read-only)", () => {
   })
 
   it("C: Impact selection works when archived; mutation paths stay gated", () => {
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     const app = readAppSource()
     expect(app).toContain("if (!impactModeActive) return")
     expect(app).not.toContain("if (!impactModeActive || analysisReadOnly) return")
@@ -67,7 +68,7 @@ describe("archived analysis inspection (read-only)", () => {
   })
 
   it("D: Correlation remains inspectable; Apply hidden when read-only", () => {
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     expect(table).toContain("costCorrelationMode.onToggleCostSelection")
     expect(table).toContain("{!readOnly ? (")
     expect(table).toMatch(/\{!readOnly \? \([\s\S]*?costCorrelationApply[\s\S]*?\) : null\}/)
@@ -75,7 +76,7 @@ describe("archived analysis inspection (read-only)", () => {
   })
 
   it("E: draft Define/Impact selection and Save wiring remain intact", () => {
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     const editor = readSrc("src/features/scenario-tables/DefineRowEditor.tsx")
     expect(table).toContain('t("expanders.define")')
     expect(editor).toContain('t("inputs.defineSave")')

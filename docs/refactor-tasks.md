@@ -78,6 +78,9 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 ## Phase 9h (2026-10-18 20:30)
 - `AnalysisLibraryNav` 1,536 -> 1,044 lines (`nav/`: folder picker, row, user folder block, entity actions menu, dialog shell) and `AnalysisLibraryPage` 1,242 -> 597 lines (`page/`: list model/sorting/filtering, toolbar select, home content, trash view, new-analysis buttons, list rows). `readLibraryNavSource()` / `readLibraryPageSource()` (test-utils) feed the source-text tests; two behavioural tests import `UserFolderBlock` from `nav/`. Browser parity vs `costsim`: library root, folder view and trash view button sweeps (20 / 20 / 15 clicks, overlays included) identical.
 
+## Phase 9i (2026-10-18 21:00)
+- `ScenarioPercentTable` 1,897 -> 1,705 lines: mode prop types (re-exported from the table file), cell theme, `InlineMagnitudeSlider` and layout helpers moved to `scenario-tables/table/`. The 1,500-line component itself is untouched (hook-heavy Glide grid wiring). `readScenarioTableSource()` (test-utils) feeds 16 source-text tests. Browser parity vs `costsim`: Define / Correlation / Impact toggles and info buttons, DOM text and canvas pixel hashes identical.
+
 ## Not done yet (2026-10-18 04:20)
 - Phase 9 splits left: `ScenarioPercentTable` (1.9k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
 - 36 lint warnings (React Compiler rules `refs` / `set-state-in-effect`, some `exhaustive-deps`): fix when the files are split.

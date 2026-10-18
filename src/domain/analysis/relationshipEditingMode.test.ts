@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
@@ -17,14 +15,11 @@ import {
   getSelectedGroupCorrelationState,
   isCostCorrelationGroupPatchValid,
 } from "@/domain/analysis/project"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function scenarioTableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 function appSource() {

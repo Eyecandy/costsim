@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   clampCostLikelyAbs,
@@ -10,8 +8,8 @@ import {
 } from "@/domain/results/scenarioNumericClamps"
 import { normalizeGuidedNumericField } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
-import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function costRow(partial: Partial<CostElementRow> = {}): CostElementRow {
   return {
@@ -67,10 +65,7 @@ describe("scenario range endpoint sign fold", () => {
 
 describe("range sign fold reaches table + Focus + paste paths", () => {
   it("A: ScenarioPercentTable commits and paste use shared O/P clamps", () => {
-    const table = readFileSync(
-      join(root, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-      "utf8",
-    )
+    const table = readScenarioTableSource()
     expect(table).toContain("clampCostOptimisticPercent")
     expect(table).toContain("clampCostPessimisticPercent")
     expect(table).toContain("onCellEdited")

@@ -9,7 +9,6 @@ import {
 } from "react"
 import { createPortal } from "react-dom"
 import {
-  CompactSelection,
   DataEditor,
   GridCellKind,
   type DrawHeaderCallback,
@@ -26,24 +25,17 @@ import {
   patchScenarioRow,
   sanitizeScenarioNumericInput,
 } from "@/domain/results/excelLikeTable"
-import { normalizeIncurredCosts, type DriverImpactsByRowId } from "@/domain/analysis/project"
-import {
-  snapCorrelationCoefficient,
-  type CostCorrelationPrepStatus,
-} from "@/domain/simulation/costCorrelation"
+import { normalizeIncurredCosts } from "@/domain/analysis/project"
+import { snapCorrelationCoefficient } from "@/domain/simulation/costCorrelation"
 import {
   driverImpactCellKey,
   INCURRED_COSTS_CELL_KEY,
 } from "@/domain/analysis/simInputSnapshotDiff"
-import {
-  formatSavedCorrelationSummaryLabel,
-  type SavedCorrelationSummary,
-} from "@/domain/simulation/costCorrelationSummaries"
+import { formatSavedCorrelationSummaryLabel } from "@/domain/simulation/costCorrelationSummaries"
 import { buttonVariants } from "@/shared/ui/button"
 import { useI18n } from "@/i18n/useI18n"
 import { applyPastedGrid } from "@/domain/results/tsvPaste"
 import { cn } from "@/shared/utils"
-import { sliderFillRangePct } from "@/domain/results/sliderFillRange"
 import {
   type CostElementRow,
   type DriverRow,
@@ -100,157 +92,44 @@ import {
   shouldShowRelationshipSelectHint,
   type ScenarioTableVariant,
 } from "@/domain/results/scenarioTableModes"
+import type {
+  DriverImpactModeProps,
+  CostCorrelationModeProps,
+  CostImpactSlidersProps,
+  DefineModeProps,
+  GuidedInputModeProps,
+} from "@/features/scenario-tables/table/tableModeTypes"
+import {
+  CHANGED_VS_SIM_CELL_BG,
+  cellThemeOverride,
+} from "@/features/scenario-tables/table/tableCellTheme"
+import {
+  INLINE_SLIDER_NAME_CLASS,
+  INLINE_SLIDER_VALUE_CLASS,
+  InlineMagnitudeSlider,
+} from "@/features/scenario-tables/table/InlineMagnitudeSlider"
+import {
+  ROW_HEIGHT,
+  HEADER_HEIGHT,
+  NAME_MAX_LENGTH,
+  COST_MAX_ROWS,
+  DRIVER_MAX_ROWS,
+  emptyGridSelection,
+  distributeScenarioColumnWidths,
+  getCostColumnWidths,
+  normalizePastedRow,
+  formatWithThousands,
+  selectionIncludesIncurredLockedCell,
+} from "@/features/scenario-tables/table/tableLayout"
 
 export type { ScenarioTableVariant }
-
-export type DriverImpactModeProps = {
-  active: boolean
-  onToggle: () => void
-  selectedDriverRowId: string | null
-  onSelectDriver: (driverRowId: string) => void
-  /** Present only when Impact was opened from Guided Input (resume detour). */
-  onReturnToGuided?: () => void
-}
-
-export type CostCorrelationModeProps = {
-  active: boolean
-  onToggle: () => void
-  /** Multi-select of valid cost-item row ids while Correlation mode is on. */
-  selectedCostRowIds: readonly string[]
-  onToggleCostSelection: (costRowId: string) => void
-  /** Open a saved summary for editing without mutating the matrix. */
-  onOpenSummary: (rowIds: readonly string[]) => void
-  /** Zero all pairs represented by a saved summary (atomic). */
-  onRemoveSummary: (rowIds: readonly string[]) => void
-  /** Proposed group correlation (−0.9…0.9); ignored for display when pendingMixed. */
-  pendingRho: number
-  /** True when selected pairs have differing stored values and user has not moved the slider. */
-  pendingMixed: boolean
-  onPendingRhoChange: (value: number) => void
-  onApplyGroupCorrelation: () => void
-  /** Summaries derived from the stored pairwise matrix (non-zero only). */
-  savedSummaries: readonly SavedCorrelationSummary[]
-  /** Brief post-Apply / post-remove confirmation. */
-  saveConfirmVisible?: boolean
-  saveConfirmKind?: "saved" | "removed" | null
-  prepStatus?: CostCorrelationPrepStatus
-  /** Set when Apply was rejected as non-PSD. */
-  incompatibleEditWarning?: boolean
-  /** Present only when Correlation was opened from Guided Input (resume detour). */
-  onReturnToGuided?: () => void
-}
-
-export type CostImpactSlidersProps = {
-  active: boolean
-  selectedDriverRowId: string | null
-  selectedDriverLabel?: string
-  driverImpacts: DriverImpactsByRowId | undefined
-  onImpactChange: (driverRowId: string, costRowId: string, value: number) => void
-  changedCellKeys?: ReadonlySet<string>
-}
-
-export type DefineModeProps = {
-  active: boolean
-  onToggle: () => void
-  selectedRowId: string | null
-  onSelectRow: (rowId: string) => void
-  onClearSelection: () => void
-}
-
-/** Opens Guided Input overlay for this table's row kind (cost or driver). */
-export type GuidedInputModeProps = {
-  active: boolean
-  onOpen: () => void
-  /** Shown after Guided Input handoff to add rows (empty Cost Items / Drivers). */
-  onReturnToGuided?: () => void
-}
-
-/** Soft brand tint for cells that differ from the last simulated input snapshot (`#1d868c` @ low opacity). */
-const CHANGED_VS_SIM_CELL_BG = "rgba(29, 134, 140, 0.05)"
-/** Muted red tint for cells that block simulation (incomplete/invalid input). */
-const INVALID_INPUT_CELL_BG = "rgba(220, 38, 38, 0.08)"
-/** Inline impact/correlation slider track width (50% wider than the original 3.25rem). */
-const INLINE_SLIDER_WIDTH_CLASS = "w-[4.875rem] min-w-[3.25rem] shrink"
-const INLINE_SLIDER_NAME_CLASS =
-  "pointer-events-none min-w-0 flex-1 truncate font-sans text-[12px] leading-none text-[rgba(115,116,131,0.95)]"
-const INLINE_SLIDER_VALUE_CLASS =
-  "pointer-events-none w-7 shrink-0 text-right font-sans text-[10px] tabular-nums text-muted-foreground"
-
-function InlineMagnitudeSlider({
-  min,
-  max,
-  step,
-  value,
-  origin,
-  ariaLabel,
-  onChange,
-  disabled = false,
-}: {
-  min: number
-  max: number
-  step: number
-  value: number
-  origin: number
-  ariaLabel: string
-  onChange: (value: number) => void
-  disabled?: boolean
-}) {
-  const { startPct, endPct } = sliderFillRangePct(value, min, max, origin)
-  const fillWidthPct = Math.max(0, endPct - startPct)
-
-  return (
-    <div className={cn("relative h-4", INLINE_SLIDER_WIDTH_CLASS)}>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-[5.5px] right-[5.5px]"
-      >
-        <div className="absolute top-1/2 h-[3px] w-full -translate-y-1/2 rounded-full bg-[color-mix(in_oklab,var(--border)_70%,var(--muted-foreground)_18%)]" />
-        {fillWidthPct > 0 ? (
-          <div
-            className="absolute top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-[#1d868c]/70"
-            style={{
-              left: `${startPct}%`,
-              width: `${fillWidthPct}%`,
-            }}
-          />
-        ) : null}
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        disabled={disabled}
-        aria-label={ariaLabel}
-        className={cn(
-          "inline-magnitude-slider relative z-10 h-4 w-full",
-          disabled
-            ? "pointer-events-none cursor-default opacity-80"
-            : "pointer-events-auto cursor-pointer",
-        )}
-        onChange={(e) => {
-          if (disabled) return
-          onChange(Number(e.target.value))
-        }}
-      />
-    </div>
-  )
-}
-
-function cellThemeOverride(
-  cellKey: string,
-  changedCellKeys: ReadonlySet<string> | undefined,
-  invalidCellKeys: ReadonlySet<string> | undefined,
-): { bgCell: string; bgCellMedium: string } | undefined {
-  if (invalidCellKeys !== undefined && invalidCellKeys.size > 0 && invalidCellKeys.has(cellKey)) {
-    return { bgCell: INVALID_INPUT_CELL_BG, bgCellMedium: INVALID_INPUT_CELL_BG }
-  }
-  if (changedCellKeys !== undefined && changedCellKeys.size > 0 && changedCellKeys.has(cellKey)) {
-    return { bgCell: CHANGED_VS_SIM_CELL_BG, bgCellMedium: CHANGED_VS_SIM_CELL_BG }
-  }
-  return undefined
-}
+export type {
+  CostCorrelationModeProps,
+  CostImpactSlidersProps,
+  DefineModeProps,
+  DriverImpactModeProps,
+  GuidedInputModeProps,
+} from "@/features/scenario-tables/table/tableModeTypes"
 
 type ScenarioPercentTableProps = {
   tableId: string
@@ -286,77 +165,6 @@ type ScenarioPercentTableProps = {
   guidedInputMode?: GuidedInputModeProps
   /** Archived / immutable analysis: inspectable but not editable. */
   readOnly?: boolean
-}
-
-const ROW_HEIGHT = 34
-const HEADER_HEIGHT = 36
-const NAME_MAX_LENGTH = 80
-const COST_MAX_ROWS = 20
-const DRIVER_MAX_ROWS = 12
-const COST_OPT_COL_WIDTH = 104
-const COST_LIKELY_COL_WIDTH = 128
-const COST_PESS_COL_WIDTH = 104
-
-const emptyGridSelection: GridSelection = {
-  columns: CompactSelection.empty(),
-  rows: CompactSelection.empty(),
-  current: undefined,
-}
-
-/** Integer widths summing to `total` so Glide content width matches the card (no horizontal scroll). */
-function distributeScenarioColumnWidths(total: number): readonly [number, number, number, number] {
-  const t = Math.max(120, Math.floor(total))
-  const w0 = Math.floor(t * 0.36)
-  const w1 = Math.floor(t * 0.17)
-  const w2 = Math.floor(t * 0.25)
-  const w3 = t - w0 - w1 - w2
-  return [w0, w1, w2, w3]
-}
-
-function getCostColumnWidths(total: number): readonly [number, number, number, number] {
-  const fixed = COST_OPT_COL_WIDTH + COST_LIKELY_COL_WIDTH + COST_PESS_COL_WIDTH
-  const name = Math.max(160, Math.floor(total) - fixed)
-  return [name, COST_OPT_COL_WIDTH, COST_LIKELY_COL_WIDTH, COST_PESS_COL_WIDTH]
-}
-
-function normalizePastedRow(r: ScenarioRow): ScenarioRow {
-  return {
-    ...r,
-    name: r.name.slice(0, NAME_MAX_LENGTH),
-    optimistic: sanitizeScenarioNumericInput(r.optimistic),
-    likely: sanitizeScenarioNumericInput(r.likely),
-    pessimistic: sanitizeScenarioNumericInput(r.pessimistic),
-  }
-}
-
-function formatWithThousands(value: string, language: "no" | "en"): string {
-  const trimmed = value.trim()
-  if (trimmed === "") return value
-  const normalized = trimmed.replace(/\s/g, "")
-  const m = normalized.match(/^(-?)(\d+)([.,]\d+)?$/)
-  if (!m) return value
-  const sign = m[1] ?? ""
-  const intPart = m[2] ?? ""
-  const fraction = m[3] ?? ""
-  const thousandsSeparator = language === "en" ? "," : " "
-  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparator)
-  return `${sign}${grouped}${fraction}`
-}
-
-/** Column index for editable incurred-cost value (`Mest sannsynlig`). */
-const INCURRED_EDITABLE_COL = 2
-
-function selectionIncludesIncurredLockedCell(
-  current: NonNullable<GridSelection["current"]>,
-  incurredRowIndex: number,
-): boolean {
-  const [col, row] = current.cell
-  if (row === incurredRowIndex && col !== INCURRED_EDITABLE_COL) return true
-  const inc = incurredRowIndex
-  const { range } = current
-  if (inc < range.y || inc >= range.y + range.height) return false
-  const right = range.x + range.width - 1
-  return range.x !== INCURRED_EDITABLE_COL || right !== INCURRED_EDITABLE_COL
 }
 
 export function ScenarioPercentTable({

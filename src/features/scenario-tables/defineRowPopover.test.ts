@@ -12,12 +12,10 @@ import {
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { shouldShowDefineSelectHint } from "@/domain/results/scenarioTableModes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function scenarioTableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 function popoverSource() {

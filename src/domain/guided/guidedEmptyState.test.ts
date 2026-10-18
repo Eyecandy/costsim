@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import {
@@ -10,9 +8,9 @@ import {
 } from "@/domain/guided/guidedWorkflow"
 import { listGuidedInputRows } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function appSource() {
   return readAppSource()
@@ -23,10 +21,7 @@ function dialogSource() {
 }
 
 function tableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {

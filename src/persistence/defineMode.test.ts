@@ -24,16 +24,14 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function appSource() {
   return readAppSource()
 }
 
 function scenarioTableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 function defineEditorSource() {

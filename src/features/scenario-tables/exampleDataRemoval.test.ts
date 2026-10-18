@@ -5,12 +5,10 @@ import { join } from "node:path"
 import { featureConfigByVariant } from "@/config/appVariant"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function scenarioTableSource() {
-  return readFileSync(
-    join(repoRoot, "src/features/scenario-tables/ScenarioPercentTable.tsx"),
-    "utf8",
-  )
+  return readScenarioTableSource()
 }
 
 function appVariantSource() {

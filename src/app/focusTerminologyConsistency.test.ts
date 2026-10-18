@@ -1,15 +1,9 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
-import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
-
-function readSrc(rel: string) {
-  return readFileSync(join(root, rel), "utf8")
-}
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 /**
  * Flatten leaf string values from the i18n catalogs for user-facing scans.
@@ -45,7 +39,7 @@ describe("Focus mode user-facing terminology", () => {
   it("B: local shortcuts use Åpne Fokusmodus / Open Focus mode", () => {
     expect(messages.no.inputs.openFocusMode).toBe("Åpne Fokusmodus")
     expect(messages.en.inputs.openFocusMode).toBe("Open Focus mode")
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     const results = readResultsPanelSource()
     expect(table).toContain('title={t("inputs.openFocusMode")}')
     expect(table).toContain('aria-label={t("inputs.openFocusMode")}')

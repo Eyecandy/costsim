@@ -10,6 +10,7 @@ import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -38,7 +39,7 @@ function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
 describe("Focus Results stepwise workflow", () => {
   it("A: Results Focus entry uses Play like Input, not Maximize2", () => {
     const panel = readResultsPanelSource()
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     expect(panel).toContain("data-results-focus-toggle")
     expect(panel).toContain('import { Check, Play } from "lucide-react"')
     expect(panel).not.toContain("Maximize2")

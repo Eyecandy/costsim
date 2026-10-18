@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest"
 import { messages } from "@/i18n/messages"
 import { METHOD_GUIDE_SECTION_IDS } from "@/domain/guided/methodGuide"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readScenarioTableSource } from "@/test-utils/scenarioTableSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -75,7 +76,7 @@ describe("Method Guide chronological content", () => {
     expect(header).toContain("data-method-guide-guide-icon")
     expect(header).toContain("fill-[#1d868c]")
     // Same icon family as Cost Items / Drivers Guide control.
-    const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
+    const table = readScenarioTableSource()
     expect(table).toContain("fill-[#1d868c]")
     expect(table).toContain("<Play")
   })
