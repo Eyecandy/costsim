@@ -28,7 +28,11 @@ import {
   extractDevelopmentMetrics,
   type OngoingDevelopmentSeries,
 } from "@/domain/analysis/ongoingDevelopmentSeries"
-import { formatPdfAbsoluteAmount, resolvePdfAmountScale, type PdfAmountScale } from "@/pdf/shared"
+import {
+  formatPdfAbsoluteAmount,
+  resolvePdfAmountScale,
+  type PdfAmountScale,
+} from "@/pdf/buildPdfReportModel"
 import {
   filterCheckpointsUpToCutoff,
   ongoingPdfCheckpointDisplayLabel,

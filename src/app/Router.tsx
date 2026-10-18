@@ -1,7 +1,5 @@
-import { useEffect, useSyncExternalStore, type ReactNode } from "react"
+import { lazy, Suspense, useEffect, useSyncExternalStore, type ReactNode } from "react"
 
-import App from "@/app/App"
-import { AnalysisLibraryPage } from "@/features/analysis-library/AnalysisLibraryPage"
 import { LandingPage } from "@/app/LandingPage"
 import { LoginPage } from "@/app/LoginPage"
 import { useAuth } from "@/shared/auth/authContext"
@@ -12,6 +10,14 @@ import {
   subscribeLocation,
 } from "@/persistence/analysisLibraryRoutes"
 import { buildLoginUrl, captureCurrentAppUrl } from "@/shared/auth/auth"
+
+// The workspace and the library are large; load them only when their route is opened.
+const App = lazy(() => import("@/app/App"))
+const AnalysisLibraryPage = lazy(() =>
+  import("@/features/analysis-library/AnalysisLibraryPage").then((m) => ({
+    default: m.AnalysisLibraryPage,
+  })),
+)
 
 function getPathname() {
   return window.location.pathname
@@ -50,7 +56,9 @@ export function Router() {
   if (isLibraryPath(pathname)) {
     return (
       <AuthedGate>
-        <AnalysisLibraryPage />
+        <Suspense fallback={null}>
+          <AnalysisLibraryPage />
+        </Suspense>
       </AuthedGate>
     )
   }
@@ -58,7 +66,9 @@ export function Router() {
   if (isAppPath(pathname)) {
     return (
       <AuthedGate>
-        <App key={pathKey} />
+        <Suspense fallback={null}>
+          <App key={pathKey} />
+        </Suspense>
       </AuthedGate>
     )
   }
