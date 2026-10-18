@@ -54,8 +54,9 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Risky UI changes get a browser parity check against the original: run `../costsim` on port 5192 and this app on 5191, seed `localStorage["cost-simulator:v1:projects"]`, run the same flow in both and compare page text with digits masked (results are random). Screenshots of the results page time out in the automated Chrome; use DOM text.
 - Commit and push at sensible milestones (end of a phase or a coherent step), not after every small edit. Commits are authored by the user with no co-author trailer. Keep `docs/refactor-tasks.md` updated with date and time.
 - Do not add new documentation files unprompted; extend this file or the README instead.
+- Open work lives on the file board in `tasks/` (`todo/`, `doing/`, `done/`; see `tasks/README.md`). Move a card with `git mv` when its status changes; `docs/refactor-tasks.md` stays the dated log of what was done.
 
-## Known debt (see `docs/refactor-tasks.md` for the live list)
+## Known debt (cards for each item are in `tasks/todo/`)
 - `shared/ui/button.tsx` (shadcn, React 19 style) takes `ref` as a plain prop, which React 18 drops. So `ConfirmDialog`'s `confirmBtnRef.current?.focus()` never runs (same in the original `costsim`). Fixing it changes dialog focus behaviour; do it on purpose (wrap in `forwardRef`) and re-check the dialogs in the browser.
 - Large files still to split: `ResultsPanel` (JSX only), `GuidedInputDialog` (main component), `ScenarioPercentTable`, `AnalysisLibraryNav` (main component).
 - Lint: 0 errors, 36 warnings (12 `refs` and 14 `set-state-in-effect` from the React-Compiler rules flagging older patterns, 9 `exhaustive-deps`, 1 memoization). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.
