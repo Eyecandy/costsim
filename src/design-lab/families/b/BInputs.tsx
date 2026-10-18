@@ -1,6 +1,8 @@
 import { Plus, Presentation } from "lucide-react"
 import { useState } from "react"
 
+import { BTable } from "@/design-lab/families/b/BTable"
+import { BCard } from "@/design-lab/families/b/BCard"
 import type { BVariant } from "@/design-lab/families/b/types"
 import { LabProjectProfile } from "@/design-lab/parts/LabProjectProfile"
 import { LabTable } from "@/design-lab/parts/LabTable"
@@ -23,21 +25,32 @@ function Count({ value }: { value: number }) {
 }
 
 /** Cost items or drivers: heading with count, the labelled toolbar and the table. */
-function TablePane({ kind }: { kind: "cost" | "driver" }) {
+function TablePane({
+  kind,
+  roomy = false,
+  bare = false,
+}: {
+  kind: "cost" | "driver"
+  roomy?: boolean
+  /** Without the heading, when a card already has one. */
+  bare?: boolean
+}) {
   const { t } = useI18n()
+  const rows = kind === "cost" ? COST_ROWS : DRIVER_ROWS
   return (
-    <div className="min-w-0 space-y-3">
-      <h2 className="m-0 flex items-center gap-2 text-[13px] font-semibold">
-        {kind === "cost" ? t("expanders.costElements") : t("expanders.drivers")}
-        <Count value={kind === "cost" ? COST_ROWS.length : DRIVER_ROWS.length} />
-      </h2>
+    <div className={cn("min-w-0", roomy ? "space-y-4" : "space-y-3")}>
+      {bare ? null : (
+        <h2 className="m-0 flex items-center gap-2 text-[13px] font-semibold">
+          {kind === "cost" ? t("expanders.costElements") : t("expanders.drivers")}
+          <Count value={rows.length} />
+        </h2>
+      )}
       <LabToolbar kind={kind} mode="labelled" rowActions="inline" />
-      <LabTable
-        kind={kind}
-        rows={kind === "cost" ? COST_ROWS : DRIVER_ROWS}
-        editable
-        rowActions="inline"
-      />
+      {roomy ? (
+        <BTable kind={kind} rows={rows} />
+      ) : (
+        <LabTable kind={kind} rows={rows} editable rowActions="inline" />
+      )}
     </div>
   )
 }
@@ -69,7 +82,7 @@ function AssumptionsStrip() {
   )
 }
 
-function TabbedBody() {
+function TabbedBody({ roomy }: { roomy: boolean }) {
   const { t } = useI18n()
   const [tab, setTab] = useState<Tab>("cost")
   const tabs: { id: Tab; label: string; count: number }[] = [
@@ -121,10 +134,30 @@ function TabbedBody() {
             </li>
           </ul>
         ) : (
-          <TablePane kind={tab} />
+          <TablePane kind={tab} roomy={roomy} />
         )}
       </div>
     </>
+  )
+}
+
+/** The project profile and, when asked, the Fokusmodus button with the Presentation icon. */
+function ProfileRow({ showFocus }: { showFocus: boolean }) {
+  const { t } = useI18n()
+  return (
+    <div className="flex flex-wrap items-start justify-between gap-3">
+      <LabProjectProfile className="min-w-0 flex-1" />
+      {showFocus ? (
+        <Button
+          type="button"
+          size="sm"
+          className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+        >
+          <Presentation className="size-3.5" aria-hidden />
+          {t("inputs.guidedFocusMode")}
+        </Button>
+      ) : null}
+    </div>
   )
 }
 
@@ -136,37 +169,76 @@ function TabbedBody() {
 export function BInputs({
   mode,
   showFocus = true,
+  density = "normal",
+  cardStyle,
 }: {
   mode: BVariant["inputs"]
   showFocus?: boolean
+  density?: BVariant["density"]
+  cardStyle?: BVariant["cardStyle"]
 }) {
   const { t } = useI18n()
+  const roomy = density === "roomy"
+  if (cardStyle) {
+    return (
+      <div className="space-y-6">
+        <section className="rounded-2xl border border-border bg-[var(--b-card)] px-6 py-4 shadow-sm">
+          <ProfileRow showFocus={showFocus} />
+        </section>
+        <div className={mode === "split" ? "grid items-start gap-6 xl:grid-cols-2" : "space-y-6"}>
+          <BCard
+            style={cardStyle}
+            badge="1"
+            title={t("expanders.costElements")}
+            count={COST_ROWS.length}
+          >
+            <TablePane kind="cost" roomy={roomy} bare />
+          </BCard>
+          <BCard
+            style={cardStyle}
+            badge="2"
+            title={t("expanders.drivers")}
+            count={DRIVER_ROWS.length}
+          >
+            <TablePane kind="driver" roomy={roomy} bare />
+          </BCard>
+        </div>
+        <BCard
+          style={cardStyle}
+          badge="3"
+          title={t("inputs.assumptionsLabel")}
+          count={ASSUMPTIONS.length}
+        >
+          <ul className="m-0 flex list-none flex-wrap gap-2 p-0 text-[13px]">
+            {ASSUMPTIONS.map((text) => (
+              <li
+                key={text}
+                className="rounded-full border border-[var(--lab-field-border)] bg-background px-3 py-1"
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
+        </BCard>
+      </div>
+    )
+  }
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-[var(--b-card)] shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-3">
-        <LabProjectProfile className="min-w-0 flex-1" />
-        {showFocus ? (
-          <Button
-            type="button"
-            size="sm"
-            className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
-          >
-            <Presentation className="size-3.5" aria-hidden />
-            {t("inputs.guidedFocusMode")}
-          </Button>
-        ) : null}
+      <div className={cn("border-b border-border px-5", roomy ? "py-4" : "py-3")}>
+        <ProfileRow showFocus={showFocus} />
       </div>
 
-      {mode === "tabs" ? <TabbedBody /> : null}
+      {mode === "tabs" ? <TabbedBody roomy={roomy} /> : null}
 
       {mode === "split" ? (
         <>
           <div className="grid divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
-            <div className="p-5">
-              <TablePane kind="cost" />
+            <div className={roomy ? "p-7" : "p-5"}>
+              <TablePane kind="cost" roomy={roomy} />
             </div>
-            <div className="p-5">
-              <TablePane kind="driver" />
+            <div className={roomy ? "p-7" : "p-5"}>
+              <TablePane kind="driver" roomy={roomy} />
             </div>
           </div>
           <AssumptionsStrip />
@@ -175,10 +247,10 @@ export function BInputs({
 
       {mode === "stacked" ? (
         <>
-          <div className="space-y-5 p-5">
-            <TablePane kind="cost" />
-            <div className="border-t border-border pt-5">
-              <TablePane kind="driver" />
+          <div className={roomy ? "space-y-8 p-7" : "space-y-5 p-5"}>
+            <TablePane kind="cost" roomy={roomy} />
+            <div className={cn("border-t border-border", roomy ? "pt-8" : "pt-5")}>
+              <TablePane kind="driver" roomy={roomy} />
             </div>
           </div>
           <AssumptionsStrip />

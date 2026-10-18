@@ -17,11 +17,11 @@ export type LabOptions = {
     user: boolean
   }
   /** Note 2: a narrow hidden rail ("rail") or an open library sidebar with a collapse arrow ("open"). */
-  sidebar: "rail" | "open"
+  sidebar: "rail" | "open" | "library"
   /** Note 3: "Checkpoint 1" twice ("duplicate") or once ("once"). */
   checkpoint: "duplicate" | "once"
   /** Where the checkpoints live: as tabs above the tables ("tabs") or as a vertical timeline on the left ("timeline"). */
-  checkpointNav: "tabs" | "timeline"
+  checkpointNav: "tabs" | "timeline" | "strip"
   /** Visible Save and Checkpoint buttons: none (only in the "..." menu, as today), beside the file name, or in the header bar. */
   documentActions: "none" | "inputRow" | "headerBar"
   /** Cost item and driver cards: with the up/down collapse arrow as today ("collapsible") or as plain cards ("plain"). */
@@ -48,6 +48,16 @@ export type LabOptions = {
   inputs: "stacked" | "sideBySide"
   /** Idea: results in one long column ("column") or as horizontal cards ("cards"). */
   results: "column" | "cards"
+  /** Calm look: "airy" gives sections more whitespace and larger text, "normal" is today's density. */
+  spacing: "normal" | "airy"
+  /** "roomy": tables with fixed column widths (cells never change width with content), taller rows and larger text. */
+  tableSize: "default" | "roomy"
+  /** "free": today's loose sections. "steps": numbered step cards with a hint each. "wizard": one step at a time with Back / Next. */
+  flow: "free" | "steps" | "wizard"
+  /** "all": cost items and drivers both shown. "tabs": a switch shows one of them at a time. */
+  inputsView: "all" | "tabs"
+  /** Colour of the checkpoint buttons: "action" is the Fokusmodus colour, "accent" a different one (the owner wants them to differ). */
+  checkpointTone: "action" | "accent"
   /** Idea: run button and result at the side ("side"), in a bottom bar ("bottom") or a full-screen view ("fullscreen"). */
   simulation: "side" | "bottom" | "fullscreen"
 }

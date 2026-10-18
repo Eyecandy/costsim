@@ -19,4 +19,9 @@ export const BASE_OPTIONS: LabOptions = {
   inputs: "stacked",
   results: "column",
   simulation: "side",
+  spacing: "normal",
+  tableSize: "default",
+  flow: "free",
+  inputsView: "all",
+  checkpointTone: "action",
 }

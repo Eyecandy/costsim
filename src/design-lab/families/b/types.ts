@@ -1,3 +1,4 @@
+import type { CardStyle } from "@/design-lab/families/c/types"
 import type { ThemeId } from "@/design-lab/themes"
 
 /** A look in family B (the workbench design). Steps inside the family change the theme or the details. */
@@ -13,7 +14,7 @@ export type BVariant = {
   /** Inputs on the left and results on the right ("columns"), or inputs across the top and results below ("rows"). */
   layout: "columns" | "rows"
   /** The left side: a narrow icon rail ("icons"), or a library panel with search and filters that can fold into the rail ("library"). */
-  sidebar: "icons" | "library"
+  sidebar: "icons" | "library" | "folders"
   /** A header bar above the command bar with the brand, links, language and user ("true"), or those inside the command bar. */
   navBar: boolean
   /** How much the results show: key figures and charts only ("compact"), or also the full key figure table and the change table as in family A ("full"). */
@@ -22,4 +23,14 @@ export type BVariant = {
   focusAtTitle?: boolean
   /** The checkpoint steps in their own colour ("distinct"), so they are not confused with Fokusmodus and Kjør simulering. */
   checkpointTone?: "brand" | "distinct"
+  /** "roomy": larger tables with fixed-size cells (they never change size with content) and more whitespace. */
+  density?: "normal" | "roomy"
+  /** Results first, then the inputs (only in the "rows" layout). */
+  resultsFirst?: boolean
+  /** A strip with the key figures that stays visible under the command bar, instead of the big tiles. */
+  keyStrip?: boolean
+  /** A right-hand drawer with the detail (key figure table, change table) that opens on request. */
+  detailDrawer?: boolean
+  /** Cards from family C with numbered headings instead of the plain B cards. */
+  cardStyle?: CardStyle
 }

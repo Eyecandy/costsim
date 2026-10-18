@@ -1,5 +1,6 @@
 import { Archive, Check, Lock, Play, Presentation } from "lucide-react"
 
+import { BKeyStrip } from "@/design-lab/families/b/BKeyStrip"
 import { BNav } from "@/design-lab/families/b/BNav"
 import { CHECKPOINTS, FILE_NAME } from "@/design-lab/sampleData"
 import { useI18n } from "@/i18n/useI18n"
@@ -71,7 +72,9 @@ export function BCommandBar({
   navBar,
   focusAtTitle = false,
   distinctCheckpoints = false,
+  keyStrip = false,
 }: {
+  keyStrip?: boolean
   navBar: boolean
   focusAtTitle?: boolean
   distinctCheckpoints?: boolean
@@ -119,6 +122,7 @@ export function BCommandBar({
             </Button>
           </div>
         </div>
+        {keyStrip ? <BKeyStrip /> : null}
       </div>
     </header>
   )

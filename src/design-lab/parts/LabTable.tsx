@@ -19,11 +19,29 @@ function Cell({
   value,
   editable,
   align,
+  fixed = false,
 }: {
   value: string
   editable: boolean
   align: "left" | "right"
+  /** Roomy tables: the value fills a cell of fixed width and is cut off with an ellipsis, never widening it. */
+  fixed?: boolean
 }) {
+  if (fixed) {
+    return (
+      <span
+        title={value}
+        className={cn(
+          "block w-full truncate tabular-nums",
+          align === "right" ? "text-right" : "text-left",
+          editable &&
+            "rounded border border-[var(--lab-field-border)] bg-background px-2.5 py-1.5 hover:border-[var(--lab-brand)] hover:bg-[var(--lab-tint)]",
+        )}
+      >
+        {value}
+      </span>
+    )
+  }
   if (!editable) return <span className="tabular-nums">{value}</span>
   return (
     <span
@@ -108,18 +126,38 @@ export function LabTable({
   rows,
   editable,
   rowActions,
+  size = "default",
 }: {
   kind: "cost" | "driver"
   rows: readonly SampleRow[]
   editable: boolean
   rowActions: LabOptions["rowActions"]
+  /** "roomy": fixed column widths, taller rows, larger text. Default keeps today's table. */
+  size?: LabOptions["tableSize"]
 }) {
   const { t } = useI18n()
   const inline = rowActions === "inline"
-  const headCell = "px-2 py-1.5 text-[10px] font-medium text-muted-foreground"
+  const roomy = size === "roomy"
+  const headCell = cn(
+    "font-medium text-muted-foreground",
+    roomy ? "px-3 py-2.5 text-[11px]" : "px-2 py-1.5 text-[10px]",
+  )
+  const bodyCell = roomy ? "h-12 px-3" : "px-2 py-1.5"
+  const footCell = roomy ? "h-11 px-3" : "px-2 py-2"
 
   return (
-    <table className="w-full border-collapse text-[12px]">
+    <table
+      className={cn("w-full border-collapse", roomy ? "table-fixed text-[13px]" : "text-[12px]")}
+    >
+      {roomy ? (
+        <colgroup>
+          <col className="w-[30%]" />
+          <col className="w-[15%]" />
+          <col className="w-[15%]" />
+          <col className="w-[15%]" />
+          <col className="w-[25%]" />
+        </colgroup>
+      ) : null}
       <thead>
         <tr className="border-b border-border">
           <th className={cn(headCell, "text-left")}>{t("inputs.nameHeader")}</th>
@@ -142,19 +180,19 @@ export function LabTable({
                   selected && "bg-[var(--lab-tint)]",
                 )}
               >
-                <td className="px-2 py-1.5">
-                  <Cell value={row.name} editable={editable} align="left" />
+                <td className={bodyCell}>
+                  <Cell value={row.name} editable={editable} align="left" fixed={roomy} />
                 </td>
-                <td className="px-2 py-1.5 text-right">
-                  <Cell value={row.optimistic} editable={editable} align="right" />
+                <td className={cn(bodyCell, "text-right")}>
+                  <Cell value={row.optimistic} editable={editable} align="right" fixed={roomy} />
                 </td>
-                <td className="px-2 py-1.5 text-right">
-                  <Cell value={row.likely} editable={editable} align="right" />
+                <td className={cn(bodyCell, "text-right")}>
+                  <Cell value={row.likely} editable={editable} align="right" fixed={roomy} />
                 </td>
-                <td className="px-2 py-1.5 text-right">
-                  <Cell value={row.pessimistic} editable={editable} align="right" />
+                <td className={cn(bodyCell, "text-right")}>
+                  <Cell value={row.pessimistic} editable={editable} align="right" fixed={roomy} />
                 </td>
-                <td className="px-2 py-1.5 text-right">
+                <td className={cn(bodyCell, "text-right")}>
                   {inline ? (
                     <span className="inline-flex items-center gap-1">
                       <RowButton label={t("expanders.define")} Icon={FileText} />
@@ -175,7 +213,7 @@ export function LabTable({
         })}
         {Array.from({ length: EMPTY_ROW_COUNT }, (_, index) => (
           <tr key={`empty-${index}`} className="border-b border-border/60">
-            <td colSpan={COLUMN_COUNT} className="h-8 px-2">
+            <td colSpan={COLUMN_COUNT} className={roomy ? "h-12 px-3" : "h-8 px-2"}>
               {editable ? (
                 <span className="inline-block h-5 w-full rounded border border-dashed border-[var(--lab-field-border)]/70" />
               ) : null}
@@ -186,15 +224,15 @@ export function LabTable({
       {kind === "cost" ? (
         <tfoot>
           <tr className="text-muted-foreground">
-            <td className="px-2 py-2">Påløpte kostnader</td>
+            <td className={footCell}>Påløpte kostnader</td>
             <td />
-            <td className="px-2 py-2 text-right tabular-nums">{INCURRED_COSTS}</td>
+            <td className={cn(footCell, "text-right tabular-nums")}>{INCURRED_COSTS}</td>
             <td colSpan={2} />
           </tr>
           <tr className="border-t border-border font-medium">
-            <td className="px-2 py-2">{t("keyMetrics.baseCost")}</td>
+            <td className={footCell}>{t("keyMetrics.baseCost")}</td>
             <td />
-            <td className="px-2 py-2 text-right tabular-nums">{BASE_COST}</td>
+            <td className={cn(footCell, "text-right tabular-nums")}>{BASE_COST}</td>
             <td colSpan={2} />
           </tr>
         </tfoot>

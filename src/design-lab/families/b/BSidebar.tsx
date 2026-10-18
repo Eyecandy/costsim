@@ -3,6 +3,7 @@ import { useState } from "react"
 
 import { BRail } from "@/design-lab/families/b/BRail"
 import type { BVariant } from "@/design-lab/families/b/types"
+import { CSidebar } from "@/design-lab/families/c/CSidebar"
 import { FILE_NAME, LIBRARY_ANALYSES, type LibraryStatus } from "@/design-lab/sampleData"
 import { cn } from "@/shared/utils"
 
@@ -151,6 +152,7 @@ function BLibrary({ onCollapse }: { onCollapse: () => void }) {
 export function BSidebar({ mode }: { mode: BVariant["sidebar"] }) {
   const [open, setOpen] = useState(true)
   if (mode === "icons") return <BRail />
+  if (mode === "folders") return <CSidebar />
   if (open) return <BLibrary onCollapse={() => setOpen(false)} />
   return <BRail onExpand={() => setOpen(true)} />
 }

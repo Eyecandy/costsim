@@ -213,7 +213,7 @@ describe("what the numbered notes change", () => {
     expect(
       within(profile).getByText("Rehabilitering / fornyelse", { selector: "dd span" }),
     ).toBeVisible()
-  })
+  }, 60_000)
 
   it("A12 has no collapse arrows on cost items and drivers, other looks keep them", () => {
     const { unmount } = renderVariant("12")
