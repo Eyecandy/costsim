@@ -12,6 +12,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # 7.1+ adds stricter React-Compiler rules (75 warnings + 1 error vs our limit of 36).
+      # Remove this entry when tasks/todo/07-lint-warnings.md is done.
+      - dependency-name: "eslint-plugin-react-hooks"
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
