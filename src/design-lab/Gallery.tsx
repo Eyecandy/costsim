@@ -1,10 +1,48 @@
+import { useState } from "react"
+
 import { VARIANTS } from "@/design-lab/variants"
+import type { LabVariant } from "@/design-lab/variants/types"
 
 const THUMB_SCALE = 0.27
 const PAGE_WIDTH = 1440
 const PAGE_HEIGHT = 960
 
-/** The index page: one card per variant with a live scaled preview. */
+/** A live preview is a whole page in an iframe, so each card loads its own only when asked. */
+function Preview({ variant }: { variant: LabVariant }) {
+  const [loaded, setLoaded] = useState(false)
+  const box = { width: PAGE_WIDTH * THUMB_SCALE, height: PAGE_HEIGHT * THUMB_SCALE }
+
+  if (!loaded) {
+    return (
+      <div
+        className="grid place-items-center rounded-md border border-dashed border-border bg-muted/50"
+        style={box}
+      >
+        <button
+          type="button"
+          onClick={() => setLoaded(true)}
+          className="rounded-md border border-border bg-background px-3 py-1.5 text-[12px] shadow-sm hover:border-[var(--lab-brand)]"
+        >
+          Vis forhåndsvisning
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-md border border-border bg-white" style={box}>
+      <iframe
+        title={`Forhåndsvisning ${variant.title}`}
+        src={`/design/${variant.id}?bare=1`}
+        tabIndex={-1}
+        className="pointer-events-none absolute top-0 left-0 origin-top-left border-0"
+        style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, transform: `scale(${THUMB_SCALE})` }}
+      />
+    </div>
+  )
+}
+
+/** The index page: one card per variant, with a preview that loads on request. */
 export function LabGallery() {
   return (
     <div className="min-h-screen bg-muted/40 px-6 py-8 font-sans text-foreground">
@@ -25,31 +63,15 @@ export function LabGallery() {
               key={variant.id}
               className="rounded-xl border border-border bg-background p-4 shadow-sm"
             >
-              <a
-                href={`/design/${variant.id}`}
-                className="block"
-                aria-label={`Åpne ${variant.title}`}
-              >
-                <div
-                  className="relative overflow-hidden rounded-md border border-border bg-white"
-                  style={{ width: PAGE_WIDTH * THUMB_SCALE, height: PAGE_HEIGHT * THUMB_SCALE }}
-                >
-                  <iframe
-                    title={`Forhåndsvisning ${variant.title}`}
-                    src={`/design/${variant.id}?bare=1`}
-                    loading="lazy"
-                    tabIndex={-1}
-                    className="pointer-events-none absolute top-0 left-0 origin-top-left border-0"
-                    style={{
-                      width: PAGE_WIDTH,
-                      height: PAGE_HEIGHT,
-                      transform: `scale(${THUMB_SCALE})`,
-                    }}
-                  />
-                </div>
-              </a>
+              <Preview variant={variant} />
               <h2 className="m-0 mt-3 text-[15px] font-semibold">
-                {variant.id} · {variant.title}
+                <a
+                  href={`/design/${variant.id}`}
+                  className="hover:underline"
+                  aria-label={`Åpne ${variant.title}`}
+                >
+                  {variant.id} · {variant.title}
+                </a>
               </h2>
               <p className="mt-1 text-[12px] text-muted-foreground">{variant.description}</p>
               <ul className="mt-2 list-disc pl-4 text-[12px]">

@@ -120,17 +120,31 @@ describe("what the numbered notes change", () => {
 })
 
 describe("gallery", () => {
-  it("links to every variant", () => {
-    render(
+  function renderGallery() {
+    return render(
       <I18nProvider>
         <LabGallery />
       </I18nProvider>,
     )
+  }
+
+  it("links to every variant", () => {
+    renderGallery()
     for (const variant of VARIANTS) {
       expect(screen.getByRole("link", { name: `Åpne ${variant.title}` })).toHaveAttribute(
         "href",
         `/design/${variant.id}`,
       )
     }
+  })
+
+  it("loads a preview only when asked, one card at a time", async () => {
+    const user = userEvent.setup()
+    const { container } = renderGallery()
+    expect(container.querySelectorAll("iframe")).toHaveLength(0)
+    await user.click(
+      screen.getAllByRole("button", { name: "Vis forhåndsvisning" })[0] as HTMLElement,
+    )
+    expect(container.querySelectorAll("iframe")).toHaveLength(1)
   })
 })
