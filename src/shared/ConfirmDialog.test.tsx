@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react"
+import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
 
 import { ConfirmDialog } from "@/shared/ConfirmDialog"
 
-function renderDialog(open = true) {
+function renderDialog(open = true, confirmVariant: "outline" | "destructive" = "outline") {
   const onCancel = vi.fn()
   const onConfirm = vi.fn()
   render(
@@ -15,6 +15,7 @@ function renderDialog(open = true) {
       message="Er du sikker?"
       cancelLabel="Avbryt"
       confirmLabel="Bekreft"
+      confirmVariant={confirmVariant}
       onCancel={onCancel}
       onConfirm={onConfirm}
     />,
@@ -42,6 +43,14 @@ describe("ConfirmDialog", () => {
     expect(onConfirm).toHaveBeenCalledTimes(1)
     await user.click(screen.getByRole("button", { name: "Avbryt" }))
     expect(onCancel).toHaveBeenCalledTimes(1)
+  })
+
+  it("focuses the confirm button on open, but Cancel for a destructive confirm", () => {
+    renderDialog()
+    expect(screen.getByRole("button", { name: "Bekreft" })).toHaveFocus()
+    cleanup()
+    renderDialog(true, "destructive")
+    expect(screen.getByRole("button", { name: "Avbryt" })).toHaveFocus()
   })
 
   it("cancels on a backdrop click but not on a click inside the dialog", async () => {

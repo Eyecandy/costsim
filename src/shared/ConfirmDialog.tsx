@@ -32,13 +32,16 @@ export function ConfirmDialog({
   onConfirm,
 }: ConfirmDialogProps) {
   const confirmBtnRef = useRef<HTMLButtonElement | null>(null)
+  const cancelBtnRef = useRef<HTMLButtonElement | null>(null)
   // Re-render when fullscreen changes; resolve fresh at portal time for Focus.
   const trackedContainer = useOverlayPortalContainer()
 
+  // Destructive confirms start on Cancel so a stray Enter cannot delete anything.
   useEffect(() => {
     if (!open) return
-    confirmBtnRef.current?.focus()
-  }, [open])
+    const target = confirmVariant === "destructive" ? cancelBtnRef : confirmBtnRef
+    target.current?.focus()
+  }, [open, confirmVariant])
 
   if (!open) return null
   if (typeof document === "undefined") return null
@@ -77,7 +80,7 @@ export function ConfirmDialog({
           {message}
         </p>
         <div className="mt-4 flex justify-end gap-2">
-          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+          <Button ref={cancelBtnRef} type="button" variant="ghost" size="sm" onClick={onCancel}>
             {cancelLabel}
           </Button>
           <Button

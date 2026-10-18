@@ -14,3 +14,4 @@ Priority: low     Size: S     Risk: low
 - Browser: every confirm dialog (delete, archive, finish ongoing, discard) with keyboard only.
 
 ## Result
+`Button` is now a `forwardRef`. `ConfirmDialog` focuses the confirm button on open and focuses Cancel for `confirmVariant="destructive"` (only the checkpoint delete uses it). New unit test covers both. Browser: the analysis Delete dialog opens with its confirm button focused. The React warning "Function components cannot be given refs" from `Button` is gone. Not changed: other dialogs keep the default (confirm focused); making analysis Delete destructive is a possible follow-up.

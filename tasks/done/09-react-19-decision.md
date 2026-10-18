@@ -13,3 +13,4 @@ Pick one:
 - `npm run check` and the full parity run (routes, workspace, Focus, library, PDF).
 
 ## Result
+Decision (2026-10-18): stay on React 18. Revisit when `@glideapps/glide-data-grid` ships a stable release with React 19 support. `CLAUDE.md` already documents the reason.

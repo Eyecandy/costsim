@@ -1,5 +1,6 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import { forwardRef } from "react"
 
 import { cn } from "@/shared/utils"
 
@@ -40,19 +41,19 @@ const buttonVariants = cva(
   },
 )
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+/** forwardRef so callers (and Base UI `render` slots) can reach the DOM button on React 18. */
+const Button = forwardRef<
+  HTMLButtonElement,
+  Omit<ButtonPrimitive.Props, "ref"> & VariantProps<typeof buttonVariants>
+>(function Button({ className, variant = "default", size = "default", ...props }, ref) {
   return (
     <ButtonPrimitive
+      ref={ref}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   )
-}
+})
 
 export { Button, buttonVariants }
