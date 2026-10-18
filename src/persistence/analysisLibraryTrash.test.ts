@@ -14,9 +14,7 @@ import {
 } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 async function createDraft(name: string, folderId: string | null = null) {
   const repo = getAnalysisLibraryRepository()
@@ -177,7 +175,7 @@ describe("Analysis Library Trash", () => {
   })
 
   it("J: UI copy — soft delete is recoverable; permanent is irreversible", () => {
-    const messages = readFileSync(join(repoRoot, "src/i18n/messages.ts"), "utf8")
+    const messages = readMessagesSource()
     expect(messages).toContain('delete: "Slett"')
     expect(messages).toContain('delete: "Delete"')
     expect(messages).toContain("Slettede analyser")

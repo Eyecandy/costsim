@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -64,7 +65,7 @@ describe("Focus / Results concise guidance copy", () => {
   })
 
   it("old long guidance and Tornado controllable-outcomes disclaimer stay absent", () => {
-    const messagesSrc = readSrc("src/i18n/messages.ts")
+    const messagesSrc = readMessagesSource()
     const panel = readSrc("src/features/results/ResultsPanel.tsx")
     expect(messagesSrc).not.toContain("Velg et kostnadsnivå på x-aksen")
     expect(messagesSrc).not.toContain("Choose a cost level on the x-axis")

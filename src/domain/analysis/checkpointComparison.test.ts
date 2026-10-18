@@ -37,6 +37,7 @@ import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
@@ -714,7 +715,7 @@ describe("checkpoint comparison UI wiring", () => {
   })
 
   it("exposes baseline and comparison i18n strings", () => {
-    const messages = read("src/i18n/messages.ts")
+    const messages = readMessagesSource()
     expect(messages).toContain('comparisonBaselineTitle: "Første checkpoint"')
     expect(messages).toContain('comparisonBaselineTitle: "First checkpoint"')
     expect(messages).toContain('comparisonHeading: "Endring siden forrige checkpoint"')

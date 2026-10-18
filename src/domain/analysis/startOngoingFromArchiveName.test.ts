@@ -26,6 +26,7 @@ import {
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 function makeSnapshot(
   projects: AnalysisDocument["workspace"]["projects"],
@@ -361,7 +362,7 @@ describe("start ongoing name UX wiring", () => {
       "utf8",
     )
     const app = readAppSource()
-    const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
+    const messages = readMessagesSource()
     const session = readFileSync(
       join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
       "utf8",

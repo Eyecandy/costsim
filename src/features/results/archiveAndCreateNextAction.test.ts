@@ -3,6 +3,7 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
@@ -10,7 +11,7 @@ function read(pathFromRepo: string) {
 
 describe("archive and create next Results shortcut", () => {
   it("exposes NO/EN labels for Options and archive action", () => {
-    const messages = read("src/i18n/messages.ts")
+    const messages = readMessagesSource()
     expect(messages).toContain('archiveAndCreateNextAction: "Arkiver og opprett neste checkpoint"')
     expect(messages).toContain('archiveAndCreateNextAction: "Archive and create next checkpoint"')
     expect(messages).toContain('optionsHeading: "Valg"')
@@ -51,7 +52,7 @@ describe("archive and create next Results shortcut", () => {
   it("Reset / Nullstill is removed from Results Options", () => {
     const panel = read("src/features/results/ResultsPanel.tsx")
     const app = readAppSource()
-    const messages = read("src/i18n/messages.ts")
+    const messages = readMessagesSource()
     expect(panel).not.toContain("onRequestReset")
     expect(panel).not.toContain("results.startOverButton")
     expect(panel).not.toContain("startOverCardHeading")

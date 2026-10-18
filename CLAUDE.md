@@ -30,7 +30,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 ## Where things go
 - Pure calculation or data shaping: `domain/<area>/`. Reads or writes browser storage or the URL: `persistence/`.
 - A component or hook used by one feature: that feature's folder. Used by two or more: `shared/`.
-- User-visible text: a key in `src/i18n/messages.ts`, read with `useI18n().t(...)`. Keep the `no` and `en` objects identical in shape. No hard-coded Norwegian/English strings in components.
+- User-visible text: a key in `src/i18n/messages.no.ts` and `messages.en.ts` (types and the `no`/`en` parity check in `messages.ts`), read with `useI18n().t(...)`. Keep the `no` and `en` objects identical in shape. No hard-coded Norwegian/English strings in components.
 - Environment variables: declared in `src/vite-env.d.ts`, documented in `.env.example`. Every `VITE_` value ends up in the public bundle: nothing secret. `VITE_APP_PASSWORD` is a gate, not real authentication.
 
 ## Code style
@@ -55,7 +55,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Commit and push at sensible milestones (end of a phase or a coherent step), not after every small edit. Commits are authored by the user with no co-author trailer. Keep `docs/refactor-tasks.md` updated with date and time.
 - Do not add new documentation files unprompted; extend this file or the README instead.
 
-## Known debt
-- `shared/ui/button.tsx` (shadcn, React 19 style) takes `ref` as a plain prop, which React 18 drops. So `ConfirmDialog`'s `confirmBtnRef.current?.focus()` never runs (same in the original `costsim`). Fixing it changes dialog focus behaviour; do it on purpose (wrap in `forwardRef`) and re-check the dialogs in the browser. (see `docs/refactor-tasks.md` for the live list)
-- Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`, `i18n/messages.ts`.
+## Known debt (see `docs/refactor-tasks.md` for the live list)
+- `shared/ui/button.tsx` (shadcn, React 19 style) takes `ref` as a plain prop, which React 18 drops. So `ConfirmDialog`'s `confirmBtnRef.current?.focus()` never runs (same in the original `costsim`). Fixing it changes dialog focus behaviour; do it on purpose (wrap in `forwardRef`) and re-check the dialogs in the browser.
+- Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`.
 - Lint: 0 errors, 36 warnings (12 `refs` and 14 `set-state-in-effect` from the React-Compiler rules flagging older patterns, 9 `exhaustive-deps`, 1 memoization). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.

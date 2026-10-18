@@ -9,6 +9,7 @@ import { messages } from "@/i18n/messages"
 import { PRODUCT_NAME, PRODUCT_NAME_SEPARATOR } from "@/shared/brand"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -131,7 +132,7 @@ describe("product brand U·SKOP", () => {
   })
 
   it("no user-facing WIT brand strings remain in src messages / brand surfaces", () => {
-    const messagesSrc = readSrc("src/i18n/messages.ts")
+    const messagesSrc = readMessagesSource()
     expect(messagesSrc).not.toMatch(/"WIT"/)
     expect(messagesSrc).not.toMatch(/'WIT'/)
     expect(messagesSrc).not.toMatch(/ i WIT/)

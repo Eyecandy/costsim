@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readMessagesSource } from "@/test-utils/messagesSource"
 
 describe("archived state uses Archive icon (not Lock)", () => {
   it("Library / workspace archived indicators use lucide Archive", () => {
@@ -34,7 +35,7 @@ describe("archived state uses Archive icon (not Lock)", () => {
   })
 
   it("keeps Archive / Arkivert accessible labels for archived header", () => {
-    const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
+    const messages = readMessagesSource()
     expect(messages).toContain('readOnlyHint: "Arkivert"')
     expect(messages).toContain('readOnlyHint: "Archived"')
     expect(messages).toContain('statusArchived: "Arkivert"')
@@ -44,7 +45,7 @@ describe("archived state uses Archive icon (not Lock)", () => {
   it("does not replace key-figure feature-lock wording (permissions stay Locked)", () => {
     const visibility = readFileSync(join(root, "src/domain/results/keyFigureVisibility.ts"), "utf8")
     expect(visibility).toContain("isKeyFigureRowLocked")
-    const messages = readFileSync(join(root, "src/i18n/messages.ts"), "utf8")
+    const messages = readMessagesSource()
     expect(messages).toMatch(/locked:\s*"Locked"/)
     expect(messages).toMatch(/locked:\s*"Låst"/)
   })
