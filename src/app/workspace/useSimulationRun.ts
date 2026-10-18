@@ -1,4 +1,4 @@
-import { useEffect, useRef, type Dispatch, type SetStateAction, type RefObject } from "react"
+import { useEffect, useRef, type Dispatch, type SetStateAction, type MutableRefObject } from "react"
 import SimulationWorker from "@/workers/simulation.worker.ts?worker"
 import type { ProjectResult, SimulationWorkerResult } from "@/domain/simulation/simulationTypes"
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
@@ -55,17 +55,17 @@ export function useSimulationRun({
 }: {
   activeProjectId: string
   analysisReadOnly: boolean
-  clearDraftResultSeedRef: RefObject<() => Promise<void>>
-  commitOngoingDraftResultRef: RefObject<
+  clearDraftResultSeedRef: MutableRefObject<() => Promise<void>>
+  commitOngoingDraftResultRef: MutableRefObject<
     ((input: CommitOngoingDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
   >
-  commitSingleDraftResultRef: RefObject<
+  commitSingleDraftResultRef: MutableRefObject<
     ((input: CommitSingleDraftResultInput) => Promise<{ ok: true } | { ok: false }>) | null
   >
-  focusViewRef: RefObject<"input" | "results" | null>
+  focusViewRef: MutableRefObject<"input" | "results" | null>
   isOngoingAnalysis: boolean
   librarySession: ReturnType<typeof useLibraryAnalysisSession>
-  pendingFocusResultsAfterGuidedRunRef: RefObject<boolean>
+  pendingFocusResultsAfterGuidedRunRef: MutableRefObject<boolean>
   projects: Project[]
   resultPreferences: ResultPreferencesV1
   runs: number

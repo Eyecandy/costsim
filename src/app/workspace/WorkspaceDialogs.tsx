@@ -13,7 +13,7 @@ import {
   isAnalysisNameConflictOnMoveError,
 } from "@/domain/analysis/analysisNameUniqueness"
 import { RenameAnalysisDialog } from "@/app/workspace/RenameAnalysisDialog"
-import type { Dispatch, RefObject, SetStateAction } from "react"
+import type { Dispatch, MutableRefObject, SetStateAction } from "react"
 import type { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
 
 import type { useAnalysisDialogs } from "@/app/workspace/useAnalysisDialogs"
@@ -39,7 +39,7 @@ export function WorkspaceDialogs({
   addAlternativeOpen: boolean
   confirmDeleteProject: () => void
   deleteProjectConfirmOpen: boolean
-  deleteProjectConfirmTargetRef: RefObject<string | null>
+  deleteProjectConfirmTargetRef: MutableRefObject<string | null>
   handleCopyExistingAlternative: (sourceId: string) => void
   handleCreateBlankAlternative: () => void
   isOngoingAnalysis: boolean

@@ -5,6 +5,7 @@ The layout and dependency rules are also summarised in `README.md`.
 
 ## What this is
 U·SKOP: a Monte Carlo cost-risk simulator. React + TypeScript + Vite, Tailwind v4, Vitest. UI language is Norwegian (default) and English.
+Runtime is **React 18** with `@types/react` 18. React 19 is blocked by `@glideapps/glide-data-grid` (stable 6.0.3 supports up to 18; only a 6.0.4 alpha supports 19, and also needs `marked` 16). `lodash`, `marked` and `react-responsive-carousel` are peer dependencies of the data grid: npm installs them automatically, do not remove them from the lockfile.
 `costsim-new` is a restructured copy of the friend's `costsim`. **Never edit `../costsim` or `../costsim-react`**: they are the reference copies.
 
 ## Commands

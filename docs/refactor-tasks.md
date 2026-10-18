@@ -50,11 +50,13 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 | 2026-10-18 | ~01:30 | Phase 4: ESLint with typescript-eslint strict + stylistic, jsx-a11y, type-aware promise rules, unused-disable errors, no `localStorage`/`sessionStorage` outside `persistence/`; 14 dialog backdrops made accessible (close on backdrop click via `target === currentTarget`); Dependabot ignores major bumps. Lint ratchet 36 warnings. | 2d79c41 |
 | 2026-10-18 | ~02:30 | Phase 5a: `ErrorBoundary`, `logError`, global `error`/`unhandledrejection` handlers; silent catches in `useLibraryAnalysisSession` now log; storage moved into `persistence/` (language, auth session, library navigation); typed i18n keys (`MessageKey`, `Translate`) with a compile-time parity check; hard-coded strings moved to messages; `<html lang>` follows the UI language. | 377862e |
 
+| 2026-10-18 | later | Phase 5b: merged duplicated helpers (`clamp`, `nearZeroToZero`, `resolvePairRho`, `projectHasMeaningfulTableInput`), shared PDF chart geometry (`pdf/shared/chartGeometry.ts`, tested). | ffdb0d7 |
+| 2026-10-18 | later | Phase 6 outcome: React 19 NOT done on purpose. Stable `@glideapps/glide-data-grid` 6.0.3 only supports React up to 18 (the 6.0.4 alpha supports 19 but also needs `marked` 16). Aligned types with the runtime instead: `@types/react` / `@types/react-dom` 18. | next commit |
 `App.tsx`: 4,459 lines at start, 1,208 after the last App commit above.
 
 ## Not done yet (stopped at the usage limit, 2026-10-18)
 - Phase 5b: de-duplicate helpers (PDF chart geometry in `ProjectReportDocument` / `ongoingPdfCharts` / `ResultsSCurve`, `clamp`, `nearZeroToZero`, `resolvePairRho`, `projectHasMeaningfulTableInput`, the repeated fullscreen code), fix the 6 `exhaustive-deps` disables and timers without cleanup.
-- Phase 6 React 19, Phase 7 bundle splitting / lazy loading / security headers, Phase 8 behavioural tests + coverage, Phase 9 splitting the large files.
+- React 19: needs your decision (use the data grid 6.0.4 alpha, or wait for a stable release). Phase 7 bundle splitting / lazy loading / security headers, Phase 8 behavioural tests + coverage, Phase 9 splitting the large files.
 - **Full UI comparison against the original `costsim` has not been run since Phase 2** (you asked for it at the end). Include: dialog backdrop clicks, language switch (`<html lang>`), error boundary, all earlier flows.
 
 Checks after each commit: `tsc -b` clean, lint no worse than the previous commit (88 at start, 80 now), tests 1,332 of 1,333 pass, `check:deps` clean.

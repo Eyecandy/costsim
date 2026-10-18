@@ -10,7 +10,7 @@ import {
   STICKY_CONTROL_STRIP_BOTTOM_PAD_CLASS,
   STALE_PROJECT_TAB_BG_CLASS,
 } from "@/app/workspace/layoutClasses"
-import type { Dispatch, SetStateAction, RefObject } from "react"
+import type { Dispatch, SetStateAction, MutableRefObject } from "react"
 
 export function ProjectTabs({
   activeProjectId,
@@ -40,7 +40,7 @@ export function ProjectTabs({
   projects: Project[]
   setEditingProjectId: Dispatch<SetStateAction<string | null>>
   showStaleInputChanges: boolean
-  skipNameCommitRef: RefObject<boolean>
+  skipNameCommitRef: MutableRefObject<boolean>
   staleProjectNameTabIds: Set<string>
 }) {
   const { t } = useI18n()
