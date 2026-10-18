@@ -43,7 +43,9 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - React hooks: keep hook call order stable; effects declare all dependencies. Extracted hooks are called at the position of the code they replaced.
 
 ## Tests
-- Vitest, test file next to the code (`thing.test.ts`). Prefer behavioural tests (call the function, render the component).
+- Vitest, test file next to the code (`thing.test.ts`, or `thing.test.tsx` for components and hooks). Prefer behavioural tests (call the function, render the component).
+- Component and hook tests start with `// @vitest-environment jsdom` and use Testing Library (`render`, `renderHook`, `userEvent`); cleanup and jest-dom matchers come from `src/test-utils/setup.ts`. Query by role/name, not by class or test id when a role exists.
+- `npm run test:coverage` (v8) enforces a floor set in `vitest.config.ts` (currently about 38 % statements); raise it when coverage grows. Uses a 120 s test timeout because instrumentation slows the Shapley tests.
 - Many older tests read source files as text (`readFileSync`, `readSrc`, `readAppSource`). Do not add new ones. They locate files through `src/test-utils/repoRoot.ts` and read the workspace screen through `src/test-utils/appSource.ts` (hook files first, then `App.tsx`, then components); moving code means updating those paths or patterns.
 - Tests run with `VITE_APP_VARIANT=pilot` (set in `vitest.config.ts`), i.e. all features on. Line endings are LF (`.gitattributes`); several tests depend on it.
 
@@ -53,6 +55,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Commit and push at sensible milestones (end of a phase or a coherent step), not after every small edit. Commits are authored by the user with no co-author trailer. Keep `docs/refactor-tasks.md` updated with date and time.
 - Do not add new documentation files unprompted; extend this file or the README instead.
 
-## Known debt (see `docs/refactor-tasks.md` for the live list)
+## Known debt
+- `shared/ui/button.tsx` (shadcn, React 19 style) takes `ref` as a plain prop, which React 18 drops. So `ConfirmDialog`'s `confirmBtnRef.current?.focus()` never runs (same in the original `costsim`). Fixing it changes dialog focus behaviour; do it on purpose (wrap in `forwardRef`) and re-check the dialogs in the browser. (see `docs/refactor-tasks.md` for the live list)
 - Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`, `i18n/messages.ts`.
 - Lint: 0 errors, 36 warnings (12 `refs` and 14 `set-state-in-effect` from the React-Compiler rules flagging older patterns, 9 `exhaustive-deps`, 1 memoization). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.

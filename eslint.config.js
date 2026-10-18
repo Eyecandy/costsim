@@ -74,7 +74,7 @@ export default defineConfig([
   {
     // Browser storage lives in src/persistence/ only (see CLAUDE.md); everything else calls those modules.
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/persistence/**", "**/*.test.ts"],
+    ignores: ["src/persistence/**", "**/*.test.{ts,tsx}"],
     rules: {
       "no-restricted-globals": [
         "error",
@@ -103,7 +103,7 @@ export default defineConfig([
   },
   {
     // Tests read project files with node APIs and may print diagnostics.
-    files: ["**/*.test.ts", "src/test-utils/**/*.ts", "*.config.ts"],
+    files: ["**/*.test.{ts,tsx}", "src/test-utils/**/*.ts", "*.config.ts"],
     languageOptions: { globals: { ...globals.node } },
     rules: { "no-console": "off" },
   },
