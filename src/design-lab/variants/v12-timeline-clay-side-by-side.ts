@@ -7,13 +7,17 @@ const variant: LabVariant = {
   description:
     "Timeline on the left and cost items next to drivers (10), in the warm Clay colour set.",
   notes: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11],
-  changes: ["Clay colours: warm linen page, clay accent"],
+  changes: [
+    "Clay colours: warm linen page, clay accent",
+    "Cost items and drivers are plain cards, without the collapse arrows",
+  ],
   options: {
     ...BASE_OPTIONS,
     theme: "clay",
     header: { fileName: "none", bar: "distinct", nav: "farRight", user: true },
     checkpoint: "once",
     checkpointNav: "timeline",
+    inputCards: "plain",
     inputHeading: "fileName",
     sidebar: "open",
     toolbar: "labelled",

@@ -1,6 +1,7 @@
-import { Pencil, Play, Plus } from "lucide-react"
+import { Play, Plus } from "lucide-react"
 import { useState } from "react"
 
+import { LabProjectProfile } from "@/design-lab/parts/LabProjectProfile"
 import { LabTable } from "@/design-lab/parts/LabTable"
 import { LabToolbar } from "@/design-lab/parts/LabToolbar"
 import { COST_ROWS, DRIVER_ROWS } from "@/design-lab/sampleData"
@@ -28,27 +29,8 @@ export function BInputs() {
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-[var(--b-card)] shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-            {t("projectProfile.heading")}
-          </span>
-          {["Bygg", "Rehabilitering", "Detaljprosjekt"].map((chip) => (
-            <span
-              key={chip}
-              className="rounded-full bg-[var(--lab-tint)] px-2.5 py-0.5 text-[12px] text-foreground"
-            >
-              {chip}
-            </span>
-          ))}
-          <button
-            type="button"
-            aria-label="Rediger prosjektprofil"
-            className="grid size-6 place-items-center rounded-full text-muted-foreground hover:bg-[var(--lab-tint)] hover:text-foreground"
-          >
-            <Pencil className="size-3" aria-hidden />
-          </button>
-        </div>
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-3">
+        <LabProjectProfile className="min-w-0 flex-1" />
         <Button
           type="button"
           size="sm"

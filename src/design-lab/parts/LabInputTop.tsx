@@ -1,10 +1,10 @@
-import { Pencil, Play } from "lucide-react"
+import { Play } from "lucide-react"
 
+import { LabProjectProfile } from "@/design-lab/parts/LabProjectProfile"
 import { FILE_NAME } from "@/design-lab/sampleData"
 import type { LabOptions } from "@/design-lab/variants/types"
 import { useI18n } from "@/i18n/useI18n"
 import { Button } from "@/shared/ui/button"
-import { cn } from "@/shared/utils"
 
 /** Note 4: the small INPUT label, or the analysis name in its place. */
 export function LabInputHeading({ mode }: { mode: LabOptions["inputHeading"] }) {
@@ -55,23 +55,8 @@ export function LabCheckpoint({ mode }: { mode: LabOptions["checkpoint"] }) {
 export function LabProfileRow({ cues }: { cues: LabOptions["cues"] }) {
   const { t } = useI18n()
   return (
-    <div className="grid items-center gap-x-3 md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
-      <button
-        type="button"
-        className={cn(
-          "flex flex-col items-start gap-0.5 rounded-md px-2 py-1 text-left",
-          cues.editable &&
-            "border border-dashed border-[var(--lab-field-border)] bg-background hover:border-[var(--lab-brand)] hover:bg-[var(--lab-tint)]",
-        )}
-      >
-        <span className="flex items-center gap-1.5 text-[12px] font-medium">
-          {t("projectProfile.heading")}
-          {cues.editable ? <Pencil className="size-3 text-muted-foreground" aria-hidden /> : null}
-        </span>
-        <span className="text-[11px] text-muted-foreground">
-          {t("projectProfile.collapsedEmptyHint")}
-        </span>
-      </button>
+    <div className="grid items-start gap-x-3 gap-y-2 md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <LabProjectProfile editable={cues.editable} />
       {cues.buttons ? (
         <Button
           type="button"

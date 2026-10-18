@@ -8,6 +8,7 @@ export const BASE_OPTIONS: LabOptions = {
   checkpoint: "duplicate",
   checkpointNav: "tabs",
   documentActions: "none",
+  inputCards: "collapsible",
   inputHeading: "label",
   toolbar: "icons",
   rowActions: "modes",

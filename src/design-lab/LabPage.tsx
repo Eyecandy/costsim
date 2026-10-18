@@ -20,27 +20,34 @@ const CARD =
 
 function InputCard({ kind, options }: { kind: "cost" | "driver"; options: LabOptions }) {
   const { t } = useI18n()
+  const title = kind === "cost" ? t("expanders.costElements") : t("expanders.drivers")
+  const content = (
+    <div className="space-y-3 pt-2">
+      {kind === "cost" ? (
+        <p className="m-0 text-[11px] text-muted-foreground">
+          {t("inputs.assumptionsLabel")} · {t("inputs.assumptionsNoneDefined")} ·{" "}
+          <span className="underline">{t("inputs.assumptionsAddShort")}</span>
+        </p>
+      ) : null}
+      <LabToolbar kind={kind} mode={options.toolbar} rowActions={options.rowActions} />
+      <LabTable
+        kind={kind}
+        rows={kind === "cost" ? COST_ROWS : DRIVER_ROWS}
+        editable={options.cues.editable}
+        rowActions={options.rowActions}
+      />
+    </div>
+  )
   return (
     <section className={CARD}>
-      <SectionExpander
-        title={kind === "cost" ? t("expanders.costElements") : t("expanders.drivers")}
-      >
-        <div className="space-y-3 pt-2">
-          {kind === "cost" ? (
-            <p className="m-0 text-[11px] text-muted-foreground">
-              {t("inputs.assumptionsLabel")} · {t("inputs.assumptionsNoneDefined")} ·{" "}
-              <span className="underline">{t("inputs.assumptionsAddShort")}</span>
-            </p>
-          ) : null}
-          <LabToolbar kind={kind} mode={options.toolbar} rowActions={options.rowActions} />
-          <LabTable
-            kind={kind}
-            rows={kind === "cost" ? COST_ROWS : DRIVER_ROWS}
-            editable={options.cues.editable}
-            rowActions={options.rowActions}
-          />
-        </div>
-      </SectionExpander>
+      {options.inputCards === "plain" ? (
+        <>
+          <h2 className="section-heading m-0 px-1">{title}</h2>
+          {content}
+        </>
+      ) : (
+        <SectionExpander title={title}>{content}</SectionExpander>
+      )}
     </section>
   )
 }

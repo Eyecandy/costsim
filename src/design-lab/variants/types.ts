@@ -24,6 +24,8 @@ export type LabOptions = {
   checkpointNav: "tabs" | "timeline"
   /** Visible Save and Checkpoint buttons: none (only in the "..." menu, as today), beside the file name, or in the header bar. */
   documentActions: "none" | "inputRow" | "headerBar"
+  /** Cost item and driver cards: with the up/down collapse arrow as today ("collapsible") or as plain cards ("plain"). */
+  inputCards: "collapsible" | "plain"
   /** Note 4: the small INPUT label ("label") or the analysis name ("fileName"). */
   inputHeading: "label" | "fileName"
   /** Note 5: icon-only toolbar ("icons") or icon plus text ("labelled"). */

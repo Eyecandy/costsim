@@ -143,6 +143,47 @@ describe("what the numbered notes change", () => {
     ).toBeInTheDocument()
   })
 
+  it("project profile example: shown in every look and hidden or shown with the arrow", async () => {
+    const user = userEvent.setup()
+    for (const entry of ENTRIES) {
+      const { unmount } = render(<I18nProvider>{entry.render()}</I18nProvider>)
+      const profile = screen.getByRole("region", { name: "Prosjektprofil" })
+      expect(within(profile).getByText("Rehabilitering / fornyelse")).toBeVisible()
+      expect(within(profile).getByText("Totalentreprise")).toBeVisible()
+      unmount()
+    }
+
+    renderVariant("12")
+    const profile = screen.getByRole("region", { name: "Prosjektprofil" })
+    await user.click(within(profile).getByRole("button", { name: "Skjul prosjektprofil" }))
+    expect(
+      within(profile).getByText("Rehabilitering / fornyelse", { selector: "dd span" }),
+    ).not.toBeVisible()
+    // collapsed, a one-line summary remains
+    expect(within(profile).getByText(/Bygg · Undervisning/)).toBeVisible()
+    await user.click(within(profile).getByRole("button", { name: "Vis prosjektprofil" }))
+    expect(
+      within(profile).getByText("Rehabilitering / fornyelse", { selector: "dd span" }),
+    ).toBeVisible()
+  })
+
+  it("A12 has no collapse arrows on cost items and drivers, other looks keep them", () => {
+    const { unmount } = renderVariant("12")
+    for (const name of ["Kostnadsposter", "Drivere"]) {
+      const card = screen.getByRole("heading", { name }).closest("section") as HTMLElement
+      expect(within(card).queryAllByRole("button", { expanded: true })).toHaveLength(0)
+      expect(within(card).queryAllByRole("button", { expanded: false })).toHaveLength(0)
+    }
+    // the project profile keeps its own arrow
+    expect(screen.getByRole("button", { name: "Skjul prosjektprofil" })).toBeInTheDocument()
+    unmount()
+    renderVariant("10")
+    const card = screen
+      .getByText("Kostnadsposter", { selector: "span" })
+      .closest("section") as HTMLElement
+    expect(within(card).getAllByRole("button", { expanded: true }).length).toBeGreaterThan(0)
+  })
+
   it("the layout ideas: side by side puts both input cards in one grid, full screen adds the mock-up", () => {
     const { unmount } = renderVariant("05")
     expect(screen.queryByLabelText("Fullskjerm resultatvisning")).toBeNull()
