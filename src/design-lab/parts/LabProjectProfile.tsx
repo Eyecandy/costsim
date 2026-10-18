@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Pencil } from "lucide-react"
-import { useId, useState } from "react"
+import { useId, useState, type ReactNode } from "react"
 
 import { useI18n } from "@/i18n/useI18n"
 import type { MessageKey } from "@/i18n/messages"
@@ -30,10 +30,13 @@ export function LabProjectProfile({
   editable = false,
   defaultOpen = true,
   className,
+  headerAction,
 }: {
   editable?: boolean
   defaultOpen?: boolean
   className?: string
+  /** Optional control shown in the header, before the arrow (used for a small Fokusmodus button). */
+  headerAction?: ReactNode
 }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(defaultOpen)
@@ -59,21 +62,24 @@ export function LabProjectProfile({
             <p className="m-0 mt-0.5 truncate text-[11px] text-muted-foreground">{summary}</p>
           )}
         </div>
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={bodyId}
-          aria-label={open ? "Skjul prosjektprofil" : "Vis prosjektprofil"}
-          title={open ? "Skjul prosjektprofil" : "Vis prosjektprofil"}
-          onClick={() => setOpen((value) => !value)}
-          className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-[var(--lab-tint)] hover:text-foreground"
-        >
-          {open ? (
-            <ChevronUp className="size-4" aria-hidden />
-          ) : (
-            <ChevronDown className="size-4" aria-hidden />
-          )}
-        </button>
+        <div className="flex shrink-0 items-center gap-1">
+          {headerAction}
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={bodyId}
+            aria-label={open ? "Skjul prosjektprofil" : "Vis prosjektprofil"}
+            title={open ? "Skjul prosjektprofil" : "Vis prosjektprofil"}
+            onClick={() => setOpen((value) => !value)}
+            className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-[var(--lab-tint)] hover:text-foreground"
+          >
+            {open ? (
+              <ChevronUp className="size-4" aria-hidden />
+            ) : (
+              <ChevronDown className="size-4" aria-hidden />
+            )}
+          </button>
+        </div>
       </div>
       <div id={bodyId} hidden={!open}>
         <dl className="m-0 mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">

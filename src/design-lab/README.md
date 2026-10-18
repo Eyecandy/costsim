@@ -41,5 +41,18 @@ If an idea needs something the options cannot express yet, add an option to `Lab
 
 ## Make a new look in family B
 
-Copy a file in `families/b/variants/` (for example `v02-midnight.ts`), change `id`, `title`, `changes` and
+Copy a file in `families/b/variants/` (for example `v03-sand.ts`), change `id`, `title`, `changes` and
 `theme` (themes are in `themes.ts`). For anything beyond colours, edit the parts in `families/b/`.
+
+## Owner's guidance for new looks
+
+Apply these by default; they come from comments on earlier looks.
+
+- **B**: a header bar of its own; only the Sand colours or the original teal (the owner does not like Midnight, which has been removed); a library panel on the left with
+  search and the filters Alle / Utkast / Arkiverte / Slettede; cost items and drivers visible together; some looks
+  with more information (key figure table, change table), some with less.
+- **Checkpoints**: no Save button (saving is automatic); "Neste checkpoint" is locked until the open checkpoint is
+  archived ("Arkiver checkpoint" first).
+- **Fokusmodus**: a presentation icon, not a play icon (play is only for "Kjør simulering"); size and placement are
+  still open, so try more than one.
+- **Project profile**: shown with an example in every look, collapsible with an up/down arrow.

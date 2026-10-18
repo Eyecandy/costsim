@@ -1,12 +1,13 @@
-import { Check, Flag, Play, Plus, Save } from "lucide-react"
+import { Archive, Check, Lock, Play, Presentation } from "lucide-react"
 
-import { CHECKPOINTS, FILE_NAME, USER } from "@/design-lab/sampleData"
+import { BNav } from "@/design-lab/families/b/BNav"
+import { CHECKPOINTS, FILE_NAME } from "@/design-lab/sampleData"
 import { useI18n } from "@/i18n/useI18n"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/utils"
 
 /** The checkpoints as connected steps: finished ones with a check, the active one filled, then "next". */
-function CheckpointSteps() {
+function CheckpointSteps({ distinct }: { distinct: boolean }) {
   const { t } = useI18n()
   return (
     <ol
@@ -23,14 +24,25 @@ function CheckpointSteps() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px]",
                 active
-                  ? "border-transparent bg-[var(--lab-action)] font-semibold text-white shadow-sm"
-                  : "border-[var(--lab-brand)]/40 bg-[var(--lab-tint)] text-foreground hover:border-[var(--lab-brand)]",
+                  ? distinct
+                    ? "border-transparent bg-[var(--lab-accent)] font-semibold text-white shadow-sm"
+                    : "border-transparent bg-[var(--lab-action)] font-semibold text-white shadow-sm"
+                  : distinct
+                    ? "border-[var(--lab-accent)]/40 bg-background text-foreground hover:border-[var(--lab-accent)]"
+                    : "border-[var(--lab-brand)]/40 bg-[var(--lab-tint)] text-foreground hover:border-[var(--lab-brand)]",
               )}
             >
               {active ? (
                 <span className="size-1.5 rounded-full bg-white" aria-hidden />
               ) : (
-                <Check className="size-3.5 text-[var(--lab-brand)]" strokeWidth={3} aria-hidden />
+                <Check
+                  className={cn(
+                    "size-3.5",
+                    distinct ? "text-[var(--lab-accent)]" : "text-[var(--lab-brand)]",
+                  )}
+                  strokeWidth={3}
+                  aria-hidden
+                />
               )}
               <span className="opacity-70">CP{checkpoint.sequence}</span>
               {checkpoint.name}
@@ -42,9 +54,11 @@ function CheckpointSteps() {
       <li>
         <button
           type="button"
-          className="flex items-center gap-1 rounded-full border border-dashed border-[var(--lab-brand)] px-3 py-1 text-[12px] text-[var(--lab-brand)] hover:bg-[var(--lab-tint)]"
+          disabled
+          title="Arkiver Checkpoint 3 først"
+          className="flex cursor-not-allowed items-center gap-1 rounded-full border border-dashed border-border px-3 py-1 text-[12px] text-muted-foreground/70"
         >
-          <Plus className="size-3.5" aria-hidden />
+          <Lock className="size-3" aria-hidden />
           {t("checkpoints.nextAction")}
         </button>
       </li>
@@ -53,8 +67,16 @@ function CheckpointSteps() {
 }
 
 /** Title, saved state, links and user on the first row; checkpoint steps and the main actions on the second. */
-export function BCommandBar() {
-  const { t, language, setLanguage } = useI18n()
+export function BCommandBar({
+  navBar,
+  focusAtTitle = false,
+  distinctCheckpoints = false,
+}: {
+  navBar: boolean
+  focusAtTitle?: boolean
+  distinctCheckpoints?: boolean
+}) {
+  const { t } = useI18n()
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-[var(--b-canvas)]/90 backdrop-blur">
       <div className="mx-auto w-full max-w-[96rem] space-y-3 px-5 py-3">
@@ -66,54 +88,27 @@ export function BCommandBar() {
               <span className="rounded-full bg-[var(--lab-tint)] px-2 py-0.5 text-[11px] text-muted-foreground">
                 {t("library.saved")} 14:32
               </span>
+              {focusAtTitle ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 self-center text-[12px]"
+                >
+                  <Presentation className="size-3.5 text-[var(--lab-brand)]" aria-hidden />
+                  {t("inputs.guidedFocusMode")}
+                </Button>
+              ) : null}
             </div>
           </div>
-          <nav
-            aria-label={t("header.navLabel")}
-            className="flex items-center gap-3 text-[11px] text-muted-foreground"
-          >
-            <button type="button" className="hover:text-foreground">
-              {t("header.navMethodGuide")}
-            </button>
-            <button type="button" className="hover:text-foreground">
-              {t("header.navAbout")}
-            </button>
-            <span role="group" aria-label={t("projects.languageGroup")} className="flex gap-1">
-              <button
-                type="button"
-                onClick={() => setLanguage("no")}
-                className={cn(language === "no" && "font-medium text-foreground")}
-              >
-                NO
-              </button>
-              <span aria-hidden>|</span>
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={cn(language === "en" && "font-medium text-foreground")}
-              >
-                EN
-              </button>
-            </span>
-            <button
-              type="button"
-              aria-label="Konto"
-              className="grid size-8 place-items-center rounded-full bg-[var(--lab-brand)] text-[11px] font-semibold text-white"
-            >
-              {USER.initials}
-            </button>
-          </nav>
+          {navBar ? null : <BNav />}
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <CheckpointSteps />
+          <CheckpointSteps distinct={distinctCheckpoints} />
           <div className="flex items-center gap-2">
             <Button type="button" variant="outline" size="sm" className="gap-1.5 text-[12px]">
-              <Save className="size-3.5" aria-hidden />
-              Lagre
-            </Button>
-            <Button type="button" variant="outline" size="sm" className="gap-1.5 text-[12px]">
-              <Flag className="size-3.5" aria-hidden />
-              Nytt checkpoint
+              <Archive className="size-3.5" aria-hidden />
+              {t("checkpoints.archiveCheckpointAction")}
             </Button>
             <Button
               type="button"

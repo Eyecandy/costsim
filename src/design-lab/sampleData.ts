@@ -60,4 +60,20 @@ export const LIBRARY_FOLDERS: readonly { name: string; analyses: readonly string
   { name: "Samferdsel", analyses: ["Ring 3 utvidelse"] },
 ]
 
+export type LibraryStatus = "draft" | "archived" | "deleted"
+
+export const LIBRARY_ANALYSES: readonly {
+  name: string
+  status: LibraryStatus
+  folder: string
+  updated: string
+}[] = [
+  { name: "Ullern renovering", status: "draft", folder: "Bygg", updated: "I dag 14:32" },
+  { name: "Ring 3 utvidelse", status: "draft", folder: "Samferdsel", updated: "3. okt" },
+  { name: "Sandvika bru", status: "draft", folder: "Samferdsel", updated: "30. sep" },
+  { name: "Skøyen skole", status: "archived", folder: "Bygg", updated: "12. sep" },
+  { name: "Fornebu kontor", status: "archived", folder: "Bygg", updated: "28. aug" },
+  { name: "Gammel variant", status: "deleted", folder: "Bygg", updated: "Slettet 2. okt" },
+]
+
 export const USER = { name: "Joakim N.", initials: "JN" }

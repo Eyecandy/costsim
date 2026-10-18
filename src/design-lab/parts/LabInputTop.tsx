@@ -1,4 +1,4 @@
-import { Play } from "lucide-react"
+import { Presentation } from "lucide-react"
 
 import { LabProjectProfile } from "@/design-lab/parts/LabProjectProfile"
 import { FILE_NAME } from "@/design-lab/sampleData"
@@ -51,31 +51,80 @@ export function LabCheckpoint({ mode }: { mode: LabOptions["checkpoint"] }) {
   )
 }
 
-/** Notes 10 and 11: the project profile and Fokusmodus, plain as today or clearer. */
-export function LabProfileRow({ cues }: { cues: LabOptions["cues"] }) {
+export type FocusSize = "default" | "small" | "bar"
+
+/** Fokusmodus as a button in three sizes: normal, small (for a header) or a slim full-width bar. */
+export function LabFocusButton({ size, filled }: { size: FocusSize; filled: boolean }) {
   const { t } = useI18n()
+  if (size === "bar") {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-lg bg-[var(--lab-tint)] px-3 py-1.5">
+        <span className="text-[12px] text-muted-foreground">
+          Trenger du hjelp til å fylle inn? Fokusmodus guider deg steg for steg.
+        </span>
+        <Button
+          type="button"
+          size="sm"
+          className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+        >
+          <Presentation className="size-3.5" aria-hidden />
+          {t("inputs.guidedFocusMode")}
+        </Button>
+      </div>
+    )
+  }
+  const small = size === "small"
+  return filled ? (
+    <Button
+      type="button"
+      size={small ? "xs" : "default"}
+      className={
+        "gap-1.5 border-transparent bg-[var(--lab-action)] text-white shadow-sm hover:bg-[var(--lab-action)]/90 hover:text-white " +
+        (small ? "text-[11px]" : "h-8 px-3 text-[12px]")
+      }
+    >
+      <Presentation className="size-3" aria-hidden />
+      {t("inputs.guidedFocusMode")}
+    </Button>
+  ) : (
+    <Button type="button" variant="outline" size={small ? "xs" : "sm"} className="text-[11px]">
+      <Presentation className="size-3 text-[var(--lab-brand)]" aria-hidden />
+      {t("inputs.guidedFocusMode")}
+    </Button>
+  )
+}
+
+/** Notes 10 and 11 and the Fokusmodus placement: the project profile with its Fokusmodus button. */
+export function LabProfileRow({
+  cues,
+  focus,
+}: {
+  cues: LabOptions["cues"]
+  focus: LabOptions["focusButton"]
+}) {
+  const filled = cues.buttons
+  if (focus === "profileHeader") {
+    return (
+      <LabProjectProfile
+        editable={cues.editable}
+        headerAction={<LabFocusButton size="small" filled={filled} />}
+      />
+    )
+  }
+  if (focus === "bar") {
+    return (
+      <div className="space-y-2">
+        <LabProjectProfile editable={cues.editable} />
+        <LabFocusButton size="bar" filled />
+      </div>
+    )
+  }
+  if (focus === "toolbarOnly" || focus === "titleRow")
+    return <LabProjectProfile editable={cues.editable} />
   return (
     <div className="grid items-start gap-x-3 gap-y-2 md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
       <LabProjectProfile editable={cues.editable} />
-      {cues.buttons ? (
-        <Button
-          type="button"
-          className="h-8 justify-self-start border-transparent bg-[var(--lab-action)] px-3 text-[12px] text-white shadow-sm hover:bg-[var(--lab-action)]/90 hover:text-white"
-        >
-          <Play className="size-3.5 fill-current" aria-hidden />
-          {t("inputs.guidedFocusMode")}
-        </Button>
-      ) : (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="justify-self-start text-[11px]"
-        >
-          <Play className="size-3 fill-current text-[var(--lab-brand)]" aria-hidden />
-          {t("inputs.guidedFocusMode")}
-        </Button>
-      )}
+      <LabFocusButton size="default" filled={filled} />
     </div>
   )
 }

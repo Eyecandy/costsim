@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it } from "vitest"
 
 import { B_VARIANTS } from "@/design-lab/families/b"
 import { BPage } from "@/design-lab/families/b/BPage"
+import { C_VARIANTS } from "@/design-lab/families/c"
+import { CPage } from "@/design-lab/families/c/CPage"
 import { LabGallery } from "@/design-lab/Gallery"
 import { LabPage } from "@/design-lab/LabPage"
 import { ENTRIES, entryByKey, entryLabel, entryPath, FAMILIES } from "@/design-lab/registry"
@@ -126,21 +128,65 @@ describe("what the numbered notes change", () => {
     expect(screen.queryByRole("tablist")).toBeNull()
   })
 
-  it("save and checkpoint buttons: absent today, beside the file name in 14, in the header bar in 15", () => {
+  it("checkpoint buttons: none today, no Save anywhere, Neste checkpoint locked until archived", () => {
     const { unmount } = renderVariant("09")
-    expect(screen.queryByRole("button", { name: "Lagre" })).toBeNull()
+    expect(screen.queryByRole("button", { name: "Arkiver checkpoint" })).toBeNull()
     unmount()
-    const second = renderVariant("14")
-    expect(screen.getByRole("button", { name: "Lagre" })).toBeInTheDocument()
-    expect(within(screen.getByRole("banner")).queryByRole("button", { name: "Lagre" })).toBeNull()
-    second.unmount()
-    renderVariant("15")
+
+    // open checkpoint: archive is the action, next is locked
+    const open = renderVariant("14")
+    expect(screen.queryByRole("button", { name: "Lagre" })).toBeNull()
+    expect(screen.getByRole("button", { name: "Arkiver checkpoint" })).toBeEnabled()
     expect(
-      within(screen.getByRole("banner")).getByRole("button", { name: "Lagre" }),
-    ).toBeInTheDocument()
+      screen
+        .getAllByRole("button", { name: "Neste checkpoint" })
+        .every((b) => b.hasAttribute("disabled")),
+    ).toBe(true)
+    open.unmount()
+
+    // in the header bar (15), still locked
+    const header = renderVariant("15")
+    const banner = within(screen.getByRole("banner"))
+    expect(banner.getByRole("button", { name: "Arkiver checkpoint" })).toBeEnabled()
+    expect(banner.getByRole("button", { name: "Neste checkpoint" })).toBeDisabled()
+    header.unmount()
+
+    // archived: no archive button, next is open everywhere
+    renderVariant("17")
+    expect(screen.queryByRole("button", { name: "Arkiver checkpoint" })).toBeNull()
     expect(
-      within(screen.getByRole("banner")).getByRole("button", { name: "Neste checkpoint" }),
-    ).toBeInTheDocument()
+      screen
+        .getAllByRole("button", { name: "Neste checkpoint" })
+        .every((b) => !b.hasAttribute("disabled")),
+    ).toBe(true)
+  })
+
+  it("Fokusmodus placement: beside the profile, small in its header, a slim bar, or toolbars only", () => {
+    const profileButtons = () =>
+      within(screen.getByRole("region", { name: "Prosjektprofil" })).queryAllByRole("button", {
+        name: /Fokusmodus/,
+      })
+    const cases: [string, number][] = [
+      ["14", 0],
+      ["16", 1],
+      ["18", 0],
+      ["19", 0],
+    ]
+    for (const [id, inProfile] of cases) {
+      const { unmount } = renderVariant(id)
+      expect(profileButtons()).toHaveLength(inProfile)
+      unmount()
+    }
+    // the slim bar sits right after the profile; toolbar-only has no extra Fokusmodus button outside the tables
+    const bar = renderVariant("18")
+    expect(screen.getByText(/Fokusmodus guider deg/)).toBeInTheDocument()
+    bar.unmount()
+    renderVariant("19")
+    expect(screen.queryByText(/Fokusmodus guider deg/)).toBeNull()
+    for (const table of screen.getAllByRole("table")) {
+      expect(table.closest("section")).not.toBeNull()
+    }
+    expect(screen.getAllByRole("button", { name: /Fokusmodus/ }).length).toBeGreaterThanOrEqual(2)
   })
 
   it("project profile example: shown in every look and hidden or shown with the arrow", async () => {
@@ -184,6 +230,19 @@ describe("what the numbered notes change", () => {
     expect(within(card).getAllByRole("button", { expanded: true }).length).toBeGreaterThan(0)
   })
 
+  it("A21: Fokusmodus on the file name row, not in the toolbars or the profile", () => {
+    renderVariant("21")
+    const heading = screen.getByRole("heading", { name: "Ullern renovering" })
+    const row = heading.parentElement?.parentElement as HTMLElement
+    expect(within(row).getByRole("button", { name: /Fokusmodus/ })).toBeInTheDocument()
+    expect(screen.getAllByRole("button", { name: /Fokusmodus/ })).toHaveLength(1)
+  })
+
+  it("no look uses the Midnight colours", () => {
+    expect(Object.keys(THEMES)).not.toContain("midnight")
+    expect(Object.values(THEMES).every((theme) => theme.label !== "Midnight")).toBe(true)
+  })
+
   it("the layout ideas: side by side puts both input cards in one grid, full screen adds the mock-up", () => {
     const { unmount } = renderVariant("05")
     expect(screen.queryByLabelText("Fullskjerm resultatvisning")).toBeNull()
@@ -208,8 +267,57 @@ describe("design families", () => {
   it("old links without a family letter still mean family A", () => {
     expect(entryByKey("00")?.key).toBe("a00")
     expect(entryByKey("a04")?.key).toBe("a04")
-    expect(entryByKey("b02")?.key).toBe("b02")
+    expect(entryByKey("b03")?.key).toBe("b03")
     expect(entryByKey("zz")).toBeUndefined()
+  })
+
+  it("B with the library panel: search and the All / Draft / Archived / Deleted filters work", async () => {
+    const user = userEvent.setup()
+    const variant = B_VARIANTS.find((candidate) => candidate.sidebar === "library")
+    if (!variant) throw new Error("no library variant")
+    render(
+      <I18nProvider>
+        <BPage variant={variant} />
+      </I18nProvider>,
+    )
+    const library = within(screen.getByRole("complementary", { name: "Analysebibliotek" }))
+    // "Alle" hides deleted analyses
+    expect(library.getByText("Skøyen skole")).toBeInTheDocument()
+    expect(library.queryByText("Gammel variant")).toBeNull()
+    await user.click(library.getByRole("button", { name: /Slettede/ }))
+    expect(library.getByText("Gammel variant")).toBeInTheDocument()
+    expect(library.queryByText("Skøyen skole")).toBeNull()
+    await user.click(library.getByRole("button", { name: /Utkast/ }))
+    expect(library.getByText("Ring 3 utvidelse")).toBeInTheDocument()
+    expect(library.queryByText("Fornebu kontor")).toBeNull()
+    await user.click(library.getByRole("button", { name: /Alle/ }))
+    await user.type(library.getByRole("searchbox", { name: "Søk i analyser" }), "sandvika")
+    expect(library.getByText("Sandvika bru")).toBeInTheDocument()
+    expect(library.queryByText("Ring 3 utvidelse")).toBeNull()
+    // the panel folds into the icon rail and back
+    await user.click(screen.getByRole("button", { name: "Skjul bibliotek" }))
+    expect(screen.queryByRole("complementary", { name: "Analysebibliotek" })).toBeNull()
+    await user.click(screen.getByRole("button", { name: "Vis bibliotek" }))
+    expect(screen.getByRole("complementary", { name: "Analysebibliotek" })).toBeInTheDocument()
+  })
+
+  it("B nav bar and detail level: the full looks add the key figure table and the change table", () => {
+    const withNavBar = B_VARIANTS.filter((variant) => variant.navBar)
+    expect(withNavBar.length).toBeGreaterThan(0)
+    for (const variant of B_VARIANTS) {
+      const { unmount } = render(
+        <I18nProvider>
+          <BPage variant={variant} />
+        </I18nProvider>,
+      )
+      const header = screen.getAllByRole("banner")
+      expect(header.length).toBe(1)
+      const brandInBar = screen.queryByText("U·SKOP") !== null
+      expect(brandInBar).toBe(variant.navBar)
+      const hasChangeTable = screen.queryByRole("columnheader", { name: "Forrige" }) !== null
+      expect(hasChangeTable).toBe(variant.detail === "full")
+      unmount()
+    }
   })
 
   for (const variant of B_VARIANTS) {
@@ -239,6 +347,48 @@ describe("design families", () => {
         expect(screen.getByRole("heading", { name: /Drivere/ })).toBeVisible()
         expect(screen.getByText("Tomten er ferdig regulert og byggeklar.")).toBeVisible()
       }
+    })
+  }
+
+  it("B11 puts Fokusmodus by the file name and gives the checkpoints their own colour", () => {
+    const variant = B_VARIANTS.find((candidate) => candidate.focusAtTitle)
+    if (!variant) throw new Error("no B variant with focusAtTitle")
+    render(
+      <I18nProvider>
+        <BPage variant={variant} />
+      </I18nProvider>,
+    )
+    const commandBar = screen.getAllByRole("banner").at(-1)
+    if (!commandBar) throw new Error("no command bar")
+    // the only Fokusmodus button inside the command bar, next to the file name
+    expect(within(commandBar).getAllByRole("button", { name: "Fokusmodus" })).toHaveLength(1)
+    const active = screen.getByRole("button", { current: "step" })
+    expect(active.className).toContain("--lab-accent")
+  })
+
+  for (const variant of C_VARIANTS) {
+    it(`C${variant.id} ${variant.title} has fixed-size cells and a library with folders`, async () => {
+      const user = userEvent.setup()
+      render(
+        <I18nProvider>
+          <CPage variant={variant} />
+        </I18nProvider>,
+      )
+      // cost items and drivers are both visible, in tables with fixed column widths
+      const tables = screen.getAllByRole("table")
+      expect(tables.length).toBeGreaterThanOrEqual(2)
+      expect(tables[0]).toHaveClass("table-fixed")
+      // library: search, folders and creating a folder
+      const search = screen.getByRole("searchbox", { name: "Søk i analyser" })
+      expect(screen.getByRole("button", { name: /Bygg/ })).toBeInTheDocument()
+      await user.click(screen.getByRole("button", { name: "Ny mappe" }))
+      await user.type(screen.getByRole("textbox", { name: "Navn på ny mappe" }), "Nye prosjekter")
+      await user.click(screen.getByRole("button", { name: "Opprett" }))
+      expect(screen.getByRole("button", { name: /Nye prosjekter/ })).toBeInTheDocument()
+      // search narrows the list
+      await user.type(search, "Ring")
+      expect(screen.queryByRole("button", { name: /Skøyen skole/ })).not.toBeInTheDocument()
+      expect(screen.getByRole("button", { name: /Ring 3 utvidelse/ })).toBeInTheDocument()
     })
   }
 })

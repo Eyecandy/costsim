@@ -8,6 +8,9 @@ const variant: BVariant = {
   theme: "clay",
   inputs: "split",
   layout: "rows",
+  sidebar: "icons",
+  navBar: false,
+  detail: "compact",
 }
 
 export default variant

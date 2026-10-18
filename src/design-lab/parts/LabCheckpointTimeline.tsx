@@ -1,33 +1,38 @@
-import { Check, Plus } from "lucide-react"
+import { Check, Lock, Plus } from "lucide-react"
 
 import { CHECKPOINTS } from "@/design-lab/sampleData"
+import type { LabOptions } from "@/design-lab/variants/types"
 import { useI18n } from "@/i18n/useI18n"
 import { cn } from "@/shared/utils"
 
 /**
- * The checkpoints as a vertical timeline on the left: oldest at the top, the active one highlighted,
- * a line connecting them, and the next checkpoint as a dashed step at the end.
+ * The checkpoints as a vertical timeline on the left: oldest at the top, the open one highlighted,
+ * a line connecting them. The next checkpoint is a dashed step at the end that stays locked until the
+ * open checkpoint is archived.
  */
-export function LabCheckpointTimeline() {
+export function LabCheckpointTimeline({ state }: { state: LabOptions["checkpointState"] }) {
   const { t } = useI18n()
+  const archivedTip = state === "archived"
+  const checkpoints = CHECKPOINTS.map((checkpoint) =>
+    archivedTip && checkpoint.status === "active"
+      ? { ...checkpoint, status: "archived" as const, date: "18. okt 2026" }
+      : checkpoint,
+  )
   return (
     <nav aria-label={t("checkpoints.region")} className="text-[12px]">
       <p className="m-0 mb-3 text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
         {t("checkpoints.region")}
       </p>
       <ol className="m-0 list-none p-0">
-        {CHECKPOINTS.map((checkpoint, index) => {
+        {checkpoints.map((checkpoint) => {
           const active = checkpoint.status === "active"
-          const last = index === CHECKPOINTS.length - 1
           return (
             <li key={checkpoint.sequence} className="relative flex gap-3 pb-5">
               {/* connector to the next step */}
-              {last ? null : (
-                <span
-                  aria-hidden
-                  className="absolute top-5 bottom-0 left-[0.55rem] w-px bg-[var(--lab-brand)]/40"
-                />
-              )}
+              <span
+                aria-hidden
+                className="absolute top-5 bottom-0 left-[0.55rem] w-px bg-[var(--lab-brand)]/40"
+              />
               <span
                 aria-hidden
                 className={cn(
@@ -70,13 +75,25 @@ export function LabCheckpointTimeline() {
         <li className="flex gap-3">
           <span
             aria-hidden
-            className="grid size-[1.1rem] shrink-0 place-items-center rounded-full border border-dashed border-[var(--lab-brand)] text-[var(--lab-brand)]"
+            className={cn(
+              "grid size-[1.1rem] shrink-0 place-items-center rounded-full border border-dashed",
+              archivedTip
+                ? "border-[var(--lab-brand)] text-[var(--lab-brand)]"
+                : "border-border text-muted-foreground",
+            )}
           >
-            <Plus className="size-3" />
+            {archivedTip ? <Plus className="size-3" /> : <Lock className="size-2.5" />}
           </span>
           <button
             type="button"
-            className="-mt-0.5 -ml-1 rounded-md px-1.5 py-0.5 text-left text-[12px] text-muted-foreground hover:bg-[var(--lab-tint)] hover:text-foreground"
+            disabled={!archivedTip}
+            title={archivedTip ? undefined : "Arkiver Checkpoint 3 først"}
+            className={cn(
+              "-mt-0.5 -ml-1 rounded-md px-1.5 py-0.5 text-left text-[12px]",
+              archivedTip
+                ? "text-foreground hover:bg-[var(--lab-tint)]"
+                : "cursor-not-allowed text-muted-foreground/60",
+            )}
           >
             {t("checkpoints.nextAction")}
           </button>

@@ -3,7 +3,7 @@ import {
   HelpCircle,
   Link2,
   Minus,
-  Play,
+  Presentation,
   Plus,
   SlidersHorizontal,
   Trash2,
@@ -29,10 +29,13 @@ export function LabToolbar({
   kind,
   mode,
   rowActions,
+  focus = true,
 }: {
   kind: "cost" | "driver"
   mode: LabOptions["toolbar"]
   rowActions: LabOptions["rowActions"]
+  /** Include the Fokusmodus button (a look may keep it elsewhere instead). */
+  focus?: boolean
 }) {
   const { t } = useI18n()
   const items: ToolbarItem[] = [
@@ -40,7 +43,7 @@ export function LabToolbar({
       key: "focus",
       label: t("expanders.guidedInput"),
       title: t("inputs.openFocusMode"),
-      Icon: Play,
+      Icon: Presentation,
     },
     { key: "define", label: t("expanders.define"), Icon: FileText, rowLevel: true },
     { key: "corr", label: t("expanders.costCorrelation"), Icon: Link2, only: "cost" },
@@ -61,7 +64,10 @@ export function LabToolbar({
     { key: "del", label: t("inputs.deleteSelectedRow"), Icon: Minus },
   ]
   const visible = items.filter(
-    (item) => (!item.only || item.only === kind) && !(rowActions === "inline" && item.rowLevel),
+    (item) =>
+      (!item.only || item.only === kind) &&
+      !(rowActions === "inline" && item.rowLevel) &&
+      (focus || item.key !== "focus"),
   )
 
   return (

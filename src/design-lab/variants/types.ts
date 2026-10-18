@@ -26,6 +26,12 @@ export type LabOptions = {
   documentActions: "none" | "inputRow" | "headerBar"
   /** Cost item and driver cards: with the up/down collapse arrow as today ("collapsible") or as plain cards ("plain"). */
   inputCards: "collapsible" | "plain"
+  /** Whether the checkpoint being worked on is still open ("active": Neste checkpoint is locked) or archived ("archived": Neste checkpoint is open). */
+  checkpointState: "active" | "archived"
+  /** Where Fokusmodus sits: beside the profile as a button ("beside"), small in the profile header ("profileHeader"), as a slim bar under the profile ("bar"), only in the table toolbars ("toolbarOnly"), or on the same row as the file name ("titleRow"). */
+  focusButton: "beside" | "profileHeader" | "bar" | "toolbarOnly" | "titleRow"
+  /** Whether table toolbars (cost items and drivers) also have a Fokusmodus button. */
+  focusInToolbar: boolean
   /** Note 4: the small INPUT label ("label") or the analysis name ("fileName"). */
   inputHeading: "label" | "fileName"
   /** Note 5: icon-only toolbar ("icons") or icon plus text ("labelled"). */

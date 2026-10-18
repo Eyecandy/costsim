@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import { LabDevelopment, LabSCurve, LabTornado } from "@/design-lab/parts/LabCharts"
+import { KeyFiguresTable } from "@/design-lab/parts/LabResults"
 import { KEY_FIGURES } from "@/design-lab/sampleData"
 import { useI18n } from "@/i18n/useI18n"
 
@@ -31,8 +32,45 @@ function Panel({ title, children }: { title: string; children: ReactNode }) {
   )
 }
 
-/** Results lead with big key figures, then the S-curve, then tornado and development side by side. */
-export function BResults({ wide = false }: { wide?: boolean }) {
+/** The change since the previous checkpoint as a table, as in family A. */
+function ChangeTable() {
+  const rows = [
+    ["P50", "9 650 000", "9 970 000", "+320 000", "+3,3 %"],
+    ["P85", "11 100 000", "11 450 000", "+350 000", "+3,2 %"],
+  ]
+  return (
+    <table className="w-full border-collapse text-[12px]">
+      <thead>
+        <tr className="border-b border-border text-[10px] text-muted-foreground">
+          <th className="px-2 py-1.5 text-left font-medium">Nøkkeltall</th>
+          <th className="px-2 py-1.5 text-right font-medium">Forrige</th>
+          <th className="px-2 py-1.5 text-right font-medium">Nå</th>
+          <th className="px-2 py-1.5 text-right font-medium">Endring</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([label, previous, current, change, percent]) => (
+          <tr key={label} className="border-b border-border/60">
+            <td className="px-2 py-1.5 font-medium">{label}</td>
+            <td className="px-2 py-1.5 text-right tabular-nums text-muted-foreground">
+              {previous}
+            </td>
+            <td className="px-2 py-1.5 text-right tabular-nums">{current}</td>
+            <td className="px-2 py-1.5 text-right tabular-nums">
+              {change} <span className="text-muted-foreground">({percent})</span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+/**
+ * Results lead with big key figures, then the S-curve, then tornado and development. With `full` the
+ * complete key figure table and the change table from family A are shown as well.
+ */
+export function BResults({ wide = false, full = false }: { wide?: boolean; full?: boolean }) {
   const { t } = useI18n()
   return (
     <div className="space-y-5">
@@ -77,13 +115,24 @@ export function BResults({ wide = false }: { wide?: boolean }) {
           </div>
         </>
       )}
-      <Panel title={t("checkpoints.comparisonHeading")}>
-        <p className="m-0 text-[13px]">
-          P50: <span className="tabular-nums">9 650 000</span> →{" "}
-          <span className="font-semibold tabular-nums">{KEY_FIGURES.p50}</span>{" "}
-          <span className="text-muted-foreground">(+3,3 % siden Checkpoint 2)</span>
-        </p>
-      </Panel>
+      {full ? (
+        <div className={wide ? "grid gap-5 xl:grid-cols-2" : "space-y-5"}>
+          <Panel title={t("results.keyMetricsTitle")}>
+            <KeyFiguresTable />
+          </Panel>
+          <Panel title={t("checkpoints.comparisonHeading")}>
+            <ChangeTable />
+          </Panel>
+        </div>
+      ) : (
+        <Panel title={t("checkpoints.comparisonHeading")}>
+          <p className="m-0 text-[13px]">
+            P50: <span className="tabular-nums">9 650 000</span> →{" "}
+            <span className="font-semibold tabular-nums">{KEY_FIGURES.p50}</span>{" "}
+            <span className="text-muted-foreground">(+3,3 % siden Checkpoint 2)</span>
+          </p>
+        </Panel>
+      )}
     </div>
   )
 }

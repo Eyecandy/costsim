@@ -2,6 +2,8 @@ import type { ReactNode } from "react"
 
 import { B_VARIANTS } from "@/design-lab/families/b"
 import { BPage } from "@/design-lab/families/b/BPage"
+import { C_VARIANTS } from "@/design-lab/families/c"
+import { CPage } from "@/design-lab/families/c/CPage"
 import { LabPage } from "@/design-lab/LabPage"
 import { VARIANTS } from "@/design-lab/variants"
 
@@ -10,7 +12,7 @@ import { VARIANTS } from "@/design-lab/variants"
  * are small steps on the same idea; a new family is for something that is not a step on the others.
  * To add one: a folder under `families/`, its variants, an entry here (see README).
  */
-export type FamilyId = "a" | "b"
+export type FamilyId = "a" | "b" | "c"
 
 export type LabFamily = { id: FamilyId; name: string; description: string }
 
@@ -26,6 +28,12 @@ export const FAMILIES: readonly LabFamily[] = [
     name: "Arbeidsbord",
     description:
       "En helt ny design, ikke et steg fra dagens side: smal ikonmeny, kommandolinje med checkpoint-steg og handlinger, inndata i faner og resultater som store nøkkeltall og diagrammer.",
+  },
+  {
+    id: "c",
+    name: "Kort og celler",
+    description:
+      "Samme enkle side, men fokus på hvordan kortene og cellene ser ut: myke, flate, omrammede eller fargede kort, og celler som understrek, felt, piller, sebra eller spredningsstolper. Bibliotek med søk og mapper til venstre.",
   },
 ]
 
@@ -51,6 +59,16 @@ export const ENTRIES: readonly LabEntry[] = [
     notes: variant.notes,
     changes: variant.changes,
     render: () => <LabPage variant={variant} />,
+  })),
+  ...C_VARIANTS.map((variant): LabEntry => ({
+    key: `c${variant.id}`,
+    family: "c",
+    id: variant.id,
+    title: variant.title,
+    description: variant.description,
+    notes: [],
+    changes: variant.changes,
+    render: () => <CPage variant={variant} />,
   })),
   ...B_VARIANTS.map((variant): LabEntry => ({
     key: `b${variant.id}`,

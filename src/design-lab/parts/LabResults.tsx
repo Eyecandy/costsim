@@ -9,7 +9,7 @@ import { cn } from "@/shared/utils"
 const SURFACE =
   "rounded-[var(--radius)] border border-border bg-[color-mix(in_oklab,var(--muted)_35%,var(--background))] p-4"
 
-function KeyFiguresTable() {
+export function KeyFiguresTable() {
   const { t } = useI18n()
   const rows: [string, string][] = [
     [t("keyMetrics.baseCost"), KEY_FIGURES.baseCost],

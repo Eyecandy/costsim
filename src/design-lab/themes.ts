@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 
-export type ThemeId = "current" | "harbour" | "clay" | "midnight"
+export type ThemeId = "current" | "harbour" | "clay"
 
 type Theme = {
   label: string
@@ -67,27 +67,6 @@ export const THEMES: Record<ThemeId, Theme> = {
       "--b-rail": "#3a2a24",
       "--b-canvas": "#f4efe7",
       "--b-card": "#fffdf9",
-    },
-  },
-  midnight: {
-    label: "Midnight",
-    vars: {
-      "--background": "#0f1b1e",
-      "--foreground": "#e8f1f1",
-      "--muted": "#172a2e",
-      "--muted-foreground": "#9db3b6",
-      "--border": "#274146",
-      "--lab-brand": "#3bb3ba",
-      "--lab-action": "#1d868c",
-      "--lab-tint": "rgba(59, 179, 186, 0.12)",
-      "--lab-tint-strong": "rgba(59, 179, 186, 0.22)",
-      "--lab-accent": "#7fb2d4",
-      "--lab-bar-bg": "#132428",
-      "--lab-bar-border": "#274146",
-      "--lab-field-border": "#36585e",
-      "--b-rail": "#091416",
-      "--b-canvas": "#0b1517",
-      "--b-card": "#14262a",
     },
   },
 }

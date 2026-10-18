@@ -3,11 +3,15 @@ import type { LabVariant } from "@/design-lab/variants/types"
 
 const variant: LabVariant = {
   id: "14",
-  title: "Save and Checkpoint buttons",
+  title: "Checkpoint buttons",
   description:
-    "The timeline look (09) with a visible Save button and a Checkpoint button next to the file name.",
+    "The timeline look (09) with the checkpoint buttons next to the file name. No Save button (saving is automatic). Neste checkpoint is locked until the open checkpoint is archived.",
   notes: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11],
-  changes: ["Lagre and Neste checkpoint as buttons beside the file name", "Saved status with time"],
+  changes: [
+    "Arkiver checkpoint is the action while the checkpoint is open",
+    "Neste checkpoint is locked (with a lock and a hint) until it is archived",
+    "No Save button",
+  ],
   options: {
     ...BASE_OPTIONS,
     header: { fileName: "none", bar: "distinct", nav: "farRight", user: true },

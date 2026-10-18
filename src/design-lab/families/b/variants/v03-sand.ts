@@ -11,6 +11,9 @@ const variant: BVariant = {
   theme: "clay",
   inputs: "tabs",
   layout: "columns",
+  sidebar: "icons",
+  navBar: false,
+  detail: "compact",
 }
 
 export default variant

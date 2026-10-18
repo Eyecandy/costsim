@@ -1,29 +1,49 @@
-import { Flag, Save } from "lucide-react"
+import { Archive, Flag, Lock } from "lucide-react"
 
+import type { LabOptions } from "@/design-lab/variants/types"
 import { useI18n } from "@/i18n/useI18n"
 import { Button } from "@/shared/ui/button"
 
 /**
- * Visible Save and Checkpoint buttons. Today both live behind the "..." menu: saving is automatic,
- * "Lagre og fortsett senere" is in the menu, and a new checkpoint is made by archiving the active one.
+ * Checkpoint buttons (no Save: saving is automatic). The rule they show: the next checkpoint cannot
+ * be started until the one being worked on is archived. While it is open, "Arkiver checkpoint" is the
+ * action and "Neste checkpoint" is locked; once archived, "Neste checkpoint" opens up.
  */
-export function LabDocumentActions() {
+export function LabDocumentActions({ state }: { state: LabOptions["checkpointState"] }) {
   const { t } = useI18n()
+  const archived = state === "archived"
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <span className="hidden text-[11px] text-muted-foreground lg:inline">
-        {t("library.saved")} 14:32
+        {archived ? `${t("checkpoints.statusArchived")} 18. okt` : `${t("library.saved")} 14:32`}
       </span>
-      <Button type="button" variant="outline" size="sm" className="gap-1.5 text-[12px]">
-        <Save className="size-3.5" aria-hidden />
-        Lagre
-      </Button>
+      {archived ? null : (
+        <Button
+          type="button"
+          size="sm"
+          className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+        >
+          <Archive className="size-3.5" aria-hidden />
+          {t("checkpoints.archiveCheckpointAction")}
+        </Button>
+      )}
       <Button
         type="button"
         size="sm"
-        className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+        variant={archived ? "default" : "outline"}
+        disabled={!archived}
+        title={archived ? undefined : "Arkiver Checkpoint 3 først"}
+        className={
+          archived
+            ? "gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+            : "gap-1.5 text-[12px]"
+        }
       >
-        <Flag className="size-3.5" aria-hidden />
+        {archived ? (
+          <Flag className="size-3.5" aria-hidden />
+        ) : (
+          <Lock className="size-3.5" aria-hidden />
+        )}
         {t("checkpoints.nextAction")}
       </Button>
     </div>

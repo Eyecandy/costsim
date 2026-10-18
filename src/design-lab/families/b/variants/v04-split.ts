@@ -13,6 +13,9 @@ const variant: BVariant = {
   theme: "current",
   inputs: "split",
   layout: "rows",
+  sidebar: "icons",
+  navBar: false,
+  detail: "compact",
 }
 
 export default variant

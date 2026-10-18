@@ -1,7 +1,12 @@
 import { LabCheckpointTimeline } from "@/design-lab/parts/LabCheckpointTimeline"
 import { LabDocumentActions } from "@/design-lab/parts/LabDocumentActions"
 import { LabHeader } from "@/design-lab/parts/LabHeader"
-import { LabCheckpoint, LabInputHeading, LabProfileRow } from "@/design-lab/parts/LabInputTop"
+import {
+  LabCheckpoint,
+  LabFocusButton,
+  LabInputHeading,
+  LabProfileRow,
+} from "@/design-lab/parts/LabInputTop"
 import { LabFullscreenResult, LabResults } from "@/design-lab/parts/LabResults"
 import { LabSidebar } from "@/design-lab/parts/LabSidebar"
 import { LabTable } from "@/design-lab/parts/LabTable"
@@ -29,7 +34,12 @@ function InputCard({ kind, options }: { kind: "cost" | "driver"; options: LabOpt
           <span className="underline">{t("inputs.assumptionsAddShort")}</span>
         </p>
       ) : null}
-      <LabToolbar kind={kind} mode={options.toolbar} rowActions={options.rowActions} />
+      <LabToolbar
+        kind={kind}
+        mode={options.toolbar}
+        rowActions={options.rowActions}
+        focus={options.focusInToolbar}
+      />
       <LabTable
         kind={kind}
         rows={kind === "cost" ? COST_ROWS : DRIVER_ROWS}
@@ -87,16 +97,23 @@ export function LabPage({ variant }: { variant: LabVariant }) {
 
   const inputTop = (
     <div className="space-y-4">
-      {options.documentActions === "inputRow" ? (
+      {options.documentActions === "inputRow" || options.focusButton === "titleRow" ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <LabInputHeading mode={options.inputHeading} />
-          <LabDocumentActions />
+          <div className="flex flex-wrap items-center gap-3">
+            {options.focusButton === "titleRow" ? (
+              <LabFocusButton size="default" filled={options.cues.buttons} />
+            ) : null}
+            {options.documentActions === "inputRow" ? (
+              <LabDocumentActions state={options.checkpointState} />
+            ) : null}
+          </div>
         </div>
       ) : (
         <LabInputHeading mode={options.inputHeading} />
       )}
       {timeline ? null : <LabCheckpoint mode={options.checkpoint} />}
-      <LabProfileRow cues={options.cues} />
+      <LabProfileRow cues={options.cues} focus={options.focusButton} />
     </div>
   )
 
@@ -108,7 +125,11 @@ export function LabPage({ variant }: { variant: LabVariant }) {
     >
       <LabHeader
         options={options.header}
-        actions={options.documentActions === "headerBar" ? <LabDocumentActions /> : undefined}
+        actions={
+          options.documentActions === "headerBar" ? (
+            <LabDocumentActions state={options.checkpointState} />
+          ) : undefined
+        }
       />
       <div className="flex flex-1">
         <LabSidebar mode={options.sidebar} />
@@ -116,7 +137,7 @@ export function LabPage({ variant }: { variant: LabVariant }) {
           <div className="mx-auto flex w-full max-w-[90rem] gap-6 px-6 pt-6 pb-24">
             {timeline ? (
               <aside className="sticky top-4 hidden w-48 shrink-0 self-start md:block">
-                <LabCheckpointTimeline />
+                <LabCheckpointTimeline state={options.checkpointState} />
               </aside>
             ) : null}
             <div className="min-w-0 flex-1">

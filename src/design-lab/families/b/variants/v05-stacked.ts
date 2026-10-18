@@ -13,6 +13,9 @@ const variant: BVariant = {
   theme: "current",
   inputs: "stacked",
   layout: "columns",
+  sidebar: "icons",
+  navBar: false,
+  detail: "compact",
 }
 
 export default variant

@@ -1,4 +1,11 @@
-import { FileText, LayoutDashboard, Library, Settings, type LucideIcon } from "lucide-react"
+import {
+  ChevronsRight,
+  FileText,
+  LayoutDashboard,
+  Library,
+  Settings,
+  type LucideIcon,
+} from "lucide-react"
 
 import { cn } from "@/shared/utils"
 
@@ -9,12 +16,23 @@ const ITEMS: { label: string; Icon: LucideIcon; active?: boolean }[] = [
 ]
 
 /** Narrow dark rail with icon navigation. Hover shows the name; the active page is lit. */
-export function BRail() {
+export function BRail({ onExpand }: { onExpand?: () => void }) {
   return (
     <aside className="sticky top-0 hidden h-screen w-16 shrink-0 flex-col items-center gap-1 bg-[var(--b-rail)] py-4 text-white md:flex">
       <span className="mb-4 grid size-9 place-items-center rounded-xl bg-[var(--lab-brand)] text-[13px] font-bold tracking-tight">
         U·
       </span>
+      {onExpand ? (
+        <button
+          type="button"
+          aria-label="Vis bibliotek"
+          title="Vis bibliotek"
+          onClick={onExpand}
+          className="mb-2 grid size-10 place-items-center rounded-xl text-white/70 hover:bg-white/10 hover:text-white"
+        >
+          <ChevronsRight className="size-[1.1rem]" aria-hidden />
+        </button>
+      ) : null}
       {ITEMS.map(({ label, Icon, active }) => (
         <button
           key={label}

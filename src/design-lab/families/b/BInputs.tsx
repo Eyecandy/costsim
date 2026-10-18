@@ -1,4 +1,4 @@
-import { Play, Plus } from "lucide-react"
+import { Plus, Presentation } from "lucide-react"
 import { useState } from "react"
 
 import type { BVariant } from "@/design-lab/families/b/types"
@@ -133,20 +133,28 @@ function TabbedBody() {
  * cost items and drivers side by side; "stacked" shows them one above the other in one scroll.
  * In both of the last two, assumptions stay visible as a strip at the bottom.
  */
-export function BInputs({ mode }: { mode: BVariant["inputs"] }) {
+export function BInputs({
+  mode,
+  showFocus = true,
+}: {
+  mode: BVariant["inputs"]
+  showFocus?: boolean
+}) {
   const { t } = useI18n()
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-[var(--b-card)] shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-3">
         <LabProjectProfile className="min-w-0 flex-1" />
-        <Button
-          type="button"
-          size="sm"
-          className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
-        >
-          <Play className="size-3.5 fill-current" aria-hidden />
-          {t("inputs.guidedFocusMode")}
-        </Button>
+        {showFocus ? (
+          <Button
+            type="button"
+            size="sm"
+            className="gap-1.5 border-transparent bg-[var(--lab-action)] text-[12px] text-white hover:bg-[var(--lab-action)]/90 hover:text-white"
+          >
+            <Presentation className="size-3.5" aria-hidden />
+            {t("inputs.guidedFocusMode")}
+          </Button>
+        ) : null}
       </div>
 
       {mode === "tabs" ? <TabbedBody /> : null}
