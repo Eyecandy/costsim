@@ -10,7 +10,7 @@ Double-click `style-preview.html` (no server, no build, no external requests). U
 - **Style**: Clean, Soft, Bold, Dark. Every palette works with every style.
 - **View**: Single, Compare 2, Compare 4 (scaled-down copies side by side; vary palette or style) and Compare all 10 (compact overview in the chosen style). Click a preview to open it full size. In Single you can also check Tablet and Phone widths.
 
-The strip under the switchers shows the brand colours (primary scale and accent scale) large, and the supporting colours (neutrals, status colours, chart series) smaller.
+The strip under the switchers shows four large swatches for the selected palette: Teal (brand), Accent, Off-white and Ink. "Show all tokens" (closed by default) opens the full primary and accent scales, neutrals, status colours and chart series. Palette chips and compare captions show the same four small swatches. The mock page itself uses all tokens.
 
 Each variant has a link, for example `style-preview.html#t6-soft` (long form `#palette=t6&style=soft`; compare: `#palette=t6&style=clean&view=compare4&vary=palette`; overview: `#palette=t1&style=soft&view=all10`). Palette ids are `t1` to `t10`. Use the link as a screenshot target. The page prints cleanly (switchers are hidden, a caption names the variant).
 

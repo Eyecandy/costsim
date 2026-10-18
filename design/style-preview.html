@@ -50,9 +50,8 @@ body {
 .ui-bar button[aria-pressed="true"] { background: var(--ui-text); color: var(--ui-on); border-color: var(--ui-text); }
 .ui-bar button:focus-visible, .ui a:focus-visible, .ui input:focus-visible { outline: 3px solid #1d5fd1; outline-offset: 2px; }
 .sws { display: inline-flex; gap: 0; border-radius: 3px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25); }
-.sws i { width: 10px; height: 16px; display: block; }
-.sws i:nth-child(1) { background: var(--color-primary-100); } .sws i:nth-child(2) { background: var(--color-primary-400); } .sws i:nth-child(3) { background: var(--color-primary-600); }
-.sws i:nth-child(4) { background: var(--color-primary-800); } .sws i:nth-child(5) { background: var(--color-accent-300); } .sws i:nth-child(6) { background: var(--color-accent-500); }
+.sws i { width: 12px; height: 16px; display: block; }
+.sws i:nth-child(1) { background: var(--color-primary-500); } .sws i:nth-child(2) { background: var(--color-accent-500); } .sws i:nth-child(3) { background: var(--color-neutral-50); } .sws i:nth-child(4) { background: var(--color-neutral-900); }
 .ui-link { display: flex; flex: 1 1 18rem; gap: 8px; min-width: 0; }
 .ui-link input { flex: 1; min-width: 0; font: 12px/1.2 ui-monospace, Consolas, monospace; padding: 8px 10px; border: 1px solid var(--ui-line); border-radius: 6px; background: #f7f8f9; color: var(--ui-text); }
 [data-when] { display: none; }
@@ -75,6 +74,15 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .ui-strip h3.sub { margin-top: 18px; color: var(--ui-muted); font-size: 11px; }
 .ui-strip .warnnote { color: var(--ui-text); font-weight: 600; }
 .ui-strip .ui-small { margin: 8px 0 0; font-size: 12.5px; color: var(--ui-muted); }
+.four { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.big { min-height: 96px; padding: 36px 12px 10px; border-radius: 8px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); print-color-adjust: exact; -webkit-print-color-adjust: exact; min-width: 0; }
+.big b { font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.big em { font-style: normal; font-size: 14px; font-weight: 600; }
+.big span { font: 12.5px ui-monospace, Consolas, monospace; }
+.tokens { margin-top: 14px; border-top: 1px solid var(--ui-line); padding-top: 10px; }
+.tokens summary { cursor: pointer; font-weight: 600; font-size: 13px; padding: 4px 0; }
+.tokens summary:focus-visible { outline: 3px solid #1d5fd1; outline-offset: 2px; }
+@media (max-width: 760px) { .four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .scale { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
 .sc { min-height: 92px; padding: 30px 8px 8px; border-radius: 6px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); min-width: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 .sc.wide { grid-column: span 2; }
@@ -100,7 +108,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .g5 .cap { font-size: 12px; gap: 2px 6px; }
 .g5 .cap a { display: none; }
 .g5 .capn { color: var(--ui-muted); font-size: 11.5px; flex: 1 1 100%; }
-.g5 .sws i { width: 7px; height: 12px; }
+.g5 .sws i { width: 9px; height: 12px; }
 @media (max-width: 1100px) { .grid.g5 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .grid.g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .frame .cover { position: absolute; inset: 0; z-index: 2; display: block; }
@@ -1155,6 +1163,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   var stage = document.getElementById("stage");
   var proto = stage.querySelector(".app").cloneNode(true);
   var st = parse();
+  var tokensOpen = false;
 
   function idx(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
   function parse() {
@@ -1184,7 +1193,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     var b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", pressed ? "true" : "false");
     if (pre) b.appendChild(pre); b.appendChild(typeof label === "string" ? document.createTextNode(label) : label); b.addEventListener("click", on); return b;
   }
-  function sws(id) { var s = el("span", "sws", "<i></i><i></i><i></i><i></i><i></i><i></i>"); s.setAttribute("data-palette", id); s.setAttribute("aria-hidden", "true"); return s; }
+  function sws(id) { var s = el("span", "sws", "<i></i><i></i><i></i><i></i>"); s.setAttribute("data-palette", id); s.setAttribute("aria-hidden", "true"); return s; }
   function sync() { try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } }
   function set(k, v) { st[k] = v; sync(); render(); }
   function open(pid, sid) { st.palette = pid; st.style = sid; st.view = "single"; sync(); render(); window.scrollTo(0, 0); }
@@ -1233,15 +1242,33 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     var probe = stage.querySelector(".app"); var cs = probe ? getComputedStyle(probe) : null;
     host.replaceChildren(el("h2", null, plabel(p) + " <small>" + p.family + "</small>"), el("p", null, p.vibe));
     if (p.extra) host.appendChild(el("p", "ui-small warnnote", p.extra));
-    host.appendChild(el("h3", null, "Brand colours"));
+    var four = el("div", "four");
+    function big(varName, role, name) {
+      var hex = hexOf(cs, varName);
+      var c = el("div", "big", "<b>" + role + "</b><em>" + name + "</em><span>" + hex.toUpperCase() + "</span>");
+      c.style.background = hex; c.style.color = fgFor(hex); return c;
+    }
+    function stepName(list, n) { for (var i = 0; i < list.length; i++) if (list[i][0] === n) return list[i][1]; return ""; }
+    four.appendChild(big("--color-primary-500", "Teal (brand)", "Teal"));
+    four.appendChild(big("--color-accent-500", "Accent", p.name));
+    four.appendChild(big("--color-neutral-50", "Off-white", stepName(p.neu, 50)));
+    four.appendChild(big("--color-neutral-900", "Ink", stepName(p.neu, 900)));
+    host.appendChild(four);
+    var det = el("details", "tokens"); det.open = tokensOpen;
+    det.addEventListener("toggle", function () { tokensOpen = det.open; });
+    det.appendChild(el("summary", null, "Show all tokens"));
+    host.appendChild(det);
+    var full = el("div", "tokens-body");
+    det.appendChild(full);
+    full.appendChild(el("h3", null, "Brand colours"));
     var prim = el("div", "scale prim");
     p.prim.forEach(function (s) { prim.appendChild(scaleChip(cs, "", "--color-primary-" + s[0], s[0], s[1], s[0] === 500 ? "brand" : s[0] === 600 ? "action" : "")); });
-    host.appendChild(prim);
+    full.appendChild(prim);
     var acc = el("div", "scale acc");
     p.acc.forEach(function (s) { acc.appendChild(scaleChip(cs, "wide", "--color-accent-" + s[0], s[0], s[1], s[0] === 500 ? "accent" : "")); });
-    host.appendChild(acc);
-    host.appendChild(el("p", "ui-small", "Teal 500 is the brand. Teal 600 is used for filled buttons and links because white on 500 is 4.34:1, just under AA."));
-    host.appendChild(el("h3", "sub", "Supporting colours"));
+    full.appendChild(acc);
+    full.appendChild(el("p", "ui-small", "Teal 500 is the brand. Teal 600 is used for filled buttons and links because white on 500 is 4.34:1, just under AA."));
+    full.appendChild(el("h3", "sub", "Supporting colours"));
     var sup = el("div", "sup");
     var neu = el("div", "minis"); p.neu.forEach(function (s) { neu.appendChild(miniChip(cs, "--color-neutral-" + s[0], s[0])); });
     neu.appendChild(miniChip(cs, "--color-surface", "white"));
@@ -1255,8 +1282,8 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     sup.appendChild(group("Status (text and tint)", sem));
     var ser = el("div", "minis"); p.ser.forEach(function (s) { ser.appendChild(miniChip(cs, "--color-series-" + s[0], s[0])); });
     sup.appendChild(group("Chart series", ser));
-    host.appendChild(sup);
-    host.appendChild(el("p", "ui-small", "Series 1 to 3 read apart without extra cues. From series 4 on, the charts add dashes, markers or direct labels, and so should any chart you add."));
+    full.appendChild(sup);
+    full.appendChild(el("p", "ui-small", "Series 1 to 3 read apart without extra cues. From series 4 on, the charts add dashes, markers or direct labels, and so should any chart you add."));
   }
   function cells() {
     if (st.view === "all10") return PAL.map(function (p) { return [p.id, st.style]; });
