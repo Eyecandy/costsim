@@ -20,6 +20,7 @@ import {
   pdfWaterfallValueToX,
 } from "@/pdf/pdfWaterfallLayout"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readPdfReportSource } from "@/test-utils/pdfReportSource"
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -64,7 +65,7 @@ function sampleShapley(args: {
 
 /** Expected Addition PdfWaterfallChart call site inside Single PDF Contribution. */
 function singleExpectedWaterfallCallSite(): string {
-  const src = readSrc("src/pdf/ProjectReportDocument.tsx")
+  const src = readPdfReportSource()
   const start = src.indexOf("<Text style={styles.contribSubtitle}>{expectedLabel}</Text>")
   const end = src.indexOf("<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>", start)
   expect(start).toBeGreaterThan(-1)
@@ -73,7 +74,7 @@ function singleExpectedWaterfallCallSite(): string {
 }
 
 function singleReserveWaterfallCallSite(): string {
-  const src = readSrc("src/pdf/ProjectReportDocument.tsx")
+  const src = readPdfReportSource()
   const start = src.indexOf("<Text style={[styles.contribSubtitle, { marginTop: 8 }]}>")
   const end = src.indexOf("</View>", start)
   expect(start).toBeGreaterThan(-1)

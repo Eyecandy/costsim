@@ -33,6 +33,7 @@ import { buildPdfReportModelForMode } from "@/pdf/exportPdfReport"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readPdfReportSource } from "@/test-utils/pdfReportSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -424,7 +425,7 @@ describe("Ongoing PDF information architecture A–K", () => {
 
     const singleModel = readSrc("src/pdf/buildPdfReportModel.ts")
     expect(singleModel).not.toContain("OngoingPdfReportModel")
-    const singleDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
+    const singleDoc = readPdfReportSource()
     expect(singleDoc).toContain("methodTitle")
     expect(panel).toContain('t("results.pdfMethodTitle")')
     expect(panel).toContain('t("results.pdfOngoingMethodTitle")')

@@ -20,6 +20,7 @@ import {
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readPdfReportSource } from "@/test-utils/pdfReportSource"
 
 function appSource() {
   return readAppSource()
@@ -30,7 +31,7 @@ function sCurveSource() {
 }
 
 function pdfSource() {
-  return readFileSync(join(repoRoot, "src/pdf/ProjectReportDocument.tsx"), "utf8")
+  return readPdfReportSource()
 }
 
 function makeSortedValues(n: number): number[] {

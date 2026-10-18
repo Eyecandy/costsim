@@ -40,6 +40,7 @@ import {
 } from "@/pdf/pdfWaterfallLayout"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readPdfReportSource } from "@/test-utils/pdfReportSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -380,7 +381,7 @@ describe("Ongoing PDF Contribution app parity A–G", () => {
   })
 
   it("G: Single PDF Contribution still uses shared chart with chart-level format", () => {
-    const singleDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
+    const singleDoc = readPdfReportSource()
     expect(singleDoc).toContain('from "@/pdf/pdfWaterfallChart"')
     expect(singleDoc).toContain("PdfWaterfallChart")
     // Default chart-level format — no adaptive override on Single.

@@ -22,9 +22,10 @@ import {
 import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readPdfReportSource } from "@/test-utils/pdfReportSource"
 
 function pdfDocSource() {
-  return readFileSync(join(repoRoot, "src/pdf/ProjectReportDocument.tsx"), "utf8")
+  return readPdfReportSource()
 }
 
 function resultsPanelSource() {
