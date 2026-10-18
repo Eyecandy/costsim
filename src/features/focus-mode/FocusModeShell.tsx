@@ -13,10 +13,10 @@ import { Maximize2, Minimize2, X } from "lucide-react"
 import { buttonVariants } from "@/shared/ui/button"
 import { useI18n } from "@/i18n/useI18n"
 import {
-  canRequestFullscreen,
+  enterFullscreenQuietly,
   exitFullscreenIfNeeded,
+  exitFullscreenQuietly,
   isElementFullscreen,
-  requestElementFullscreen,
   subscribeFullscreenChange,
 } from "@/persistence/browserFullscreen"
 import { cn } from "@/shared/utils"
@@ -119,12 +119,10 @@ export const FocusModeShell = forwardRef<FocusModeShellHandle, FocusModeShellPro
         getHostElement: () => focusRootRef.current,
         getContentElement: () => contentSlotRef.current,
         requestFullscreen: () => {
-          const root = focusRootRef.current
-          if (!root || !canRequestFullscreen(root)) return
-          void requestElementFullscreen(root).catch(() => {})
+          enterFullscreenQuietly(focusRootRef.current)
         },
         exitFullscreen: () => {
-          void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+          exitFullscreenQuietly(focusRootRef.current)
           setBrowserFullscreen(false)
         },
       }),
@@ -242,13 +240,11 @@ export const FocusModeShell = forwardRef<FocusModeShellHandle, FocusModeShellPro
     }, [open, onNavigatePrevious, onNavigateNext, canNavigateNext, canNavigatePrevious])
 
     const enterBrowserFullscreen = () => {
-      const root = focusRootRef.current
-      if (!root || !canRequestFullscreen(root)) return
-      void requestElementFullscreen(root).catch(() => {})
+      enterFullscreenQuietly(focusRootRef.current)
     }
 
     const exitBrowserFullscreen = () => {
-      void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+      exitFullscreenQuietly(focusRootRef.current)
       setBrowserFullscreen(false)
       window.requestAnimationFrame(() => {
         focusToggleRef.current?.focus()
@@ -256,7 +252,7 @@ export const FocusModeShell = forwardRef<FocusModeShellHandle, FocusModeShellPro
     }
 
     const handleClose = () => {
-      void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+      exitFullscreenQuietly(focusRootRef.current)
       setBrowserFullscreen(false)
       onExitFocus()
     }

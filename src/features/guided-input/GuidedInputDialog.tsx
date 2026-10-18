@@ -56,10 +56,10 @@ import {
   type GuidedNumericField,
 } from "@/domain/guided/guidedInput"
 import {
-  canRequestFullscreen,
+  enterFullscreenQuietly,
   exitFullscreenIfNeeded,
+  exitFullscreenQuietly,
   isElementFullscreen,
-  requestElementFullscreen,
   subscribeFullscreenChange,
 } from "@/persistence/browserFullscreen"
 import { shouldIgnoreGuidedArrowNavigation } from "@/domain/guided/shouldIgnoreGuidedArrowNavigation"
@@ -1233,7 +1233,7 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
           })
           return
         }
-        void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+        exitFullscreenQuietly(focusRootRef.current)
         onClose()
       }
       window.addEventListener("keydown", onKeyDown)
@@ -1248,14 +1248,12 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
         onRequestFocusFullscreen()
         return
       }
-      const root = focusRootRef.current
-      if (!root || !canRequestFullscreen(root)) return
-      void requestElementFullscreen(root).catch(() => {})
+      enterFullscreenQuietly(focusRootRef.current)
     }
 
     const handleCloseGuided = () => {
       if (onExitFocusFullscreen) onExitFocusFullscreen()
-      else void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+      else exitFullscreenQuietly(focusRootRef.current)
       setFocusMode(false)
       setBrowserFullscreen(false)
       onFocusModeChange?.(false)
@@ -2457,19 +2455,14 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
                 if (browserFullscreen) {
                   if (onExitFocusFullscreen) onExitFocusFullscreen()
                   else {
-                    void exitFullscreenIfNeeded(focusRootRef.current).catch(() => {})
+                    exitFullscreenQuietly(focusRootRef.current)
                     setBrowserFullscreen(false)
                   }
                   return
                 }
                 if (focusMode) {
                   if (onRequestFocusFullscreen) onRequestFocusFullscreen()
-                  else {
-                    const root = focusRootRef.current
-                    if (root && canRequestFullscreen(root)) {
-                      void requestElementFullscreen(root).catch(() => {})
-                    }
-                  }
+                  else enterFullscreenQuietly(focusRootRef.current)
                   return
                 }
                 enterFocusMode()

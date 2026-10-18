@@ -70,3 +70,18 @@ export function subscribeFullscreenChange(listener: () => void): () => void {
     document.removeEventListener("webkitfullscreenchange", listener)
   }
 }
+
+/** Enter fullscreen for `element` when the browser supports it; failures (denied, unsupported) are ignored. */
+export function enterFullscreenQuietly(element: Element | null): void {
+  if (!element || !canRequestFullscreen(element)) return
+  void requestElementFullscreen(element).catch(() => {
+    // intentional: the user can decline fullscreen; the in-page Focus view still works
+  })
+}
+
+/** Leave fullscreen if `element` owns it; failures are ignored. */
+export function exitFullscreenQuietly(element: Element | null): void {
+  void exitFullscreenIfNeeded(element).catch(() => {
+    // intentional: nothing to recover when the browser has already left fullscreen
+  })
+}

@@ -258,6 +258,13 @@ export function ResultPreferencesPanel({
   const titleId = useId()
   const [open, setOpen] = useState(false)
   const [savedFlash, setSavedFlash] = useState(false)
+  const savedFlashTimerRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (savedFlashTimerRef.current !== null) window.clearTimeout(savedFlashTimerRef.current)
+    }
+  }, [])
 
   const close = () => {
     setOpen(false)
@@ -510,7 +517,13 @@ export function ResultPreferencesPanel({
                       onClick={() => {
                         onSaveAsDefault()
                         setSavedFlash(true)
-                        window.setTimeout(() => setSavedFlash(false), 1600)
+                        if (savedFlashTimerRef.current !== null) {
+                          window.clearTimeout(savedFlashTimerRef.current)
+                        }
+                        savedFlashTimerRef.current = window.setTimeout(
+                          () => setSavedFlash(false),
+                          1600,
+                        )
                       }}
                     >
                       {t("resultPreferences.saveAsDefault")}

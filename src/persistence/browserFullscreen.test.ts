@@ -4,6 +4,8 @@ import { join } from "node:path"
 
 import {
   canRequestFullscreen,
+  enterFullscreenQuietly,
+  exitFullscreenQuietly,
   getFullscreenElement,
   isElementFullscreen,
 } from "@/persistence/browserFullscreen"
@@ -22,7 +24,7 @@ describe("browserFullscreen helpers", () => {
       join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
       "utf8",
     )
-    expect(dialog).toContain("requestElementFullscreen")
+    expect(dialog).toContain("enterFullscreenQuietly")
     expect(dialog).toContain("exitFullscreenIfNeeded")
     expect(dialog).toContain("subscribeFullscreenChange")
     expect(dialog).toContain("enterFocusMode")
@@ -38,10 +40,17 @@ describe("browserFullscreen helpers", () => {
 
   it("Focus Results shell reuses the same fullscreen helpers", () => {
     const shell = readFileSync(join(root, "src/features/focus-mode/FocusModeShell.tsx"), "utf8")
-    expect(shell).toContain("requestElementFullscreen")
+    expect(shell).toContain("enterFullscreenQuietly")
     expect(shell).toContain("exitFullscreenIfNeeded")
     expect(shell).toContain("subscribeFullscreenChange")
     expect(shell).toContain('data-focus-mode-fullscreen-toggle=""')
     expect(shell).toMatch(/isElementFullscreen\(focusRootRef\.current\)[\s\S]*?return/)
+  })
+})
+
+describe("quiet fullscreen helpers", () => {
+  it("do nothing and do not throw without an element", () => {
+    expect(() => enterFullscreenQuietly(null)).not.toThrow()
+    expect(() => exitFullscreenQuietly(null)).not.toThrow()
   })
 })

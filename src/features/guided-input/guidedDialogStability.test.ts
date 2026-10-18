@@ -188,7 +188,7 @@ describe("Guided Input dialog stability and exit", () => {
     expect(src).toContain("useState(false)")
     expect(src).toContain("setFocusMode")
     expect(src).toContain("enterFocusMode")
-    expect(src).toContain("requestElementFullscreen")
+    expect(src).toContain("enterFullscreenQuietly")
     expect(src).toContain("subscribeFullscreenChange")
     expect(src).toContain("Maximize2")
     expect(src).toContain("Minimize2")

@@ -257,7 +257,7 @@ describe("Focus Results stepwise workflow", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
     const app = readAppSource()
-    expect(shell).toContain("requestElementFullscreen")
+    expect(shell).toContain("enterFullscreenQuietly")
     expect(shell).toContain("exitFullscreenIfNeeded")
     expect(shell).toContain("subscribeFullscreenChange")
     expect(shell).toContain('data-focus-mode-fullscreen-toggle=""')

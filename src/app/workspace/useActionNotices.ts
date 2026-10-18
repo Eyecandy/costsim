@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { ArchiveBlockReason } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 
 export function useActionNotices() {
@@ -10,6 +10,13 @@ export function useActionNotices() {
     "need_archive_checkpoint" | "failed" | null
   >(null)
   const finishOngoingNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (archiveBlockedNoticeTimerRef.current) clearTimeout(archiveBlockedNoticeTimerRef.current)
+      if (finishOngoingNoticeTimerRef.current) clearTimeout(finishOngoingNoticeTimerRef.current)
+    }
+  }, [])
 
   const showArchiveBlockedNotice = useCallback((reason: ArchiveBlockReason) => {
     // Only true absence of results → "run simulation". Never use that copy for
