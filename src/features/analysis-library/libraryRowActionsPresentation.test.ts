@@ -1,14 +1,10 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 describe("Library analysis row actions presentation", () => {
   it("main list uses one shared row surface with right-aligned ⋯ menu", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
     expect(page).toContain("function LibraryListRow")
     expect(page).toContain("revealWithRow")
     expect(page).toContain("hover:bg-muted/50")
@@ -29,10 +25,7 @@ describe("Library analysis row actions presentation", () => {
   })
 
   it("sidebar rows share SidebarEntityActionsMenu hover-reveal + portal menu", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("function SidebarEntityActionsMenu")
     expect(nav).toContain("group/sidebar-entity-row")
     expect(nav).toContain("group-hover/sidebar-entity-row:opacity-100")
@@ -44,10 +37,7 @@ describe("Library analysis row actions presentation", () => {
   })
 
   it("Folders header shares one surface with Folder-plus", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     const foldersStart = nav.indexOf("data-library-user-folders")
     const foldersHeader = nav.slice(foldersStart, foldersStart + 2000)
     expect(foldersHeader).toContain("FolderPlus")

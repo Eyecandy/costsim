@@ -23,6 +23,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
 
 describe("Analysis Library repository", () => {
   beforeEach(() => {
@@ -389,10 +390,7 @@ describe("Analysis Library repository", () => {
   })
 
   it("new-analysis dialog includes analysis mode choice", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("analysisMode")
     expect(nav).toContain("data-analysis-mode-option")
     expect(nav).toContain("library.analysisModeSingle")

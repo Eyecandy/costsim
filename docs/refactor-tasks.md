@@ -75,8 +75,11 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 ## Phase 9g (2026-10-18 19:30)
 - `ProjectReportDocument` split: 2,103 -> 421 lines. Types, the 490-line style sheet, chart constants, helpers and the section components (cover parts, S-curve, tornado, item blocks, correlation, contribution) moved to `src/pdf/report/`, generated with a config-driven mover that keeps line ranges as written and only adds `export`. `readPdfReportSource()` (test-utils) feeds the 7 source-text tests. Browser parity vs `costsim`: PDF download with Contribution has 5 pages / 3 fonts / about 42 kB in both apps.
 
+## Phase 9h (2026-10-18 20:30)
+- `AnalysisLibraryNav` 1,536 -> 1,044 lines (`nav/`: folder picker, row, user folder block, entity actions menu, dialog shell) and `AnalysisLibraryPage` 1,242 -> 597 lines (`page/`: list model/sorting/filtering, toolbar select, home content, trash view, new-analysis buttons, list rows). `readLibraryNavSource()` / `readLibraryPageSource()` (test-utils) feed the source-text tests; two behavioural tests import `UserFolderBlock` from `nav/`. Browser parity vs `costsim`: library root, folder view and trash view button sweeps (20 / 20 / 15 clicks, overlays included) identical.
+
 ## Not done yet (2026-10-18 04:20)
-- Phase 9 splits left: `ScenarioPercentTable` (1.9k), `AnalysisLibraryNav` (1.5k), `AnalysisLibraryPage` (1.2k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
+- Phase 9 splits left: `ScenarioPercentTable` (1.9k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
 - 36 lint warnings (React Compiler rules `refs` / `set-state-in-effect`, some `exhaustive-deps`): fix when the files are split.
 - `Button` ref under React 18 (see `CLAUDE.md` known debt): `ConfirmDialog` never focuses its confirm button, same as the original.
 - React 19: needs your decision (data grid 6.0.4 alpha, or wait for a stable release).

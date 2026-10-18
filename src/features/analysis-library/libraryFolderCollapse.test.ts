@@ -3,13 +3,12 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 describe("library user-folder collapse vs nav sections", () => {
   it("user folders use empty expandedUserFolderIds; Recent/Archived are not sidebar sections", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("expandedUserFolderIds")
     expect(nav).toContain("() => new Set<string>()")
     expect(nav).toContain("UserFolderBlock")
@@ -22,18 +21,12 @@ describe("library user-folder collapse vs nav sections", () => {
   })
 
   it("AnalysisLibraryPage does not pass activeAnalysisId (Home stays collapsed)", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
     expect(page).not.toContain("activeAnalysisId=")
   })
 
   it("Library shell reuses analysis sticky-footer pattern (flow, not fixed)", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
     const app = readAppSource()
     expect(page).toContain('className="flex min-h-screen flex-col bg-background"')
     expect(page).toContain('role="contentinfo"')

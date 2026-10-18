@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { createElement, type ReactElement } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
@@ -15,8 +13,9 @@ import {
   nowIso,
   type AnalysisDocument,
 } from "@/domain/analysis/analysisDocument"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 function renderWithI18n(node: ReactElement) {
   return renderToStaticMarkup(createElement(I18nProvider, null, node))
@@ -107,14 +106,8 @@ describe("analysis mode presentation", () => {
   })
 
   it("Library surfaces share AnalysisModeIndicator", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
+    const nav = readLibraryNavSource()
     expect(page).toContain("AnalysisModeIndicator")
     expect(nav).toContain("AnalysisModeIndicator")
     expect(page).toContain("mode={item.analysisMode}")

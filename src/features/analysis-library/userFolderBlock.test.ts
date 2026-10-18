@@ -1,13 +1,11 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { createElement, type ReactElement } from "react"
 import { describe, expect, it } from "vitest"
 
-import { UserFolderBlock } from "@/features/analysis-library/AnalysisLibraryNav"
+import { UserFolderBlock } from "@/features/analysis-library/nav/UserFolderBlock"
 import { I18nProvider } from "@/i18n/I18nProvider"
 import type { AnalysisSummary } from "@/domain/analysis/analysisDocument"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
 
 const sampleItems: AnalysisSummary[] = [
   {
@@ -81,10 +79,7 @@ describe("UserFolderBlock (Mapper user-created folders)", () => {
   })
 
   it("owns disclosure via expandedUserFolderIds empty Set — independent of All analyses", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("expandedUserFolderIds")
     expect(nav).toContain("() => new Set<string>()")
     expect(nav).toContain("data-library-user-folders")

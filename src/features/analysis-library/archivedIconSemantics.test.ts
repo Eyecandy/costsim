@@ -4,17 +4,13 @@ import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 describe("archived state uses Archive icon (not Lock)", () => {
   it("Library / workspace archived indicators use lucide Archive", () => {
-    const nav = readFileSync(
-      join(root, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
-    const page = readFileSync(
-      join(root, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
+    const page = readLibraryPageSource()
     const menu = readFileSync(
       join(root, "src/features/analysis-library/AnalysisActionsMenu.tsx"),
       "utf8",

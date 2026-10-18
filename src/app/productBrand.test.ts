@@ -11,6 +11,7 @@ import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -97,9 +98,7 @@ describe("product brand U·SKOP", () => {
 
     // Authenticated app surfaces still branded.
     expect(readAppSource()).toContain("BrandWordmark")
-    expect(readSrc("src/features/analysis-library/AnalysisLibraryPage.tsx")).toContain(
-      "BrandWordmark",
-    )
+    expect(readLibraryPageSource()).toContain("BrandWordmark")
     expect(messages.no.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(messages.en.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(PRODUCT_NAME).toBe("U·SKOP")

@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   buildLibraryPath,
   readLibraryFilterFromLocation,
   runBeforeLeaveWithoutBlocking,
 } from "@/persistence/libraryNavigation"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 describe("Library direct destinations (URL-authoritative)", () => {
   it("buildLibraryPath encodes Home / All / Deleted / folder canonically", () => {
@@ -39,14 +38,8 @@ describe("Library direct destinations (URL-authoritative)", () => {
   })
 
   it("workspace navigation goes directly to buildLibraryPath (not bare /library stash)", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
+    const page = readLibraryPageSource()
     expect(nav).toContain("goToLibraryDestination")
     expect(nav).toContain("navigateTo(buildLibraryPath(next))")
     expect(nav).not.toContain("stashLibraryInitialFilter")
@@ -61,10 +54,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
   })
 
   it("draft leave still flushes autosave before direct destination navigation", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     const app = readAppSource()
     expect(nav).toContain("beforeLeaveWorkspace")
     expect(app).toContain("flushPendingSave()")
@@ -79,10 +69,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
       }),
     ).resolves.toBeUndefined()
 
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("await runBeforeLeaveWithoutBlocking(beforeLeaveWorkspace)")
   })
 

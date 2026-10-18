@@ -4,10 +4,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { createElement, type ReactElement } from "react"
 import { describe, expect, it } from "vitest"
 
-import { UserFolderBlock } from "@/features/analysis-library/AnalysisLibraryNav"
+import { UserFolderBlock } from "@/features/analysis-library/nav/UserFolderBlock"
 import { I18nProvider } from "@/i18n/I18nProvider"
 import type { AnalysisSummary } from "@/domain/analysis/analysisDocument"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 const sampleItems: AnalysisSummary[] = [
   {
@@ -28,10 +30,7 @@ function renderWithI18n(node: ReactElement) {
 
 describe("Sidebar entity row actions (shared Library + analysis sidebar)", () => {
   it("uses one shared SidebarEntityActionsMenu for folder and analysis rows", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("function SidebarEntityActionsMenu")
     expect(nav).toContain("group/sidebar-entity-row")
     expect(nav).toContain(
@@ -51,10 +50,7 @@ describe("Sidebar entity row actions (shared Library + analysis sidebar)", () =>
   })
 
   it("both Library page and AnalysisSidebar mount the same AnalysisLibraryNav", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
     const sidebar = readFileSync(
       join(repoRoot, "src/features/analysis-library/AnalysisSidebar.tsx"),
       "utf8",
@@ -115,10 +111,7 @@ describe("Sidebar entity row actions (shared Library + analysis sidebar)", () =>
   })
 
   it("wires folder Rename/Delete and analysis Rename/Move/Delete through the shared menu", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain('t("library.renameFolder")')
     expect(nav).toContain('t("library.deleteFolder")')
     expect(nav).toContain('t("library.renameAnalysis")')

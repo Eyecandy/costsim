@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   buildAnalysisWorkspacePath,
@@ -10,7 +8,8 @@ import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepos
 import { clearLocalAnalysisLibraryStorageForTests } from "@/persistence/localAnalysisLibraryRepository"
 import { navigateTo } from "@/shared/auth/auth"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibraryNavSource } from "@/test-utils/librarySource"
+import { readLibraryPageSource } from "@/test-utils/librarySource"
 
 function stubWindowLocation(href = "http://localhost/library") {
   const url = new URL(href)
@@ -85,10 +84,7 @@ async function createBlankNamed(name: string) {
 
 describe("empty-library New Analysis shares sidebar action", () => {
   it("sidebar exposes openNewAnalysisFromToolbar via openNewAnalysisActionRef", () => {
-    const nav = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryNav.tsx"),
-      "utf8",
-    )
+    const nav = readLibraryNavSource()
     expect(nav).toContain("openNewAnalysisFromToolbar")
     expect(nav).toContain("openNewAnalysisActionRef")
     expect(nav).toContain("openNewAnalysisActionRef.current = openNewAnalysisFromToolbar")
@@ -96,10 +92,7 @@ describe("empty-library New Analysis shares sidebar action", () => {
   })
 
   it("Home empty-state CTA invokes the registered sidebar action (not requestNewAnalysis)", () => {
-    const page = readFileSync(
-      join(repoRoot, "src/features/analysis-library/AnalysisLibraryPage.tsx"),
-      "utf8",
-    )
+    const page = readLibraryPageSource()
     expect(page).toContain("openNewAnalysisActionRef")
     expect(page).toContain("onNewAnalysis={() => openNewAnalysisActionRef.current?.()}")
     // Must not wire Home to the folder-request counter path (click-event bug).
