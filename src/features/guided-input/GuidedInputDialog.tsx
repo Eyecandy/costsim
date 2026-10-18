@@ -583,8 +583,8 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
                 ? "impact"
                 : null
 
-    const phaseInfoContent: GuidedPhaseInfoContent | null =
-      phaseInfoTopic === "assumptions"
+    const phaseInfoContent = useMemo((): GuidedPhaseInfoContent | null => {
+      return phaseInfoTopic === "assumptions"
         ? {
             title: t("inputs.guidedAssumptionsHelpTitle"),
             meaning: t("inputs.guidedAssumptionsHelpMeaning"),
@@ -635,6 +635,7 @@ export const GuidedInputDialog = forwardRef<GuidedInputDialogHandle, GuidedInput
                     avoidLabel: t("inputs.guidedHelpAvoidLabel"),
                   }
                 : null
+    }, [phaseInfoTopic, t])
 
     const focusChromeMeta = useMemo((): GuidedFocusChromeMeta | null => {
       // Only publish while actively embedded as Focus Input (shell owns chrome).

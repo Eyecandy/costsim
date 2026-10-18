@@ -37,7 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isLoading = isAuthenticated === null
   const isAuthed = isAuthenticated === true
-  const user = isAuthed ? { id: LOCAL_USER_ID } : null
+  const user = useMemo(() => (isAuthed ? { id: LOCAL_USER_ID } : null), [isAuthed])
 
   const signIn = useCallback(async ({ password }: SignInCredentials) => {
     const expectedPassword = import.meta.env.VITE_APP_PASSWORD ?? ""

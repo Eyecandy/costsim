@@ -424,7 +424,10 @@ export function ScenarioPercentTable({
   const showIncurredRow = variant === "costMixed" && onIncurredCostsChange !== undefined
   const dataRowCount = rows.length
   const gridRowCount = showIncurredRow ? dataRowCount + 1 : dataRowCount
-  const isIncurredRowIndex = (rowIndex: number) => showIncurredRow && rowIndex === dataRowCount
+  const isIncurredRowIndex = useCallback(
+    (rowIndex: number) => showIncurredRow && rowIndex === dataRowCount,
+    [showIncurredRow, dataRowCount],
+  )
 
   const costBaseSum = useMemo(() => {
     if (variant !== "costMixed") return null
@@ -563,8 +566,7 @@ export function ScenarioPercentTable({
       language,
       changedCellKeys,
       invalidCellKeys,
-      showIncurredRow,
-      dataRowCount,
+      isIncurredRowIndex,
       incurredCosts,
       t,
       costImpactSliders,
