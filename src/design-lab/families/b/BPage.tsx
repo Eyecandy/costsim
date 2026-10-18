@@ -16,10 +16,17 @@ export function BPage({ variant }: { variant: BVariant }) {
       <BRail />
       <div className="flex min-w-0 flex-1 flex-col">
         <BCommandBar />
-        <main className="mx-auto grid w-full max-w-[96rem] items-start gap-5 p-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          <BInputs />
-          <BResults />
-        </main>
+        {variant.layout === "rows" ? (
+          <main className="mx-auto w-full max-w-[96rem] space-y-5 p-5">
+            <BInputs mode={variant.inputs} />
+            <BResults wide />
+          </main>
+        ) : (
+          <main className="mx-auto grid w-full max-w-[96rem] items-start gap-5 p-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            <BInputs mode={variant.inputs} />
+            <BResults />
+          </main>
+        )}
       </div>
     </div>
   )

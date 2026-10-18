@@ -223,10 +223,22 @@ describe("design families", () => {
       expect(screen.getByRole("banner")).toBeInTheDocument()
       // checkpoint steps, the three input tabs and the key figures
       expect(screen.getByRole("list", { name: "Analysepunkter" })).toBeInTheDocument()
-      expect(screen.getAllByRole("tab")).toHaveLength(3)
       expect(screen.getByText("9 970 000", { selector: "p" })).toBeInTheDocument()
-      await user.click(screen.getByRole("tab", { name: /Drivere/ }))
-      expect(screen.getByRole("tab", { name: /Drivere/ })).toHaveAttribute("aria-selected", "true")
+      if (variant.inputs === "tabs") {
+        expect(screen.getAllByRole("tab")).toHaveLength(3)
+        await user.click(screen.getByRole("tab", { name: /Drivere/ }))
+        expect(screen.getByRole("tab", { name: /Drivere/ })).toHaveAttribute(
+          "aria-selected",
+          "true",
+        )
+      } else {
+        // no tabs: cost items and drivers are both on the page, with the assumptions as a strip
+        expect(screen.queryAllByRole("tab")).toHaveLength(0)
+        expect(screen.getAllByRole("table").length).toBeGreaterThanOrEqual(2)
+        expect(screen.getByRole("heading", { name: /Kostnadsposter/ })).toBeVisible()
+        expect(screen.getByRole("heading", { name: /Drivere/ })).toBeVisible()
+        expect(screen.getByText("Tomten er ferdig regulert og byggeklar.")).toBeVisible()
+      }
     })
   }
 })

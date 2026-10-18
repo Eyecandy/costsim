@@ -8,4 +8,8 @@ export type BVariant = {
   description: string
   changes: readonly string[]
   theme: ThemeId
+  /** Cost items, drivers and assumptions: one at a time in tabs, side by side ("split"), or stacked in one card. */
+  inputs: "tabs" | "split" | "stacked"
+  /** Inputs on the left and results on the right ("columns"), or inputs across the top and results below ("rows"). */
+  layout: "columns" | "rows"
 }

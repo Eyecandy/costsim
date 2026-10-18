@@ -32,11 +32,15 @@ function Panel({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /** Results lead with big key figures, then the S-curve, then tornado and development side by side. */
-export function BResults() {
+export function BResults({ wide = false }: { wide?: boolean }) {
   const { t } = useI18n()
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-4 2xl:grid-cols-4">
+      <div
+        className={
+          wide ? "grid grid-cols-2 gap-4 lg:grid-cols-4" : "grid grid-cols-2 gap-4 2xl:grid-cols-4"
+        }
+      >
         <Tile label={t("keyMetrics.baseCost")} value={KEY_FIGURES.baseCost} />
         <Tile
           label={t("keyMetrics.p50")}
@@ -46,17 +50,33 @@ export function BResults() {
         <Tile label={t("keyMetrics.p85")} value={KEY_FIGURES.p85} />
         <Tile label={t("keyMetrics.uncertaintyReserve")} value={KEY_FIGURES.uncertaintyReserve} />
       </div>
-      <Panel title={t("charts.sCurveTitle")}>
-        <LabSCurve tall />
-      </Panel>
-      <div className="grid gap-5 md:grid-cols-2">
-        <Panel title={t("charts.tornadoTitle")}>
-          <LabTornado />
-        </Panel>
-        <Panel title={t("checkpoints.developmentTitle")}>
-          <LabDevelopment />
-        </Panel>
-      </div>
+      {wide ? (
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]">
+          <Panel title={t("charts.sCurveTitle")}>
+            <LabSCurve />
+          </Panel>
+          <Panel title={t("charts.tornadoTitle")}>
+            <LabTornado />
+          </Panel>
+          <Panel title={t("checkpoints.developmentTitle")}>
+            <LabDevelopment />
+          </Panel>
+        </div>
+      ) : (
+        <>
+          <Panel title={t("charts.sCurveTitle")}>
+            <LabSCurve tall />
+          </Panel>
+          <div className="grid gap-5 md:grid-cols-2">
+            <Panel title={t("charts.tornadoTitle")}>
+              <LabTornado />
+            </Panel>
+            <Panel title={t("checkpoints.developmentTitle")}>
+              <LabDevelopment />
+            </Panel>
+          </div>
+        </>
+      )}
       <Panel title={t("checkpoints.comparisonHeading")}>
         <p className="m-0 text-[13px]">
           P50: <span className="tabular-nums">9 650 000</span> →{" "}

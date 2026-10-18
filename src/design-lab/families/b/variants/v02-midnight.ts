@@ -7,6 +7,8 @@ const variant: BVariant = {
     "The same workbench in a dark theme with teal highlights, for long working sessions.",
   changes: ["Dark canvas and cards", "Lighter teal for highlights so contrast holds"],
   theme: "midnight",
+  inputs: "tabs",
+  layout: "columns",
 }
 
 export default variant

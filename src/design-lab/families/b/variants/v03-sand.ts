@@ -9,6 +9,8 @@ const variant: BVariant = {
     "Umber rail and a clay accent for the second chart colour",
   ],
   theme: "clay",
+  inputs: "tabs",
+  layout: "columns",
 }
 
 export default variant

@@ -11,6 +11,8 @@ const variant: BVariant = {
     "Results lead with big key figures, then the charts",
   ],
   theme: "current",
+  inputs: "tabs",
+  layout: "columns",
 }
 
 export default variant
