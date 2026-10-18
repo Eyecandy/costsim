@@ -50,6 +50,11 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Many older tests read source files as text (`readFileSync`, `readSrc`, `readAppSource`). Do not add new ones. They locate files through `src/test-utils/repoRoot.ts` and read the workspace screen through `src/test-utils/appSource.ts` (hook files first, then `App.tsx`, then components); moving code means updating those paths or patterns.
 - Tests run with `VITE_APP_VARIANT=pilot` (set in `vitest.config.ts`), i.e. all features on. Line endings are LF (`.gitattributes`); several tests depend on it.
 
+## Design lab (`src/design-lab/`)
+- Throwaway, functionless mock-ups for trying alternative looks without touching the real components; served at `/design`, gallery with live previews, `/design/compare?a=00&b=03`. Not behind the login; sample data only.
+- A look is one small file: `npm run lab:new -- my-look` copies the latest variant into `src/design-lab/variants/`; edit its `options` (typed in `variants/types.ts`). New kind of change = a new option plus a part in `parts/`. See `src/design-lab/README.md`.
+- Layer rules: the lab may use `shared/`, `i18n/`, `config/`, `domain/` only; only `app/Router.tsx` loads it. Delete the folder and the `/design` branch in the router to remove it.
+
 ## Workflow
 - Behaviour-preserving changes unless asked otherwise. After each step: typecheck, lint (no new errors), tests, `check:deps`, build.
 - Risky UI changes get a browser parity check against the original: run `../costsim` on port 5192 and this app on 5191, seed `localStorage["cost-simulator:v1:projects"]`, run the same flow in both and compare page text with digits masked (results are random). Screenshots of the results page time out in the automated Chrome; use DOM text.

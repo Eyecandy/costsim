@@ -19,6 +19,15 @@ const AnalysisLibraryPage = lazy(() =>
   })),
 )
 
+// Throwaway design mock-ups (src/design-lab). Open to anyone with the link, sample data only.
+const DesignLabRoute = lazy(() =>
+  import("@/design-lab/DesignLabRoute").then((m) => ({ default: m.DesignLabRoute })),
+)
+
+function isDesignPath(pathname: string) {
+  return pathname === "/design" || pathname.startsWith("/design/")
+}
+
 function getPathname() {
   return window.location.pathname
 }
@@ -52,6 +61,14 @@ export function Router() {
   // Include search so `/app?analysis=` changes remount/re-render App correctly.
   const pathKey = useSyncExternalStore(subscribeLocation, getLocationPathKey, () => "/")
   const pathname = pathKey.split("?")[0] || getPathname()
+
+  if (isDesignPath(pathname)) {
+    return (
+      <Suspense fallback={null}>
+        <DesignLabRoute />
+      </Suspense>
+    )
+  }
 
   if (isLibraryPath(pathname)) {
     return (

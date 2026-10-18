@@ -21,6 +21,7 @@
     "test:coverage": "vitest run --coverage --testTimeout=120000",
     "test:bench": "vitest run --config vitest.bench.config.ts",
     "test:e2e": "playwright test",
+    "lab:new": "node scripts/design-lab-new.mjs",
     "check:deps": "depcruise src --config .dependency-cruiser.cjs",
     "check": "npm run typecheck && npm run lint && npm run test && npm run check:deps && npm run build",
     "prepare": "husky"

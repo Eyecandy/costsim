@@ -81,6 +81,9 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 ## Phase 9i (2026-10-18 21:00)
 - `ScenarioPercentTable` 1,897 -> 1,705 lines: mode prop types (re-exported from the table file), cell theme, `InlineMagnitudeSlider` and layout helpers moved to `scenario-tables/table/`. The 1,500-line component itself is untouched (hook-heavy Glide grid wiring). `readScenarioTableSource()` (test-utils) feeds 16 source-text tests. Browser parity vs `costsim`: Define / Correlation / Impact toggles and info buttons, DOM text and canvas pixel hashes identical.
 
+## Design lab (2026-10-19)
+- `src/design-lab/`: throwaway functionless mock-ups of the calc page at `/design` (gallery with live previews, `/design/NN`, `/design/compare?a=&b=`). Built from `tasks/todo/UI/notes.txt` (notes 1-11 plus the layout ideas): variants 00 (current) to 08, each a small file of typed options; `npm run lab:new -- name` scaffolds the next one. Reuses the app's shared components, tokens and i18n; does not touch product code. Only `app/Router.tsx` gets a lazy `/design` branch; two dependency-cruiser rules keep the lab off the features and the router the only importer. Open to anyone with the link (not behind the login), sample data only. 21 tests render every variant and check what each note changes.
+
 ## Not done yet (2026-10-18 04:20)
 - Phase 9 splits left: `ScenarioPercentTable` (1.9k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
 - 36 lint warnings (React Compiler rules `refs` / `set-state-in-effect`, some `exhaustive-deps`): fix when the files are split.

@@ -103,7 +103,13 @@ export default defineConfig([
   },
   {
     // Tests read project files with node APIs and may print diagnostics.
-    files: ["**/*.test.{ts,tsx}", "src/test-utils/**/*.ts", "*.config.ts", "e2e/**/*.ts"],
+    files: [
+      "**/*.test.{ts,tsx}",
+      "src/test-utils/**/*.ts",
+      "*.config.ts",
+      "e2e/**/*.ts",
+      "scripts/**/*.mjs",
+    ],
     languageOptions: { globals: { ...globals.node } },
     rules: { "no-console": "off" },
   },

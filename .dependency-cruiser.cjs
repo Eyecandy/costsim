@@ -66,6 +66,21 @@ module.exports = {
       to: { path: "^src/features/", pathNot: "^src/features/$1/" },
     },
     {
+      name: "design-lab-is-throwaway",
+      severity: "error",
+      comment:
+        "src/design-lab/ holds throwaway mock-ups. It may use shared/, i18n/, config/ and domain/, but never the product features, so deleting the folder is always safe.",
+      from: { path: "^src/design-lab/" },
+      to: { path: "^src/(features|app|persistence|pdf|workers)/" },
+    },
+    {
+      name: "only-the-router-loads-design-lab",
+      severity: "error",
+      comment: "Nothing but the router (lazy route) may import the design lab.",
+      from: { path: "^src/", pathNot: "^src/(design-lab/|app/Router\\.tsx)" },
+      to: { path: "^src/design-lab/" },
+    },
+    {
       name: "guided-input-allowed-features",
       severity: "error",
       comment: "guided-input composes focus-mode, scenario-tables and workspace, and nothing else.",
