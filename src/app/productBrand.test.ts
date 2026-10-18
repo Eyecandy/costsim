@@ -10,6 +10,7 @@ import { PRODUCT_NAME, PRODUCT_NAME_SEPARATOR } from "@/shared/brand"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -107,9 +108,7 @@ describe("product brand U·SKOP", () => {
   it("PDF branding uses PRODUCT_NAME / message brand strings", () => {
     expect(messages.no.results.pdfBrandName).toBe(PRODUCT_NAME)
     expect(messages.en.results.pdfBrandName).toBe(PRODUCT_NAME)
-    const panel =
-      readSrc("src/features/results/ResultsPanel.tsx") +
-      readSrc("src/features/results/pdfExport.tsx")
+    const panel = readResultsPanelSource() + readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('brandName: t("results.pdfBrandName")')
     expect(panel).toContain('brandName={t("results.pdfBrandName")}')
     expect(panel).not.toMatch(/\bWIT\b/)

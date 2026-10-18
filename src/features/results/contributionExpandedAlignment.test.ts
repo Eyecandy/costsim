@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { buildWaterfallChartLayout, valueToX } from "@/domain/results/waterfallLayout"
 import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function attributionSource() {
   return readFileSync(join(root, "src/features/results/AttributionWaterfall.tsx"), "utf8")
@@ -114,7 +115,7 @@ describe("Contribution waterfall expanded bracket alignment", () => {
   })
 
   it("D: expanded waterfall still reuses AttributionWaterfall (no separate expanded geometry)", () => {
-    const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(panel).toMatch(/expandedChart\?\.kind === "expectedAddition"[\s\S]*?expanded/)
     expect(panel).toMatch(/expandedChart\?\.kind === "uncertaintyReserve"[\s\S]*?expanded/)
     const src = attributionSource()

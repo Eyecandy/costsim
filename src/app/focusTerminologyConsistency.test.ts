@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -45,7 +46,7 @@ describe("Focus mode user-facing terminology", () => {
     expect(messages.no.inputs.openFocusMode).toBe("Åpne Fokusmodus")
     expect(messages.en.inputs.openFocusMode).toBe("Open Focus mode")
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
-    const results = readSrc("src/features/results/ResultsPanel.tsx")
+    const results = readResultsPanelSource()
     expect(table).toContain('title={t("inputs.openFocusMode")}')
     expect(table).toContain('aria-label={t("inputs.openFocusMode")}')
     expect(results).toContain('title={t("inputs.openFocusMode")}')

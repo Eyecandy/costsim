@@ -15,6 +15,7 @@ import { messages } from "@/i18n/messages"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -173,7 +174,7 @@ describe("Focus mode entry hierarchy", () => {
     expect(messages.no.inputs.focusOverviewPhase4).toBe("Resultater")
     expect(messages.en.inputs.focusOverviewPhase4).toBe("Results")
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
-    const results = readSrc("src/features/results/ResultsPanel.tsx")
+    const results = readResultsPanelSource()
     expect(table).toContain('t("inputs.openFocusMode")')
     expect(table).toContain('<Play className="size-4" aria-hidden />')
     expect(results).toContain('t("inputs.openFocusMode")')

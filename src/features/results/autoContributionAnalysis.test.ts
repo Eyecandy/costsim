@@ -11,13 +11,14 @@ import {
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function hookSource() {
   return readFileSync(join(repoRoot, "src/features/results/useLazyShapleyAttribution.ts"), "utf8")
 }
 
 function panelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  return readResultsPanelSource()
 }
 
 function appSource() {

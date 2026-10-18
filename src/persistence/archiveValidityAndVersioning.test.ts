@@ -23,6 +23,7 @@ import { messages } from "@/i18n/messages"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function fakeShapley(id: string): ShapleyAttributionResult {
   return {
@@ -232,7 +233,7 @@ describe("archived Result View capture", () => {
 
   it("App archives from the same live Result Preferences hook as ResultsPanel", () => {
     const app = readAppSource()
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(app).toContain("useResultPreferences")
     expect(app).toContain("resultPreferences,")
     expect(app).toContain("liveResultPreferences={resultPreferences}")
@@ -387,7 +388,7 @@ describe("create new version inherits archived results", () => {
   })
 
   it("ResultsPanel uses draftResultSeed Shapley and does not auto-run while seeded", () => {
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("draftResultSeed")
     expect(panel).toContain("useSeededShapley")
     expect(panel).toContain("draftResultSeed.shapleyByProjectId")

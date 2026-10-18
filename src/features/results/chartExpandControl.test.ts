@@ -7,6 +7,7 @@ import {
   CHART_EXPAND_RESERVE_TOP_CLASS,
 } from "@/features/results/ChartExpandButton"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -14,7 +15,7 @@ function readSrc(rel: string) {
 
 describe("integrated chart expand control", () => {
   it("A: all expandable visualizations still have an expand control", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain('onExpand={() => setExpandedChart({ kind: "keyFigures" })}')
     expect(panel).toContain('onExpand={() => setExpandedChart({ kind: "scurve" })}')
     expect(panel).toContain('kind: "tornado"')
@@ -73,7 +74,7 @@ describe("integrated chart expand control", () => {
   })
 
   it("G: clicking the control still opens the correct expanded content", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("<ResultsSCurve")
     expect(panel).toContain('setExpandedChart({ kind: "scurve" })')
     expect(panel).toContain('kind: "keyFigures"')

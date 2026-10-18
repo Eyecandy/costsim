@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   archiveCheckpoint,
@@ -25,8 +23,8 @@ import { DEFAULT_RESULT_PREFERENCES, resolveResultView } from "@/domain/results/
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function fixture() {
   const blank = createBlankWorkspaceRuntimeState()
@@ -95,12 +93,8 @@ describe("Ongoing compact result persistence A–K", () => {
   it("D: archived compact contribution is frozen and needs no rerun", () => {
     const { compact } = fixture()
     expect(compact.contribution).toBeNull()
-    expect(readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")).toContain(
-      "ongoingCompactResult.contribution",
-    )
-    expect(readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")).toContain(
-      "onContributionReady",
-    )
+    expect(readResultsPanelSource()).toContain("ongoingCompactResult.contribution")
+    expect(readResultsPanelSource()).toContain("onContributionReady")
     expect(readLibrarySessionSource()).toContain("attachOngoingDraftContribution")
   })
 

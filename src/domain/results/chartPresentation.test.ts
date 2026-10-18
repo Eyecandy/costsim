@@ -27,6 +27,7 @@ import {
 } from "@/domain/results/sCurveDisplay"
 import { SCURVE_PROJECT_DIM_OPACITY } from "@/domain/results/sCurveProjectEmphasis"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string): string {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -113,7 +114,7 @@ describe("chartPresentation", () => {
   })
 
   it("keeps Focus and normal Results on the same S-curve component", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const matches = panel.match(/<ResultsSCurve/g) ?? []
     expect(matches.length).toBeGreaterThanOrEqual(2)
     expect(panel).toContain('expandedChart?.kind === "scurve"')

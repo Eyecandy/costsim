@@ -13,6 +13,7 @@ import {
   uncertaintyModelConfig,
 } from "@/domain/simulation/uncertaintyModelConfig"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -56,7 +57,7 @@ describe("uncertaintyModelConfig product architecture", () => {
     expect(messages.no.results.pdfMethodParagraph1).not.toContain("trekantfordelinger")
     expect(messages.en.results.pdfMethodParagraph1).not.toContain("triangular distributions")
 
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("fillUncertaintyModelCopy")
     expect(panel).toContain("results.pdfMethodParagraph1")
     // Ongoing + Single both build methodParagraphs via the same ResultsPanel path.

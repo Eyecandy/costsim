@@ -20,6 +20,7 @@ import {
   type Project,
 } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function richShareProject(): Project {
   return {
@@ -262,7 +263,7 @@ describe("share-state v3", () => {
   })
 
   it("P: Share and PDF use the same v3 URL builder", () => {
-    const src = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const src = readResultsPanelSource()
     expect(src).toContain('from "@/persistence/shareLink"')
     expect(src).toContain("buildShareUrl({ projects, activeProjectId })")
     const copyIdx = src.indexOf("handleCopyShareLink")

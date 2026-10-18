@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -33,7 +34,7 @@ describe("Focus archive confirmation overlay portal", () => {
 
   it("D: Archive from Next Steps still uses requestArchiveCheckpoint", () => {
     const app = readAppSource()
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(app).toContain("const requestArchiveCheckpoint = useCallback")
     expect(app).toContain("setArchiveConfirmOpen(true)")
     expect(app).toContain("onRequestArchiveAndCreateNext=")

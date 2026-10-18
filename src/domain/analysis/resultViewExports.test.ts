@@ -13,6 +13,7 @@ import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -165,9 +166,7 @@ describe("resolveResultView + export consumers", () => {
   })
 
   it("PDF/AI generation paths snapshot active prefs and do not read localStorage", () => {
-    const panel =
-      readSrc("src/features/results/ResultsPanel.tsx") +
-      readSrc("src/features/results/pdfExport.tsx")
+    const panel = readResultsPanelSource() + readSrc("src/features/results/pdfExport.tsx")
     const pdfDoc = readSrc("src/pdf/ProjectReportDocument.tsx")
     const aiBrief = readSrc("src/domain/results/aiBrief.ts")
     const kfRows = readSrc("src/domain/results/keyFiguresMetricRows.ts")

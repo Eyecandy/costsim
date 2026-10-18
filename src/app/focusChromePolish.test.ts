@@ -12,6 +12,7 @@ import {
 import { focusResultHelpCopyKeys } from "@/domain/guided/focusResultSteps"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -97,7 +98,7 @@ describe("Focus chrome visual polish", () => {
   })
 
   it("H: Next Steps action buttons share equal width + centered text", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("FOCUS_NEXT_STEPS_ACTION_CLASS")
     expect(panel).toContain("FOCUS_NEXT_STEPS_ACTION_COL_CLASS")
     expect(FOCUS_NEXT_STEPS_ACTION_CLASS).toContain("w-full")

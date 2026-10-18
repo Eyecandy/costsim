@@ -24,6 +24,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function results(projectId: string, values: number[]): ProjectResult[] {
   return [
@@ -201,7 +202,7 @@ describe("Development wiring stability (source / memo / hover)", () => {
   })
 
   it("ResultsPanel development memo ignores result preferences and archived nav tip", () => {
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("viewedDraftCheckpointId")
     expect(panel).toContain("developmentLiveResultSource")
     const memoStart = panel.indexOf("const developmentSeries = useMemo")

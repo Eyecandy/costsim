@@ -21,6 +21,7 @@ import {
 } from "@/pdf/buildPdfReportModel"
 import { groupWaterfallContributors } from "@/domain/results/waterfallContributors"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function pdfDocSource() {
   return readFileSync(join(repoRoot, "src/pdf/ProjectReportDocument.tsx"), "utf8")
@@ -29,7 +30,7 @@ function pdfDocSource() {
 function resultsPanelSource() {
   // PDF rendering lives in pdfExport.tsx; the handlers that call it stay in ResultsPanel.tsx.
   return (
-    readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8") +
+    readResultsPanelSource() +
     readFileSync(join(repoRoot, "src/features/results/pdfExport.tsx"), "utf8")
   )
 }

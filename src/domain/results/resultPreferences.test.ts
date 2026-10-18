@@ -32,6 +32,7 @@ import {
 } from "@/domain/results/keyFiguresDisplay"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 describe("Result Preferences model", () => {
   it("defaults preserve current Key Figures / S-curve experience", () => {
@@ -302,7 +303,7 @@ describe("Result Preferences UI wiring", () => {
   it("panel and consumers are wired without touching share/project schema", async () => {
     const { readFileSync } = await import("node:fs")
     const { join } = await import("node:path")
-    const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     const share = readFileSync(join(root, "src/persistence/shareLink.ts"), "utf8")
     const expander = readFileSync(join(root, "src/shared/SectionExpander.tsx"), "utf8")
     const keyFigures = readFileSync(

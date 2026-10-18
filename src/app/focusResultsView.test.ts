@@ -8,6 +8,7 @@ import { buildGuidedWorkflowSteps } from "@/domain/guided/guidedWorkflow"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -35,7 +36,7 @@ function driver(partial: Partial<DriverRow> & { id: string }): DriverRow {
 
 describe("Focus Results stepwise workflow", () => {
   it("A: Results Focus entry uses Play like Input, not Maximize2", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const table = readSrc("src/features/scenario-tables/ScenarioPercentTable.tsx")
     expect(panel).toContain("data-results-focus-toggle")
     expect(panel).toContain('import { Check, Play } from "lucide-react"')
@@ -141,7 +142,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("J: stepwise Results — one section via focusSection", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const steps = buildFocusResultSteps({
       includeDevelopment: false,
       includeContribution: true,
@@ -176,7 +177,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("M/N: ExpandedChartDialog reused; expand stays on same step", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("ExpandedChartDialog")
     expect(panel).toContain("setExpandedChart")
     expect(panel).toContain("closeExpandedChart")
@@ -292,7 +293,7 @@ describe("Focus Results stepwise workflow", () => {
     expect(focusResultSectionTitleKey("nextSteps")).toBe("inputs.focusNextStepsTitle")
     expect(messages.no.inputs.focusNextStepsTitle).toBe("Neste steg")
     expect(messages.en.inputs.focusNextStepsTitle).toBe("Next steps")
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain('data-focus-next-steps=""')
     expect(panel).toContain("onFocusReviewInput")
     expect(panel).toContain("onRequestArchiveAndCreateNext")
@@ -311,7 +312,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("Next Steps archive uses existing eligibility gate", () => {
     const app = readAppSource()
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(app).toContain("librarySession.canArchive")
     expect(app).toContain("requestArchiveCheckpoint")
     expect(panel).toContain("data-focus-next-steps-archive")
@@ -319,7 +320,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("G: Next Steps removes redundant Back to results", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const app = readAppSource()
     expect(panel).not.toContain("onFocusBackToResults")
     expect(panel).not.toContain("data-focus-next-steps-back-to-results")
@@ -328,7 +329,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("H: Next Steps renders Continue working and Use the results sections", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain('data-focus-next-steps-continue=""')
     expect(panel).toContain('data-focus-next-steps-use-results=""')
     expect(messages.no.inputs.focusContinueWorkingHeading).toBe("Fortsett arbeidet")
@@ -356,7 +357,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("J–N: Next Steps reuses PDF / share / AI / archive handlers and gates", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const start = panel.indexOf('data-focus-next-steps=""')
     const endMarker = panel.indexOf('data-focus-next-steps-ai-brief=""', start)
     expect(start).toBeGreaterThanOrEqual(0)
@@ -431,7 +432,7 @@ describe("Focus Results stepwise workflow", () => {
     const dialog = readSrc("src/features/results/ExpandedChartDialog.tsx")
     expect(dialog).toContain("useOverlayPortalContainer")
     expect(dialog).toContain("portalContainer")
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain('setExpandedChart({ kind: "scurve" })')
     expect(panel).toMatch(
       /expandedChart\?\.kind === "scurve"[\s\S]*?<ResultsSCurve[\s\S]*?expanded/,

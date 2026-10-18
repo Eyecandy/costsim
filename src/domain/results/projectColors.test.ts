@@ -11,6 +11,7 @@ import {
 } from "@/domain/results/projectColors"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 describe("projectColors", () => {
   it("assigns Project 1 to the blue scurve token", () => {
@@ -31,7 +32,7 @@ describe("projectColors", () => {
   })
 
   it("ResultsPanel and App resolve colors from the shared helper", () => {
-    const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     const app = readAppSource()
     const swatch = readFileSync(join(root, "src/shared/ProjectColorSwatch.tsx"), "utf8")
     expect(panel).toContain("getProjectColorCssVar")
@@ -46,7 +47,7 @@ describe("projectColors", () => {
   })
 
   it("Tornado and Contribution headings use ProjectColorSwatch without recoloring bars", () => {
-    const panel = readFileSync(join(root, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     const tornado = readFileSync(join(root, "src/features/results/ResultsTornado.tsx"), "utf8")
     const waterfall = readFileSync(join(root, "src/features/results/ResultsWaterfall.tsx"), "utf8")
     const reserve = readFileSync(

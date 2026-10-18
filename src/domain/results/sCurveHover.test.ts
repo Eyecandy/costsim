@@ -19,6 +19,7 @@ import {
   wholePercentileLabel,
 } from "@/domain/results/sCurveHover"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function sCurveSource() {
   return readFileSync(join(repoRoot, "src/features/results/ResultsSCurve.tsx"), "utf8")
@@ -29,7 +30,7 @@ function hoverSource() {
 }
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  return readResultsPanelSource()
 }
 
 describe("expanded S-curve hover", () => {

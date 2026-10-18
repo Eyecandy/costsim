@@ -22,6 +22,7 @@ import { messages } from "@/i18n/messages"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -234,7 +235,7 @@ describe("classic S-curve guides", () => {
 describe("S-curve Classic-only wiring", () => {
   it("has no display-mode or horizontal-zoom controls and does not re-simulate", () => {
     const scurve = readSrc("src/features/results/ResultsSCurve.tsx")
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(scurve).toContain("shouldHideOrdinaryYTickLabel")
     expect(scurve).toContain("shouldHideOrdinaryXTickLabel")
     expect(scurve).toContain("classicYLabelX")
@@ -278,7 +279,7 @@ describe("S-curve Classic-only wiring", () => {
 describe("S-curve legend project highlight", () => {
   it("combines ephemeral hover with shared click multi-select", () => {
     const scurve = readSrc("src/features/results/ResultsSCurve.tsx")
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const css = readSrc("src/index.css")
     const emphasis = readSrc("src/domain/results/sCurveProjectEmphasis.ts")
 

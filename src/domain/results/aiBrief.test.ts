@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   buildAiBriefOngoingDevelopment,
@@ -31,12 +29,12 @@ import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttrib
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { DEFAULT_RESULT_PREFERENCES, resolveResultView } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 const defaultResultView = resolveResultView(DEFAULT_RESULT_PREFERENCES)
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  return readResultsPanelSource()
 }
 
 function richProject(): Project {

@@ -27,6 +27,7 @@ import {
   resolveOngoingPdfCutoff,
 } from "@/pdf/ongoing/resolveOngoingPdfCutoff"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -273,9 +274,7 @@ describe("Ongoing PDF cutoff A–J", () => {
   })
 
   it("I: Single PDF path unchanged (smoke)", () => {
-    const panel =
-      readSrc("src/features/results/ResultsPanel.tsx") +
-      readSrc("src/features/results/pdfExport.tsx")
+    const panel = readResultsPanelSource() + readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("planOngoingPdfExport")
     expect(panel).toContain("ConfirmDialog")
@@ -330,7 +329,7 @@ describe("Ongoing PDF cutoff A–J", () => {
     )
     expect(en.message).not.toContain("checkpoint.sequenceLabel")
 
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("buildOngoingPdfDraftConfirmCopy")
     expect(panel).not.toContain('t("checkpoint.sequenceLabel")')
   })

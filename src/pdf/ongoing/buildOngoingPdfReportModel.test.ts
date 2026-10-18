@@ -32,6 +32,7 @@ import { ONGOING_PDF_REPORT_KIND, ONGOING_PDF_SECTION_IDS } from "@/pdf/ongoing/
 import { buildPdfReportModelForMode } from "@/pdf/exportPdfReport"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -409,9 +410,7 @@ describe("Ongoing PDF information architecture A–K", () => {
   it("K: Single PDF builders remain separate (regression smoke)", () => {
     const exportSrc = readSrc("src/pdf/exportPdfReport.ts")
     expect(exportSrc).toContain('mode === "ongoing"')
-    const panel =
-      readSrc("src/features/results/ResultsPanel.tsx") +
-      readSrc("src/features/results/pdfExport.tsx")
+    const panel = readResultsPanelSource() + readSrc("src/features/results/pdfExport.tsx")
     expect(panel).toContain('if (analysisMode === "ongoing")')
     expect(panel).toContain("ProjectReportDocument")
     expect(panel).toContain("OngoingReportDocument")

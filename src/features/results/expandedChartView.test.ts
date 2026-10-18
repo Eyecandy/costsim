@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  return readResultsPanelSource()
 }
 
 function expandedDialogSource() {

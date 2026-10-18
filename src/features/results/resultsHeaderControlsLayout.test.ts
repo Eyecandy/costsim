@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -10,7 +11,7 @@ function readSrc(rel: string) {
 describe("Results header right-side control group", () => {
   it("Focus, Result Settings, and expander share one right-side end group", () => {
     const expander = readSrc("src/shared/SectionExpander.tsx")
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
 
     expect(expander).toContain('data-section-expander-end=""')
     expect(expander).toContain('data-section-expander-trailing=""')
@@ -41,7 +42,7 @@ describe("Results header right-side control group", () => {
   })
 
   it("control order is Focus → Settings → Expander (outermost)", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const expander = readSrc("src/shared/SectionExpander.tsx")
 
     const actions = panel.slice(
@@ -64,7 +65,7 @@ describe("Results header right-side control group", () => {
   })
 
   it("Focus and Result Settings handlers remain unchanged", () => {
-    const panel = readSrc("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("onClick={onOpenFocusResults}")
     expect(panel).toContain('aria-label={t("inputs.openFocusMode")}')
     expect(panel).toContain('title={t("inputs.openFocusMode")}')

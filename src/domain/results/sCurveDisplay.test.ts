@@ -19,6 +19,7 @@ import {
 } from "@/domain/results/sCurveDisplay"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function appSource() {
   return readAppSource()
@@ -123,7 +124,7 @@ describe("S-curve display series", () => {
 
   it("I: S-curve project colors use shared project identity tokens", () => {
     const src = sCurveSource()
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(src).toContain("`var(${c.colorVar})`")
     expect(src).toContain("var(--muted-foreground)")
     expect(src).toContain('emphasis === "reference"')

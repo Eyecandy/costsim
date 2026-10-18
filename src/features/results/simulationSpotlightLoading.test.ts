@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function appSource() {
   return readAppSource()
@@ -44,7 +45,7 @@ describe("simulation run spotlight loading", () => {
 
   it("reuses the same spotlight component/CSS as Contribution Analysis", () => {
     const app = appSource()
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     const component = readFileSync(join(repoRoot, "src/shared/SpotlightLoadingText.tsx"), "utf8")
     const css = readFileSync(join(repoRoot, "src/index.css"), "utf8")
     expect(app).toContain('from "@/shared/SpotlightLoadingText"')
@@ -69,7 +70,7 @@ describe("simulation run spotlight loading", () => {
     const component = readFileSync(join(repoRoot, "src/shared/SpotlightLoadingText.tsx"), "utf8")
     const brand = readFileSync(join(repoRoot, "src/shared/brand.ts"), "utf8")
     const logo = readFileSync(join(repoRoot, "src/shared/BrandWordmark.tsx"), "utf8")
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(app).toContain('tone="primary"')
     expect(app).toContain("brandPrimaryTextClass")
     expect(app).not.toMatch(/data-simulation-loading[\s\S]{0,200}text-\[#1d868c\]/)

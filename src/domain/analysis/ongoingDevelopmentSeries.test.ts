@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   archiveCheckpoint,
@@ -17,7 +15,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { messages } from "@/i18n/messages"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function results(projectId: string, values: number[]): ProjectResult[] {
   return [
@@ -148,7 +146,7 @@ describe("buildOngoingDevelopmentSeries", () => {
   })
 
   it("ResultsPanel wires Ongoing-only development section", () => {
-    const panel = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("buildOngoingDevelopmentSeries")
     expect(panel).toContain("ResultsDevelopmentChart")
     expect(panel).toContain("developmentSeries")

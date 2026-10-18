@@ -23,6 +23,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function snapshotFor(projects: Project[], activeProjectId: string, tag = "a") {
   const fakeResults: ProjectResult[] = projects.map((p) => ({
@@ -306,7 +307,7 @@ describe("completeOngoingAnalysis", () => {
     expect(menu).toContain("finishOngoingLabel")
     expect(menu).toContain("onFinishOngoing")
 
-    const results = readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+    const results = readResultsPanelSource()
     expect(results).toContain("onRequestFinishOngoingAnalysis")
     expect(results).toContain('data-finish-ongoing-analysis=""')
   })

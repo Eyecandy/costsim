@@ -38,6 +38,7 @@ import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function read(pathFromRepo: string) {
   return readFileSync(join(repoRoot, pathFromRepo), "utf8")
@@ -647,7 +648,7 @@ describe("checkpoint comparison presentation helpers", () => {
 
 describe("checkpoint comparison UI wiring", () => {
   it("shows comparison above shared result sections for Ongoing only", () => {
-    const panel = read("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("CheckpointComparisonSection")
     expect(panel).toContain("ongoingCheckpoints")
     expect(panel).toContain("resultPreferences={resultPreferences}")

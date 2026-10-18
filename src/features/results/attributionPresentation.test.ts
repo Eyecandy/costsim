@@ -8,6 +8,7 @@ import { runShapleyAttributionForPayload } from "@/domain/simulation/shapleyWork
 import { buildSimulationProjectPayload } from "@/domain/simulation/buildSimulationProjectPayload"
 import { createProject } from "@/domain/analysis/project"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 function sampleProject() {
   const base = createProject({ id: "p1", name: "Project A" })
@@ -35,7 +36,7 @@ function sampleProject() {
 }
 
 function resultsPanelSource() {
-  return readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")
+  return readResultsPanelSource()
 }
 
 function sectionExpanderSource() {

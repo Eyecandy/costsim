@@ -1,33 +1,15 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { Button, buttonVariants } from "@/shared/ui/button"
 import { type Project } from "@/domain/analysis/project"
 import { appFeatures } from "@/config/appVariant"
-import { buildShareUrl } from "@/persistence/shareLink"
 import { projectsFromLegacySignature } from "@/domain/analysis/projectsPayload"
 import { useI18n } from "@/i18n/useI18n"
-import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { Card, CardContent } from "@/shared/ui/card"
-import {
-  computeDeterministicTornadoRows,
-  type DeterministicTornadoRow,
-} from "@/domain/simulation/deterministicTornado"
 import { ResultsDevelopmentChart } from "@/features/results/ResultsDevelopmentChart"
 import { ResultsSCurve } from "@/features/results/ResultsSCurve"
 import { CheckpointComparisonSection } from "@/features/results/CheckpointComparisonSection"
-import type { AnalysisCheckpoint } from "@/domain/analysis/analysisCheckpoint"
-import type { AnalysisMode } from "@/domain/analysis/analysisDocument"
-import {
-  compareCheckpoints,
-  type CheckpointResultSource,
-} from "@/domain/analysis/checkpointComparison"
-import { formatCheckpointLegendLabel } from "@/domain/analysis/checkpointComparisonPresentation"
-import { listVisibleComparableKeyFigureRowIds } from "@/domain/results/keyFigureVisibility"
 import { ConfirmDialog } from "@/shared/ConfirmDialog"
-import {
-  buildOngoingPdfDraftConfirmCopy,
-  planOngoingPdfExport,
-} from "@/pdf/ongoing/resolveOngoingPdfCutoff"
 import { ResultsWaterfall } from "@/features/results/ResultsWaterfall"
 import { ResultsReserveWaterfall } from "@/features/results/ResultsReserveWaterfall"
 import { ResultsKeyFiguresTable } from "@/features/results/ResultsKeyFiguresTable"
@@ -38,151 +20,27 @@ import {
   FOCUS_NEXT_STEPS_ACTION_COL_CLASS,
 } from "@/domain/guided/focusSessionFrame"
 import { toggleSelectedProjectId } from "@/domain/results/sCurveProjectEmphasis"
-import { getProjectColorCssVar, getProjectColorHex } from "@/domain/results/projectColors"
 import { ResultsTornado } from "@/features/results/ResultsTornado"
-import {
-  buildTornadoSharedLayout,
-  computeTornadoSharedSymmetricMaxAbs,
-} from "@/features/results/tornadoShared"
 import { ExpandedChartDialog } from "@/features/results/ExpandedChartDialog"
-import { formatNumber } from "@/domain/results/formatNumber"
-import {
-  firstPersistedSimulationCount,
-  resolveReportedSimulationCount,
-} from "@/domain/simulation/simulationConfig"
-import { fillUncertaintyModelCopy } from "@/domain/simulation/uncertaintyModelConfig"
-import { resolveTornadoDisplayScales } from "@/domain/results/formatWaterfallValue"
 import { useLazyShapleyAttribution } from "@/features/results/useLazyShapleyAttribution"
-import {
-  resolveSCurvePercentiles,
-  resolveResultView,
-  type ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import { resolveSCurvePercentiles } from "@/domain/results/resultPreferences"
 import {
   shouldShowResultSettingsEditor,
   shouldUseCompactResultAnalytics,
 } from "@/domain/results/resultSettingsPresentation"
-import type { ArchivedAnalysisSnapshotV1 } from "@/domain/analysis/archivedAnalysisSnapshot"
-import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
-import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
-import { buildKeyFigureMetricTableRows } from "@/domain/results/keyFiguresMetricRows"
-import { buildKeyFigureMetricTableRowsFromFrozen } from "@/domain/results/keyFiguresMetricRows"
-import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
-import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisResult"
-import type { SingleArchivedResultSnapshotV1 } from "@/domain/analysis/singleArchivedResultSnapshot"
-import type { SingleDraftResultSnapshotV1 } from "@/domain/analysis/singleDraftResultSnapshot"
 import { Check, Play } from "lucide-react"
-import { mapShapleyToPdfContribution } from "@/pdf/buildPdfReportModel"
-import { buildOngoingPdfReportModel } from "@/pdf/ongoing/buildOngoingPdfReportModel"
-import { buildAiBriefOngoingDevelopment, buildAiBriefV3 } from "@/domain/results/aiBrief"
 import { SectionExpander } from "@/shared/SectionExpander"
 import { SpotlightLoadingText } from "@/shared/SpotlightLoadingText"
 import { simulationRunKeyForProjects } from "@/domain/simulation/simulationRunId"
 import type { FocusResultSectionId } from "@/domain/guided/focusResultSteps"
-import { profileOptionKey } from "@/i18n/messages"
-
-/** Auto-dismiss for stale-input notices under PDF / share / AI brief actions. */
-const STALE_ACTION_NOTICE_DISMISS_MS = 4000
-
-type ExpandedResultChart =
-  | { kind: "keyFigures" }
-  | { kind: "development" }
-  | { kind: "scurve" }
-  | { kind: "tornado"; projectId: string; projectName: string }
-  | { kind: "expectedAddition"; projectId: string; projectName: string }
-  | { kind: "uncertaintyReserve"; projectId: string; projectName: string }
-
-type ResultsPanelProps = {
-  projects: Project[]
-  activeProjectId: string
-  projectResults: ProjectResult[]
-  simulatedBaseCostByProjectId: Record<string, number | null>
-  /** Canonical analytical signature from the last completed simulation. */
-  lastSimulatedInputSignature: string
-  /** Full projects captured at last simulation — Results display baseline. */
-  lastSimulatedProjects?: readonly Project[]
-  /** Per-project run token from the last completed main simulation. */
-  simulationRunIdByProjectId: Readonly<Record<string, string>>
-  /** Matches `runs` sent to the simulation worker (Monte Carlo draws per project). */
-  simulationCount: number
-  /** True when live `projects` no longer match the last completed simulation (same as stale notice). */
-  pdfExportBlockedStaleInputs: boolean
-  /** When true, do not compute new Contribution/Shapley (archived snapshot view). */
-  analysisArchivedView?: boolean
-  /** Frozen archive payload; used when `analysisArchivedView` is true. */
-  archivedSnapshot?: ArchivedAnalysisSnapshotV1 | null
-  ongoingCompactResult?: OngoingCheckpointResultSnapshotV1 | null
-  singleArchivedCompact?: SingleArchivedResultSnapshotV1 | null
-  singleDraftResult?: SingleDraftResultSnapshotV1 | null
-  /**
-   * Remapped results from "Create new version". While present, Contribution
-   * uses seeded Shapley (no live recomputation) until cleared after re-sim.
-   */
-  draftResultSeed?: DraftResultSeedV1 | null
-  /** Live session Result Preferences (single source of truth from App). */
-  liveResultPreferences: ResultPreferencesV1
-  replacePreferences: (next: ResultPreferencesV1) => void
-  saveAsDefault: () => void
-  resetToDefaults: () => void
-  addKeyFigurePercentile: (p: number) => void
-  removeKeyFigurePercentile: (p: number) => void
-  addSCurvePercentile: (p: number) => void
-  removeSCurvePercentile: (p: number) => void
-  /**
-   * Ongoing Analysis only: same archive entry as the analysis actions menu.
-   * When omitted (Single / read-only), the Results shortcut is hidden.
-   */
-  onRequestArchiveAndCreateNext?: () => void
-  /**
-   * Active Ongoing Analysis only: finish whole analysis after tip is archived.
-   * Shown even while viewing an archived checkpoint (document still draft).
-   */
-  onRequestFinishOngoingAnalysis?: () => void
-  /**
-   * Domain analysis mode — PDF export routes on this explicitly
-   * (not on presence of `ongoingCheckpoints`).
-   */
-  analysisMode?: AnalysisMode
-  /**
-   * Ongoing Analysis only: checkpoint list + viewed id for comparison layer.
-   * Omitted for Single Analysis — comparison section is not shown.
-   */
-  ongoingCheckpoints?: readonly AnalysisCheckpoint[]
-  viewedCheckpointId?: string
-  /** Display name of the open analysis (PDF cover). */
-  analysisName?: string
-  /** Ongoing lifecycle for PDF metadata; ignored for Single. */
-  ongoingLifecycle?: "active" | "completed"
-  /**
-   * Hydrated results for the viewed checkpoint (live or archived).
-   * `resultsComparable` must be false when live inputs are stale.
-   */
-  checkpointComparisonResultSource?: CheckpointResultSource | null
-  /**
-   * Ongoing live tip: when Contribution finishes, attach it to the compact
-   * draft snapshot for reload continuity (no full MC arrays).
-   */
-  onContributionReady?: (
-    projectId: string,
-    contribution: ShapleyAttributionResult,
-    simulationRunId: string,
-  ) => void
-  /**
-   * Open Results inside Focus mode (presentation only).
-   * When omitted, the Focus entry control is hidden.
-   */
-  onOpenFocusResults?: () => void
-  /** When true, Results are rendered inside Focus — hide the Focus entry control. */
-  focusResultsActive?: boolean
-  /**
-   * When set, render only this analytical section (Focus stepwise Results).
-   * Presentation-only; does not change analytical state.
-   */
-  focusSection?: FocusResultSectionId | null
-  /** Focus Next Steps: exit Focus to normal Input. */
-  onFocusReviewInput?: () => void
-}
+import {
+  type ExpandedResultChart,
+  type ResultsPanelProps,
+} from "@/features/results/panel/panelTypes"
+import { resolveAttributionUi } from "@/features/results/panel/attributionUi"
+import { useResultsDerivedData } from "@/features/results/panel/useResultsDerivedData"
+import { useResultsExportActions } from "@/features/results/panel/useResultsExportActions"
 
 export function ResultsPanel({
   projects,
@@ -274,21 +132,6 @@ export function ResultsPanel({
     if (baseline) return baseline
     return projects
   }, [projects, projectResults.length, lastSimulatedProjects, lastSimulatedInputSignature])
-  const [shareCopied, setShareCopied] = useState(false)
-  const [aiBriefCopied, setAiBriefCopied] = useState(false)
-  const [showPdfBlockedNotice, setShowPdfBlockedNotice] = useState(false)
-  const [showOngoingPdfBlockedNotice, setShowOngoingPdfBlockedNotice] = useState(false)
-  const [ongoingPdfDraftConfirm, setOngoingPdfDraftConfirm] = useState<{
-    cutoffCheckpointId: string
-    draftLabel: string
-    cutoffLabel: string
-    title: string
-    message: string
-  } | null>(null)
-  const [showShareBlockedNotice, setShowShareBlockedNotice] = useState(false)
-  const [showShareOversizedNotice, setShowShareOversizedNotice] = useState(false)
-  const [showPdfShareOversizedNotice, setShowPdfShareOversizedNotice] = useState(false)
-  const [showAiBriefStaleNotice, setShowAiBriefStaleNotice] = useState(false)
   const [resultsExpanderOpen, setResultsExpanderOpen] = useState(true)
   const [keyFiguresOpen, setKeyFiguresOpen] = useState(true)
   const [developmentOpen, setDevelopmentOpen] = useState(true)
@@ -330,198 +173,45 @@ export function ResultsPanel({
   )
 
   useEffect(() => {
+    // intentional: a new simulation run re-opens every section
+    /* eslint-disable react-hooks/set-state-in-effect */
     setKeyFiguresOpen(true)
     setSCurveOpen(true)
     setTornadoOpen(true)
     setContributionOpen(true)
     setExportOpen(false)
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [resultsLayoutResetKey])
 
-  const shareCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const aiBriefCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const pdfStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const shareStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const shareOversizedNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const pdfShareOversizedNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const aiBriefStaleNoticeDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const baseCostByProjectId = useMemo(() => {
-    const m = new Map<string, number | null>()
-    for (const p of projects) {
-      m.set(p.id, simulatedBaseCostByProjectId[p.id] ?? null)
-    }
-    return m
-  }, [projects, simulatedBaseCostByProjectId])
-
-  const resultsByProjectId = useMemo(() => {
-    return new Map(projectResults.map((r) => [r.projectId, r.values]))
-  }, [projectResults])
-  const compactResultByProjectId = useMemo(() => {
-    const map = new Map<string, CompactProjectResultV1>()
-    if (!useCompactResults) return map
-    if (singleDraftResult) {
-      for (const [projectId, result] of Object.entries(singleDraftResult.byProjectId)) {
-        map.set(projectId, result)
-      }
-    }
-    if (singleArchivedCompact) {
-      for (const [projectId, result] of Object.entries(singleArchivedCompact.byProjectId)) {
-        map.set(projectId, result)
-      }
-    }
-    if (ongoingCompactResult) {
-      map.set(ongoingCompactResult.activeProjectId, {
-        projectId: ongoingCompactResult.activeProjectId,
-        incurredCosts: ongoingCompactResult.incurredCosts,
-        simulatedBaseCost: ongoingCompactResult.simulatedBaseCost,
-        keyFigures: ongoingCompactResult.keyFigures,
-        sCurve: ongoingCompactResult.sCurve,
-        tornado: ongoingCompactResult.tornado,
-        contribution: ongoingCompactResult.contribution,
-      })
-    }
-    return map
-  }, [ongoingCompactResult, singleArchivedCompact, singleDraftResult, useCompactResults])
-  const frozenKeyFiguresByProjectId = useMemo(() => {
-    const map = new Map()
-    for (const [projectId, result] of compactResultByProjectId) {
-      map.set(projectId, result.keyFigures)
-    }
-    return map
-  }, [compactResultByProjectId])
-
-  const simulatedIncurredByProjectId = useMemo(() => {
-    const map = new Map(projectResults.map((r) => [r.projectId, r.incurredCosts]))
-    for (const [projectId, result] of compactResultByProjectId) {
-      map.set(projectId, result.incurredCosts)
-    }
-    return map
-  }, [compactResultByProjectId, projectResults])
-
-  const checkpointComparison = useMemo(() => {
-    if (!ongoingCheckpoints || !viewedCheckpointId || !checkpointComparisonResultSource) {
-      return null
-    }
-    return compareCheckpoints({
-      checkpoints: ongoingCheckpoints,
-      viewedCheckpointId,
-      viewedResultSource: checkpointComparisonResultSource,
-      keyFigureMetricIds: listVisibleComparableKeyFigureRowIds(resultPreferences.keyFigures),
-      probabilityBelowAmount: resultPreferences.keyFigures.probabilityBelowCostLevel.amount,
-    })
-  }, [ongoingCheckpoints, viewedCheckpointId, checkpointComparisonResultSource, resultPreferences])
-
-  /**
-   * Live tip source only while viewing a draft checkpoint. Archived navigation
-   * must not depend on changing viewed result identity (history is frozen).
-   */
-  const viewedDraftCheckpointId = useMemo(() => {
-    if (!ongoingCheckpoints || !viewedCheckpointId) return null
-    const cp = ongoingCheckpoints.find((c) => c.id === viewedCheckpointId)
-    return cp?.status === "draft" ? viewedCheckpointId : null
-  }, [ongoingCheckpoints, viewedCheckpointId])
-
-  const developmentLiveResultSource = viewedDraftCheckpointId
-    ? checkpointComparisonResultSource
-    : null
-
-  const developmentSeries = useMemo(() => {
-    if (!ongoingCheckpoints || ongoingCheckpoints.length === 0) return null
-    return buildOngoingDevelopmentSeries({
-      checkpoints: ongoingCheckpoints,
-      viewedCheckpointId: viewedDraftCheckpointId,
-      viewedResultSource: developmentLiveResultSource,
-    })
-  }, [ongoingCheckpoints, viewedDraftCheckpointId, developmentLiveResultSource])
-
-  const cdfSeries = useMemo(() => {
-    const primary = displayProjects.map((p, i) => ({
-      id: p.id,
-      label: p.name,
-      values: resultsByProjectId.get(p.id) ?? [],
-      ...(compactResultByProjectId.has(p.id)
-        ? {
-            displayPoints: compactResultByProjectId.get(p.id)!.sCurve.points,
-            values: undefined,
-          }
-        : {}),
-      colorVar: getProjectColorCssVar(i),
-      emphasis: "primary" as const,
-    }))
-    const previous =
-      checkpointComparison?.kind === "comparison"
-        ? checkpointComparison.extensions?.sCurve?.previous
-        : undefined
-    if (
-      !previous ||
-      ((!previous.values || previous.values.length === 0) &&
-        (!previous.displayPoints || previous.displayPoints.length === 0))
-    )
-      return primary
-    return [
-      ...primary,
-      {
-        id: `checkpoint-ref-${previous.checkpointId}`,
-        label: formatCheckpointLegendLabel(previous.sequence, t("checkpoints.sequenceLabel")),
-        values: previous.values,
-        displayPoints: previous.displayPoints,
-        colorVar: getProjectColorCssVar(0),
-        emphasis: "reference" as const,
-      },
-    ]
-  }, [displayProjects, resultsByProjectId, compactResultByProjectId, checkpointComparison, t])
-
-  const tornadoRowsByProjectId = useMemo(() => {
-    const m = new Map<string, DeterministicTornadoRow[]>()
-    if (useCompactResults) {
-      for (const [projectId, result] of compactResultByProjectId) {
-        m.set(projectId, result.tornado ?? [])
-      }
-      return m
-    }
-    if (useArchivedResults && archivedSnapshot) {
-      for (const p of displayProjects) {
-        m.set(p.id, archivedSnapshot.tornadoByProjectId[p.id] ?? [])
-      }
-      return m
-    }
-    for (const p of displayProjects) {
-      const pr = projectResults.find((r) => r.projectId === p.id)
-      m.set(p.id, pr && pr.values.length > 0 ? computeDeterministicTornadoRows(p, 6) : [])
-    }
-    return m
-  }, [
-    archivedSnapshot,
-    displayProjects,
-    projectResults,
-    useArchivedResults,
-    useCompactResults,
+  const {
+    baseCostByProjectId,
+    resultsByProjectId,
     compactResultByProjectId,
-  ])
-
-  const tornadoRowsGroups = useMemo(
-    () => displayProjects.map((p) => tornadoRowsByProjectId.get(p.id) ?? []),
-    [displayProjects, tornadoRowsByProjectId],
-  )
-  const tornadoDisplayScales = useMemo(
-    () => resolveTornadoDisplayScales(tornadoRowsGroups),
-    [tornadoRowsGroups],
-  )
-  const tornadoDisplayScaleByProjectId = useMemo(() => {
-    const m = new Map<string, (typeof tornadoDisplayScales)[number]>()
-    displayProjects.forEach((project, index) => {
-      const scale = tornadoDisplayScales[index]
-      if (scale) m.set(project.id, scale)
-    })
-    return m
-  }, [displayProjects, tornadoDisplayScales])
-  const sharedTornadoLayout = useMemo(
-    () => buildTornadoSharedLayout(tornadoRowsGroups, tornadoDisplayScales),
-    [tornadoRowsGroups, tornadoDisplayScales],
-  )
-  const sharedTornadoSymmetricMaxAbs = useMemo(
-    () => computeTornadoSharedSymmetricMaxAbs(tornadoRowsGroups),
-    [tornadoRowsGroups],
-  )
+    frozenKeyFiguresByProjectId,
+    simulatedIncurredByProjectId,
+    developmentSeries,
+    cdfSeries,
+    tornadoRowsByProjectId,
+    tornadoDisplayScaleByProjectId,
+    sharedTornadoLayout,
+    sharedTornadoSymmetricMaxAbs,
+  } = useResultsDerivedData({
+    projects,
+    simulatedBaseCostByProjectId,
+    projectResults,
+    useCompactResults,
+    useArchivedResults,
+    archivedSnapshot,
+    singleDraftResult,
+    singleArchivedCompact,
+    ongoingCompactResult,
+    ongoingCheckpoints,
+    viewedCheckpointId,
+    checkpointComparisonResultSource,
+    resultPreferences,
+    displayProjects,
+    t,
+  })
 
   const { requestCalculation, getStatus, getResult, getError } = useLazyShapleyAttribution({
     displayProjects,
@@ -602,585 +292,89 @@ export function ResultsPanel({
     useCompactResults,
   ])
 
-  const attributionUi = useMemo(() => {
-    if (useCompactResults) {
-      const states = displayProjects.map((project) => {
-        const result = compactResultByProjectId.get(project.id)?.contribution ?? null
-        return {
-          projectId: project.id,
-          projectName: project.name,
-          status: (result ? "ready" : "idle") as "ready" | "idle",
-          result,
-          error: null as string | null,
-        }
-      })
-      return {
-        states,
-        allReady: states.some((state) => state.result !== null),
-        anyCalculating: false,
-        anyIdle: states.some((state) => state.result === null),
-        anyError: false,
-        firstError: null as string | null,
-      }
-    }
-    if (useArchivedResults && archivedSnapshot) {
-      const states = displayProjects.map((project) => {
-        const result = archivedSnapshot.shapleyByProjectId[project.id] ?? null
-        return {
-          projectId: project.id,
-          projectName: project.name,
-          status: (result ? "ready" : "idle") as "ready" | "idle",
-          result,
-          error: null as string | null,
-        }
-      })
-      return {
-        states,
-        allReady: states.length > 0 && states.some((state) => state.result !== null),
-        anyCalculating: false,
-        anyIdle: states.some((state) => state.result === null),
-        anyError: false,
-        firstError: null as string | null,
-      }
-    }
-
-    if (useSeededShapley && draftResultSeed) {
-      const states = displayProjects.map((project) => {
-        const result = draftResultSeed.shapleyByProjectId[project.id] ?? null
-        return {
-          projectId: project.id,
-          projectName: project.name,
-          status: (result ? "ready" : "idle") as "ready" | "idle",
-          result,
-          error: null as string | null,
-        }
-      })
-      return {
-        states,
-        allReady: states.length > 0 && states.some((state) => state.result !== null),
-        anyCalculating: false,
-        anyIdle: states.some((state) => state.result === null),
-        anyError: false,
-        firstError: null as string | null,
-      }
-    }
-
-    const states = displayProjects.map((project) => ({
-      projectId: project.id,
-      projectName: project.name,
-      status: getStatus(project.id),
-      result: getResult(project.id),
-      error: getError(project.id),
-    }))
-
-    return {
-      states,
-      allReady:
-        states.length > 0 &&
-        states.every((state) => state.status === "ready" && state.result !== null),
-      anyCalculating: states.some((state) => state.status === "calculating"),
-      anyIdle: states.some((state) => state.status === "idle"),
-      anyError: states.some((state) => state.status === "error"),
-      firstError:
-        states.find((state) => state.error)?.error ??
-        states.find((state) => state.status === "error")?.error ??
-        null,
-    }
-  }, [
-    archivedSnapshot,
-    displayProjects,
-    draftResultSeed,
-    getError,
-    getResult,
-    getStatus,
-    useArchivedResults,
-    useCompactResults,
-    useSeededShapley,
-    compactResultByProjectId,
-  ])
-
-  const handleCopyShareLink = async () => {
-    if (pdfExportBlockedStaleInputs) {
-      setShowShareOversizedNotice(false)
-      setShowShareBlockedNotice(true)
-      if (shareStaleNoticeDismissRef.current !== null) {
-        clearTimeout(shareStaleNoticeDismissRef.current)
-      }
-      shareStaleNoticeDismissRef.current = setTimeout(() => {
-        shareStaleNoticeDismissRef.current = null
-        setShowShareBlockedNotice(false)
-      }, STALE_ACTION_NOTICE_DISMISS_MS)
-      return
-    }
-    if (shareStaleNoticeDismissRef.current !== null) {
-      clearTimeout(shareStaleNoticeDismissRef.current)
-      shareStaleNoticeDismissRef.current = null
-    }
-    if (shareOversizedNoticeDismissRef.current !== null) {
-      clearTimeout(shareOversizedNoticeDismissRef.current)
-      shareOversizedNoticeDismissRef.current = null
-    }
-    setShowShareBlockedNotice(false)
-    setShowShareOversizedNotice(false)
-    const built = await buildShareUrl({ projects, activeProjectId })
-    if (!built.ok) {
-      if (built.reason === "oversized") {
-        setShowShareOversizedNotice(true)
-        shareOversizedNoticeDismissRef.current = setTimeout(() => {
-          shareOversizedNoticeDismissRef.current = null
-          setShowShareOversizedNotice(false)
-        }, STALE_ACTION_NOTICE_DISMISS_MS)
-      }
-      return
-    }
-    const url = built.url
-
-    const copyWithExecCommand = (text: string): boolean => {
-      const textarea = document.createElement("textarea")
-      textarea.value = text
-      textarea.setAttribute("readonly", "")
-      textarea.style.position = "fixed"
-      textarea.style.top = "0"
-      textarea.style.left = "0"
-      textarea.style.opacity = "0"
-      document.body.appendChild(textarea)
-      textarea.focus()
-      textarea.select()
-      textarea.setSelectionRange(0, textarea.value.length)
-      const ok = document.execCommand("copy")
-      document.body.removeChild(textarea)
-      return ok
-    }
-
-    let copied = false
-    try {
-      await navigator.clipboard.writeText(url)
-      copied = true
-    } catch {
-      copied = copyWithExecCommand(url)
-    }
-    if (!copied) return
-
-    if (shareCopiedTimerRef.current !== null) {
-      clearTimeout(shareCopiedTimerRef.current)
-    }
-    setShareCopied(true)
-    shareCopiedTimerRef.current = setTimeout(() => {
-      shareCopiedTimerRef.current = null
-      setShareCopied(false)
-    }, 2000)
-  }
-
-  const generateOngoingPdf = async (cutoffCheckpointId: string) => {
-    const checkpoints = ongoingCheckpoints ?? []
-    const cutoffCp = checkpoints.find((c) => c.id === cutoffCheckpointId)
-    const latestSnap = cutoffCp?.archivedSnapshot
-    const methodSimCount = resolveReportedSimulationCount(
-      latestSnap &&
-        typeof latestSnap === "object" &&
-        "simulationCount" in latestSnap &&
-        typeof (latestSnap as { simulationCount?: unknown }).simulationCount === "number"
-        ? (latestSnap as { simulationCount: number }).simulationCount
-        : undefined,
-    )
-    const simCountLabel = formatNumber(methodSimCount, 0, language)
-    const built = buildOngoingPdfReportModel({
-      analysisName: analysisName ?? "",
-      lifecycle: ongoingLifecycle,
-      checkpoints,
-      cutoffCheckpointId,
-      language,
-      brandName: t("results.pdfBrandName"),
-      reportKindLabel: t("results.pdfOngoingReportKindLabel"),
-      keyFigureLabels: {
-        baseCost: t("keyMetrics.baseCost"),
-        p50: t("keyMetrics.p50"),
-        p85: t("keyMetrics.p85"),
-        expectedValue: t("keyMetrics.expectedValue"),
-      },
-      sectionLabels: {
-        development: t("results.pdfOngoingDevelopmentTitle"),
-        latest: t("results.pdfOngoingLatestSummaryTitle"),
-        sCurve: t("charts.sCurveTitle"),
-        tornado: t("charts.tornadoTitle"),
-        contribution: t("results.pdfContributionTitle"),
-        history: t("results.pdfOngoingHistoryTitle"),
-        assumptions: t("results.pdfOngoingAssumptionsTitle"),
-        method: t("results.pdfOngoingMethodTitle"),
-      },
-      coverCopy: {
-        reportBasisArchivedOnly: t("results.pdfOngoingReportBasisArchivedOnly"),
-        reportBasisWithExcludedDraft: t("results.pdfOngoingReportBasisWithExcludedDraft"),
-        reportMeaning: t("results.pdfOngoingReportMeaning"),
-        assumptionsContext: t("results.pdfOngoingAssumptionsContext"),
-      },
-      methodParagraphs: [
-        fillUncertaintyModelCopy(t("results.pdfMethodParagraph1"), {
-          language,
-          count: simCountLabel,
-        }),
-        t("results.pdfMethodParagraph2"),
-        t("results.pdfMethodParagraph3"),
-      ],
-      resolveProfileOptionLabel: (optionId) => t(profileOptionKey(optionId)),
-    })
-    if (!built.ok) {
-      setShowOngoingPdfBlockedNotice(true)
-      if (pdfStaleNoticeDismissRef.current !== null) {
-        clearTimeout(pdfStaleNoticeDismissRef.current)
-      }
-      pdfStaleNoticeDismissRef.current = setTimeout(() => {
-        pdfStaleNoticeDismissRef.current = null
-        setShowOngoingPdfBlockedNotice(false)
-      }, STALE_ACTION_NOTICE_DISMISS_MS)
-      return
-    }
-
-    const { downloadOngoingReportPdf } = await import("@/features/results/pdfExport")
-    await downloadOngoingReportPdf({ model: built.model, language, t })
-  }
-
-  const handleDownloadPdf = async () => {
-    if (projects.length === 0) return
-
-    // Ongoing PDF: route on analysisMode only — never infer from checkpoint presence.
-    // Cutoff follows the currently viewed checkpoint; drafts require confirmation.
-    if (analysisMode === "ongoing") {
-      setShowPdfBlockedNotice(false)
-      setShowOngoingPdfBlockedNotice(false)
-      setOngoingPdfDraftConfirm(null)
-
-      const plan = planOngoingPdfExport({
-        checkpoints: ongoingCheckpoints ?? [],
-        selectedCheckpointId: viewedCheckpointId,
-      })
-
-      if (plan.action === "block") {
-        setShowOngoingPdfBlockedNotice(true)
-        if (pdfStaleNoticeDismissRef.current !== null) {
-          clearTimeout(pdfStaleNoticeDismissRef.current)
-        }
-        pdfStaleNoticeDismissRef.current = setTimeout(() => {
-          pdfStaleNoticeDismissRef.current = null
-          setShowOngoingPdfBlockedNotice(false)
-        }, STALE_ACTION_NOTICE_DISMISS_MS)
-        return
-      }
-
-      if (plan.action === "confirm") {
-        const copy = buildOngoingPdfDraftConfirmCopy({
-          draftSequence: plan.selectedCheckpoint.sequence,
-          cutoffSequence: plan.cutoffCheckpoint.sequence,
-          titleTemplate: t("results.pdfOngoingDraftNotArchivedTitle"),
-          bodyTemplate: t("results.pdfOngoingDraftExportBody"),
-        })
-        setOngoingPdfDraftConfirm({
-          cutoffCheckpointId: plan.cutoffCheckpointId,
-          draftLabel: copy.draftLabel,
-          cutoffLabel: copy.cutoffLabel,
-          title: copy.title,
-          message: copy.message,
-        })
-        return
-      }
-
-      await generateOngoingPdf(plan.cutoffCheckpointId)
-      return
-    }
-
-    if (pdfExportBlockedStaleInputs) {
-      setShowPdfBlockedNotice(true)
-      if (pdfStaleNoticeDismissRef.current !== null) {
-        clearTimeout(pdfStaleNoticeDismissRef.current)
-      }
-      pdfStaleNoticeDismissRef.current = setTimeout(() => {
-        pdfStaleNoticeDismissRef.current = null
-        setShowPdfBlockedNotice(false)
-      }, STALE_ACTION_NOTICE_DISMISS_MS)
-      return
-    }
-    if (pdfStaleNoticeDismissRef.current !== null) {
-      clearTimeout(pdfStaleNoticeDismissRef.current)
-      pdfStaleNoticeDismissRef.current = null
-    }
-    setShowPdfBlockedNotice(false)
-    setShowOngoingPdfBlockedNotice(false)
-    if (pdfShareOversizedNoticeDismissRef.current !== null) {
-      clearTimeout(pdfShareOversizedNoticeDismissRef.current)
-      pdfShareOversizedNoticeDismissRef.current = null
-    }
-    setShowPdfShareOversizedNotice(false)
-    // Snapshot Result Preferences at Generate click (archived prefs when viewing archive).
-    const resultViewSnapshot = archivedResultView ?? resolveResultView(resultPreferences)
-    const comparisonProjects = displayProjects
-
-    const rowLabels = {
-      baseCost: t("keyMetrics.baseCost"),
-      expectedAddition: t("keyMetrics.expectedAddition"),
-      expectedValue: t("keyMetrics.expectedValue"),
-      uncertaintyPremium: t("keyMetrics.uncertaintyPremium"),
-      stdDev: t("keyMetrics.stdDev"),
-      probabilityAtBaseCost: t("keyMetrics.probabilityAtBaseCost"),
-      probabilityBelowCostLevel: t("keyMetrics.probabilityBelowWithAmount"),
-      locked: t("results.locked"),
-    }
-    const rows = useCompactResults
-      ? buildKeyFigureMetricTableRowsFromFrozen({
-          resultView: resultViewSnapshot,
-          projectIds: comparisonProjects.map((project) => project.id),
-          frozenByProjectId: frozenKeyFiguresByProjectId,
-          language,
-          labels: rowLabels,
-        })
-      : buildKeyFigureMetricTableRows({
-          resultView: resultViewSnapshot,
-          projects: comparisonProjects,
-          valuesByProjectId: resultsByProjectId,
-          baseCostByProjectId,
-          simulatedIncurredByProjectId,
-          language,
-          labels: rowLabels,
-        })
-
-    let shareLinkAppendix: {
-      url: string
-      linkLabel: string
-    } | null = null
-    let shareUnavailableNote: string | null = null
-    if (appFeatures.allowShareLink) {
-      const built = await buildShareUrl({ projects, activeProjectId })
-      if (!built.ok) {
-        if (built.reason === "oversized") {
-          setShowPdfShareOversizedNotice(true)
-          pdfShareOversizedNoticeDismissRef.current = setTimeout(() => {
-            pdfShareOversizedNoticeDismissRef.current = null
-            setShowPdfShareOversizedNotice(false)
-          }, STALE_ACTION_NOTICE_DISMISS_MS)
-          shareUnavailableNote = t("results.pdfShareUnavailableNote")
-        }
-        // Continue PDF without a share link — never embed a broken/oversized URL.
-      } else {
-        const trimmed = built.url.trim()
-        if (trimmed) {
-          shareLinkAppendix = {
-            url: trimmed,
-            linkLabel: t("results.pdfShareLinkAnchorText"),
-          }
-        }
-      }
-    }
-
-    const contributionBlocks = comparisonProjects.flatMap((project) => {
-      const existing = getShapleyResult(project.id)
-      if (!existing) return []
-      return [mapShapleyToPdfContribution(project.name, existing)]
-    })
-
-    const reportedSimulationCount = resolveReportedSimulationCount(
-      firstPersistedSimulationCount(
-        singleArchivedCompact,
-        singleDraftResult,
+  const attributionUi = useMemo(
+    () =>
+      resolveAttributionUi({
         archivedSnapshot,
+        compactResultByProjectId,
+        displayProjects,
         draftResultSeed,
-        { simulationCount },
-      ),
-    )
-    const simCountLabel = formatNumber(reportedSimulationCount, 0, language)
-    const methodParagraphs = [
-      fillUncertaintyModelCopy(t("results.pdfMethodParagraph1"), {
-        language,
-        count: simCountLabel,
+        getError,
+        getResult,
+        getStatus,
+        useArchivedResults,
+        useCompactResults,
+        useSeededShapley,
       }),
-      t("results.pdfMethodParagraph2"),
-      t("results.pdfMethodParagraph3"),
-    ]
+    [
+      archivedSnapshot,
+      displayProjects,
+      draftResultSeed,
+      getError,
+      getResult,
+      getStatus,
+      useArchivedResults,
+      useCompactResults,
+      useSeededShapley,
+      compactResultByProjectId,
+    ],
+  )
 
-    const { downloadProjectReportPdf } = await import("@/features/results/pdfExport")
-    await downloadProjectReportPdf({
-      language,
-      t,
-      comparisonProjects,
-      rows,
-      sCurvePercentiles: resultViewSnapshot.sCurve.percentiles,
-      sCurveSeries: comparisonProjects.map((project, idx) => ({
-        id: project.id,
-        label: project.name,
-        ...(compactResultByProjectId.has(project.id)
-          ? {
-              displayPoints: compactResultByProjectId.get(project.id)!.sCurve.points,
-            }
-          : { values: resultsByProjectId.get(project.id) ?? [] }),
-        color: getProjectColorHex(idx),
-      })),
-      tornadoProjects: comparisonProjects.map((project) => ({
-        projectName: project.name,
-        rows: (tornadoRowsByProjectId.get(project.id) ?? []).map((row) => ({
-          name: row.name,
-          lowImpact: row.lowImpact,
-          highImpact: row.highImpact,
-        })),
-      })),
-      contributionBlocks,
-      methodParagraphs,
-      shareLinkAppendix,
-      shareUnavailableNote,
-    })
-  }
-
-  const handleCopyAiBriefPackage = async () => {
-    if (projects.length === 0) return
-    if (pdfExportBlockedStaleInputs) {
-      setShowAiBriefStaleNotice(true)
-      if (aiBriefStaleNoticeDismissRef.current !== null) {
-        clearTimeout(aiBriefStaleNoticeDismissRef.current)
-      }
-      aiBriefStaleNoticeDismissRef.current = setTimeout(() => {
-        aiBriefStaleNoticeDismissRef.current = null
-        setShowAiBriefStaleNotice(false)
-      }, STALE_ACTION_NOTICE_DISMISS_MS)
-      return
-    }
-    if (aiBriefStaleNoticeDismissRef.current !== null) {
-      clearTimeout(aiBriefStaleNoticeDismissRef.current)
-      aiBriefStaleNoticeDismissRef.current = null
-    }
-    setShowAiBriefStaleNotice(false)
-    setShowPdfBlockedNotice(false)
-    // Snapshot Result Preferences at Generate click (archived prefs when viewing archive).
-    const resultViewSnapshot = archivedResultView ?? resolveResultView(resultPreferences)
-    const contributionAnalysisByProjectId: Record<string, ShapleyAttributionResult> = {}
-    for (const project of projects) {
-      const existing = getShapleyResult(project.id)
-      if (existing) contributionAnalysisByProjectId[project.id] = existing
-    }
-    const ongoingDevelopment =
-      analysisMode === "ongoing" &&
-      viewedCheckpointId &&
-      ongoingCheckpoints &&
-      ongoingCheckpoints.length > 0
-        ? buildAiBriefOngoingDevelopment({
-            checkpoints: ongoingCheckpoints,
-            viewedCheckpointId,
-            viewedResultSource: checkpointComparisonResultSource,
-          })
-        : null
-    const brief = buildAiBriefV3({
-      language,
-      projects,
-      activeProjectId,
-      projectResults,
-      simulatedBaseCostByProjectId,
-      simulationCount: resolveReportedSimulationCount(
-        firstPersistedSimulationCount(
-          singleArchivedCompact,
-          singleDraftResult,
-          archivedSnapshot,
-          draftResultSeed,
-          ongoingCompactResult,
-          { simulationCount },
-        ),
-      ),
-      contributionAnalysisByProjectId,
-      resultView: resultViewSnapshot,
-      ongoingCompactResult,
-      compactByProjectId: Object.fromEntries(compactResultByProjectId),
-      ongoingDevelopment,
-    })
-    const promptBase = t("results.aiBriefClipboardPrompt")
-    const prompt =
-      analysisMode === "ongoing"
-        ? `${promptBase}\n\n${t("results.aiBriefClipboardPromptOngoingAddendum")}`
-        : promptBase
-    const json = JSON.stringify(brief, null, 2)
-    const payload = `${prompt}\n\n\`\`\`json\n${json}\n\`\`\``
-
-    const copyWithExecCommand = (text: string): boolean => {
-      const textarea = document.createElement("textarea")
-      textarea.value = text
-      textarea.setAttribute("readonly", "")
-      textarea.style.position = "fixed"
-      textarea.style.top = "0"
-      textarea.style.left = "0"
-      textarea.style.opacity = "0"
-      document.body.appendChild(textarea)
-      textarea.focus()
-      textarea.select()
-      textarea.setSelectionRange(0, textarea.value.length)
-      const ok = document.execCommand("copy")
-      document.body.removeChild(textarea)
-      return ok
-    }
-
-    let copied = false
-    try {
-      await navigator.clipboard.writeText(payload)
-      copied = true
-    } catch {
-      copied = copyWithExecCommand(payload)
-    }
-    if (!copied) return
-
-    if (aiBriefCopiedTimerRef.current !== null) {
-      clearTimeout(aiBriefCopiedTimerRef.current)
-    }
-    setAiBriefCopied(true)
-    aiBriefCopiedTimerRef.current = setTimeout(() => {
-      aiBriefCopiedTimerRef.current = null
-      setAiBriefCopied(false)
-    }, 2000)
-  }
+  const {
+    shareCopied,
+    aiBriefCopied,
+    showPdfBlockedNotice,
+    showOngoingPdfBlockedNotice,
+    ongoingPdfDraftConfirm,
+    setOngoingPdfDraftConfirm,
+    showShareBlockedNotice,
+    showShareOversizedNotice,
+    showPdfShareOversizedNotice,
+    showAiBriefStaleNotice,
+    handleCopyShareLink,
+    generateOngoingPdf,
+    handleDownloadPdf,
+    handleCopyAiBriefPackage,
+  } = useResultsExportActions({
+    projects,
+    activeProjectId,
+    projectResults,
+    simulatedBaseCostByProjectId,
+    pdfExportBlockedStaleInputs,
+    simulationCount,
+    ongoingCheckpoints,
+    viewedCheckpointId,
+    analysisName,
+    archivedSnapshot,
+    ongoingCompactResult,
+    singleArchivedCompact,
+    singleDraftResult,
+    draftResultSeed,
+    analysisMode,
+    ongoingLifecycle,
+    checkpointComparisonResultSource,
+    frozenKeyFiguresByProjectId,
+    resultsByProjectId,
+    baseCostByProjectId,
+    simulatedIncurredByProjectId,
+    compactResultByProjectId,
+    tornadoRowsByProjectId,
+    t,
+    language,
+    resultPreferences,
+    archivedResultView,
+    displayProjects,
+    useCompactResults,
+    getShapleyResult,
+  })
 
   useEffect(() => {
     if (projectResults.length > 0) {
+      // intentional: results arriving expands the Results section
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setResultsExpanderOpen(true)
     }
   }, [projectResults])
-
-  useEffect(() => {
-    return () => {
-      if (shareCopiedTimerRef.current !== null) {
-        clearTimeout(shareCopiedTimerRef.current)
-      }
-      if (aiBriefCopiedTimerRef.current !== null) {
-        clearTimeout(aiBriefCopiedTimerRef.current)
-      }
-      if (pdfStaleNoticeDismissRef.current !== null) {
-        clearTimeout(pdfStaleNoticeDismissRef.current)
-      }
-      if (shareStaleNoticeDismissRef.current !== null) {
-        clearTimeout(shareStaleNoticeDismissRef.current)
-      }
-      if (shareOversizedNoticeDismissRef.current !== null) {
-        clearTimeout(shareOversizedNoticeDismissRef.current)
-      }
-      if (pdfShareOversizedNoticeDismissRef.current !== null) {
-        clearTimeout(pdfShareOversizedNoticeDismissRef.current)
-      }
-      if (aiBriefStaleNoticeDismissRef.current !== null) {
-        clearTimeout(aiBriefStaleNoticeDismissRef.current)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!pdfExportBlockedStaleInputs) {
-      if (pdfStaleNoticeDismissRef.current !== null) {
-        clearTimeout(pdfStaleNoticeDismissRef.current)
-        pdfStaleNoticeDismissRef.current = null
-      }
-      if (shareStaleNoticeDismissRef.current !== null) {
-        clearTimeout(shareStaleNoticeDismissRef.current)
-        shareStaleNoticeDismissRef.current = null
-      }
-      if (aiBriefStaleNoticeDismissRef.current !== null) {
-        clearTimeout(aiBriefStaleNoticeDismissRef.current)
-        aiBriefStaleNoticeDismissRef.current = null
-      }
-      setShowPdfBlockedNotice(false)
-      setShowShareBlockedNotice(false)
-      setShowAiBriefStaleNotice(false)
-    }
-  }, [pdfExportBlockedStaleInputs])
 
   const inFocusStep = focusSection != null
   const showFocusSection = (id: FocusResultSectionId) => !inFocusStep || focusSection === id

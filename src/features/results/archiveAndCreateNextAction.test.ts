@@ -1,13 +1,7 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
-
-function read(pathFromRepo: string) {
-  return readFileSync(join(repoRoot, pathFromRepo), "utf8")
-}
+import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
 
 describe("archive and create next Results shortcut", () => {
   it("exposes NO/EN labels for Options and archive action", () => {
@@ -19,7 +13,7 @@ describe("archive and create next Results shortcut", () => {
   })
 
   it("Results Options expander hosts archive when callback is provided", () => {
-    const panel = read("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("onRequestArchiveAndCreateNext")
     expect(panel).toContain('data-archive-and-create-next=""')
     expect(panel).toContain("checkpoints.archiveAndCreateNextAction")
@@ -43,14 +37,14 @@ describe("archive and create next Results shortcut", () => {
   })
 
   it("does not show Archive block for archived Results views", () => {
-    const panel = read("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     expect(panel).toContain("{!analysisArchivedView && onRequestArchiveAndCreateNext ? (")
     const app = readAppSource()
     expect(app).toContain("isOngoingAnalysis && librarySession.canArchive")
   })
 
   it("Reset / Nullstill is removed from Results Options", () => {
-    const panel = read("src/features/results/ResultsPanel.tsx")
+    const panel = readResultsPanelSource()
     const app = readAppSource()
     const messages = readMessagesSource()
     expect(panel).not.toContain("onRequestReset")
