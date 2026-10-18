@@ -1,0 +1,20 @@
+Look at the website pic in this folder, I have in purple outlined the numbers
+
+
+1. The file name should not be in the header
+2. The menu should by default be displayed not hidden and therer should be a and arrow <<< to hide it and >>> to show it again. 
+3.  Why is "chekcpoint 1" named twice?
+4.Do we really need the input there or maybe we can have the file name there instead.
+5. Difficlt to remember icon names, I know its hoverable but maybe a better idea would be to have the options in text with an icon
+6. There is an option to add documentation and look at impact to each row in drivers by first clicking the menu. maybe there should be an option to click directly on row and do this?
+Also, when clicking the impact, and there are a lot of rows you have to scroll upwards to find the impacts.
+7. maybe this should pushed all the way to the right, with loggedin user and account seting all the way to the right.
+9.The nav bare should be distintice from the rest of page, right now its not visible where is starts and end.
+10. It should be clearer that this is editiable
+11. it should be clearer that this a button
+
+------------------------
+Maybe driver and cost items should be horizontal to avoid scrolling
+Maybe simulation should be a full screen option to view full result of simulation? Or simulation should be at the bottom if driver and cost is horizontal.
+And maybe instead of the simulation being on long row items can be represented more horizontally? 
+
