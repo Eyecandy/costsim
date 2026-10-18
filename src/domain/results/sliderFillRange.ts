@@ -1,12 +1,9 @@
+import { clamp } from "@/domain/math"
 /** Visual fill of a range slider as a segment of the track, not native accent-color. */
 
 export type SliderFillRange = {
   startPct: number
   endPct: number
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value))
 }
 
 function valueToPct(value: number, min: number, max: number): number {

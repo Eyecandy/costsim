@@ -45,6 +45,7 @@ import {
 import { PdfWaterfallChart } from "@/pdf/pdfWaterfallChart"
 import type { OngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
 import type { OngoingPdfSCurve, OngoingPdfTornadoRow } from "@/pdf/ongoing/ongoingPdfTypes"
+import { createChartGeometry, niceTickStep } from "@/pdf/shared/chartGeometry"
 
 const styles = StyleSheet.create({
   chartWrap: { marginTop: 6, marginBottom: 8 },
@@ -82,6 +83,13 @@ const CURVE_TOP_PAD = 28
 const CHART_PLOT_TOP = CURVE_TOP_PAD
 const CHART_PLOT_BOTTOM = CHART_H - CHART_PAD_Y
 const CHART_INNER_H = CHART_PLOT_BOTTOM - CHART_PLOT_TOP
+
+const { xForValue, pathFromPoints } = createChartGeometry({
+  plotLeft: CHART_PLOT_LEFT,
+  plotBottom: CHART_PLOT_BOTTOM,
+  innerWidth: CHART_INNER_W,
+  innerHeight: CHART_INNER_H,
+})
 const CHART_GRID_STROKE = "#e8edf3"
 const CHART_Y_PROB_TICKS = PDF_SCURVE_Y_TICKS
 const SCURVE_LABEL_FONT = PDF_SCURVE_LABEL_FONT
@@ -115,32 +123,6 @@ const DEV_COLORS = {
   p50: "#1d868c",
   p85: "#7680ac",
 } as const
-
-function pathFromPoints(points: { x: number; y: number }[], minX: number, maxX: number): string {
-  if (points.length === 0) return ""
-  const spanX = maxX - minX || 1
-  return points
-    .map((p, idx) => {
-      const nx = (p.x - minX) / spanX
-      const x = CHART_PLOT_LEFT + nx * CHART_INNER_W
-      const y = CHART_PLOT_BOTTOM - p.y * CHART_INNER_H
-      return `${idx === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`
-    })
-    .join(" ")
-}
-
-function xForValue(value: number, minX: number, maxX: number): number {
-  const spanX = maxX - minX || 1
-  return CHART_PLOT_LEFT + ((value - minX) / spanX) * CHART_INNER_W
-}
-
-function niceTickStep(rough: number): number {
-  if (!Number.isFinite(rough) || rough <= 0) return 1
-  const exp = Math.floor(Math.log10(rough))
-  const f = rough / 10 ** exp
-  const nf = f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10
-  return nf * 10 ** exp
-}
 
 function generateXAxisTicks(minX: number, maxX: number): number[] {
   const span = maxX - minX || 1

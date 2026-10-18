@@ -22,6 +22,7 @@ import {
   computeTotalFromSampledValues,
   type DriverImpactMatrix,
 } from "@/domain/simulation/simulation"
+import { nearZeroToZero } from "@/domain/math"
 
 export type DeterministicTornadoRow = {
   name: string
@@ -48,11 +49,6 @@ export type DeterministicTornadoComputation = {
 }
 
 const DEFAULT_TOP_N = 12
-const IMPACT_NEAR_ZERO = 1e-9
-
-function nearZeroToZero(n: number): number {
-  return Math.abs(n) < IMPACT_NEAR_ZERO ? 0 : n
-}
 
 /** User-implied absolute P10 / mode / P90 for a cost row (before triangular support). */
 export function costUserPercentileAbsolutes(row: CostElementRow): {

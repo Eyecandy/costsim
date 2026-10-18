@@ -16,7 +16,7 @@ type UndirectedEdge = {
   rho: number
 }
 
-function resolvePairRho(
+export function resolvePairRho(
   costCorrelations: CostCorrelationsByRowId | undefined,
   rowIdA: string,
   rowIdB: string,

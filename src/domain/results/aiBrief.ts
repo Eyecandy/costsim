@@ -8,7 +8,6 @@ import {
 } from "@/domain/analysis/checkpointComparison"
 import { getPrecedingCheckpointPair } from "@/domain/analysis/checkpointDiff"
 import type { CompactProjectResultV1 } from "@/domain/analysis/compactAnalysisResult"
-import { parseCorrelationCoefficient } from "@/domain/simulation/costCorrelation"
 import { computeDeterministicTornadoRows } from "@/domain/simulation/deterministicTornado"
 import type { OngoingCheckpointResultSnapshotV1 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
 import { buildOngoingDevelopmentSeries } from "@/domain/analysis/ongoingDevelopmentSeries"
@@ -39,6 +38,7 @@ import {
 } from "@/domain/simulation/uncertaintyModelConfig"
 import { summarizeSamples } from "@/domain/simulation/simulation"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
+import { resolvePairRho } from "@/domain/simulation/costCorrelationSummaries"
 
 export const AI_BRIEF_SCHEMA_VERSION = "ai-brief-v3" as const
 
@@ -486,16 +486,6 @@ function mapDriverRows(rows: readonly DriverRow[]): AiBriefDriverInput[] {
     mostLikely: parseNumberField(row.likely),
     pessimisticPct: parseNumberField(row.pessimistic),
   }))
-}
-
-function resolvePairRho(
-  costCorrelations: CostCorrelationsByRowId | undefined,
-  idA: string,
-  idB: string,
-): number {
-  if (idA === idB) return 1
-  const direct = costCorrelations?.[idA]?.[idB] ?? costCorrelations?.[idB]?.[idA]
-  return parseCorrelationCoefficient(direct)
 }
 
 /** Sparse non-zero off-diagonal pairs from the stored correlation map. */

@@ -62,6 +62,7 @@ import {
   splitPdfMetricValueParts,
   type PdfCoverLayout,
 } from "@/pdf/pdfCoverLayout"
+import { createChartGeometry, niceTickStep } from "@/pdf/shared/chartGeometry"
 
 type ReportRow = {
   label: string
@@ -667,6 +668,13 @@ const CURVE_BOTTOM_PAD = CHART_PAD_Y
 const CHART_PLOT_TOP = CURVE_TOP_PAD
 const CHART_PLOT_BOTTOM = CHART_H - CURVE_BOTTOM_PAD
 const CHART_INNER_H = CHART_PLOT_BOTTOM - CHART_PLOT_TOP
+
+const { xForValue, yForProbability, pathFromPoints } = createChartGeometry({
+  plotLeft: CHART_PLOT_LEFT,
+  plotBottom: CHART_PLOT_BOTTOM,
+  innerWidth: CHART_INNER_W,
+  innerHeight: CHART_INNER_H,
+})
 const CHART_GRID_STROKE = "#e8edf3"
 const CHART_GRID_WIDTH = 0.55
 const CHART_AXIS_TICK_FONT = 7
@@ -704,37 +712,6 @@ export const PDF_COVER_ALWAYS_ONE_PAGE = true
 
 /** @deprecated S-curve is never on the cover; kept only if external imports remain. */
 export const PDF_SCURVE_ON_PAGE1_MAX_PROJECTS = 0
-
-function pathFromPoints(points: { x: number; y: number }[], minX: number, maxX: number): string {
-  if (points.length === 0) return ""
-  const spanX = maxX - minX || 1
-  return points
-    .map((p, idx) => {
-      const nx = (p.x - minX) / spanX
-      const x = CHART_PLOT_LEFT + nx * CHART_INNER_W
-      const y = CHART_PLOT_BOTTOM - p.y * CHART_INNER_H
-      return `${idx === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`
-    })
-    .join(" ")
-}
-
-function xForValue(value: number, minX: number, maxX: number): number {
-  const spanX = maxX - minX || 1
-  const nx = (value - minX) / spanX
-  return CHART_PLOT_LEFT + nx * CHART_INNER_W
-}
-
-function yForProbability(p: number): number {
-  return CHART_PLOT_BOTTOM - p * CHART_INNER_H
-}
-
-function niceTickStep(rough: number): number {
-  if (!Number.isFinite(rough) || rough <= 0) return 1
-  const exp = Math.floor(Math.log10(rough))
-  const f = rough / 10 ** exp
-  const nf = f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10
-  return nf * 10 ** exp
-}
 
 function generateXAxisTicks(minX: number, maxX: number): number[] {
   const span = maxX - minX || 1

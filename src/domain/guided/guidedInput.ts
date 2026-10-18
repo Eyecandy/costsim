@@ -21,6 +21,7 @@ import {
   clampDriverLikelyPercent,
 } from "@/domain/results/scenarioNumericClamps"
 import { computeTotalFromSampledValues } from "@/domain/simulation/simulation"
+import { nearZeroToZero } from "@/domain/math"
 
 export type GuidedInputKind = "cost" | "driver"
 
@@ -237,12 +238,6 @@ export function guidedPercentToStoredString(value: number): string {
   if (Number.isInteger(value)) return String(value)
   const rounded = Math.round(value * 10) / 10
   return String(rounded)
-}
-
-const IMPACT_NEAR_ZERO = 1e-9
-
-function nearZeroToZero(n: number): number {
-  return Math.abs(n) < IMPACT_NEAR_ZERO ? 0 : n
 }
 
 export type GuidedDriverEndpointEffects = {

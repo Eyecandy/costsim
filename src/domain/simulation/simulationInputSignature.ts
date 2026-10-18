@@ -13,7 +13,7 @@ import { normalizeIncurredCosts } from "@/domain/analysis/project"
 import { stripRowDefinitions } from "@/domain/results/rowDefinitions"
 import { isMeaningfullyFilledRow } from "@/domain/results/tableRows"
 
-function projectHasMeaningfulTableInput(project: Project): boolean {
+export function projectHasMeaningfulTableInput(project: Project): boolean {
   if (normalizeIncurredCosts(project.incurredCosts) > 0) return true
   return (
     project.costRows.some(isMeaningfullyFilledRow) ||

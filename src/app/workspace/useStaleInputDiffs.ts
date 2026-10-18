@@ -12,10 +12,8 @@ import {
   changedDriverImpactCellKeySet,
   changedScenarioCellKeySet,
 } from "@/domain/analysis/simInputSnapshotDiff"
-import {
-  EMPTY_STALE_CELL_KEYS,
-  projectHasMeaningfulTableInput,
-} from "@/app/workspace/workspaceHelpers"
+import { EMPTY_STALE_CELL_KEYS } from "@/app/workspace/workspaceHelpers"
+import { projectHasMeaningfulTableInput } from "@/domain/simulation/simulationInputSignature"
 
 export function useStaleInputDiffs({
   projects,

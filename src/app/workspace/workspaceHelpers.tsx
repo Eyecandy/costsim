@@ -67,14 +67,6 @@ export function baseCostSumForProject(project: Project): number | null {
   return hasAny ? sum : null
 }
 
-export function projectHasMeaningfulTableInput(project: Project): boolean {
-  if (normalizeIncurredCosts(project.incurredCosts) > 0) return true
-  return (
-    project.costRows.some(isMeaningfullyFilledRow) ||
-    project.driverRows.some(isMeaningfullyFilledRow)
-  )
-}
-
 export function runValidationErrorKey(projects: readonly Project[]): ValidationErrorKey | null {
   const hasIncompleteStartedCosts = projects.some((proj) =>
     proj.costRows.some(

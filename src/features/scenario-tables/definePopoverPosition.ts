@@ -1,10 +1,7 @@
+import { clamp } from "@/domain/math"
 const VIEWPORT_PAD = 8
 
 const GAP = 8
-
-function clamp(n: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, n))
-}
 
 /** Place a panel near an anchor: prefer right, then left, then below/above. */
 export function positionDefinePopover(
