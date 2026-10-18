@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>U·SKOP Style Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout concept: a neutral "review table" chrome (switchers + palette strip) above one
+   or several scaled copies of the calculator page. Each copy is themed only through the
+   data-palette and data-style attributes on its .app root (CSS variables, no logic). */
+:root {
+  --ui-bg: #eceff1;
+  --ui-card: #ffffff;
+  --ui-text: #1b2127;
+  --ui-muted: #4f5a64;
+  --ui-line: #c9d0d6;
+  --ui-on: #ffffff;
+  --ui-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font: 14px/1.45 var(--ui-font);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+.ui { max-width: 1320px; margin: 0 auto; }
+.ui h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.01em; text-wrap: balance; }
+.ui-lead { margin: 4px 0 0; color: var(--ui-muted); max-width: 70ch; }
+.ui-bar { margin-top: 16px; background: var(--ui-card); border: 1px solid var(--ui-line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 12px; }
+.ui-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; min-width: 0; }
+.ui-label { flex: 0 0 5.5em; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ui-muted); }
+.ui-seg { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.ui-bar button {
+  font: inherit; font-size: 13px; color: var(--ui-text); background: var(--ui-card);
+  border: 1px solid var(--ui-line); border-radius: 6px; padding: 7px 12px; min-height: 36px;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none;
+}
+.ui-bar button:hover { border-color: var(--ui-muted); }
+.ui-bar button[aria-pressed="true"] { background: var(--ui-text); color: var(--ui-on); border-color: var(--ui-text); }
+.ui-bar button:focus-visible, .ui a:focus-visible, .ui input:focus-visible { outline: 3px solid #1d5fd1; outline-offset: 2px; }
+.sws { display: inline-flex; gap: 0; border-radius: 3px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25); }
+.sws i { width: 10px; height: 16px; display: block; }
+.sws i:nth-child(1) { background: var(--p1); } .sws i:nth-child(2) { background: var(--p2); } .sws i:nth-child(3) { background: var(--p3); }
+.sws i:nth-child(4) { background: var(--s1); } .sws i:nth-child(5) { background: var(--s2); } .sws i:nth-child(6) { background: var(--s3); }
+.ui-link { display: flex; flex: 1 1 18rem; gap: 8px; min-width: 0; }
+.ui-link input { flex: 1; min-width: 0; font: 12px/1.2 ui-monospace, Consolas, monospace; padding: 8px 10px; border: 1px solid var(--ui-line); border-radius: 6px; background: #f7f8f9; color: var(--ui-text); }
+[data-when] { display: none; }
+body[data-view="single"] [data-when~="single"], body[data-view^="compare"] [data-when~="compare"] { display: flex; }
+
+body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
+.ui-strip { margin-top: 12px; background: var(--ui-card); border: 1px solid var(--ui-line); border-radius: 8px; padding: 14px 16px; }
+.ui-strip h2 { margin: 0; font-size: 15px; }
+.ui-strip p { margin: 2px 0 12px; color: var(--ui-muted); }
+.chips { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.chip6 { border-radius: 6px; padding: 28px 10px 8px; min-height: 84px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.chip6 b { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.chip6 span { font: 12.5px ui-monospace, Consolas, monospace; }
+.chip6 em { font-style: normal; font-size: 13px; }
+.chip6.small { min-height: 64px; padding-top: 14px; }
+.status-row { margin-top: 8px; align-items: center; }
+.status-row .status-note { grid-column: span 4; margin: 0; font-size: 12.5px; color: var(--ui-muted); }
+@media (max-width: 760px) { .status-row .status-note { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .chips { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ui-label { flex-basis: 100%; } }
+
+#stage { margin-top: 16px; }
+.single-frame { margin: 0 auto; width: 100%; max-width: var(--frame-w, 1320px); border: 1px solid var(--ui-line); border-radius: 8px; overflow: hidden; background: var(--ui-card); }
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cell { min-width: 0; display: grid; gap: 8px; break-inside: avoid; }
+.cap { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 13px; }
+.cap b { font-weight: 700; }
+.cap a { color: #124fb3; margin-left: auto; font-weight: 600; }
+.frame { position: relative; overflow: hidden; border: 1px solid var(--ui-line); border-radius: 8px; background: var(--ui-card); }
+.frame .app { width: 1200px; transform-origin: 0 0; pointer-events: none; user-select: none; }
+@media (max-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.print-cap { display: none; }
+.ui-foot { margin-top: 18px; color: var(--ui-muted); font-size: 12.5px; max-width: 90ch; }
+
+/* ================= Palettes (generated from palettes.json; edit there or here) =================
+   p1-p3 primary, s1-s3 secondary (analogous to the primary), err/warn status colours outside the six.
+   Neutrals: bg (page), surface (cards), tint, line, text, text2, muted. accent = filled buttons,
+   accent-text = text and links. d-* tokens are used by the Dark style. */
+[data-palette="teal"] {
+  --p1: #1d868c; --p2: #156a70; --p3: #e4f2f3; --s1: #0b4838; --s2: #5d98b5; --s3: #3f585a;
+  --err: #b03a3a; --warn: #946600;
+  --bg: #f8fafc; --surface: #ffffff; --tint: #e4f2f3; --line: #cbd5e1; --text: #0f172a; --text2: #334155; --muted: #64748b;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #0b1a1c; --d-surface: #12272a; --d-tint: #19343a; --d-line: #2b4a50; --d-text: #e6f2f3; --d-muted: #9db8bb;
+  --d-accent: #4fb3ba; --d-on-accent: #052326; --d-accent-text: #6cc6cc;
+  --d-s1: #8fd3bd; --d-s2: #7fb5d1; --d-s3: #6f9195; --d-err: #f19a9a; --d-warn: #e0b24a;
+}
+[data-palette="blue"] {
+  --p1: #4076b9; --p2: #132e50; --p3: #e5f0fc; --s1: #363678; --s2: #4a97b7; --s3: #4b5d6e;
+  --err: #b3394a; --warn: #8f6a00;
+  --bg: #f5f8fc; --surface: #ffffff; --tint: #e5f0fc; --line: #cbd5e3; --text: #0e1a2b; --text2: #2a3a52; --muted: #5b6b80;
+  --accent: #4076b9; --on-accent: #ffffff; --accent-text: #4076b9;
+  --d-bg: #0c1523; --d-surface: #13213a; --d-tint: #1b2d4d; --d-line: #2d4467; --d-text: #e8eefa; --d-muted: #9fb0cc;
+  --d-accent: #6f9fe0; --d-on-accent: #07162e; --d-accent-text: #8db4ea;
+  --d-s1: #9a9be0; --d-s2: #6fb6d6; --d-s3: #7388a0; --d-err: #f08fa0; --d-warn: #e3bb55;
+}
+[data-palette="terra"] {
+  --p1: #b0472b; --p2: #6a2d20; --p3: #f6e9df; --s1: #5a2530; --s2: #bf7f43; --s3: #5f4739;
+  --err: #9b2335; --warn: #8a6d00;
+  --bg: #faf6f1; --surface: #ffffff; --tint: #f6e9df; --line: #ddd3ca; --text: #2b2623; --text2: #4a423d; --muted: #78706a;
+  --accent: #b0472b; --on-accent: #ffffff; --accent-text: #b0472b;
+  --d-bg: #1d1512; --d-surface: #2a1e19; --d-tint: #36261f; --d-line: #4d3a31; --d-text: #f6ebe2; --d-muted: #bda99b;
+  --d-accent: #e0825f; --d-on-accent: #2a0f06; --d-accent-text: #eb9a7c;
+  --d-s1: #d9909c; --d-s2: #e0a26a; --d-s3: #a88672; --d-err: #f0929f; --d-warn: #d4bd4c;
+}
+[data-palette="green"] {
+  --p1: #428252; --p2: #1c472a; --p3: #e6f3e8; --s1: #0b4a3e; --s2: #849a49; --s3: #576450;
+  --err: #a8433a; --warn: #8f6a00;
+  --bg: #f5f8f5; --surface: #ffffff; --tint: #e6f3e8; --line: #d0dcd2; --text: #16231a; --text2: #34463a; --muted: #66786b;
+  --accent: #428252; --on-accent: #ffffff; --accent-text: #428252;
+  --d-bg: #0e1a12; --d-surface: #162a1c; --d-tint: #1d3625; --d-line: #2f4b38; --d-text: #e8f3ea; --d-muted: #a2b8a8;
+  --d-accent: #78b98a; --d-on-accent: #0a2113; --d-accent-text: #8fcb9f;
+  --d-s1: #6fc4ae; --d-s2: #b2c872; --d-s3: #7f9585; --d-err: #f0978d; --d-warn: #e3bb55;
+}
+
+
+/* ================= The calculator mock ================= */
+.app {
+  container: app / inline-size;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* semantic colors, light mapping */
+  --c-card: var(--surface); --c-tint: var(--tint); --c-line: var(--line); --c-text: var(--text); --c-muted: var(--muted);
+  --c-accent: var(--accent); --c-on: var(--on-accent); --c-atext: var(--accent-text);
+  --k1: var(--s1); --k2: var(--s2); --k3: var(--s3); --kp: var(--p1); --tot: var(--p2);
+  --c-err: var(--err); --c-warn: var(--warn); --c-text2: var(--text2);
+  /* shape and feel, defaults = Clean */
+  --fs: 13px; --fw-body: 400;
+  --r: 4px; --r-sm: 3px; --chip-r: 3px; --th-r: 0px; --bar-r: 2px;
+  --shadow: none; --card-border: 1px solid var(--c-line);
+  --pad: 18px; --gap: 20px; --main-pad: 24px 28px 32px;
+  --title-size: 11px; --title-fw: 600; --title-tr: uppercase; --title-ls: 0.09em;
+  --card-h-pad: var(--pad) var(--pad) 0; --card-h-bg: transparent; --card-h-fg: var(--c-muted); --card-h-hint: var(--c-muted);
+  --th-bg: transparent; --th-fg: var(--c-muted); --th-line: 1px solid var(--c-line); --row-line: var(--c-line);
+  --field-bg: var(--c-card); --field-border: 1px solid var(--c-line);
+  --btn-h: 36px; --btn-r: 4px; --btn-fw: 600; --btn-tr: uppercase; --btn-shadow: none; --btn-border: 1px solid transparent;
+  --hdr-bg: var(--c-page); --hdr-fg: var(--c-text); --hdr-border: 1px solid var(--c-line); --hdr-margin: 0; --hdr-r: 0px;
+  --hdr-shadow: none; --hdr-pad: 12px 28px; --hdr-brand: var(--c-atext); --seg-bg: var(--c-text); --seg-fg: var(--c-card);
+  --hl-bg: var(--c-tint);
+  --c-page: var(--surface);
+  background: var(--c-page);
+  color: var(--c-text);
+  font: var(--fw-body) var(--fs) / 1.45 var(--font);
+  font-variant-numeric: tabular-nums;
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+.app *, .app *::before, .app *::after { box-sizing: border-box; }
+.app[data-style="soft"] {
+  --fs: 13.5px; --r: 16px; --r-sm: 10px; --chip-r: 999px; --th-r: 10px; --bar-r: 6px;
+  --shadow: 0 1px 2px color-mix(in srgb, var(--p2) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--p2) 24%, transparent);
+  --card-border: 0 solid transparent; --pad: 24px; --gap: 24px; --main-pad: 8px 20px 36px;
+  --title-size: 15px; --title-fw: 650; --title-tr: none; --title-ls: 0; --card-h-fg: var(--c-text);
+  --th-bg: var(--c-tint); --th-fg: var(--c-text2); --th-line: 0 solid transparent; --row-line: color-mix(in srgb, var(--c-line) 55%, transparent);
+  --field-bg: var(--c-tint); --field-border: 1px solid transparent;
+  --btn-h: 42px; --btn-r: 999px; --btn-tr: none; --btn-shadow: 0 8px 18px -8px color-mix(in srgb, var(--c-accent) 75%, transparent);
+  --hdr-bg: var(--c-card); --hdr-margin: 14px 20px 8px; --hdr-r: 16px; --hdr-border: 0 solid transparent;
+  --hdr-shadow: 0 1px 2px color-mix(in srgb, var(--p2) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--p2) 24%, transparent);
+  --hdr-pad: 10px 20px; --c-page: var(--bg);
+}
+.app[data-style="bold"] {
+  --fs: 14px; --fw-body: 500; --r: 2px; --r-sm: 2px; --chip-r: 2px; --bar-r: 0px;
+  --shadow: 4px 4px 0 var(--p2); --card-border: 2px solid var(--p2); --gap: 26px; --main-pad: 28px 32px 40px;
+  --title-size: 12.5px; --title-fw: 800; --title-ls: 0.1em;
+  --card-h-pad: 10px var(--pad); --card-h-bg: var(--p2); --card-h-fg: #ffffff; --card-h-hint: var(--p3);
+  --th-bg: var(--c-tint); --th-fg: var(--c-text); --th-line: 2px solid var(--p2); --row-line: var(--c-line);
+  --field-border: 1px solid var(--c-muted);
+  --btn-h: 46px; --btn-r: 2px; --btn-fw: 800; --btn-border: 2px solid var(--p2); --btn-shadow: 3px 3px 0 var(--p2);
+  --hdr-bg: var(--p2); --hdr-fg: #ffffff; --hdr-border: 0 solid transparent; --hdr-pad: 14px 32px; --hdr-brand: #ffffff;
+  --seg-bg: #ffffff; --seg-fg: var(--p2); --hl-bg: var(--p3); --c-page: var(--bg);
+}
+.app[data-style="dark"] {
+  --c-page: var(--d-bg); --c-card: var(--d-surface); --c-tint: var(--d-tint); --c-line: var(--d-line); --c-text: var(--d-text);
+  --c-muted: var(--d-muted); --c-accent: var(--d-accent); --c-on: var(--d-on-accent); --c-atext: var(--d-accent-text);
+  --k1: var(--d-s1); --k2: var(--d-s2); --k3: var(--d-s3); --kp: var(--d-accent); --tot: var(--d-muted);
+  --c-err: var(--d-err); --c-warn: var(--d-warn); --c-text2: var(--d-muted);
+  --r: 10px; --r-sm: 6px; --chip-r: 999px; --bar-r: 3px; --pad: 20px; --gap: 22px;
+  --th-bg: var(--c-tint); --hdr-bg: var(--c-card); --hdr-brand: var(--c-atext);
+  --seg-bg: var(--c-accent); --seg-fg: var(--c-on); --hl-bg: var(--c-tint);
+  color-scheme: dark;
+}
+.app[data-style="clean"] { --seg-bg: var(--c-text); --seg-fg: var(--c-card); }
+.app[data-style="soft"] { --seg-bg: var(--c-accent); --seg-fg: var(--c-on); }
+
+/* header */
+.app .hdr { background: var(--hdr-bg); color: var(--hdr-fg); border-bottom: var(--hdr-border); margin: var(--hdr-margin); border-radius: var(--hdr-r); box-shadow: var(--hdr-shadow); }
+.app .hdr-in { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 22px; padding: var(--hdr-pad); }
+.app .brand { font-size: 1.45em; font-weight: 700; letter-spacing: 0.07em; color: var(--hdr-brand); line-height: 1.2; }
+.app[data-style="bold"] .brand { font-weight: 800; }
+.app .doc { flex: 1 1 12em; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.app .doc small { color: inherit; opacity: 0.8; margin-left: 8px; font-weight: 400; }
+.app .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; }
+.app .nav a { color: var(--hdr-fg); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 0.22em; }
+.app .lang { display: inline-flex; border: 1px solid color-mix(in srgb, currentColor 35%, transparent); border-radius: var(--btn-r); overflow: hidden; font-size: 0.85em; font-weight: 600; }
+.app .lang span { padding: 3px 9px; }
+.app .lang .on { background: var(--seg-bg); color: var(--seg-fg); }
+.app[data-style="soft"] .lang { border-radius: 999px; }
+.app[data-style="dark"] .lang { border-radius: 6px; }
+
+/* layout */
+.app .main { padding: var(--main-pad); }
+.app .layout { display: grid; gap: var(--gap); grid-template-columns: minmax(0, 1fr); align-items: start; }
+.app .col { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+@container app (min-width: 880px) { .app .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.app .sec { margin: 0 0 -4px; font-size: 0.85em; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-text2); }
+.app[data-style="bold"] .sec { color: var(--c-text); }
+
+/* card */
+.app .card { background: var(--c-card); border: var(--card-border); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
+.app .card-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; padding: var(--card-h-pad); background: var(--card-h-bg); color: var(--card-h-fg); }
+.app .card-h h2 { margin: 0; font-size: var(--title-size); font-weight: var(--title-fw); text-transform: var(--title-tr); letter-spacing: var(--title-ls); }
+.app .card-h .hint { font-size: 0.9em; color: var(--card-h-hint); font-weight: 400; }
+.app .card-b { padding: var(--pad); min-width: 0; }
+.app .card-h + .card-b { padding-top: 12px; }
+.app[data-style="bold"] .card-h + .card-b { padding-top: var(--pad); }
+
+/* profile */
+.app .prof { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin: 0; }
+.app .prof dt { font-size: 0.85em; color: var(--c-muted); margin-bottom: 3px; }
+.app .prof dd { margin: 0; }
+.app .pill { display: inline-block; padding: 3px 11px; border-radius: var(--chip-r); background: var(--c-tint); border: var(--field-border); font-weight: 500; }
+.app[data-style="clean"] .pill { background: transparent; }
+
+/* tables */
+.app .scroll { overflow-x: auto; }
+.app .tbl { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 21em; }
+.app .tbl th { padding: 8px 10px; text-align: right; font-size: 0.88em; font-weight: 600; color: var(--th-fg); background: var(--th-bg); border-bottom: var(--th-line); white-space: nowrap; }
+.app .tbl thead th:first-child { border-radius: var(--th-r) 0 0 var(--th-r); }
+.app .tbl thead th:last-child { border-radius: 0 var(--th-r) var(--th-r) 0; }
+.app .tbl th:first-child, .app .tbl td:first-child { text-align: left; }
+.app .tbl td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--row-line); }
+.app .tbl tbody tr:last-child td { border-bottom: 0; }
+.app .tbl td:first-child { white-space: normal; }
+.app .tbl .name { font-weight: 500; }
+.app .fld { display: inline-block; min-width: 4.6em; padding: 3px 9px; text-align: right; background: var(--field-bg); border: var(--field-border); border-radius: var(--r-sm); }
+.app .tbl tfoot td { padding-top: 10px; font-weight: 700; border-top: var(--th-line); }
+.app .tbl tfoot td:first-child { border-radius: 0; }
+.app .note { margin: 10px 0 0; font-size: 0.9em; color: var(--c-muted); }
+.app .applies { color: var(--c-muted); font-size: 0.9em; }
+@container app (max-width: 640px) { .app .hide-n { display: none; } .app .prof { grid-template-columns: minmax(0, 1fr); } .app .card-b { padding-left: calc(var(--pad) * 0.75); padding-right: calc(var(--pad) * 0.75); } .app .hdr-in { padding-left: 16px; padding-right: 16px; } .app .main { padding-left: 14px; padding-right: 14px; } .app .doc { display: none; } .app .fld { min-width: 3.4em; padding-left: 6px; padding-right: 6px; } .app .tbl th, .app .tbl td { padding-left: 6px; padding-right: 6px; } }
+
+/* incurred */
+.app .inc { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.app .meter { height: 8px; margin-top: 12px; border-radius: 999px; background: var(--c-tint); overflow: hidden; border: 1px solid var(--c-line); }
+.app .meter span { display: block; height: 100%; width: 14.7%; background: var(--c-atext); border-radius: 999px; }
+.app[data-style="bold"] .meter, .app[data-style="bold"] .meter span { border-radius: 0; }
+
+/* run strip */
+.app .strip { display: flex; flex-direction: column; gap: 8px; }
+.app .btn { width: 100%; height: var(--btn-h); font: var(--btn-fw) 0.92em var(--font); letter-spacing: 0.08em; text-transform: var(--btn-tr); background: var(--c-accent); color: var(--c-on); border: var(--btn-border); border-radius: var(--btn-r); box-shadow: var(--btn-shadow); cursor: default; }
+.app .notice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--c-warn); border-radius: var(--r-sm); background: color-mix(in srgb, var(--c-warn) 9%, var(--c-card)); color: var(--c-text); }
+.app .notice svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--c-warn); }
+.app .notice p { margin: 2px 0 0; font-size: 0.92em; color: var(--c-text2); }
+.app .notice b { font-weight: 700; }
+.app .fld.bad { border: 1.5px solid var(--c-err); background: color-mix(in srgb, var(--c-err) 10%, var(--c-card)); }
+.app .fld.chg { border-color: var(--c-atext); background: color-mix(in srgb, var(--c-atext) 14%, var(--c-card)); }
+.app .note.err { display: flex; gap: 6px; align-items: flex-start; color: var(--c-err); font-weight: 500; }
+.app .note.err svg { flex: none; width: 15px; height: 15px; margin-top: 2px; }
+
+/* key figures */
+.app .kf td, .app .kf th { padding-top: 7px; padding-bottom: 7px; }
+.app .kf { min-width: 0; }
+.app .kf .hl td { background: var(--hl-bg); font-weight: 700; }
+.app .kf .hl td:first-child { border-radius: var(--th-r) 0 0 var(--th-r); }
+.app .kf .hl td:last-child { border-radius: 0 var(--th-r) var(--th-r) 0; }
+.app .kf td:nth-child(2) { font-size: 1.08em; font-weight: 600; }
+.app .kf .hl td:nth-child(2) { font-size: 1.15em; font-weight: 800; }
+.app .kf td:last-child { color: var(--c-muted); font-weight: 400; }
+.app .kf .hl td:last-child { color: var(--c-text); }
+
+/* charts */
+.app .cw { overflow-x: auto; }
+.app .chart { display: block; width: 100%; min-width: 420px; height: auto; font-family: var(--font); }
+.app .chart .ax { fill: var(--c-muted); font-size: 11.5px; }
+.app .chart .lbl { fill: var(--c-text); font-size: 12.5px; font-weight: 700; }
+.app .chart .rowl { fill: var(--c-text); font-size: 12.5px; }
+.app .chart .rowl.drv { font-style: italic; }
+.app .chart .strong { font-weight: 700; }
+.app .chart .val { fill: var(--c-muted); font-size: 11.5px; }
+.app .chart .val.strong { fill: var(--c-text); }
+.app .chart .grid, .app .chart .tick { stroke: var(--c-line); stroke-width: 1; }
+.app .chart .axis0 { stroke: var(--c-text); stroke-width: 1.2; }
+.app .chart .curve { fill: none; stroke: var(--k1); stroke-width: 2.8; stroke-linejoin: round; stroke-linecap: round; }
+.app .chart .area { fill: var(--k1); opacity: 0.1; }
+.app .chart .ref { stroke: var(--c-muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.app .chart .mk { stroke-width: 1.6; stroke-dasharray: 5 4; }
+.app .chart .mk.m2 { stroke: var(--kp); stroke-dasharray: 7 4; } .app .chart .mk.m3 { stroke: var(--k3); stroke-dasharray: 2 3.5; }
+.app .chart .dot { stroke: var(--c-card); stroke-width: 2; }
+.app .chart .dot.m2 { fill: var(--kp); } .app .chart .dot.m3 { fill: var(--k3); }
+.app .chart .bar { rx: var(--bar-r); }
+.app .chart .bar.lo, .app .chart .bar.inc { fill: var(--k2); } .app .chart .bar.hi { fill: var(--k1); } .app .chart .bar.dec { fill: var(--k3); }
+.app .chart .bar.tot { fill: var(--tot); } .app .chart .bar.res { fill: var(--k1); stroke: var(--c-card); stroke-width: 1.5; }
+.app .chart .conn { stroke: var(--c-muted); stroke-width: 1; stroke-dasharray: 2 2; }
+.app .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 0.9em; color: var(--c-muted); }
+.app .legend li { display: inline-flex; align-items: center; gap: 6px; }
+.app .legend .sw { width: 14px; height: 8px; border-radius: var(--bar-r); background: var(--k1); }
+.app .legend .sw.k2 { background: var(--k2); } .app .legend .sw.k3 { background: var(--k3); } .app .legend .sw.kt { background: var(--tot); }
+.app .legend .sw.dia { width: 9px; height: 9px; background: var(--kp); transform: rotate(45deg); border-radius: 1px; margin: 0 2px; }
+.app .legend .sw.sq { width: 9px; height: 9px; background: var(--k3); border-radius: 0; margin: 0 2px; }
+.app .legend .ln { width: 16px; height: 0; border-top: 3px solid var(--k1); border-radius: 2px; }
+.app .legend em { font-style: italic; }
+.app .foot { padding: 6px 28px 22px; text-align: center; font-size: 0.8em; color: var(--c-text2); }
+
+@media print {
+  @page { margin: 10mm; }
+  body { background: #fff; padding: 0; }
+  .no-print { display: none !important; }
+  .print-cap { display: block; margin: 0 0 8px; font-weight: 700; }
+  .single-frame { border: 0; max-width: none; }
+  .app .card, .cell { break-inside: avoid; }
+  .grid { gap: 10px; }
+  #stage { margin-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+</head>
+<body data-view="single">
+<div class="ui">
+  <div class="no-print">
+    <h1>U·SKOP style preview</h1>
+    <p class="ui-lead">The main calculator page in four colour palettes and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
+    <div class="ui-bar" id="controls">
+      <div class="ui-row"><span class="ui-label">Palette</span><div class="ui-seg" id="pal-seg"></div></div>
+      <div class="ui-row"><span class="ui-label">Style</span><div class="ui-seg" id="sty-seg"></div></div>
+      <div class="ui-row"><span class="ui-label">View</span><div class="ui-seg" id="view-seg"></div>
+        <div class="ui-seg" data-when="compare" id="vary-seg" style="margin-left:8px"></div>
+        <div class="ui-seg" data-when="single" id="w-seg" style="margin-left:8px"></div></div>
+      <div class="ui-row"><span class="ui-label">Link</span><div class="ui-link"><input id="link" type="text" readonly aria-label="Link to this view" value=""><button type="button" id="copy">Copy link</button></div></div>
+    </div>
+    <section class="ui-strip" id="strip" data-when="single" aria-live="polite"></section>
+  </div>
+  <p class="print-cap" id="print-cap"></p>
+
+  <main id="stage">
+    <div class="single-frame">
+<div class="app" data-palette="teal" data-style="clean">
+  <header class="hdr"><div class="hdr-in">
+    <span class="brand">U·SKOP</span>
+    <span class="doc">Ullern renovation, phase 2 <small>Saved</small></span>
+    <nav class="nav" aria-label="Shortcuts and language">
+      <a href="#guide" tabindex="-1">Method Guide</a><a href="#about" tabindex="-1">About the model</a>
+      <span class="lang" aria-label="Language"><span>NO</span><span class="on">EN</span></span>
+    </nav>
+  </div></header>
+
+  <div class="main"><div class="layout">
+    <div class="col">
+      <p class="sec">Input</p>
+
+      <section class="card"><div class="card-h"><h2>Project profile</h2></div><div class="card-b">
+        <dl class="prof">
+          <div><dt>Project type</dt><dd><span class="pill">Building, renovation</span></dd></div>
+          <div><dt>Phase</dt><dd><span class="pill">Detailed design</span></dd></div>
+          <div><dt>Contract form</dt><dd><span class="pill">Unit price</span></dd></div>
+          <div><dt>Region</dt><dd><span class="pill">Vestland</span></dd></div>
+        </dl>
+      </div></section>
+
+      <section class="card"><div class="card-h"><h2>Cost items</h2><span class="hint">NOK, excl. VAT</span></div><div class="card-b"><div class="scroll">
+        <table class="tbl"><thead><tr><th scope="col">Name</th><th scope="col">Optimistic (%)</th><th scope="col">Most likely</th><th scope="col">Pessimistic (%)</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Demolition &amp; clearing</td><td><span class="fld">−10</span></td><td><span class="fld">150 000</span></td><td><span class="fld">+20</span></td></tr>
+          <tr><td class="name">Groundwork &amp; drainage</td><td><span class="fld">−8</span></td><td><span class="fld">320 000</span></td><td><span class="fld">+25</span></td></tr>
+          <tr><td class="name">Structural work</td><td><span class="fld">−5</span></td><td><span class="fld">410 000</span></td><td><span class="fld">+15</span></td></tr>
+          <tr><td class="name">Roofing &amp; facade</td><td><span class="fld">−6</span></td><td><span class="fld">280 000</span></td><td><span class="fld">+18</span></td></tr>
+          <tr><td class="name">Electrical &amp; plumbing</td><td><span class="fld">−7</span></td><td><span class="fld">260 000</span></td><td><span class="fld">+22</span></td></tr>
+          <tr><td class="name">Interior finishes</td><td><span class="fld">−5</span></td><td><span class="fld">190 000</span></td><td><span class="fld">+14</span></td></tr>
+          <tr><td class="name">Project management</td><td><span class="fld bad" aria-invalid="true">+4</span></td><td><span class="fld">90 000</span></td><td><span class="fld">+10</span></td></tr>
+        </tbody>
+        <tfoot><tr><td>Base cost</td><td></td><td>1 700 000</td><td></td></tr></tfoot></table>
+      </div><p class="note err"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 5.8v5M10 13.4v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Project management: the optimistic value must not be above most likely.</p></div></section>
+
+      <section class="card"><div class="card-h"><h2>Cost drivers</h2><span class="hint">Change in total cost</span></div><div class="card-b"><div class="scroll">
+        <table class="tbl"><thead><tr><th scope="col">Driver</th><th scope="col">Optimistic (%)</th><th scope="col">Most likely (%)</th><th scope="col">Pessimistic (%)</th><th scope="col" class="hide-n">Applies to</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Ground conditions</td><td><span class="fld">−5</span></td><td><span class="fld">0</span></td><td><span class="fld">+20</span></td><td class="applies hide-n">Groundwork, structure</td></tr>
+          <tr><td class="name">Material prices</td><td><span class="fld">−2</span></td><td><span class="fld">0</span></td><td><span class="fld chg">+10</span></td><td class="applies hide-n">All items</td></tr>
+          <tr><td class="name">Contractor capacity</td><td><span class="fld">0</span></td><td><span class="fld">0</span></td><td><span class="fld">+6</span></td><td class="applies hide-n">All items</td></tr>
+        </tbody></table>
+      </div><p class="note">Outlined cell: changed since the last run.</p></div></section>
+
+      <section class="card"><div class="card-h"><h2>Incurred costs</h2></div><div class="card-b">
+        <div class="inc"><span>Incurred to date</span><span class="fld">250 000</span><span class="applies">14.7 % of base cost</span></div>
+        <div class="meter" role="img" aria-label="14.7 percent of base cost incurred"><span></span></div>
+        <p class="note">Incurred costs are known and are left out of the uncertainty range. Remaining uncertain part: 1 450 000.</p>
+      </div></section>
+    </div>
+
+    <div class="col">
+      <div class="strip" role="region" aria-label="Simulation">
+        <p class="sec">Output</p>
+        <button class="btn" type="button" tabindex="-1">Run simulation</button>
+        <div class="notice" role="status"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 18.5 17h-17Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 8v4.2M10 14.2v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><div><b>Input has changed</b><p>The results are based on previous input (run 14:32, 10 000 iterations). Run the simulation again to update them.</p></div></div>
+      </div>
+
+      <section class="card"><div class="card-h"><h2>Key figures</h2><span class="hint">NOK</span></div><div class="card-b"><div class="scroll">
+        <table class="tbl kf"><thead><tr><th scope="col">Name</th><th scope="col">Amount</th><th scope="col">% of base</th></tr></thead>
+        <tbody>
+          <tr><td>Base cost</td><td>1 700 000</td><td>100.0</td></tr>
+          <tr><td>Expected addition</td><td>+180 000</td><td>10.6</td></tr>
+          <tr class="hl"><td>P50</td><td>1 880 000</td><td>110.6</td></tr>
+          <tr><td>Uncertainty reserve</td><td>+160 000</td><td>9.4</td></tr>
+          <tr class="hl"><td>P85</td><td>2 040 000</td><td>120.0</td></tr>
+          <tr><td>Expected value</td><td>1 897 000</td><td>111.6</td></tr>
+          <tr><td>Standard deviation</td><td>154 000</td><td>9.1</td></tr>
+          <tr><td>Probability at base cost</td><td>12 %</td><td></td></tr>
+        </tbody></table>
+      </div></div></section>
+
+      <section class="card"><div class="card-h"><h2>S-curve</h2><span class="hint">Cumulative probability</span></div><div class="card-b">
+        <div class="cw"><svg class="chart" viewBox="0 0 480 300" role="img" aria-label="S-curve: cumulative probability against total cost. P50 is 1.88 million and P85 is 2.04 million NOK."><line class="grid" x1="46" x2="464" y1="256" y2="256"/><text class="ax" x="38" y="260" text-anchor="end">0 %</text><line class="grid" x1="46" x2="464" y1="196" y2="196"/><text class="ax" x="38" y="200" text-anchor="end">25 %</text><line class="grid" x1="46" x2="464" y1="136" y2="136"/><text class="ax" x="38" y="140" text-anchor="end">50 %</text><line class="grid" x1="46" x2="464" y1="76" y2="76"/><text class="ax" x="38" y="80" text-anchor="end">75 %</text><line class="grid" x1="46" x2="464" y1="16" y2="16"/><text class="ax" x="38" y="20" text-anchor="end">100 %</text><line class="tick" x1="73.9" x2="73.9" y1="256" y2="260"/><text class="ax" x="73.9" y="274" text-anchor="middle">1.6</text><line class="tick" x1="129.6" x2="129.6" y1="256" y2="260"/><text class="ax" x="129.6" y="274" text-anchor="middle">1.7</text><line class="tick" x1="185.3" x2="185.3" y1="256" y2="260"/><text class="ax" x="185.3" y="274" text-anchor="middle">1.8</text><line class="tick" x1="241.1" x2="241.1" y1="256" y2="260"/><text class="ax" x="241.1" y="274" text-anchor="middle">1.9</text><line class="tick" x1="296.8" x2="296.8" y1="256" y2="260"/><text class="ax" x="296.8" y="274" text-anchor="middle">2.0</text><line class="tick" x1="352.5" x2="352.5" y1="256" y2="260"/><text class="ax" x="352.5" y="274" text-anchor="middle">2.1</text><line class="tick" x1="408.3" x2="408.3" y1="256" y2="260"/><text class="ax" x="408.3" y="274" text-anchor="middle">2.2</text><line class="tick" x1="464" x2="464" y1="256" y2="260"/><text class="ax" x="464" y="274" text-anchor="middle">2.3</text><text class="ax" x="255" y="294" text-anchor="middle">Total cost, NOK million</text><path class="area" d="M51.6 256L57.1 254.9L62.7 253.8L68.3 252.8L73.9 251.8L79.4 250.7L85 249.5L90.6 248L96.2 246.4L101.7 244.3L107.3 241.6L112.9 238.4L118.5 234.9L124 231.1L129.6 227.2L135.2 222.9L140.7 217.9L146.3 212.5L151.9 207L157.5 201.4L163 196L168.6 190.8L174.2 185.5L179.8 180.2L185.3 175L190.9 169.9L196.5 164.8L202.1 159.9L207.6 155.2L213.2 150.6L218.8 145.9L224.3 141.1L229.9 136L235.5 130.5L241.1 124.7L246.6 118.7L252.2 112.6L257.8 106.5L263.4 100.7L268.9 95.2L274.5 89.9L280.1 84.5L285.7 79.2L291.2 74.1L296.8 69L302.4 64.3L307.9 59.8L313.5 55.7L319.1 52L324.7 48.6L330.2 45.4L335.8 42.3L341.4 39.4L347 36.8L352.5 34.4L358.1 32.2L363.7 30.4L369.3 28.7L374.8 27.1L380.4 25.6L386 24.2L391.5 22.9L397.1 21.7L402.7 20.6L408.3 19.7L413.8 19L419.4 18.4L425 18L430.6 17.6L436.1 17.3L441.7 17L447.3 16.8L452.9 16.5L458.4 16.3L464 16L464 256L51.6 256Z"/><path class="curve" d="M51.6 256L57.1 254.9L62.7 253.8L68.3 252.8L73.9 251.8L79.4 250.7L85 249.5L90.6 248L96.2 246.4L101.7 244.3L107.3 241.6L112.9 238.4L118.5 234.9L124 231.1L129.6 227.2L135.2 222.9L140.7 217.9L146.3 212.5L151.9 207L157.5 201.4L163 196L168.6 190.8L174.2 185.5L179.8 180.2L185.3 175L190.9 169.9L196.5 164.8L202.1 159.9L207.6 155.2L213.2 150.6L218.8 145.9L224.3 141.1L229.9 136L235.5 130.5L241.1 124.7L246.6 118.7L252.2 112.6L257.8 106.5L263.4 100.7L268.9 95.2L274.5 89.9L280.1 84.5L285.7 79.2L291.2 74.1L296.8 69L302.4 64.3L307.9 59.8L313.5 55.7L319.1 52L324.7 48.6L330.2 45.4L335.8 42.3L341.4 39.4L347 36.8L352.5 34.4L358.1 32.2L363.7 30.4L369.3 28.7L374.8 27.1L380.4 25.6L386 24.2L391.5 22.9L397.1 21.7L402.7 20.6L408.3 19.7L413.8 19L419.4 18.4L425 18L430.6 17.6L436.1 17.3L441.7 17L447.3 16.8L452.9 16.5L458.4 16.3L464 16"/><line class="ref" x1="129.6" x2="129.6" y1="16" y2="256"/><text class="lbl" x="134.6" y="27">Base cost 1.70</text><line class="mk m2" x1="46" x2="229.9" y1="136" y2="136"/><line class="mk m2" x1="229.9" x2="229.9" y1="136" y2="256"/><path class="dot m2" d="M229.9 128.5L237.4 136L229.9 143.5L222.4 136Z"/><text class="lbl" x="219.9" y="127" text-anchor="end">P50 1.88</text><line class="mk m3" x1="46" x2="319.1" y1="52" y2="52"/><line class="mk m3" x1="319.1" x2="319.1" y1="52" y2="256"/><rect class="dot m3" x="313.6" y="46.5" width="11" height="11"/><text class="lbl" x="309.1" y="43" text-anchor="end">P85 2.04</text></svg></div>
+        <ul class="legend"><li><span class="ln"></span>Total cost</li><li><span class="sw dia"></span>P50 (long dashes)</li><li><span class="sw sq"></span>P85 (dotted)</li><li>Grey dashed: base cost</li></ul>
+      </div></section>
+
+      <section class="card"><div class="card-h"><h2>Tornado</h2><span class="hint">Effect on P50, NOK thousand</span></div><div class="card-b">
+        <div class="cw"><svg class="chart" viewBox="0 0 520 284" role="img" aria-label="Tornado chart: effect on P50 in thousand NOK when each factor moves from P10 to P90. Ground conditions has the largest spread."><line class="grid" x1="185" x2="185" y1="24" y2="258"/><text class="ax" x="185" y="274" text-anchor="middle">−40</text><line class="grid" x1="236.8" x2="236.8" y1="24" y2="258"/><text class="ax" x="236.8" y="274" text-anchor="middle">−20</text><line class="grid" x1="288.6" x2="288.6" y1="24" y2="258"/><text class="ax" x="288.6" y="274" text-anchor="middle">P50</text><line class="grid" x1="340.5" x2="340.5" y1="24" y2="258"/><text class="ax" x="340.5" y="274" text-anchor="middle">+20</text><line class="grid" x1="392.3" x2="392.3" y1="24" y2="258"/><text class="ax" x="392.3" y="274" text-anchor="middle">+40</text><line class="grid" x1="444.2" x2="444.2" y1="24" y2="258"/><text class="ax" x="444.2" y="274" text-anchor="middle">+60</text><text class="lbl" x="280.6" y="14" text-anchor="end">◂ P10 lower</text><text class="lbl" x="296.6" y="14" text-anchor="start">P90 higher ▸</text><text class="ax" x="502" y="274" text-anchor="start">k</text><text class="rowl drv" x="160" y="48" text-anchor="end">Ground conditions</text><rect class="bar lo" x="208.3" y="36" width="80.4" height="16"><title>P10: −31 000 NOK</title></rect><rect class="bar hi" x="288.6" y="36" width="191.8" height="16"><title>P90: +74 000 NOK</title></rect><text class="val" x="203.3" y="48" text-anchor="end">−31</text><text class="val" x="485.4" y="48" text-anchor="start">+74</text><text class="rowl drv" x="160" y="76" text-anchor="end">Material prices</text><rect class="bar lo" x="226.4" y="64" width="62.2" height="16"><title>P10: −24 000 NOK</title></rect><rect class="bar hi" x="288.6" y="64" width="150.3" height="16"><title>P90: +58 000 NOK</title></rect><text class="val" x="221.4" y="76" text-anchor="end">−24</text><text class="val" x="444" y="76" text-anchor="start">+58</text><text class="rowl" x="160" y="104" text-anchor="end">Groundwork &amp; drainage</text><rect class="bar lo" x="244.6" y="92" width="44.1" height="16"><title>P10: −17 000 NOK</title></rect><rect class="bar hi" x="288.6" y="92" width="119.2" height="16"><title>P90: +46 000 NOK</title></rect><text class="val" x="239.6" y="104" text-anchor="end">−17</text><text class="val" x="412.9" y="104" text-anchor="start">+46</text><text class="rowl" x="160" y="132" text-anchor="end">Structural work</text><rect class="bar lo" x="242" y="120" width="46.7" height="16"><title>P10: −18 000 NOK</title></rect><rect class="bar hi" x="288.6" y="120" width="85.5" height="16"><title>P90: +33 000 NOK</title></rect><text class="val" x="237" y="132" text-anchor="end">−18</text><text class="val" x="379.2" y="132" text-anchor="start">+33</text><text class="rowl" x="160" y="160" text-anchor="end">Electrical &amp; plumbing</text><rect class="bar lo" x="252.4" y="148" width="36.3" height="16"><title>P10: −14 000 NOK</title></rect><rect class="bar hi" x="288.6" y="148" width="88.1" height="16"><title>P90: +34 000 NOK</title></rect><text class="val" x="247.4" y="160" text-anchor="end">−14</text><text class="val" x="381.8" y="160" text-anchor="start">+34</text><text class="rowl drv" x="160" y="188" text-anchor="end">Contractor capacity</text><rect class="bar lo" x="283.5" y="176" width="5.2" height="16"><title>P10: −2 000 NOK</title></rect><rect class="bar hi" x="288.6" y="176" width="106.3" height="16"><title>P90: +41 000 NOK</title></rect><text class="val" x="278.5" y="188" text-anchor="end">−2</text><text class="val" x="399.9" y="188" text-anchor="start">+41</text><text class="rowl" x="160" y="216" text-anchor="end">Roofing &amp; facade</text><rect class="bar lo" x="257.5" y="204" width="31.1" height="16"><title>P10: −12 000 NOK</title></rect><rect class="bar hi" x="288.6" y="204" width="70" height="16"><title>P90: +27 000 NOK</title></rect><text class="val" x="252.5" y="216" text-anchor="end">−12</text><text class="val" x="363.6" y="216" text-anchor="start">+27</text><text class="rowl" x="160" y="244" text-anchor="end">Interior finishes</text><rect class="bar lo" x="267.9" y="232" width="20.7" height="16"><title>P10: −8 000 NOK</title></rect><rect class="bar hi" x="288.6" y="232" width="44.1" height="16"><title>P90: +17 000 NOK</title></rect><text class="val" x="262.9" y="244" text-anchor="end">−8</text><text class="val" x="337.7" y="244" text-anchor="start">+17</text><line class="axis0" x1="288.6" x2="288.6" y1="24" y2="258"/></svg></div>
+        <ul class="legend"><li><span class="sw k2"></span>P10, optimistic</li><li><span class="sw"></span>P90, pessimistic</li><li><em>Italic</em> = cost driver</li></ul>
+      </div></section>
+
+      <section class="card"><div class="card-h"><h2>Contributions</h2><span class="hint">Expected addition and reserve</span></div><div class="card-b">
+        <div class="cw"><svg class="chart" viewBox="0 0 520 334" role="img" aria-label="Waterfall: contributions that build the expected addition from base cost 1.70 million to P50 1.88 million, then the uncertainty reserve to P85 2.04 million NOK."><line class="grid" x1="172" x2="172" y1="8" y2="300"/><text class="ax" x="172" y="314" text-anchor="middle">1.6</text><line class="grid" x1="234.7" x2="234.7" y1="8" y2="300"/><text class="ax" x="234.7" y="314" text-anchor="middle">1.7</text><line class="grid" x1="297.4" x2="297.4" y1="8" y2="300"/><text class="ax" x="297.4" y="314" text-anchor="middle">1.8</text><line class="grid" x1="360.1" x2="360.1" y1="8" y2="300"/><text class="ax" x="360.1" y="314" text-anchor="middle">1.9</text><line class="grid" x1="422.8" x2="422.8" y1="8" y2="300"/><text class="ax" x="422.8" y="314" text-anchor="middle">2.0</text><line class="grid" x1="485.5" x2="485.5" y1="8" y2="300"/><text class="ax" x="485.5" y="314" text-anchor="middle">2.1</text><text class="ax" x="335" y="330" text-anchor="middle">Total cost, NOK million (axis starts at 1.6)</text><text class="rowl strong" x="160" y="24" text-anchor="end">Base cost</text><rect class="bar tot" x="172" y="13" width="62.7" height="14"/><text class="val strong" x="239.7" y="24">1 700 000</text><text class="rowl drv" x="160" y="48" text-anchor="end">Ground conditions</text><rect class="bar inc" x="234.7" y="37" width="22.6" height="14"/><text class="val" x="262.3" y="48">+36 000</text><text class="rowl drv" x="160" y="72" text-anchor="end">Material prices</text><rect class="bar inc" x="257.3" y="61" width="21.3" height="14"/><text class="val" x="283.6" y="72">+34 000</text><text class="rowl drv" x="160" y="96" text-anchor="end">Contractor capacity</text><rect class="bar inc" x="278.6" y="85" width="15" height="14"/><text class="val" x="298.6" y="96">+24 000</text><text class="rowl" x="160" y="120" text-anchor="end">Groundwork &amp; drainage</text><rect class="bar inc" x="293.6" y="109" width="13.8" height="14"/><text class="val" x="312.4" y="120">+22 000</text><text class="rowl" x="160" y="144" text-anchor="end">Structural work</text><rect class="bar inc" x="307.4" y="133" width="11.3" height="14"/><text class="val" x="323.7" y="144">+18 000</text><text class="rowl" x="160" y="168" text-anchor="end">Electrical &amp; plumbing</text><rect class="bar inc" x="318.7" y="157" width="10" height="14"/><text class="val" x="333.7" y="168">+16 000</text><text class="rowl" x="160" y="192" text-anchor="end">Other items</text><rect class="bar inc" x="328.7" y="181" width="21.3" height="14"/><text class="val" x="355" y="192">+34 000</text><text class="rowl" x="160" y="216" text-anchor="end">Project management</text><rect class="bar dec" x="347.5" y="205" width="2.5" height="14"/><text class="val" x="355" y="216">−4 000</text><text class="rowl strong" x="160" y="240" text-anchor="end">P50</text><rect class="bar tot" x="172" y="229" width="175.5" height="14"/><text class="val strong" x="352.5" y="240">1 880 000</text><text class="rowl" x="160" y="264" text-anchor="end">Uncertainty reserve</text><rect class="bar res" x="347.5" y="253" width="100.3" height="14"/><text class="val" x="452.8" y="264">+160 000</text><text class="rowl strong" x="160" y="288" text-anchor="end">P85</text><rect class="bar tot" x="172" y="277" width="275.8" height="14"/><text class="val strong" x="452.8" y="288">2 040 000</text><line class="conn" x1="257.3" x2="257.3" y1="51" y2="61"/><line class="conn" x1="278.6" x2="278.6" y1="75" y2="85"/><line class="conn" x1="293.6" x2="293.6" y1="99" y2="109"/><line class="conn" x1="307.4" x2="307.4" y1="123" y2="133"/><line class="conn" x1="318.7" x2="318.7" y1="147" y2="157"/><line class="conn" x1="328.7" x2="328.7" y1="171" y2="181"/><line class="conn" x1="350" x2="350" y1="195" y2="205"/><line class="conn" x1="347.5" x2="347.5" y1="219" y2="229"/></svg></div>
+        <ul class="legend"><li><span class="sw k2"></span>Increases cost</li><li><span class="sw k3"></span>Reduces cost</li><li><span class="sw"></span>Uncertainty reserve</li><li><span class="sw kt"></span>Totals</li></ul>
+      </div></section>
+    </div>
+  </div></div>
+  <p class="foot">Sample figures for a style preview. Not a real analysis.</p>
+</div>
+    </div>
+  </main>
+
+  <p class="ui-foot no-print">The real app uses the Geist typeface. This preview uses the system font stack, so letter shapes differ slightly. Variants can be linked directly, for example <code>#palette=blue&amp;style=soft</code> or <code>#blue-soft</code>.</p>
+</div>
+
+<script>
+(function () {
+  var PAL = [
+    { id: "teal", name: "A Teal (current, tidied)", names: ["Teal","Teal Deep","Teal Mist","Sea Pine","Harbour Blue","Slate Teal"], status: ["Muted Brick","Dusty Amber"], note: "Calm, cohesive and trustworthy. Everything stays inside one teal family, from dark sea green to harbour blue, so it reads quiet and a little clinical, with no loud accents." },
+    { id: "blue", name: "B Blue", names: ["Cobalt","Ink Blue","Pale Blue","Twilight","Sky","Blue Slate"], status: ["Crimson Dust","Old Gold"], note: "Cool, orderly and authoritative. Blues from ink navy to sky read as bank-grade trust and stability: very safe, a touch generic, the most conventional of the four." },
+    { id: "terra", name: "C Terracotta", names: ["Terracotta","Umber","Sand","Rosewood","Amber Clay","Taupe"], status: ["Wine","Olive Gold"], note: "Warm, earthy and human. One terracotta family from rosewood to amber clay feels like a well-made printed report: friendly and less corporate. The brand sits close to error red, so status colors need an icon." },
+    { id: "green", name: "D Green", names: ["Forest","Deep Fern","Leaf Mist","Spruce","Olive","Moss Grey"], status: ["Clay Red","Old Gold"], note: "Fresh, balanced and natural. Greens from spruce to olive suggest growth and steadiness: calm and approachable, a little less financial. Green already means success, so good-news messages need another cue." },
+  ];
+  var STY = [
+    { id: "clean", name: "Clean" }, { id: "soft", name: "Soft" }, { id: "bold", name: "Bold" }, { id: "dark", name: "Dark" }
+  ];
+  var ROLES = ["Primary", "Primary dark", "Primary tint", "Secondary 1 (dark)", "Secondary 2 (light)", "Secondary 3 (grey)"];
+  var VARS = ["--p1", "--p2", "--p3", "--s1", "--s2", "--s3"];
+  var WIDTHS = [["full", "Full width", ""], ["tablet", "Tablet 768", "768px"], ["phone", "Phone 390", "390px"]];
+  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"]];
+  var VARY = [["palette", "Vary palette"], ["style", "Vary style"]];
+  var stage = document.getElementById("stage");
+  var proto = stage.querySelector(".app").cloneNode(true);
+  var st = parse();
+
+  function idx(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
+  function parse() {
+    var o = { palette: "teal", style: "clean", view: "single", vary: "palette", w: "full" };
+    var h = location.hash.replace(/^#/, "");
+    try {
+      if (h.indexOf("=") >= 0) { new URLSearchParams(h).forEach(function (v, k) { o[k] = v; }); }
+      else if (h) { var p = h.split("-"); if (p[0]) o.palette = p[0]; if (p[1]) o.style = p[1]; if (p[2]) o.view = p[2]; if (p[3]) o.vary = p[3]; }
+    } catch (e) { /* keep defaults */ }
+    if (idx(PAL, o.palette) < 0) o.palette = "teal";
+    if (idx(STY, o.style) < 0) o.style = "clean";
+    if (["single", "compare2", "compare4"].indexOf(o.view) < 0) o.view = "single";
+    if (o.vary !== "style") o.vary = "palette";
+    if (!WIDTHS.some(function (w) { return w[0] === o.w; })) o.w = "full";
+    return o;
+  }
+  function ser() {
+    var s = "palette=" + st.palette + "&style=" + st.style;
+    if (st.view !== "single") s += "&view=" + st.view + "&vary=" + st.vary;
+    else if (st.w !== "full") s += "&w=" + st.w;
+    return s;
+  }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function btn(label, pressed, on, pre) {
+    var b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", pressed ? "true" : "false");
+    if (pre) b.appendChild(pre); b.appendChild(document.createTextNode(label)); b.addEventListener("click", on); return b;
+  }
+  function sws(id) { var s = el("span", "sws", "<i></i><i></i><i></i><i></i><i></i><i></i>"); s.setAttribute("data-palette", id); s.setAttribute("aria-hidden", "true"); return s; }
+  function set(k, v) { st[k] = v; try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } render(); }
+
+  function controls() {
+    var a = document.getElementById("pal-seg"); a.replaceChildren();
+    PAL.forEach(function (p) { a.appendChild(btn(p.name, p.id === st.palette, function () { set("palette", p.id); }, sws(p.id))); });
+    var b = document.getElementById("sty-seg"); b.replaceChildren();
+    STY.forEach(function (s) { b.appendChild(btn(s.name, s.id === st.style, function () { set("style", s.id); })); });
+    var v = document.getElementById("view-seg"); v.replaceChildren();
+    VIEWS.forEach(function (x) { v.appendChild(btn(x[1], x[0] === st.view, function () { set("view", x[0]); })); });
+    var y = document.getElementById("vary-seg"); y.replaceChildren();
+    VARY.forEach(function (x) { y.appendChild(btn(x[1], x[0] === st.vary, function () { set("vary", x[0]); })); });
+    var w = document.getElementById("w-seg"); w.replaceChildren();
+    WIDTHS.forEach(function (x) { w.appendChild(btn(x[1], x[0] === st.w, function () { set("w", x[0]); })); });
+    document.body.setAttribute("data-view", st.view === "single" ? "single" : "compare");
+  }
+  function lum(hex) {
+    var c = [1, 3, 5].map(function (i) { var v = parseInt(hex.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function strip() {
+    var host = document.getElementById("strip"); var p = PAL[idx(PAL, st.palette)];
+    var probe = stage.querySelector(".app"); var cs = probe ? getComputedStyle(probe) : null;
+    host.replaceChildren(el("h2", null, p.name), el("p", null, p.note));
+    var row = el("div", "chips");
+    VARS.forEach(function (v, i) {
+      var hex = cs ? cs.getPropertyValue(v).trim() : "#ffffff";
+      var fg = lum(hex) > 0.35 ? "#111111" : "#ffffff";
+      var c = el("div", "chip6", "<b>" + ROLES[i] + "</b><em>" + p.names[i] + "</em><span>" + hex.toUpperCase() + "</span>");
+      c.style.background = hex; c.style.color = fg; row.appendChild(c);
+    });
+    host.appendChild(row);
+    var srow = el("div", "chips status-row");
+    [["--err", "Error", p.status[0]], ["--warn", "Warning", p.status[1]]].forEach(function (s) {
+      var hex = cs ? cs.getPropertyValue(s[0]).trim() : "#ffffff";
+      var c = el("div", "chip6 small", "<b>" + s[1] + " (status)</b><em>" + s[2] + "</em><span>" + hex.toUpperCase() + "</span>");
+      c.style.background = hex; c.style.color = lum(hex) > 0.35 ? "#111111" : "#ffffff"; srow.appendChild(c);
+    });
+    srow.appendChild(el("p", "status-note", "Status colours sit outside the six. They are used only for errors and warnings, always with an icon or text."));
+    host.appendChild(srow);
+  }
+  function cells() {
+    var n = st.view === "compare4" ? 4 : 2, out = [];
+    var base = st.vary === "palette" ? idx(PAL, st.palette) : idx(STY, st.style);
+    var len = st.vary === "palette" ? PAL.length : STY.length;
+    for (var i = 0; i < n; i++) {
+      var k = (base + i) % len;
+      out.push(st.vary === "palette" ? [PAL[k].id, st.style] : [st.palette, STY[k].id]);
+    }
+    return out;
+  }
+  function name(list, id) { return list[idx(list, id)].name; }
+  function render() {
+    controls();
+    document.getElementById("print-cap").textContent = "U·SKOP style preview. Palette: " + name(PAL, st.palette) + ". Style: " + name(STY, st.style) + ".";
+    document.getElementById("link").value = location.href.split("#")[0] + "#" + ser();
+    stage.replaceChildren();
+    if (st.view === "single") {
+      var f = el("div", "single-frame"); var wd = WIDTHS.filter(function (x) { return x[0] === st.w; })[0][2];
+      if (wd) f.style.setProperty("--frame-w", wd);
+      var a = proto.cloneNode(true); a.setAttribute("data-palette", st.palette); a.setAttribute("data-style", st.style);
+      f.appendChild(a); stage.appendChild(f); strip();
+    } else {
+      var g = el("div", "grid");
+      cells().forEach(function (c) {
+        var cell = el("div", "cell"); var cap = el("div", "cap");
+        cap.appendChild(sws(c[0]));
+        cap.appendChild(el("b", null, name(PAL, c[0]) + " / " + name(STY, c[1])));
+        var link = el("a", "no-print", "Open full size"); link.href = "#palette=" + c[0] + "&style=" + c[1]; link.addEventListener("click", function (ev) { ev.preventDefault(); st.palette = c[0]; st.style = c[1]; st.view = "single"; try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } render(); window.scrollTo(0, 0); }); cap.appendChild(link);
+        var fr = el("div", "frame"); fr.setAttribute("aria-hidden", "true");
+        var a2 = proto.cloneNode(true); a2.setAttribute("data-palette", c[0]); a2.setAttribute("data-style", c[1]);
+        fr.appendChild(a2); cell.appendChild(cap); cell.appendChild(fr); g.appendChild(cell);
+      });
+      stage.appendChild(g); fit();
+    }
+  }
+  function fit() {
+    stage.querySelectorAll(".frame").forEach(function (fr) {
+      var a = fr.firstChild; a.style.transform = "none"; fr.style.height = "auto";
+      var s = fr.clientWidth / 1200; a.style.transform = "scale(" + s + ")"; fr.style.height = Math.ceil(a.offsetHeight * s) + "px";
+    });
+  }
+  window.addEventListener("hashchange", function () { st = parse(); render(); });
+  window.addEventListener("resize", function () { if (st.view !== "single") fit(); });
+  window.addEventListener("beforeprint", function () { if (st.view !== "single") fit(); });
+  var cp = document.getElementById("copy");
+  cp.addEventListener("click", function () {
+    var inp = document.getElementById("link");
+    function done() { cp.textContent = "Copied"; setTimeout(function () { cp.textContent = "Copy link"; }, 1500); }
+    function fallback() { inp.focus(); inp.select(); }
+    try { navigator.clipboard.writeText(inp.value).then(done, fallback); } catch (e) { fallback(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>
