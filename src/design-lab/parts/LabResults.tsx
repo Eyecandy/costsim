@@ -56,7 +56,15 @@ function useSections(): Section[] {
 }
 
 /** Idea: the results as one long column (today) or as separate horizontal cards. */
-export function LabResults({ layout, wide }: { layout: LabOptions["results"]; wide: boolean }) {
+export function LabResults({
+  layout,
+  wide,
+  checkpoint = 1,
+}: {
+  layout: LabOptions["results"]
+  wide: boolean
+  checkpoint?: number
+}) {
   const { t } = useI18n()
   const sections = useSections()
 
@@ -80,7 +88,7 @@ export function LabResults({ layout, wide }: { layout: LabOptions["results"]; wi
     <div className={cn(SURFACE, "space-y-5")}>
       <div>
         <h3 className="section-heading m-0">{t("results.resultsHeading")}</h3>
-        <p className="m-0 mt-2 text-[12px] font-medium">Checkpoint 1</p>
+        <p className="m-0 mt-2 text-[12px] font-medium">Checkpoint {checkpoint}</p>
       </div>
       {sections.map((section) => (
         <section key={section.key} className="space-y-2">

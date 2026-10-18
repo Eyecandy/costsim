@@ -6,6 +6,7 @@ export const BASE_OPTIONS: LabOptions = {
   header: { fileName: "center", bar: "plain", nav: "content", user: false },
   sidebar: "rail",
   checkpoint: "duplicate",
+  checkpointNav: "tabs",
   inputHeading: "label",
   toolbar: "icons",
   rowActions: "modes",

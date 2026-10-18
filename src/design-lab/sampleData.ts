@@ -27,6 +27,20 @@ export const IMPACT_ON_COSTS: readonly { name: string; percent: number }[] = [
   { name: "Prosjektering", percent: 10 },
 ]
 
+export type SampleCheckpoint = {
+  sequence: number
+  name: string
+  date: string
+  status: "archived" | "active"
+}
+
+/** The timeline looks show an ongoing analysis that has two archived checkpoints and an active third. */
+export const CHECKPOINTS: readonly SampleCheckpoint[] = [
+  { sequence: 1, name: "Konseptfase", date: "12. mar 2026", status: "archived" },
+  { sequence: 2, name: "Forprosjekt", date: "2. juni 2026", status: "archived" },
+  { sequence: 3, name: "Detaljprosjekt", date: "Pågår", status: "active" },
+]
+
 export const EMPTY_ROW_COUNT = 4
 
 export const INCURRED_COSTS = "250 000"

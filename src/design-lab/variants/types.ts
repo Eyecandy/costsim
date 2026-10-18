@@ -20,6 +20,8 @@ export type LabOptions = {
   sidebar: "rail" | "open"
   /** Note 3: "Checkpoint 1" twice ("duplicate") or once ("once"). */
   checkpoint: "duplicate" | "once"
+  /** Where the checkpoints live: as tabs above the tables ("tabs") or as a vertical timeline on the left ("timeline"). */
+  checkpointNav: "tabs" | "timeline"
   /** Note 4: the small INPUT label ("label") or the analysis name ("fileName"). */
   inputHeading: "label" | "fileName"
   /** Note 5: icon-only toolbar ("icons") or icon plus text ("labelled"). */

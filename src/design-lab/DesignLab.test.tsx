@@ -109,6 +109,20 @@ describe("what the numbered notes change", () => {
     expect(screen.getAllByRole("button", { name: "Definer" }).length).toBeGreaterThan(3)
   })
 
+  it("checkpoint timeline: three steps on the left, the active one marked, results for checkpoint 3", () => {
+    renderVariant("09")
+    const timeline = screen.getByRole("navigation", { name: "Analysepunkter" })
+    expect(within(timeline).getAllByRole("listitem")).toHaveLength(4)
+    expect(within(timeline).getByText("Detaljprosjekt").closest("button")).toHaveAttribute(
+      "aria-current",
+      "step",
+    )
+    expect(within(timeline).getByText("Neste checkpoint")).toBeInTheDocument()
+    // once as the timeline label and once as the heading of the results card
+    expect(screen.getAllByText("Checkpoint 3")).toHaveLength(2)
+    expect(screen.queryByRole("tablist")).toBeNull()
+  })
+
   it("the layout ideas: side by side puts both input cards in one grid, full screen adds the mock-up", () => {
     const { unmount } = renderVariant("05")
     expect(screen.queryByLabelText("Fullskjerm resultatvisning")).toBeNull()

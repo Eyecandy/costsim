@@ -1,3 +1,4 @@
+import { LabCheckpointTimeline } from "@/design-lab/parts/LabCheckpointTimeline"
 import { LabHeader } from "@/design-lab/parts/LabHeader"
 import { LabCheckpoint, LabInputHeading, LabProfileRow } from "@/design-lab/parts/LabInputTop"
 import { LabFullscreenResult, LabResults } from "@/design-lab/parts/LabResults"
@@ -94,11 +95,13 @@ export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?:
   const { options } = variant
   const sideBySide = options.inputs === "sideBySide"
   const bottomBar = options.simulation !== "side"
+  const timeline = options.checkpointNav === "timeline"
+  const activeCheckpoint = timeline ? 3 : 1
 
   const inputTop = (
     <div className="space-y-4">
       <LabInputHeading mode={options.inputHeading} />
-      <LabCheckpoint mode={options.checkpoint} />
+      {timeline ? null : <LabCheckpoint mode={options.checkpoint} />}
       <LabProfileRow cues={options.cues} />
     </div>
   )
@@ -114,36 +117,47 @@ export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?:
       <div className="flex flex-1">
         <LabSidebar mode={options.sidebar} />
         <main className="min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-[90rem] px-6 pt-6 pb-24">
-            {sideBySide ? (
-              <div className="space-y-6">
-                {inputTop}
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <InputCard kind="cost" options={options} />
-                  <InputCard kind="driver" options={options} />
-                </div>
-                <div className="space-y-4">
-                  <OutputLabel />
-                  {bottomBar ? null : <RunButton full={false} />}
-                  <LabResults layout={options.results} wide />
-                  {options.simulation === "fullscreen" ? <LabFullscreenResult /> : null}
-                </div>
-              </div>
-            ) : (
-              <div className="grid gap-8 md:grid-cols-2 md:items-start">
-                <div className="space-y-5">
+          <div className="mx-auto flex w-full max-w-[90rem] gap-6 px-6 pt-6 pb-24">
+            {timeline ? (
+              <aside className="sticky top-4 hidden w-48 shrink-0 self-start md:block">
+                <LabCheckpointTimeline />
+              </aside>
+            ) : null}
+            <div className="min-w-0 flex-1">
+              {sideBySide ? (
+                <div className="space-y-6">
                   {inputTop}
-                  <InputCard kind="cost" options={options} />
-                  <InputCard kind="driver" options={options} />
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <InputCard kind="cost" options={options} />
+                    <InputCard kind="driver" options={options} />
+                  </div>
+                  <div className="space-y-4">
+                    <OutputLabel />
+                    {bottomBar ? null : <RunButton full={false} />}
+                    <LabResults layout={options.results} wide checkpoint={activeCheckpoint} />
+                    {options.simulation === "fullscreen" ? <LabFullscreenResult /> : null}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  <OutputLabel />
-                  {bottomBar ? null : <RunButton full />}
-                  <LabResults layout={options.results} wide={false} />
-                  {options.simulation === "fullscreen" ? <LabFullscreenResult /> : null}
+              ) : (
+                <div className="grid gap-8 md:grid-cols-2 md:items-start">
+                  <div className="space-y-5">
+                    {inputTop}
+                    <InputCard kind="cost" options={options} />
+                    <InputCard kind="driver" options={options} />
+                  </div>
+                  <div className="space-y-4">
+                    <OutputLabel />
+                    {bottomBar ? null : <RunButton full />}
+                    <LabResults
+                      layout={options.results}
+                      wide={false}
+                      checkpoint={activeCheckpoint}
+                    />
+                    {options.simulation === "fullscreen" ? <LabFullscreenResult /> : null}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </main>
       </div>
