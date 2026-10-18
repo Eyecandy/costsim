@@ -57,5 +57,5 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 
 ## Known debt (see `docs/refactor-tasks.md` for the live list)
 - `shared/ui/button.tsx` (shadcn, React 19 style) takes `ref` as a plain prop, which React 18 drops. So `ConfirmDialog`'s `confirmBtnRef.current?.focus()` never runs (same in the original `costsim`). Fixing it changes dialog focus behaviour; do it on purpose (wrap in `forwardRef`) and re-check the dialogs in the browser.
-- Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `useGuidedFocusSession`, `AnalysisLibraryNav`.
+- Large files still to split: `GuidedInputDialog`, `ResultsPanel`, `ScenarioPercentTable`, `useLibraryAnalysisSession`, `AnalysisLibraryNav`.
 - Lint: 0 errors, 36 warnings (12 `refs` and 14 `set-state-in-effect` from the React-Compiler rules flagging older patterns, 9 `exhaustive-deps`, 1 memoization). `--max-warnings` in `package.json` holds that number: lower it when you fix some, never raise it.

@@ -22,13 +22,17 @@ function listSorted(dir: string): string[] {
  * change what they assert on. Order: the hook files (`use*.ts`) first, then
  * `src/app/App.tsx`, then the component files. Hooks come first so that
  * `indexOf("someHandler")` finds a definition before any destructuring of the same
- * name; components come last so App's own JSX keeps its original position.
+ * name; components come last so App's own JSX keeps its original position. The
+ * orchestrator hook that only calls the other hooks (`useGuidedFocusSession`) goes last
+ * among the hooks, for the same reason: its destructuring must not precede the definitions.
  */
 export function readAppSource(): string {
   const extracted = listSorted(join(repoRoot, "src/app/workspace"))
   const isHook = (f: string) => /[\\/]use[A-Z][^\\/]*$/.test(f)
+  const isOrchestrator = (f: string) => /[\\/]useGuidedFocusSession\.ts$/.test(f)
   const files = [
-    ...extracted.filter(isHook),
+    ...extracted.filter((f) => isHook(f) && !isOrchestrator(f)),
+    ...extracted.filter(isOrchestrator),
     join(repoRoot, "src/app/App.tsx"),
     ...extracted.filter((f) => !isHook(f)),
   ]

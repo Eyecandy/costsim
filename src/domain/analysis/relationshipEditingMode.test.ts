@@ -198,9 +198,10 @@ describe("relationship editing mode UX", () => {
 
   it("Correlation click-outside: inside controls stay active; outside exits without mutating saved data", () => {
     const app = appSource()
+    const deactivateStart = app.indexOf("const deactivateEditingModes")
     const deactivate = app.slice(
-      app.indexOf("const deactivateEditingModes"),
-      app.indexOf("validSimCostRows"),
+      deactivateStart,
+      app.indexOf('document.removeEventListener("mousedown"', deactivateStart),
     )
     expect(deactivate).toContain("setCorrelationModeActive(false)")
     expect(deactivate).toContain("impactEditingAreaRef")

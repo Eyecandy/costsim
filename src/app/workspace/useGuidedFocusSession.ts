@@ -7,12 +7,7 @@ import {
   type SetStateAction,
 } from "react"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import {
-  CORRELATION_SAVE_CONFIRM_MS,
-  deriveSavedCorrelationSummaries,
-} from "@/domain/simulation/costCorrelationSummaries"
 import type { GuidedInputKind } from "@/domain/guided/guidedInput"
-import { buildFocusResultSteps, type FocusResultSectionId } from "@/domain/guided/focusResultSteps"
 import { resolveFocusNext, resolveFocusPrevious } from "@/domain/guided/focusSessionNavigation"
 import {
   advanceFurthestFocusPhase,
@@ -20,24 +15,17 @@ import {
   isFocusPhaseReached,
   type FocusUserPhase,
 } from "@/domain/guided/focusPhaseNav"
-import {
-  clearFocusSessionResume,
-  focusSessionResumeMatchesContext,
-  readFocusSessionResume,
-  resolveFocusResultStepIndexForResume,
-  writeFocusSessionResume,
-  type FocusSessionResumeV1,
-} from "@/persistence/focusSessionResume"
-import {
-  patchProjectCostCorrelationGroup,
-  isCostCorrelationGroupPatchValid,
-  getSelectedGroupCorrelationState,
-  type Project,
-} from "@/domain/analysis/project"
-import { parseCostForSimulation, parseDriverForSimulation } from "@/domain/results/tableRows"
-import { appFeatures } from "@/config/appVariant"
+import { clearFocusSessionResume } from "@/persistence/focusSessionResume"
+import type { Project } from "@/domain/analysis/project"
+import { parseDriverForSimulation } from "@/domain/results/tableRows"
 import type { useGuidedFocusState } from "@/app/workspace/useGuidedFocusState"
 import type { useLibraryAnalysisSession } from "@/features/analysis-library/useLibraryAnalysisSession"
+import { useCorrelationEditing } from "@/app/workspace/useCorrelationEditing"
+import { useCorrelationGroupEditing } from "@/app/workspace/useCorrelationGroupEditing"
+import { useEditingModeToggles } from "@/app/workspace/useEditingModeToggles"
+import { useFocusResultSteps } from "@/app/workspace/useFocusResultSteps"
+import { useFocusSessionResume } from "@/app/workspace/useFocusSessionResume"
+import { useGuidedHandoff } from "@/app/workspace/useGuidedHandoff"
 
 export function useGuidedFocusSession({
   activeProject,
@@ -64,12 +52,7 @@ export function useGuidedFocusSession({
 }) {
   const {
     correlationModeActive,
-    correlationPendingMixed,
-    correlationPendingRho,
-    correlationSaveConfirmTimerRef,
-    correlationSelectedCostIds,
     defineModeActive,
-    didAttemptFocusSessionResumeRef,
     focusResultStepIndex,
     focusShellRef,
     focusView,
@@ -77,18 +60,9 @@ export function useGuidedFocusSession({
     guidedDialogRef,
     guidedFocusChromeMeta,
     guidedInputKind,
-    guidedResume,
-    impactEditingAreaRef,
     impactModeActive,
     impactSelectedDriverId,
-    prevFocusViewForResumeClearRef,
-    setCorrelationEditBlocked,
-    setCorrelationFeedbackKind,
     setCorrelationModeActive,
-    setCorrelationPendingMixed,
-    setCorrelationPendingRho,
-    setCorrelationSaveConfirmVisible,
-    setCorrelationSelectedCostIds,
     setDefineModeActive,
     setDefineSelectedRowId,
     setFocusPortalTarget,
@@ -121,70 +95,12 @@ export function useGuidedFocusSession({
     }
   }, [impactModeActive, activeProject, impactSelectedDriverId])
 
-  const syncCorrelationPendingFromSelection = useCallback(
-    (selectedIds: readonly string[], correlations: Project["costCorrelations"]) => {
-      const state = getSelectedGroupCorrelationState(correlations, selectedIds)
-      if (state.kind === "uniform") {
-        setCorrelationPendingRho(state.value)
-        setCorrelationPendingMixed(false)
-      } else if (state.kind === "mixed") {
-        setCorrelationPendingRho(0)
-        setCorrelationPendingMixed(true)
-      } else {
-        setCorrelationPendingRho(0)
-        setCorrelationPendingMixed(false)
-      }
-    },
-    [setCorrelationPendingMixed, setCorrelationPendingRho],
-  )
-
-  const clearCorrelationSaveConfirm = useCallback(() => {
-    if (correlationSaveConfirmTimerRef.current !== null) {
-      clearTimeout(correlationSaveConfirmTimerRef.current)
-      correlationSaveConfirmTimerRef.current = null
-    }
-    setCorrelationSaveConfirmVisible(false)
-    setCorrelationFeedbackKind(null)
-  }, [correlationSaveConfirmTimerRef, setCorrelationFeedbackKind, setCorrelationSaveConfirmVisible])
-
-  const flashCorrelationFeedback = useCallback(
-    (kind: "saved" | "removed") => {
-      clearCorrelationSaveConfirm()
-      setCorrelationFeedbackKind(kind)
-      setCorrelationSaveConfirmVisible(true)
-      correlationSaveConfirmTimerRef.current = setTimeout(() => {
-        correlationSaveConfirmTimerRef.current = null
-        setCorrelationSaveConfirmVisible(false)
-        setCorrelationFeedbackKind(null)
-      }, CORRELATION_SAVE_CONFIRM_MS)
-    },
-    [
-      clearCorrelationSaveConfirm,
-      correlationSaveConfirmTimerRef,
-      setCorrelationFeedbackKind,
-      setCorrelationSaveConfirmVisible,
-    ],
-  )
-
-  const clearCorrelationEditingState = useCallback(() => {
-    setCorrelationSelectedCostIds([])
-    setCorrelationPendingRho(0)
-    setCorrelationPendingMixed(false)
-    setCorrelationEditBlocked(false)
-  }, [
-    setCorrelationEditBlocked,
-    setCorrelationPendingMixed,
-    setCorrelationPendingRho,
-    setCorrelationSelectedCostIds,
-  ])
-
-  useEffect(() => {
-    return () => {
-      if (correlationSaveConfirmTimerRef.current !== null) {
-        clearTimeout(correlationSaveConfirmTimerRef.current)
-      }
-    }
-  }, [correlationSaveConfirmTimerRef])
+  const {
+    clearCorrelationEditingState,
+    clearCorrelationSaveConfirm,
+    flashCorrelationFeedback,
+    syncCorrelationPendingFromSelection,
+  } = useCorrelationEditing({ guidedFocusState })
 
   useEffect(() => {
     if (!impactModeActive) setImpactSelectedDriverId(null)
@@ -323,456 +239,47 @@ export function useGuidedFocusSession({
     openGuidedInput("cost", 0, { startPhase: "focusIntro" })
   }, [analysisReadOnly, openGuidedInput])
 
-  /** Guided handoff: pause for Cost Items table editing; keep resume context. */
-  const handoffGuidedToAddCostItems = useCallback(() => {
-    if (!activeProject || !guidedInputKind) return
-    setGuidedResume({
-      after: "costItems",
-      entry: guidedInputKind,
-      projectId: activeProject.id,
-    })
-    setGuidedResumePhase(null)
-    setGuidedInputKind(null)
-    setFocusView((prev) => (prev === "input" ? null : prev))
-    setImpactModeActive(false)
-    setImpactSelectedDriverId(null)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    setCorrelationModeActive(false)
-  }, [
+  const {
+    handleGuidedLandFocusPhaseApplied,
+    handleGuidedResumeApplied,
+    handleGuidedSemanticResumeApplied,
+    handoffGuidedToAddCostItems,
+    handoffGuidedToAddDrivers,
+    handoffGuidedToCorrelation,
+    handoffGuidedToImpact,
+    returnToGuidedReview,
+  } = useGuidedHandoff({
     activeProject,
-    guidedInputKind,
-    clearCorrelationEditingState,
-    clearCorrelationSaveConfirm,
-    setCorrelationModeActive,
-    setDefineModeActive,
-    setDefineSelectedRowId,
-    setFocusView,
-    setGuidedInputKind,
-    setGuidedResume,
-    setGuidedResumePhase,
-    setImpactModeActive,
-    setImpactSelectedDriverId,
-  ])
-
-  /** Guided handoff: pause for Drivers table editing; keep resume context. */
-  const handoffGuidedToAddDrivers = useCallback(() => {
-    if (!activeProject || !guidedInputKind) return
-    setGuidedResume({
-      after: "drivers",
-      entry: guidedInputKind,
-      projectId: activeProject.id,
-    })
-    setGuidedResumePhase(null)
-    setGuidedInputKind(null)
-    setFocusView((prev) => (prev === "input" ? null : prev))
-    setCorrelationModeActive(false)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    setImpactSelectedDriverId(null)
-    setImpactModeActive(false)
-  }, [
-    activeProject,
-    guidedInputKind,
-    clearCorrelationEditingState,
-    clearCorrelationSaveConfirm,
-    setCorrelationModeActive,
-    setDefineModeActive,
-    setDefineSelectedRowId,
-    setFocusView,
-    setGuidedInputKind,
-    setGuidedResume,
-    setGuidedResumePhase,
-    setImpactModeActive,
-    setImpactSelectedDriverId,
-  ])
-
-  /** Guided handoff: pause for Correlation editing; keep resume context. */
-  const handoffGuidedToCorrelation = useCallback(() => {
-    if (!activeProject || !guidedInputKind) return
-    setGuidedResume({
-      after: "correlation",
-      entry: guidedInputKind,
-      projectId: activeProject.id,
-    })
-    setGuidedResumePhase(null)
-    setGuidedInputKind(null)
-    setFocusView((prev) => (prev === "input" ? null : prev))
-    setImpactModeActive(false)
-    setImpactSelectedDriverId(null)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    setCorrelationModeActive(true)
-  }, [
-    activeProject,
-    guidedInputKind,
-    clearCorrelationEditingState,
-    clearCorrelationSaveConfirm,
-    setCorrelationModeActive,
-    setDefineModeActive,
-    setDefineSelectedRowId,
-    setFocusView,
-    setGuidedInputKind,
-    setGuidedResume,
-    setGuidedResumePhase,
-    setImpactModeActive,
-    setImpactSelectedDriverId,
-  ])
-
-  /** Guided handoff: pause for Driver Impact editing; keep resume context. */
-  const handoffGuidedToImpact = useCallback(() => {
-    if (!activeProject || !guidedInputKind) return
-    setGuidedResume({
-      after: "impact",
-      entry: guidedInputKind,
-      projectId: activeProject.id,
-    })
-    setGuidedResumePhase(null)
-    setGuidedInputKind(null)
-    setFocusView((prev) => (prev === "input" ? null : prev))
-    setCorrelationModeActive(false)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    setImpactSelectedDriverId(null)
-    setImpactModeActive(true)
-  }, [
-    activeProject,
-    guidedInputKind,
-    clearCorrelationEditingState,
-    clearCorrelationSaveConfirm,
-    setCorrelationModeActive,
-    setDefineModeActive,
-    setDefineSelectedRowId,
-    setFocusView,
-    setGuidedInputKind,
-    setGuidedResume,
-    setGuidedResumePhase,
-    setImpactModeActive,
-    setImpactSelectedDriverId,
-  ])
-
-  /** Explicit return from Correlation/Impact detour into Guided Input. */
-  const returnToGuidedReview = useCallback(() => {
-    if (!guidedResume || !activeProjectId) {
-      setGuidedResume(null)
-      return
-    }
-    if (guidedResume.projectId !== activeProjectId) {
-      setGuidedResume(null)
-      return
-    }
-    const { after, entry } = guidedResume
-    setCorrelationModeActive(false)
-    setImpactModeActive(false)
-    setImpactSelectedDriverId(null)
-    setDefineModeActive(false)
-    setDefineSelectedRowId(null)
-    clearCorrelationEditingState()
-    clearCorrelationSaveConfirm()
-    // Keep guidedResume until Guided Input has applied the target step, then
-    // clear via onResumeApplied. Clearing phase too early resets to page 1.
-    setGuidedResumePhase(after)
-    setGuidedInputStartIndex(0)
-    setGuidedInputKind(entry)
-    // Resume into shared Focus Input chrome (lightweight footer), not the
-    // standalone Guided modal.
-    setFocusView("input")
-  }, [
-    guidedResume,
     activeProjectId,
     clearCorrelationEditingState,
     clearCorrelationSaveConfirm,
-    setCorrelationModeActive,
-    setDefineModeActive,
-    setDefineSelectedRowId,
-    setFocusView,
-    setGuidedInputKind,
-    setGuidedInputStartIndex,
-    setGuidedResume,
-    setGuidedResumePhase,
-    setImpactModeActive,
-    setImpactSelectedDriverId,
-  ])
+    guidedFocusState,
+  })
 
-  const handleGuidedResumeApplied = useCallback(() => {
-    setGuidedResume(null)
-    setGuidedResumePhase(null)
-  }, [setGuidedResume, setGuidedResumePhase])
-
-  const handleGuidedLandFocusPhaseApplied = useCallback(() => {
-    setGuidedLandFocusPhase(null)
-  }, [setGuidedLandFocusPhase])
-
-  const handleGuidedSemanticResumeApplied = useCallback(() => {
-    setGuidedSemanticResume(null)
-  }, [setGuidedSemanticResume])
-
-  const handleImpactModeToggle = () => {
-    // Allowed when archived for inspection; mutation handlers stay guarded.
-    setImpactModeActive((prev) => {
-      const next = !prev
-      if (next) {
-        // Direct toolbar open — not a guided detour.
-        setGuidedResume(null)
-        setGuidedResumePhase(null)
-        setCorrelationModeActive(false)
-        setDefineModeActive(false)
-        setDefineSelectedRowId(null)
-        setGuidedInputKind(null)
-        clearCorrelationEditingState()
-        clearCorrelationSaveConfirm()
-      } else {
-        setImpactSelectedDriverId(null)
-        // Closing Impact via toolbar abandons impact resume.
-        setGuidedResume((r) => (r?.after === "impact" ? null : r))
-      }
-      return next
-    })
-  }
-
-  const handleCorrelationModeToggle = () => {
-    // Allowed when archived for inspection; mutation handlers stay guarded.
-    setCorrelationModeActive((prev) => {
-      const next = !prev
-      if (next) {
-        // Direct toolbar open — not a guided detour.
-        setGuidedResume(null)
-        setGuidedResumePhase(null)
-        setImpactModeActive(false)
-        setImpactSelectedDriverId(null)
-        setDefineModeActive(false)
-        setDefineSelectedRowId(null)
-        setGuidedInputKind(null)
-        clearCorrelationEditingState()
-        clearCorrelationSaveConfirm()
-      } else {
-        clearCorrelationEditingState()
-        clearCorrelationSaveConfirm()
-        // Closing Correlation via toolbar abandons correlation resume.
-        setGuidedResume((r) => (r?.after === "correlation" ? null : r))
-      }
-      return next
-    })
-  }
-
-  const handleDefineModeToggle = () => {
-    // Allowed when archived for inspection; save path stays guarded.
-    setDefineModeActive((prev) => {
-      const next = !prev
-      if (next) {
-        setGuidedResume(null)
-        setGuidedResumePhase(null)
-        setImpactModeActive(false)
-        setImpactSelectedDriverId(null)
-        setCorrelationModeActive(false)
-        setGuidedInputKind(null)
-        clearCorrelationEditingState()
-        clearCorrelationSaveConfirm()
-      } else {
-        setDefineSelectedRowId(null)
-      }
-      return next
-    })
-  }
-
-  /** Outside-click exit for Impact, Correlation, and Define (does not abandon guided resume). */
-  const deactivateEditingModes = useCallback(() => {
-    setImpactModeActive(false)
-    setCorrelationModeActive(false)
-    setDefineModeActive(false)
-  }, [setCorrelationModeActive, setDefineModeActive, setImpactModeActive])
-
-  useEffect(() => {
-    if (!impactModeActive && !correlationModeActive && !defineModeActive) return
-    const onDocMouseDown = (event: MouseEvent) => {
-      const target = event.target
-      if (!(target instanceof Node)) return
-      if (impactEditingAreaRef.current?.contains(target)) return
-      const portal = document.getElementById("portal")
-      if (portal?.contains(target)) return
-      deactivateEditingModes()
-    }
-    document.addEventListener("mousedown", onDocMouseDown)
-    return () => document.removeEventListener("mousedown", onDocMouseDown)
-  }, [
-    impactModeActive,
-    correlationModeActive,
-    defineModeActive,
-    deactivateEditingModes,
-    impactEditingAreaRef,
-  ])
-
-  const validSimCostRows = useMemo(() => {
-    if (!activeProject) return []
-    return activeProject.costRows.filter((row) => parseCostForSimulation(row) !== null)
-  }, [activeProject])
-
-  useEffect(() => {
-    if (!correlationModeActive || !activeProject) return
-    const validIds = new Set(
-      activeProject.costRows
-        .filter((row) => parseCostForSimulation(row) !== null)
-        .map((row) => row.id),
-    )
-    setCorrelationSelectedCostIds((prev) => {
-      const next = prev.filter((id) => validIds.has(id))
-      if (next.length === prev.length && next.every((id, i) => id === prev[i])) {
-        return prev
-      }
-      syncCorrelationPendingFromSelection(next, activeProject.costCorrelations)
-      return next
-    })
-  }, [
-    correlationModeActive,
-    activeProject,
-    syncCorrelationPendingFromSelection,
-    setCorrelationSelectedCostIds,
-  ])
-
-  const handleToggleCorrelationCost = useCallback(
-    (costRowId: string) => {
-      if (!correlationModeActive || !activeProject) return
-      if (activeProject.costRows.find((r) => r.id === costRowId) === undefined) {
-        return
-      }
-      if (
-        parseCostForSimulation(activeProject.costRows.find((r) => r.id === costRowId)!) === null
-      ) {
-        return
-      }
-      setCorrelationSelectedCostIds((prev) => {
-        const next = prev.includes(costRowId)
-          ? prev.filter((id) => id !== costRowId)
-          : [...prev, costRowId]
-        syncCorrelationPendingFromSelection(next, activeProject.costCorrelations)
-        setCorrelationEditBlocked(false)
-        return next
-      })
-    },
-    [
-      correlationModeActive,
-      activeProject,
-      syncCorrelationPendingFromSelection,
-      setCorrelationEditBlocked,
-      setCorrelationSelectedCostIds,
-    ],
-  )
-
-  const handleCorrelationPendingChange = useCallback(
-    (value: number) => {
-      setCorrelationPendingRho(value)
-      setCorrelationPendingMixed(false)
-      setCorrelationEditBlocked(false)
-    },
-    [setCorrelationEditBlocked, setCorrelationPendingMixed, setCorrelationPendingRho],
-  )
-
-  const handleOpenCorrelationSummary = useCallback(
-    (rowIds: readonly string[]) => {
-      if (!correlationModeActive || !activeProject) return
-      const validIds = new Set(
-        activeProject.costRows
-          .filter((row) => parseCostForSimulation(row) !== null)
-          .map((row) => row.id),
-      )
-      const next = rowIds.filter((id) => validIds.has(id))
-      if (next.length < 2) return
-      setCorrelationSelectedCostIds(next)
-      syncCorrelationPendingFromSelection(next, activeProject.costCorrelations)
-      setCorrelationEditBlocked(false)
-      clearCorrelationSaveConfirm()
-    },
-    [
-      correlationModeActive,
-      activeProject,
-      syncCorrelationPendingFromSelection,
-      clearCorrelationSaveConfirm,
-      setCorrelationEditBlocked,
-      setCorrelationSelectedCostIds,
-    ],
-  )
-
-  const handleRemoveCorrelationSummary = useCallback(
-    (rowIds: readonly string[]) => {
-      if (analysisReadOnly) return
-      if (!correlationModeActive || !activeProject) return
-      if (rowIds.length < 2) return
-      if (
-        !isCostCorrelationGroupPatchValid(
-          validSimCostRows,
-          activeProject.costCorrelations,
-          rowIds,
-          "0",
-        )
-      ) {
-        setCorrelationEditBlocked(true)
-        return
-      }
-      setCorrelationEditBlocked(false)
-      setProjects((prev) => patchProjectCostCorrelationGroup(prev, activeProject.id, rowIds, "0"))
-      clearCorrelationEditingState()
-      flashCorrelationFeedback("removed")
-    },
-    [
-      analysisReadOnly,
-      correlationModeActive,
-      activeProject,
-      validSimCostRows,
+  const { handleCorrelationModeToggle, handleDefineModeToggle, handleImpactModeToggle } =
+    useEditingModeToggles({
       clearCorrelationEditingState,
-      flashCorrelationFeedback,
-      setCorrelationEditBlocked,
-      setProjects,
-    ],
-  )
+      clearCorrelationSaveConfirm,
+      guidedFocusState,
+    })
 
-  const handleCostCorrelationGroupApply = useCallback(() => {
-    if (analysisReadOnly) return
-    if (!activeProject) return
-    if (correlationSelectedCostIds.length < 2) return
-    if (correlationPendingMixed) return
-    const raw = String(correlationPendingRho)
-    if (
-      !isCostCorrelationGroupPatchValid(
-        validSimCostRows,
-        activeProject.costCorrelations,
-        correlationSelectedCostIds,
-        raw,
-      )
-    ) {
-      setCorrelationEditBlocked(true)
-      return
-    }
-    setCorrelationEditBlocked(false)
-    setProjects((prev) =>
-      patchProjectCostCorrelationGroup(prev, activeProject.id, correlationSelectedCostIds, raw),
-    )
-    clearCorrelationEditingState()
-    flashCorrelationFeedback("saved")
-  }, [
-    analysisReadOnly,
+  const {
+    handleCostCorrelationGroupApply,
+    handleCorrelationPendingChange,
+    handleOpenCorrelationSummary,
+    handleRemoveCorrelationSummary,
+    handleToggleCorrelationCost,
+    savedCorrelationSummaries,
+  } = useCorrelationGroupEditing({
     activeProject,
-    correlationSelectedCostIds,
-    correlationPendingRho,
-    correlationPendingMixed,
-    validSimCostRows,
+    analysisReadOnly,
     clearCorrelationEditingState,
+    clearCorrelationSaveConfirm,
     flashCorrelationFeedback,
-    setCorrelationEditBlocked,
+    guidedFocusState,
     setProjects,
-  ])
-
-  const savedCorrelationSummaries = useMemo(() => {
-    if (!correlationModeActive || !activeProject) return []
-    return deriveSavedCorrelationSummaries(validSimCostRows, activeProject.costCorrelations)
-  }, [correlationModeActive, activeProject, validSimCostRows])
+    syncCorrelationPendingFromSelection,
+  })
 
   const activeCostCorrelationPrep = useMemo(() => {
     if (!activeProject) return undefined
@@ -970,170 +477,24 @@ export function useGuidedFocusSession({
     }
   }, [showStaleInputNotice, setShowStaleInputChanges])
 
-  /** Stable identity for Ongoing comparison / Development tip — not prefs/UI. */
-  const focusResultSteps = useMemo(
-    () =>
-      buildFocusResultSteps({
-        includeDevelopment: Boolean(
-          isOngoingAnalysis &&
-          librarySession.ongoing?.checkpoints &&
-          librarySession.ongoing.checkpoints.length > 0,
-        ),
-        includeContribution: appFeatures.showExpectedAddition,
-      }),
-    [isOngoingAnalysis, librarySession.ongoing?.checkpoints],
-  )
-
-  const focusResultSection: FocusResultSectionId | null =
-    focusView === "results" && hasViewableResults
-      ? (focusResultSteps[
-          Math.min(Math.max(0, focusResultStepIndex), Math.max(0, focusResultSteps.length - 1))
-        ] ??
-        focusResultSteps[0] ??
-        null)
-      : null
-
-  // Clear sessionStorage when Focus fully exits (not Input ↔ Results).
-  useEffect(() => {
-    const prev = prevFocusViewForResumeClearRef.current
-    prevFocusViewForResumeClearRef.current = focusView
-    if (prev !== null && focusView === null) {
-      clearStoredFocusSessionResume()
-    }
-  }, [focusView, clearStoredFocusSessionResume, prevFocusViewForResumeClearRef])
-
-  // Persist semantic Focus location for same-tab reload resume.
-  useEffect(() => {
-    if (!librarySession.ready) return
-    const analysisId = librarySession.analysisId
-    if (!analysisId || focusView === null) return
-    if (!activeProjectId) return
-
-    const checkpointId = isOngoingAnalysis ? (librarySession.activeCheckpoint?.id ?? null) : null
-
-    const base: FocusSessionResumeV1 = {
-      v: 1,
-      analysisId,
-      projectId: activeProjectId,
-      checkpointId,
-      focusView,
-      ...(furthestReachedFocusPhase ? { furthestReachedPhase: furthestReachedFocusPhase } : {}),
-    }
-
-    if (focusView === "input") {
-      const phase = guidedFocusChromeMeta?.workflowPhase
-      if (!phase) return
-      writeFocusSessionResume({
-        ...base,
-        guidedPhase: phase,
-        ...(guidedFocusChromeMeta.workflowRowId
-          ? { guidedRowId: guidedFocusChromeMeta.workflowRowId }
-          : {}),
-      })
-      return
-    }
-
-    if (focusView === "results" && focusResultSection) {
-      writeFocusSessionResume({
-        ...base,
-        resultSectionId: focusResultSection,
-      })
-    }
-  }, [
-    librarySession.ready,
-    librarySession.analysisId,
-    librarySession.activeCheckpoint?.id,
-    isOngoingAnalysis,
-    focusView,
-    activeProjectId,
-    furthestReachedFocusPhase,
-    guidedFocusChromeMeta?.workflowPhase,
-    guidedFocusChromeMeta?.workflowRowId,
-    focusResultSection,
-  ])
-
-  // Restore Focus after library hydration (once per page load).
-  useEffect(() => {
-    if (!librarySession.ready) return
-    if (didAttemptFocusSessionResumeRef.current) return
-    didAttemptFocusSessionResumeRef.current = true
-
-    const analysisId = librarySession.analysisId
-    if (!analysisId || !activeProjectId) return
-
-    const stored = readFocusSessionResume(analysisId)
-    if (!stored) return
-
-    const checkpointId = isOngoingAnalysis ? (librarySession.activeCheckpoint?.id ?? null) : null
-    if (
-      !focusSessionResumeMatchesContext(stored, {
-        analysisId,
-        projectId: activeProjectId,
-        checkpointId,
-        isOngoing: isOngoingAnalysis,
-      })
-    ) {
-      clearFocusSessionResume(analysisId)
-      return
-    }
-
-    if (stored.furthestReachedPhase) {
-      setFurthestReachedFocusPhase(stored.furthestReachedPhase)
-    }
-
-    let view = stored.focusView
-    let guidedPhase = stored.guidedPhase
-    let guidedRowId = stored.guidedRowId
-
-    if (view === "results" && !hasViewableResults) {
-      view = "input"
-      guidedPhase = "simulation"
-      guidedRowId = undefined
-    }
-
-    if (view === "results") {
-      setFocusResultStepIndex(
-        resolveFocusResultStepIndexForResume(focusResultSteps, stored.resultSectionId),
-      )
-      setFocusView("results")
-      return
-    }
-
-    if (analysisReadOnly) {
-      clearFocusSessionResume(analysisId)
-      return
-    }
-
-    setGuidedSemanticResume(
-      guidedPhase
-        ? {
-            phase: guidedPhase,
-            ...(guidedRowId ? { rowId: guidedRowId } : {}),
-          }
-        : { phase: "assumptions" },
-    )
-    setGuidedStartPhase(guidedPhase === "focusIntro" ? "focusIntro" : null)
-    setGuidedInputStartIndex(0)
-    setGuidedInputKind("cost")
-    setFocusView("input")
-  }, [
-    librarySession.ready,
-    librarySession.analysisId,
-    librarySession.activeCheckpoint?.id,
-    isOngoingAnalysis,
-    activeProjectId,
+  const { focusResultSection, focusResultSteps } = useFocusResultSteps({
+    guidedFocusState,
     hasViewableResults,
+    isOngoingAnalysis,
+    librarySession,
+  })
+
+  useFocusSessionResume({
+    activeProjectId,
     analysisReadOnly,
+    clearStoredFocusSessionResume,
+    focusResultSection,
     focusResultSteps,
-    didAttemptFocusSessionResumeRef,
-    setFocusResultStepIndex,
-    setFocusView,
-    setFurthestReachedFocusPhase,
-    setGuidedInputKind,
-    setGuidedInputStartIndex,
-    setGuidedSemanticResume,
-    setGuidedStartPhase,
-  ])
+    guidedFocusState,
+    hasViewableResults,
+    isOngoingAnalysis,
+    librarySession,
+  })
 
   /** One Previous action for the whole Focus session (buttons + arrows). */
   const navigateFocusPrevious = useCallback(() => {

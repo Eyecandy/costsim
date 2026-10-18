@@ -60,8 +60,11 @@ Times are local (+02:00), taken from git commits unless marked "approx". Newest 
 
 `App.tsx`: 4,459 lines at start, 1,208 after the last App commit above.
 
+## Phase 9 follow-up (2026-10-18 14:00)
+- `useGuidedFocusSession` split: 1,221 -> 582 lines. New hooks in `app/workspace/`: `useCorrelationEditing`, `useGuidedHandoff`, `useEditingModeToggles`, `useCorrelationGroupEditing`, `useFocusResultSteps`, `useFocusSessionResume`. Called at the original positions, so hook and effect order is unchanged. `readAppSource()` lists the orchestrator hook last; 4 source-text tests got new slice anchors. `npm run check` green (36 warnings, 1,367 tests). Browser parity vs `costsim`: toggles, Focus steps, correlation/impact handoffs and return, run, Results steps, Back to input, phase navigation, reload, Close all identical. Not browser-checked: correlation group apply (canvas grid), focus resume with a library analysis.
+
 ## Not done yet (2026-10-18 04:20)
-- Phase 9 splits left: `GuidedInputDialog` (2.5k lines), `ResultsPanel` (2.3k), `ProjectReportDocument` (2.1k), `ScenarioPercentTable` (1.9k), `useLibraryAnalysisSession` (1.9k), `AnalysisLibraryNav` (1.5k), `AnalysisLibraryPage` (1.2k), `useGuidedFocusSession` (1.2k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
+- Phase 9 splits left: `GuidedInputDialog` (2.5k lines), `ResultsPanel` (2.3k), `ProjectReportDocument` (2.1k), `ScenarioPercentTable` (1.9k), `useLibraryAnalysisSession` (1.9k), `AnalysisLibraryNav` (1.5k), `AnalysisLibraryPage` (1.2k), `localAnalysisLibraryRepository` (1.0k). These touch hook order and need a browser parity check after each.
 - 36 lint warnings (React Compiler rules `refs` / `set-state-in-effect`, some `exhaustive-deps`): fix when the files are split.
 - `Button` ref under React 18 (see `CLAUDE.md` known debt): `ConfirmDialog` never focuses its confirm button, same as the original.
 - React 19: needs your decision (data grid 6.0.4 alpha, or wait for a stable release).

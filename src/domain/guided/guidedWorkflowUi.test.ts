@@ -139,9 +139,10 @@ describe("Guided workflow UI contracts", () => {
 
     const app = appSource()
     expect(app).toContain("handoffGuidedToImpact")
+    const impactStart = app.indexOf("const handoffGuidedToImpact")
     const impactHandoff = app.slice(
-      app.indexOf("handoffGuidedToImpact"),
-      app.indexOf("handleImpactModeToggle"),
+      impactStart,
+      app.indexOf("const returnToGuidedReview", impactStart),
     )
     expect(impactHandoff).toContain("setImpactModeActive(true)")
     expect(impactHandoff).not.toContain("patchProjectDriverImpact")

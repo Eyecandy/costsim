@@ -154,19 +154,18 @@ describe("Guided Input pause/resume", () => {
   it("stale state cleanup", () => {
     const app = appSource()
     expect(app).toContain("handleGuidedResumeApplied")
+    const appliedStart = app.indexOf("const handleGuidedResumeApplied")
     const applied = app.slice(
-      app.indexOf("handleGuidedResumeApplied"),
-      app.indexOf("handleImpactModeToggle"),
+      appliedStart,
+      app.indexOf("const handleGuidedLandFocusPhaseApplied", appliedStart),
     )
     expect(applied).toContain("setGuidedResume(null)")
     expect(applied).toContain("setGuidedResumePhase(null)")
     // No premature setTimeout clear
     expect(app).not.toMatch(/setTimeout\(\(\) => setGuidedResumePhase\(null\)/)
     // Fresh guided open clears resume
-    const open = app.slice(
-      app.indexOf("const openGuidedInput"),
-      app.indexOf("handoffGuidedToCorrelation"),
-    )
+    const openStart = app.indexOf("const openGuidedInput")
+    const open = app.slice(openStart, app.indexOf("const openFocusModePrimary", openStart))
     expect(open).toContain("setGuidedResume(null)")
     // closeGuidedInput abandons resume
     const close = app.slice(
@@ -213,9 +212,10 @@ describe("Guided Input pause/resume", () => {
 
   it("click-outside Correlation does not abandon guided resume", () => {
     const app = appSource()
+    const deactivateStart = app.indexOf("const deactivateEditingModes")
     const deactivate = app.slice(
-      app.indexOf("const deactivateEditingModes"),
-      app.indexOf("validSimCostRows"),
+      deactivateStart,
+      app.indexOf('document.removeEventListener("mousedown"', deactivateStart),
     )
     expect(deactivate).toContain("setCorrelationModeActive(false)")
     expect(deactivate).not.toContain("setGuidedResume")
