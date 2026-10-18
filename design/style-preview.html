@@ -73,6 +73,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .status-row { margin-top: 8px; align-items: center; }
 .ui-strip h3 { margin: 14px 0 8px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
 .ui-strip h3.sub { margin-top: 18px; color: var(--ui-muted); font-size: 11px; }
+.ui-strip .warnnote { color: var(--ui-text); font-weight: 600; }
 .ui-strip .ui-small { margin: 8px 0 0; font-size: 12.5px; color: var(--ui-muted); }
 .scale { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
 .sc { min-height: 92px; padding: 30px 8px 8px; border-radius: 6px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); min-width: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -186,6 +187,73 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --d-info: #a8bfdc;
   --d-info-b: #1b4f56;
 }
+[data-palette="t2"] {
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e3f0f4;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #dceefa;
+  --color-accent-300: #93c5e6;
+  --color-accent-500: #25678c;
+  --color-accent-700: #003f5e;
+  --color-accent-900: #062a3d;
+  --color-neutral-50: #f7f8f5;
+  --color-neutral-100: #eceee8;
+  --color-neutral-200: #e0e2db;
+  --color-neutral-300: #cfd2ca;
+  --color-neutral-500: #858f8c;
+  --color-neutral-600: #5c656a;
+  --color-neutral-800: #303a3f;
+  --color-neutral-900: #0f2733;
+  --color-surface: #ffffff;
+  --color-success-text: #3d7a48;
+  --color-success-tint: #e3f6e5;
+  --color-warning-text: #906606;
+  --color-warning-tint: #ffeed3;
+  --color-error-text: #b74441;
+  --color-error-tint: #ffe9e6;
+  --color-info-text: #436fa6;
+  --color-info-tint: #e3f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #003f5e;
+  --color-series-3: #25678c;
+  --color-series-4: #005256;
+  --color-series-5: #4585ab;
+  --color-series-6: #47a0a6;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f7f8f5;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #4eabd9;
+  --d-k3: #83bede;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #14515c;
+  --d-pill-fg: #aed4ea;
+  --d-pill-bd: #33748a;
+  --d-a500: #66aed6;
+  --d-ok: #add6b5;
+  --d-ok-b: #1c5350;
+  --d-warn: #edd397;
+  --d-warn-b: #26524b;
+  --d-err: #dfa6a5;
+  --d-err-b: #244b4e;
+  --d-info: #a8bfdc;
+  --d-info-b: #1b4f56;
+}
 [data-palette="t3"] {
   --color-primary-50: #f2f8f9;
   --color-primary-100: #e3f2ef;
@@ -244,6 +312,73 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --d-pill-fg: #b5e3ce;
   --d-pill-bd: #3a8270;
   --d-a500: #73c9a2;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #edd397;
+  --d-warn-b: #26524b;
+  --d-err: #dfa6a5;
+  --d-err-b: #244b4e;
+  --d-info: #a8bfdc;
+  --d-info-b: #1b4f56;
+}
+[data-palette="t4"] {
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e3f0f2;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #dbf1ea;
+  --color-accent-300: #8dcdbb;
+  --color-accent-500: #3f9f88;
+  --color-accent-700: #187360;
+  --color-accent-900: #002f25;
+  --color-neutral-50: #f9f9f6;
+  --color-neutral-100: #edede7;
+  --color-neutral-200: #e2e2da;
+  --color-neutral-300: #d2d2c9;
+  --color-neutral-500: #858f8c;
+  --color-neutral-600: #5d646b;
+  --color-neutral-800: #313940;
+  --color-neutral-900: #10283a;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #906606;
+  --color-warning-tint: #ffeed3;
+  --color-error-text: #b74441;
+  --color-error-tint: #ffe9e6;
+  --color-info-text: #436fa6;
+  --color-info-tint: #e3f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #005256;
+  --color-series-3: #3f9f88;
+  --color-series-4: #187360;
+  --color-series-5: #47a0a6;
+  --color-series-6: #056a6f;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f9f9f6;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #49d2d8;
+  --d-k3: #a5dbcf;
+  --d-k4: #68dfc6;
+  --d-pill-bg: #175655;
+  --d-pill-fg: #b6e2d7;
+  --d-pill-bd: #3a8179;
+  --d-a500: #74c8b4;
   --d-ok: #b5d5af;
   --d-ok-b: #1d534f;
   --d-warn: #edd397;
@@ -387,6 +522,73 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --d-info: #a4c3df;
   --d-info-b: #1a5057;
 }
+[data-palette="t7"] {
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #e3f0e0;
+  --color-accent-300: #abc8a3;
+  --color-accent-500: #6f8a68;
+  --color-accent-700: #496043;
+  --color-accent-900: #1d2b1a;
+  --color-neutral-50: #f7f6f2;
+  --color-neutral-100: #eeede7;
+  --color-neutral-200: #e3e1da;
+  --color-neutral-300: #d3d1c8;
+  --color-neutral-500: #8a8e86;
+  --color-neutral-600: #5d6661;
+  --color-neutral-800: #313b35;
+  --color-neutral-900: #232a26;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #886800;
+  --color-warning-tint: #fbefd2;
+  --color-error-text: #b7434a;
+  --color-error-tint: #ffe9e8;
+  --color-info-text: #3971a4;
+  --color-info-tint: #e1f3ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #496043;
+  --color-series-3: #809b79;
+  --color-series-4: #005256;
+  --color-series-5: #47a0a6;
+  --color-series-6: #056a6f;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f7f6f2;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #a3bb9d;
+  --d-k3: #d0dacd;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #1e514e;
+  --d-pill-fg: #c8d3c5;
+  --d-pill-bd: #4b7367;
+  --d-a500: #96ac90;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #edd897;
+  --d-warn-b: #26534b;
+  --d-err: #dea5a9;
+  --d-err-b: #244b4e;
+  --d-info: #a4c3df;
+  --d-info-b: #1a5057;
+}
 [data-palette="t8"] {
   --color-primary-50: #f2f8f9;
   --color-primary-100: #e4f2f3;
@@ -454,6 +656,140 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --d-info: #a4c3df;
   --d-info-b: #1a5057;
 }
+[data-palette="t9"] {
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #fbe6e0;
+  --color-accent-300: #e7ae9f;
+  --color-accent-500: #b0472b;
+  --color-accent-700: #7c2206;
+  --color-accent-900: #471103;
+  --color-neutral-50: #f6f8f8;
+  --color-neutral-100: #e7efef;
+  --color-neutral-200: #dae3e3;
+  --color-neutral-300: #c8d4d4;
+  --color-neutral-500: #848e90;
+  --color-neutral-600: #5b6569;
+  --color-neutral-800: #2f3a3e;
+  --color-neutral-900: #12303a;
+  --color-surface: #ffffff;
+  --color-success-text: #3d7a48;
+  --color-success-tint: #e3f6e5;
+  --color-warning-text: #8c6802;
+  --color-warning-tint: #fdefd2;
+  --color-error-text: #b64258;
+  --color-error-tint: #ffe8eb;
+  --color-info-text: #436fa6;
+  --color-info-tint: #e3f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #7c2206;
+  --color-series-3: #d26649;
+  --color-series-4: #005256;
+  --color-series-5: #b0472b;
+  --color-series-6: #47a0a6;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f6f8f8;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #de8063;
+  --d-k3: #efc7bd;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #2b4745;
+  --d-pill-fg: #ebbaad;
+  --d-pill-bd: #6d5b50;
+  --d-a500: #d97c63;
+  --d-ok: #add6b5;
+  --d-ok-b: #1c5350;
+  --d-warn: #edd697;
+  --d-warn-b: #26534b;
+  --d-err: #dea5b0;
+  --d-err-b: #244b4f;
+  --d-info: #a8bfdc;
+  --d-info-b: #1b4f56;
+}
+[data-palette="t10"] {
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #fae7dd;
+  --color-accent-300: #dbb4a2;
+  --color-accent-500: #6b4a3a;
+  --color-accent-700: #412619;
+  --color-accent-900: #332219;
+  --color-neutral-50: #f5f6f0;
+  --color-neutral-100: #ecede7;
+  --color-neutral-200: #e1e2db;
+  --color-neutral-300: #d1d2c9;
+  --color-neutral-500: #888e87;
+  --color-neutral-600: #5c6662;
+  --color-neutral-800: #303b37;
+  --color-neutral-900: #1b2924;
+  --color-surface: #ffffff;
+  --color-success-text: #3d7a48;
+  --color-success-tint: #e3f6e5;
+  --color-warning-text: #886800;
+  --color-warning-tint: #fbefd2;
+  --color-error-text: #b7434a;
+  --color-error-tint: #ffe9e8;
+  --color-info-text: #3a6fa3;
+  --color-info-tint: #e2f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #6b4a3a;
+  --color-series-3: #005256;
+  --color-series-4: #896655;
+  --color-series-5: #47a0a6;
+  --color-series-6: #056a6f;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f5f6f0;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #c5a494;
+  --d-k3: #49d2d8;
+  --d-k4: #cfbbb2;
+  --d-pill-bg: #254c4b;
+  --d-pill-fg: #dbc7bd;
+  --d-pill-bd: #5e675f;
+  --d-a500: #bb9481;
+  --d-ok: #add6b5;
+  --d-ok-b: #1c5350;
+  --d-warn: #edd897;
+  --d-warn-b: #26534b;
+  --d-err: #dea5a9;
+  --d-err-b: #244b4e;
+  --d-info: #a5c2df;
+  --d-info-b: #1a5057;
+}
 
 
 /* ================= The calculator mock ================= */
@@ -468,7 +804,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --c-deep: var(--color-primary-800);
   --c-ok: var(--color-success-text); --c-ok-b: var(--color-success-tint); --c-warn: var(--color-warning-text); --c-warn-b: var(--color-warning-tint);
   --c-err: var(--color-error-text); --c-err-b: var(--color-error-tint); --c-info: var(--color-info-text); --c-info-b: var(--color-info-tint);
-  --c-pill-bg: var(--color-accent-100); --c-pill-fg: var(--color-accent-700); --c-pill-bd: var(--color-accent-300); --c-a500: var(--color-accent-500);
+  --c-pill-bg: var(--color-accent-100); --c-pill-fg: var(--color-accent-700); --c-pill-bd: var(--color-accent-300); --c-meter: var(--color-accent-700);
   --k1: var(--color-series-1); --k2: var(--color-series-2); --k3: var(--color-series-3); --k4: var(--color-series-4); --tot: var(--color-series-2);
   /* shape and feel, defaults = Clean */
   --fs: 13px; --fw-body: 400;
@@ -519,7 +855,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --c-accent: var(--d-accent); --c-on: var(--d-on-accent); --c-atext: var(--d-atext); --c-brand: var(--d-atext); --c-deep: var(--d-surface);
   --c-ok: var(--d-ok); --c-ok-b: var(--d-ok-b); --c-warn: var(--d-warn); --c-warn-b: var(--d-warn-b);
   --c-err: var(--d-err); --c-err-b: var(--d-err-b); --c-info: var(--d-info); --c-info-b: var(--d-info-b);
-  --c-pill-bg: var(--d-pill-bg); --c-pill-fg: var(--d-pill-fg); --c-pill-bd: var(--d-pill-bd); --c-a500: var(--d-a500);
+  --c-pill-bg: var(--d-pill-bg); --c-pill-fg: var(--d-pill-fg); --c-pill-bd: var(--d-pill-bd); --c-meter: var(--d-a500);
   --k1: var(--d-k1); --k2: var(--d-k2); --k3: var(--d-k3); --k4: var(--d-k4); --tot: var(--d-k2);
   --r: 10px; --r-sm: 6px; --chip-r: 999px; --bar-r: 3px; --pad: 20px; --gap: 22px;
   --th-bg: var(--c-tint); --hdr-bg: var(--c-card); --hdr-brand: var(--c-atext);
@@ -589,7 +925,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 /* incurred */
 .app .inc { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .app .meter { height: 8px; margin-top: 12px; border-radius: 999px; background: var(--c-panel); overflow: hidden; border: 1px solid var(--c-line); }
-.app .meter span { display: block; height: 100%; width: 14.7%; background: var(--c-a500); border-radius: 999px; }
+.app .meter span { display: block; height: 100%; width: 14.7%; background: var(--c-meter); border-radius: 999px; }
 .app[data-style="bold"] .meter, .app[data-style="bold"] .meter span { border-radius: 0; }
 
 /* run strip */
@@ -603,6 +939,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app .notice svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--c-warn); }
 .app .notice p { margin: 2px 0 0; font-size: 0.92em; color: var(--c-text); }
 .app .notice b { font-weight: 700; }
+.app .fld.bad svg { width: 12px; height: 12px; margin-right: 4px; vertical-align: -1px; color: var(--c-err); }
 .app .fld.bad { border: 1.5px solid var(--c-err); background: var(--c-err-b); }
 .app .fld.chg { border: 1.5px solid var(--c-brand); background: var(--c-tint); }
 .app .note.err { display: flex; gap: 6px; align-items: flex-start; color: var(--c-err); font-weight: 500; }
@@ -670,7 +1007,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <div class="ui">
   <div class="no-print">
     <h1>U·SKOP style preview</h1>
-    <p class="ui-lead">The main calculator page in five teal-based colour systems and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
+    <p class="ui-lead">The main calculator page in ten teal-based colour systems and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
     <div class="ui-bar" id="controls">
       <div class="ui-row top"><span class="ui-label">Palette</span><div class="ui-seg" id="pal-seg"></div></div>
       <div class="ui-row"><span class="ui-label">Style</span><div class="ui-seg" id="sty-seg"></div></div>
@@ -717,7 +1054,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
           <tr><td class="name">Roofing &amp; facade</td><td><span class="fld">−6</span></td><td><span class="fld">280 000</span></td><td><span class="fld">+18</span></td></tr>
           <tr><td class="name">Electrical &amp; plumbing</td><td><span class="fld">−7</span></td><td><span class="fld">260 000</span></td><td><span class="fld">+22</span></td></tr>
           <tr><td class="name">Interior finishes</td><td><span class="fld">−5</span></td><td><span class="fld">190 000</span></td><td><span class="fld">+14</span></td></tr>
-          <tr><td class="name">Project management</td><td><span class="fld bad" aria-invalid="true">+4</span></td><td><span class="fld">90 000</span></td><td><span class="fld">+10</span></td></tr>
+          <tr><td class="name">Project management</td><td><span class="fld bad" aria-invalid="true"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 5.8v5M10 13.4v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>+4</span></td><td><span class="fld">90 000</span></td><td><span class="fld">+10</span></td></tr>
         </tbody>
         <tfoot><tr><td>Base cost</td><td></td><td>1 700 000</td><td></td></tr></tfoot></table>
       </div><p class="note err"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 5.8v5M10 13.4v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Project management: the optimistic value must not be above most likely.</p></div></section>
@@ -786,24 +1123,34 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <script>
 (function () {
   var PAL = [
-    { id: "t1", label: "T1", name: "Harbour Blue", family: "Analogous", vibe: "Calm, cohesive and trustworthy. Teal with a harbour-blue accent and a barely warm off-white; quiet, a little clinical.",
+    { id: "t1", label: "T1", name: "Harbour Blue", family: "Analogous", vibe: "Calm, cohesive and trustworthy. Teal with a muted harbour-blue accent and a barely warm off-white; quiet, a little clinical.", extra: "",
       prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Harbour Blue 100"],[300,"Harbour Blue 300"],[500,"Harbour Blue 500"],[700,"Harbour Blue 700"],[900,"Harbour Blue 900"]], neu: [[50,"Eggwhite"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Teal Ink"]], ser: [[1,"Primary 500"],[2,"Primary 700"],[3,"Accent 400 (lighter)"],[4,"Accent 700"],[5,"Primary 400"],[6,"Primary 600"]] },
-    { id: "t3", label: "T3", name: "Jade", family: "Analogous", vibe: "Fresh and natural while staying calm. Teal leaning toward green, like deep water over a forest floor.",
+    { id: "t2", label: "T2", name: "Petrol Blue", family: "Analogous", vibe: "Cool, orderly and authoritative. A deep petrol-blue accent and a pearl page with navy ink; reads like a bank or audit report.", extra: "",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Petrol Blue 100"],[300,"Petrol Blue 300"],[500,"Petrol Blue 500"],[700,"Petrol Blue 700"],[900,"Petrol Blue 900"]], neu: [[50,"Pearl"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Petrol Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 500"],[4,"Primary 700"],[5,"Accent 400 (lighter)"],[6,"Primary 400"]] },
+    { id: "t3", label: "T3", name: "Jade", family: "Analogous", vibe: "Fresh and natural while staying calm. Teal leaning toward green, like deep water over a forest floor.", extra: "",
       prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Jade 100"],[300,"Jade 300"],[500,"Jade 500"],[700,"Jade 700"],[900,"Jade 900"]], neu: [[50,"Sea Salt"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Pine Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
-    { id: "t5", label: "T5", name: "Moss", family: "Earthy", vibe: "Grounded and outdoorsy. Teal with a deep moss accent on an oat-white page; calm, a little rustic.",
+    { id: "t4", label: "T4", name: "Seafoam", family: "Analogous", vibe: "Modern, light and a little more energetic. Seafoam brightens the teal without leaving the family; chalk page, navy ink.", extra: "",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Seafoam 100"],[300,"Seafoam 300"],[500,"Seafoam 500"],[700,"Seafoam 700"],[900,"Seafoam 900"]], neu: [[50,"Chalk"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Navy Ink"]], ser: [[1,"Primary 500"],[2,"Primary 700"],[3,"Accent 500"],[4,"Accent 700"],[5,"Primary 400"],[6,"Primary 600"]] },
+    { id: "t5", label: "T5", name: "Moss", family: "Earthy", vibe: "Grounded and outdoorsy. Teal with a deep moss accent on an oat-white page; calm, a little rustic.", extra: "",
       prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Moss 100"],[300,"Moss 300"],[500,"Moss 500"],[700,"Moss 700"],[900,"Moss 900"]], neu: [[50,"Oat White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Moss Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
-    { id: "t6", label: "T6", name: "Clay", family: "Earthy", vibe: "Warm and human against a cool teal. Clay adds earth, linen white softens the page. Reads like a printed report.",
+    { id: "t6", label: "T6", name: "Clay", family: "Earthy", vibe: "Warm and human against a cool teal. Clay adds earth, linen white softens the page. Reads like a printed report.", extra: "",
       prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Clay 100"],[300,"Clay 300"],[500,"Clay 500"],[700,"Clay 700"],[900,"Clay 900"]], neu: [[50,"Linen White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Umber Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
-    { id: "t8", label: "T8", name: "Ochre", family: "Earthy", vibe: "Rich and heritage-like. Teal with an ochre gold accent on bone white; warmer and more characterful, still serious.",
+    { id: "t7", label: "T7", name: "Sage", family: "Earthy", vibe: "Soft, quiet and understated. Muted sage and stone greys keep everything low-contrast and calm; the least assertive option.", extra: "",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Sage 100"],[300,"Sage 300"],[500,"Sage 500"],[700,"Sage 700"],[900,"Sage 900"]], neu: [[50,"Stone White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Stone Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Primary 400"],[6,"Primary 600"]] },
+    { id: "t8", label: "T8", name: "Ochre", family: "Earthy", vibe: "Rich and heritage-like. Teal with an ochre gold accent on bone white; warmer and more characterful, still serious.", extra: "",
       prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Ochre 100"],[300,"Ochre 300"],[500,"Ochre 500"],[700,"Ochre 700"],[900,"Ochre 900"]], neu: [[50,"Bone White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Umber Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Primary 700"],[4,"Accent 400 (lighter)"],[5,"Primary 400"],[6,"Primary 600"]] },
+    { id: "t9", label: "T9", name: "Terracotta", family: "Mixed", vibe: "Confident and clear. A saturated terracotta against teal, kept calm by a cool frost page and petrol ink. Error red must stay distinct, so errors always carry an icon.", extra: "Its error red is close to the terracotta accent, so every error here carries an icon and a message, never colour alone.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Terracotta 100"],[300,"Terracotta 300"],[500,"Terracotta 500"],[700,"Terracotta 700"],[900,"Terracotta 900"]], neu: [[50,"Frost"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Petrol Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
+    { id: "t10", label: "T10", name: "Umber", family: "Mixed", vibe: "Serious and grounded. A dark umber accent gives weight without bright color; lichen page and green-grey ink keep it cool-leaning.", extra: "Weakest chart distinction of the set: series 1 to 3 are close in lightness, so the charts lean on dashes, markers, direct labels and printed values.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Umber 100"],[300,"Umber 300"],[500,"Umber 500"],[700,"Umber 700"],[900,"Umber 900"]], neu: [[50,"Lichen"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Lichen Ink"]], ser: [[1,"Primary 500"],[2,"Accent 500"],[3,"Primary 700"],[4,"Accent 400 (lighter)"],[5,"Primary 400"],[6,"Primary 600"]] },
   ];
-  var FAMS = ["Analogous", "Earthy"];
+  var FAMS = ["Analogous", "Earthy", "Mixed"];
   var STY = [
     { id: "clean", name: "Clean" }, { id: "soft", name: "Soft" }, { id: "bold", name: "Bold" }, { id: "dark", name: "Dark" }
   ];
   var SEM = [["success", "Success"], ["warning", "Warning"], ["error", "Error"], ["info", "Info"]];
   var WIDTHS = [["full", "Full width", ""], ["tablet", "Tablet 768", "768px"], ["phone", "Phone 390", "390px"]];
-  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"], ["all5", "Compare all 5"]];
+  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"], ["all10", "Compare all 10"]];
   var VARY = [["palette", "Vary palette"], ["style", "Vary style"]];
   var stage = document.getElementById("stage");
   var proto = stage.querySelector(".app").cloneNode(true);
@@ -820,7 +1167,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     o.palette = String(o.palette).toLowerCase();
     if (idx(PAL, o.palette) < 0) o.palette = "t1";
     if (idx(STY, o.style) < 0) o.style = "clean";
-    if (["single", "compare2", "compare4", "all5"].indexOf(o.view) < 0) o.view = "single";
+    if (["single", "compare2", "compare4", "all10"].indexOf(o.view) < 0) o.view = "single";
     if (o.vary !== "style") o.vary = "palette";
     if (!WIDTHS.some(function (w) { return w[0] === o.w; })) o.w = "full";
     return o;
@@ -828,7 +1175,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   function ser() {
     var s = "palette=" + st.palette + "&style=" + st.style;
     if (st.view === "compare2" || st.view === "compare4") s += "&view=" + st.view + "&vary=" + st.vary;
-    else if (st.view === "all5") s += "&view=all5";
+    else if (st.view === "all10") s += "&view=all10";
     else if (st.w !== "full") s += "&w=" + st.w;
     return s;
   }
@@ -858,7 +1205,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     STY.forEach(function (s) { b.appendChild(btn(s.name, s.id === st.style, function () { set("style", s.id); })); });
     var v = document.getElementById("view-seg"); v.replaceChildren();
     VIEWS.forEach(function (x) { v.appendChild(btn(x[1], x[0] === st.view, function () { set("view", x[0]); })); });
-    var y = document.getElementById("vary-seg"); y.replaceChildren(); y.hidden = st.view === "all5";
+    var y = document.getElementById("vary-seg"); y.replaceChildren(); y.hidden = st.view === "all10";
     VARY.forEach(function (x) { y.appendChild(btn(x[1], x[0] === st.vary, function () { set("vary", x[0]); })); });
     var w = document.getElementById("w-seg"); w.replaceChildren();
     WIDTHS.forEach(function (x) { w.appendChild(btn(x[1], x[0] === st.w, function () { set("w", x[0]); })); });
@@ -885,6 +1232,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     var host = document.getElementById("strip"); var p = PAL[idx(PAL, st.palette)];
     var probe = stage.querySelector(".app"); var cs = probe ? getComputedStyle(probe) : null;
     host.replaceChildren(el("h2", null, plabel(p) + " <small>" + p.family + "</small>"), el("p", null, p.vibe));
+    if (p.extra) host.appendChild(el("p", "ui-small warnnote", p.extra));
     host.appendChild(el("h3", null, "Brand colours"));
     var prim = el("div", "scale prim");
     p.prim.forEach(function (s) { prim.appendChild(scaleChip(cs, "", "--color-primary-" + s[0], s[0], s[1], s[0] === 500 ? "brand" : s[0] === 600 ? "action" : "")); });
@@ -911,7 +1259,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     host.appendChild(el("p", "ui-small", "Series 1 to 3 read apart without extra cues. From series 4 on, the charts add dashes, markers or direct labels, and so should any chart you add."));
   }
   function cells() {
-    if (st.view === "all5") return PAL.map(function (p) { return [p.id, st.style]; });
+    if (st.view === "all10") return PAL.map(function (p) { return [p.id, st.style]; });
     var n = st.view === "compare4" ? 4 : 2, out = [];
     var base = st.vary === "palette" ? idx(PAL, st.palette) : idx(STY, st.style);
     var len = st.vary === "palette" ? PAL.length : STY.length;
@@ -934,7 +1282,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
       var a = proto.cloneNode(true); a.setAttribute("data-palette", st.palette); a.setAttribute("data-style", st.style);
       f.appendChild(a); stage.appendChild(f); strip();
     } else {
-      var all = st.view === "all5";
+      var all = st.view === "all10";
       var g = el("div", all ? "grid g5" : "grid");
       cells().forEach(function (c) {
         var p = PAL[idx(PAL, c[0])];
