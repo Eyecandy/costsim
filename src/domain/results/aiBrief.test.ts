@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import {
-  AI_BRIEF_SCHEMA_VERSION,
   buildAiBriefOngoingDevelopment,
   buildAiBriefV3,
   buildDriverImpactEntries,
@@ -13,6 +12,7 @@ import {
   filterCheckpointsUpToViewed,
   mapContributionAnalysis,
 } from "@/domain/results/aiBrief"
+import { AI_BRIEF_SCHEMA_VERSION } from "@/domain/results/aiBriefTypes"
 import { messages } from "@/i18n/messages"
 import {
   archiveCheckpoint,
