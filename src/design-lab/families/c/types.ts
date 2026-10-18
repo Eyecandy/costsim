@@ -16,4 +16,6 @@ export type CVariant = {
   cardStyle: CardStyle
   /** How the cells in the tables look. */
   cellStyle: CellStyle
+  /** More room: taller rows and larger text, for a calmer page. */
+  airy?: boolean
 }

@@ -56,7 +56,7 @@ export function CPage({ variant }: { variant: CVariant }) {
               count={COST_ROWS.length}
               actions={<LabToolbar kind="cost" mode="icons" rowActions="inline" />}
             >
-              <CTable kind="cost" rows={COST_ROWS} style={cellStyle} />
+              <CTable kind="cost" rows={COST_ROWS} style={cellStyle} airy={variant.airy} />
             </CCard>
             <CCard
               style={cardStyle}
@@ -65,7 +65,7 @@ export function CPage({ variant }: { variant: CVariant }) {
               count={DRIVER_ROWS.length}
               actions={<LabToolbar kind="driver" mode="icons" rowActions="inline" />}
             >
-              <CTable kind="driver" rows={DRIVER_ROWS} style={cellStyle} />
+              <CTable kind="driver" rows={DRIVER_ROWS} style={cellStyle} airy={variant.airy} />
             </CCard>
           </div>
           <div className="grid gap-5 lg:grid-cols-3">

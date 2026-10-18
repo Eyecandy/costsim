@@ -98,16 +98,22 @@ export function CTable({
   kind,
   rows,
   style,
+  airy = false,
 }: {
   kind: "cost" | "driver"
   rows: readonly SampleRow[]
   style: CellStyle
+  airy?: boolean
 }) {
   const { t } = useI18n()
   const head = "px-2 py-1.5 text-[10px] font-medium tracking-wide text-muted-foreground uppercase"
   const range = style === "range"
+  const rowPad = airy ? "py-3.5" : "py-2"
   return (
-    <table className="w-full table-fixed border-collapse text-[12px]" data-cell-style={style}>
+    <table
+      className={cn("w-full table-fixed border-collapse", airy ? "text-[14px]" : "text-[12px]")}
+      data-cell-style={style}
+    >
       {/* Fixed widths: a cell is the same size whatever is typed in it. */}
       <colgroup>
         <col />
@@ -139,21 +145,21 @@ export function CTable({
                 : "",
             )}
           >
-            <td className="px-2 py-2 font-medium">
+            <td className={`px-2 ${rowPad} font-medium`}>
               <Value text={row.name} style={style === "pill" ? "underline" : style} align="left" />
             </td>
             {range ? (
-              <td className="px-2 py-2">
+              <td className={`px-2 ${rowPad}`}>
                 <RangeBar row={row} />
               </td>
             ) : null}
-            <td className="px-2 py-2 text-right">
+            <td className={`px-2 ${rowPad} text-right`}>
               <Value text={row.optimistic} style={style} />
             </td>
-            <td className="px-2 py-2 text-right">
+            <td className={`px-2 ${rowPad} text-right`}>
               <Value text={row.likely} style={style} />
             </td>
-            <td className="px-2 py-2 text-right">
+            <td className={`px-2 ${rowPad} text-right`}>
               <Value text={row.pessimistic} style={style} />
             </td>
           </tr>

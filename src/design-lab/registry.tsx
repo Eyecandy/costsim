@@ -4,6 +4,8 @@ import { B_VARIANTS } from "@/design-lab/families/b"
 import { BPage } from "@/design-lab/families/b/BPage"
 import { C_VARIANTS } from "@/design-lab/families/c"
 import { CPage } from "@/design-lab/families/c/CPage"
+import { D_VARIANTS } from "@/design-lab/families/d"
+import { DPage } from "@/design-lab/families/d/DPage"
 import { LabPage } from "@/design-lab/LabPage"
 import { VARIANTS } from "@/design-lab/variants"
 
@@ -12,7 +14,7 @@ import { VARIANTS } from "@/design-lab/variants"
  * are small steps on the same idea; a new family is for something that is not a step on the others.
  * To add one: a folder under `families/`, its variants, an entry here (see README).
  */
-export type FamilyId = "a" | "b" | "c"
+export type FamilyId = "a" | "b" | "c" | "d"
 
 export type LabFamily = { id: FamilyId; name: string; description: string }
 
@@ -34,6 +36,12 @@ export const FAMILIES: readonly LabFamily[] = [
     name: "Kort og celler",
     description:
       "Samme enkle side, men fokus på hvordan kortene og cellene ser ut: myke, flate, omrammede eller fargede kort, og celler som understrek, felt, piller, sebra eller spredningsstolper. Bibliotek med søk og mapper til venstre.",
+  },
+  {
+    id: "d",
+    name: "Veiviser",
+    description:
+      "Helt annerledes: ett steg om gangen (prosjekt, kostnadsposter, drivere, resultat) med en stegindikator, korte forklaringer og store, rolige celler. For den som ikke kan hele siden fra før.",
   },
 ]
 
@@ -69,6 +77,16 @@ export const ENTRIES: readonly LabEntry[] = [
     notes: [],
     changes: variant.changes,
     render: () => <CPage variant={variant} />,
+  })),
+  ...D_VARIANTS.map((variant): LabEntry => ({
+    key: `d${variant.id}`,
+    family: "d",
+    id: variant.id,
+    title: variant.title,
+    description: variant.description,
+    notes: [],
+    changes: variant.changes,
+    render: () => <DPage variant={variant} />,
   })),
   ...B_VARIANTS.map((variant): LabEntry => ({
     key: `b${variant.id}`,

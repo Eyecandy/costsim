@@ -7,6 +7,8 @@ import { B_VARIANTS } from "@/design-lab/families/b"
 import { BPage } from "@/design-lab/families/b/BPage"
 import { C_VARIANTS } from "@/design-lab/families/c"
 import { CPage } from "@/design-lab/families/c/CPage"
+import { D_VARIANTS } from "@/design-lab/families/d"
+import { DPage } from "@/design-lab/families/d/DPage"
 import { LabGallery } from "@/design-lab/Gallery"
 import { LabPage } from "@/design-lab/LabPage"
 import { ENTRIES, entryByKey, entryLabel, entryPath, FAMILIES } from "@/design-lab/registry"
@@ -365,6 +367,33 @@ describe("design families", () => {
     const active = screen.getByRole("button", { current: "step" })
     expect(active.className).toContain("--lab-accent")
   })
+
+  for (const variant of D_VARIANTS) {
+    it(`D${variant.id} ${variant.title} walks through the steps`, async () => {
+      const user = userEvent.setup()
+      render(
+        <I18nProvider>
+          <DPage variant={variant} />
+        </I18nProvider>,
+      )
+      const steps = screen.getByRole("list", { name: "Steg" })
+      expect(within(steps).getAllByRole("listitem")).toHaveLength(4)
+      // step 1: Previous is disabled
+      expect(screen.getByRole("button", { name: /Forrige steg/ })).toBeDisabled()
+      await user.click(screen.getByRole("button", { name: /Neste steg/ }))
+      expect(screen.getByRole("heading", { name: /2\. Kostnadsposter/ })).toBeVisible()
+      expect(screen.getByRole("table")).toHaveClass("table-fixed")
+      // the other input stays in view as a summary
+      expect(screen.getByRole("complementary", { name: "Oppsummering" })).toHaveTextContent(
+        "Drivere",
+      )
+      await user.click(screen.getByRole("button", { name: /Neste steg/ }))
+      await user.click(screen.getByRole("button", { name: /Neste steg/ }))
+      expect(screen.getByRole("heading", { name: /4\. Resultat/ })).toBeVisible()
+      // the next checkpoint is locked until the open one is archived
+      expect(screen.getByRole("button", { name: /Neste checkpoint/ })).toBeDisabled()
+    })
+  }
 
   for (const variant of C_VARIANTS) {
     it(`C${variant.id} ${variant.title} has fixed-size cells and a library with folders`, async () => {
