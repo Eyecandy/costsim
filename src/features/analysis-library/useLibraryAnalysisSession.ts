@@ -1,16 +1,21 @@
+import type {
+  CommitOngoingDraftResultInput,
+  CommitSingleDraftResultInput,
+  LibraryDocMeta,
+  LibrarySaveStatus,
+  LibrarySessionArgs,
+  LiveArchiveState,
+} from "@/features/analysis-library/session/sessionTypes"
+import type { LibrarySessionContext } from "@/features/analysis-library/session/sessionContext"
+import { useArchiveCommands } from "@/features/analysis-library/session/useArchiveCommands"
+import { useOngoingCheckpointCommands } from "@/features/analysis-library/session/useOngoingCheckpointCommands"
+import { restoreDraftResultPreferences } from "@/features/analysis-library/session/sessionSupport"
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react"
 
-import type { AnalysisMode, AnalysisStatus } from "@/domain/analysis/analysisDocument"
+import type { AnalysisStatus } from "@/domain/analysis/analysisDocument"
+import { DEFAULT_ANALYSIS_MODE, nowIso } from "@/domain/analysis/analysisDocument"
 import {
-  DEFAULT_ANALYSIS_MODE,
-  isAnalysisTrashed,
-  nowIso,
-} from "@/domain/analysis/analysisDocument"
-import {
-  archiveCheckpoint,
   canCreateNextCheckpoint,
-  createNextCheckpoint,
-  deleteActiveDraftCheckpoint,
   ensureSingleProjectWorkspace,
   getActiveCheckpoint,
   getCompleteOngoingAnalysisBlockReason,
@@ -19,12 +24,8 @@ import {
   getLatestCheckpoint,
   MAX_CHECKPOINTS,
   resolveActiveCheckpointOnLoad,
-  selectCheckpoint as selectCheckpointInState,
   syncActiveCheckpointWorkspace,
   type AnalysisCheckpoint,
-  type CompleteOngoingAnalysisBlockReason,
-  type CreateNextCheckpointBlockReason,
-  type DeleteActiveDraftCheckpointBlockReason,
   type OngoingAnalysisState,
 } from "@/domain/analysis/analysisCheckpoint"
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
@@ -42,12 +43,7 @@ import {
 } from "@/domain/analysis/buildArchivedAnalysisSnapshot"
 import type { DraftResultSeedV1 } from "@/domain/analysis/draftResultSeed"
 import { logError } from "@/shared/logError"
-import type { Project } from "@/domain/analysis/project"
-import {
-  cloneResultPreferences,
-  normalizeResultPreferences,
-  type ResultPreferencesV1,
-} from "@/domain/results/resultPreferences"
+import { cloneResultPreferences } from "@/domain/results/resultPreferences"
 import {
   omitDraftResultFields,
   replaceDraftResultField,
@@ -55,20 +51,7 @@ import {
 import type { AnalysisDocument } from "@/domain/analysis/analysisDocument"
 import type { ShapleyAttributionResult } from "@/domain/simulation/shapleyAttribution"
 import {
-  canStartOngoingFromArchivedSingle,
-  planCreateOngoingFromArchivedSingle,
-  resolveArchivedSingleAlternatives,
-  type StartOngoingFromArchivedSingleBlockReason,
-} from "@/domain/analysis/createOngoingFromArchivedSingle"
-import {
-  buildShapleyWorkerRequest,
-  runShapleyAttributionForPayload,
-} from "@/domain/simulation/shapleyWorkerMessages"
-import { percentile } from "@/domain/simulation/stats"
-import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import {
   buildOngoingCheckpointResultSnapshot,
-  freezeOngoingCompactForArchive,
   isOngoingCheckpointResultSnapshot,
   type OngoingCheckpointResultSnapshotV1,
 } from "@/domain/analysis/ongoingCheckpointResultSnapshot"
@@ -77,120 +60,25 @@ import {
   pickAuthoritativeOngoingDraftResult,
 } from "@/domain/analysis/ongoingDraftResultCommit"
 import { getSimulationRunIdForProject } from "@/domain/simulation/simulationRunId"
-import {
-  buildSingleArchivedResultSnapshot,
-  type SingleAnalysisArchivedSnapshot,
-} from "@/domain/analysis/singleArchivedResultSnapshot"
+import { type SingleAnalysisArchivedSnapshot } from "@/domain/analysis/singleArchivedResultSnapshot"
 import {
   buildSingleDraftFromCompactSeed,
   buildSingleDraftResultSnapshot,
-  freezeSingleDraftForArchive,
   pickAuthoritativeSingleDraftResult,
   singleDraftResultIdentityMatches,
   type SingleDraftResultSnapshotV1,
 } from "@/domain/analysis/singleDraftResultSnapshot"
 
-export type CommitOngoingDraftResultInput = {
-  analysisId: string
-  checkpointId: string
-  projects: readonly Project[]
-  activeProjectId: string
-  projectResults: readonly ProjectResult[]
-  simulatedBaseCostByProjectId: Readonly<Record<string, number | null>>
-  inputSignature: string
-  simulationCount: number
-  resultPreferences: ResultPreferencesV1
-  simulationRunIdByProjectId: Readonly<Record<string, string>>
-}
-
-export type CommitSingleDraftResultInput = {
-  analysisId: string
-  projects: readonly Project[]
-  activeProjectId: string
-  projectResults: readonly ProjectResult[]
-  simulatedBaseCostByProjectId: Readonly<Record<string, number | null>>
-  inputSignature: string
-  simulationCount: number
-  resultPreferences: ResultPreferencesV1
-  simulationRunIdByProjectId: Readonly<Record<string, string>>
-}
-
-function restoreDraftResultPreferences(
-  doc: AnalysisDocument,
-  replacePreferences: (next: ResultPreferencesV1) => void,
-): void {
-  if (doc.status !== "draft" || !doc.draftResultPreferences) return
-  replacePreferences(normalizeResultPreferences(doc.draftResultPreferences))
-}
-
-function computeShapleyByProjectIdForArchive(
-  projects: readonly Project[],
-  projectResults: readonly ProjectResult[],
-): Record<string, ShapleyAttributionResult | null> {
-  const shapleyByProjectId: Record<string, ShapleyAttributionResult | null> = {}
-  for (const project of projects) {
-    const pr = projectResults.find((r) => r.projectId === project.id)
-    if (!pr || pr.values.length === 0) {
-      shapleyByProjectId[project.id] = null
-      continue
-    }
-    const request = buildShapleyWorkerRequest(
-      project,
-      percentile(pr.values, 50),
-      percentile(pr.values, 85),
-      "archive",
-    )
-    if (!request) {
-      shapleyByProjectId[project.id] = null
-      continue
-    }
-    shapleyByProjectId[project.id] = runShapleyAttributionForPayload(
-      request.payload,
-      request.mainSimulationP50,
-      request.mainSimulationP85,
-    )
-  }
-  return shapleyByProjectId
-}
-
-export type LibrarySaveStatus = "idle" | "saving" | "saved" | "error" | "error_quota"
-
-export type ArchiveCurrentResult =
-  { ok: true; doc: AnalysisDocument } | { ok: false; reason: ArchiveBlockReason }
-
-export type ArchiveCheckpointResult =
-  { ok: true; ongoing: OngoingAnalysisState } | { ok: false; reason: ArchiveBlockReason }
-
-export type CreateNextCheckpointSessionResult =
-  | {
-      ok: true
-      ongoing: OngoingAnalysisState
-      newCheckpoint: AnalysisCheckpoint
-    }
-  | {
-      ok: false
-      reason: CreateNextCheckpointBlockReason | "persistence_failed"
-    }
-
-/**
- * Deletes only the tip draft checkpoint inside an Ongoing Analysis.
- * Never moves the AnalysisDocument to Trash or sets deletedAt.
- */
-export type DeleteActiveDraftCheckpointSessionResult =
-  | {
-      ok: true
-      ongoing: OngoingAnalysisState
-      restoredCheckpoint: AnalysisCheckpoint
-      deletedCheckpointId: string
-    }
-  | {
-      ok: false
-      reason: DeleteActiveDraftCheckpointBlockReason | "persistence_failed"
-    }
-
-export type CompleteOngoingAnalysisResult =
-  | { ok: true; doc: AnalysisDocument }
-  | { ok: false; reason: CompleteOngoingAnalysisBlockReason | "persistence_failed" }
+export type {
+  ArchiveCheckpointResult,
+  ArchiveCurrentResult,
+  CommitOngoingDraftResultInput,
+  CommitSingleDraftResultInput,
+  CompleteOngoingAnalysisResult,
+  CreateNextCheckpointSessionResult,
+  DeleteActiveDraftCheckpointSessionResult,
+  LibrarySaveStatus,
+} from "@/features/analysis-library/session/sessionTypes"
 
 /**
  * Loads an AnalysisDocument when `?analysis=` is present and autosaves drafts.
@@ -199,40 +87,12 @@ export type CompleteOngoingAnalysisResult =
  * Ongoing ownership: session/domain syncs active draft workspace locally;
  * repository persists the supplied document without mutating Ongoing structure.
  */
-export function useLibraryAnalysisSession(args: {
-  projects: Project[]
-  activeProjectId: string
-  setProjects: (projects: Project[] | ((prev: Project[]) => Project[])) => void
-  setActiveProjectId: (id: string) => void
-  projectResults: ProjectResult[]
-  simulatedBaseCostByProjectId: Record<string, number | null>
-  lastSimulatedInputSignature: string
-  simulationCount: number
-  simulationRunIdByProjectId?: Readonly<Record<string, string>>
-  resultPreferences: ResultPreferencesV1
-  /** Live simulation ownership (analysis + checkpoint at run). */
-  liveSimulationAnalysisId?: string | null
-  liveSimulationCheckpointId?: string | null
-  applyArchivedResults: (source: { archivedSnapshot?: SingleAnalysisArchivedSnapshot }) => void
-  applyOngoingCompactResult: (snapshot: OngoingCheckpointResultSnapshotV1) => void
-  applySingleDraftResult: (snapshot: SingleDraftResultSnapshotV1) => void
-  applyDraftResultSeed: (seed: DraftResultSeedV1) => void
-  clearResults: () => void
-  /** Hydrate App Result Settings after compact/archive apply (draft presentation). */
-  replacePreferences: (next: ResultPreferencesV1) => void
-}) {
+export function useLibraryAnalysisSession(args: LibrarySessionArgs) {
   const repo = getAnalysisLibraryRepository()
   // Re-read when pathname or search changes (e.g. analysis A → B on /app).
   useSyncExternalStore(subscribeLocation, getLocationPathKey, () => "/")
   const analysisId = readAnalysisIdFromLocation()
-  const [docMeta, setDocMeta] = useState<{
-    id: string
-    name: string
-    status: AnalysisStatus
-    folderId: string | null
-    analysisMode: AnalysisMode
-    previousVersionId?: string
-  } | null>(null)
+  const [docMeta, setDocMeta] = useState<LibraryDocMeta | null>(null)
   const [ongoing, setOngoing] = useState<OngoingAnalysisState | null>(null)
   const ongoingRef = useRef<OngoingAnalysisState | null>(null)
   ongoingRef.current = ongoing
@@ -268,7 +128,7 @@ export function useLibraryAnalysisSession(args: {
   }, [])
 
   /** Live App result/input state for archive eligibility (avoids stale closures). */
-  const liveArchiveStateRef = useRef({
+  const liveArchiveStateRef = useRef<LiveArchiveState>({
     projects: args.projects,
     activeProjectId: args.activeProjectId,
     projectResults: args.projectResults,
@@ -834,189 +694,37 @@ export function useLibraryAnalysisSession(args: {
     enqueueSave,
   ])
 
-  const archiveCurrent = useCallback(async (): Promise<ArchiveCurrentResult> => {
-    if (!docMeta || docMeta.status !== "draft") {
-      return { ok: false, reason: "not_draft" }
-    }
-    if (checkpointReadOnly) {
-      return { ok: false, reason: "not_draft" }
-    }
-    const blockReason = readLiveArchiveBlockReason()
-    if (blockReason) {
-      return { ok: false, reason: blockReason }
-    }
-
-    // Cancel any debounced autosave so it cannot fire mid-archive.
-    if (saveTimerRef.current) {
-      clearTimeout(saveTimerRef.current)
-      saveTimerRef.current = null
-    }
-
-    const live = liveArchiveStateRef.current
-    let snapshot: SingleAnalysisArchivedSnapshot
-    if (live.projectResults.length > 0 && live.lastSimulatedInputSignature.trim() !== "") {
-      const shapleyByProjectId = computeShapleyByProjectIdForArchive(
-        live.projects,
-        live.projectResults,
-      )
-      snapshot = buildSingleArchivedResultSnapshot({
-        analysisId: docMeta.id,
-        projects: live.projects,
-        activeProjectId: live.activeProjectId,
-        projectResults: live.projectResults,
-        simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
-        inputSignature: live.lastSimulatedInputSignature,
-        simulationCount: live.simulationCount,
-        resultPreferences: live.resultPreferences,
-        shapleyByProjectId,
-        simulationRunIdByProjectId: live.simulationRunIdByProjectId,
-      })
-    } else if (
-      singleDraftResultRef.current &&
-      singleDraftResultRef.current.analysisId === docMeta.id
-    ) {
-      snapshot = freezeSingleDraftForArchive({
-        draft: singleDraftResultRef.current,
-        projects: live.projects,
-        resultPreferences: live.resultPreferences,
-      })
-    } else {
-      return { ok: false, reason: "no_results" }
-    }
-
-    const analysisIdToArchive = docMeta.id
-    const archiveHolder: { doc: AnalysisDocument | null } = { doc: null }
-
-    // Serialize behind in-flight draft saves so a stale saveDraft cannot
-    // overwrite the archived document afterward.
-    try {
-      await enqueueSave(async () => {
-        const existing = await repo.get(analysisIdToArchive)
-        if (!existing || existing.status !== "draft" || existing.deletedAt) {
-          throw new Error("not_draft")
-        }
-        archiveHolder.doc = await repo.archive({
-          analysisId: analysisIdToArchive,
-          snapshot,
-        })
-      })
-    } catch (error) {
-      logError("archive current analysis", error)
-      /* archiveHolder.doc stays null */
-    }
-
-    const archived = archiveHolder.doc
-    if (!archived) {
-      return { ok: false, reason: "persistence_failed" }
-    }
-
-    skipNextSaveRef.current = true
-    setDocMeta({
-      id: archived.id,
-      name: archived.name,
-      status: archived.status,
-      folderId: archived.folderId,
-      analysisMode: archived.analysisMode ?? docMeta.analysisMode,
-      previousVersionId: archived.previousVersionId,
-    })
-    setOngoing(archived.ongoing ?? null)
-    setArchivedSnapshot(archived.archivedSnapshot ?? snapshot)
-    setDraftResultSeed(null)
-    setSingleDraftResult(null)
-    return { ok: true, doc: archived }
-  }, [checkpointReadOnly, docMeta, enqueueSave, readLiveArchiveBlockReason, repo])
-
-  const createNewVersion = useCallback(
-    async (versionSuffix: string) => {
-      if (!docMeta || docMeta.status !== "archived") return null
-      const draft = await repo.createDraftFromArchived({
-        archivedId: docMeta.id,
-        name: `${docMeta.name}${versionSuffix}`,
-      })
-      return draft
-    },
-    [docMeta, repo],
-  )
-
-  /**
-   * New Ongoing Analysis from the current archived Single Analysis.
-   * Copy/import only — never mutates the source.
-   *
-   * - No selectedProjectId → { need_selection, projects } (always; dialog collects name)
-   * - With selectedProjectId (+ optional name) → creates with that alternative
-   */
-  const beginStartOngoingFromArchived = useCallback(
-    async (
-      selectedProjectId?: string,
-      name?: string,
-    ): Promise<
-      | { ok: true; doc: AnalysisDocument }
-      | {
-          ok: false
-          reason: StartOngoingFromArchivedSingleBlockReason
-          projects?: { id: string; name: string }[]
-        }
-    > => {
-      if (!docMeta || docMeta.status !== "archived") {
-        return { ok: false, reason: "not_archived" }
-      }
-      if (docMeta.analysisMode !== "single") {
-        return { ok: false, reason: "not_single" }
-      }
-      if (!canStartOngoingFromArchivedSingle({ ...docMeta, deletedAt: null })) {
-        return { ok: false, reason: "not_archived" }
-      }
-
-      const source = await repo.get(docMeta.id)
-      if (!source) return { ok: false, reason: "not_found" }
-      if (isAnalysisTrashed(source)) return { ok: false, reason: "trashed" }
-
-      // Always open the create dialog so the user can confirm/edit the analysis name.
-      if (!selectedProjectId) {
-        const projects = resolveArchivedSingleAlternatives(source).map((p) => ({
-          id: p.id,
-          name: p.name,
-        }))
-        if (!projects.length) return { ok: false, reason: "empty" }
-        return { ok: false, reason: "need_selection", projects }
-      }
-
-      const planned = planCreateOngoingFromArchivedSingle(source, {
-        selectedProjectId,
-        name,
-      })
-      if (!planned.ok) {
-        if (planned.reason === "need_selection" && planned.projects) {
-          return {
-            ok: false,
-            reason: "need_selection",
-            projects: planned.projects.map((p) => ({
-              id: p.id,
-              name: p.name,
-            })),
-          }
-        }
-        return { ok: false, reason: planned.reason }
-      }
-
-      const doc = await repo.createOngoingFromArchivedSingle({
-        archivedId: source.id,
-        selectedProjectId: planned.plan.sourceProjectId,
-        name,
-      })
-      return { ok: true, doc }
-    },
-    [docMeta, repo],
-  )
-
-  /** @deprecated Prefer beginStartOngoingFromArchived */
-  const startOngoingFromArchived = useCallback(
-    async (selectedProjectId: string, name?: string) => {
-      const result = await beginStartOngoingFromArchived(selectedProjectId, name)
-      return result.ok ? result.doc : null
-    },
-    [beginStartOngoingFromArchived],
-  )
+  const sessionContext: LibrarySessionContext = {
+    args,
+    repo,
+    docMeta,
+    ongoing,
+    checkpointReadOnly,
+    enqueueSave,
+    setSaveStatusSafe,
+    readLiveArchiveBlockReason,
+    applyCheckpointView,
+    ongoingRef,
+    saveTimerRef,
+    skipNextSaveRef,
+    loadedIdRef,
+    draftResultSeedRef,
+    ongoingDraftResultRef,
+    singleDraftResultRef,
+    liveArchiveStateRef,
+    setDocMeta,
+    setOngoing,
+    setDraftResultSeed,
+    setOngoingDraftResult,
+    setArchivedSnapshot,
+    setSingleDraftResult,
+  }
+  const {
+    archiveCurrent,
+    createNewVersion,
+    beginStartOngoingFromArchived,
+    startOngoingFromArchived,
+  } = useArchiveCommands(sessionContext)
 
   const clearDraftResultSeed = useCallback(async () => {
     setDraftResultSeed(null)
@@ -1140,534 +848,13 @@ export function useLibraryAnalysisSession(args: {
     setSaveStatusSafe,
   ])
 
-  /**
-   * Ongoing mode: freeze the active draft checkpoint. Document stays draft;
-   * the ongoing analysis remains active (not completed).
-   */
-  const archiveActiveCheckpoint = useCallback(async (): Promise<ArchiveCheckpointResult> => {
-    if (!docMeta || docMeta.status !== "draft") {
-      return { ok: false, reason: "not_draft" }
-    }
-    if (docMeta.analysisMode !== "ongoing") {
-      return { ok: false, reason: "not_ongoing" }
-    }
-
-    const liveOngoing = ongoingRef.current
-    if (!liveOngoing) {
-      return { ok: false, reason: "not_ongoing" }
-    }
-    const liveActive = getActiveCheckpoint(liveOngoing)
-    if (!liveActive || liveActive.status !== "draft") {
-      return { ok: false, reason: "not_draft" }
-    }
-
-    const blockReason = readLiveArchiveBlockReason()
-    if (blockReason) {
-      return { ok: false, reason: blockReason }
-    }
-
-    try {
-      await flushPendingSave()
-    } catch (error) {
-      logError("flush pending save before archiving the checkpoint", error)
-      /* continue with current App state */
-    }
-
-    const live = liveArchiveStateRef.current
-    const compactDraft = ongoingDraftResultRef.current
-    // Re-check after flush — same canonical validity model (live arrays or compact).
-    const blockAfterFlush = getArchiveBlockReason({
-      analysisId: docMeta.id,
-      checkpointId: ongoingRef.current?.activeCheckpointId ?? null,
-      projects: live.projects,
-      projectResults: live.projectResults,
-      lastSimulatedInputSignature: live.lastSimulatedInputSignature,
-      simulationState: {
-        analysisId: live.liveSimulationAnalysisId,
-        checkpointId: live.liveSimulationCheckpointId,
-        inputSignature: live.lastSimulatedInputSignature,
-        projectResults: live.projectResults,
-        simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
-        activeProjectIdAtRun: live.activeProjectId,
-        simulationCount: live.simulationCount,
-        projectsAtRun: [],
-      },
-      ongoingCompactResult: compactDraft,
-      resultPreferences: live.resultPreferences,
-    })
-    if (blockAfterFlush) {
-      return { ok: false, reason: blockAfterFlush }
-    }
-
-    const authoritativeOngoing = ongoingRef.current
-    if (!authoritativeOngoing) {
-      return { ok: false, reason: "not_ongoing" }
-    }
-    const activeId = authoritativeOngoing.activeCheckpointId
-    const active = getActiveCheckpoint(authoritativeOngoing)
-    if (!active || active.status !== "draft") {
-      return { ok: false, reason: "not_draft" }
-    }
-
-    const archivedAt = nowIso()
-    let snapshot: OngoingCheckpointResultSnapshotV1
-    if (live.projectResults.length > 0) {
-      const shapleyByProjectId = computeShapleyByProjectIdForArchive(
-        live.projects,
-        live.projectResults,
-      )
-      snapshot = buildOngoingCheckpointResultSnapshot({
-        analysisId: docMeta.id,
-        checkpointId: activeId,
-        projects: live.projects,
-        activeProjectId: live.activeProjectId,
-        projectResults: live.projectResults,
-        simulatedBaseCostByProjectId: live.simulatedBaseCostByProjectId,
-        inputSignature: live.lastSimulatedInputSignature,
-        simulationCount: live.simulationCount,
-        resultPreferences: live.resultPreferences,
-        shapleyByProjectId,
-        computedAt: archivedAt,
-        simulationRunIdByProjectId: live.simulationRunIdByProjectId,
-      })
-    } else if (compactDraft && isOngoingCheckpointResultSnapshot(compactDraft)) {
-      snapshot = freezeOngoingCompactForArchive(compactDraft, {
-        computedAt: archivedAt,
-        resultPreferences: live.resultPreferences,
-      })
-    } else {
-      return { ok: false, reason: "no_results" }
-    }
-
-    // Sync live editor workspace into the active draft, then archive that checkpoint.
-    const synced = syncActiveCheckpointWorkspace(authoritativeOngoing, {
-      projects: live.projects,
-      activeProjectId: live.activeProjectId,
-    })
-    const nextOngoing = archiveCheckpoint(synced, activeId, snapshot, archivedAt)
-    const frozen = nextOngoing.checkpoints.find((c) => c.id === activeId)
-
-    skipNextSaveRef.current = true
-    try {
-      await enqueueSave(async () => {
-        const existing = await repo.get(docMeta.id)
-        if (!existing || existing.status !== "draft" || existing.deletedAt) {
-          throw new Error("not_draft")
-        }
-        await repo.saveDraft(
-          omitDraftResultFields(
-            {
-              ...existing,
-              ongoing: nextOngoing,
-              workspace: frozen
-                ? ensureSingleProjectWorkspace(frozen.workspace)
-                : ensureSingleProjectWorkspace({
-                    projects: live.projects,
-                    activeProjectId: live.activeProjectId,
-                  }),
-            },
-            "draftResultSeed",
-            "ongoingDraftResult",
-          ),
-        )
-      })
-    } catch (error) {
-      logError("archive active checkpoint", error)
-      return { ok: false, reason: "persistence_failed" }
-    }
-    setOngoing(nextOngoing)
-    ongoingRef.current = nextOngoing
-    setDraftResultSeed(null)
-    setOngoingDraftResult(null)
-    if (frozen) {
-      applyCheckpointView(frozen, "draft")
-    }
-    return { ok: true, ongoing: nextOngoing }
-  }, [
-    applyCheckpointView,
-    docMeta,
-    enqueueSave,
-    flushPendingSave,
-    readLiveArchiveBlockReason,
-    repo,
-  ])
-
-  const completeOngoingAnalysisSession =
-    useCallback(async (): Promise<CompleteOngoingAnalysisResult> => {
-      if (!docMeta) {
-        return { ok: false, reason: "not_found" }
-      }
-      const block = getCompleteOngoingAnalysisBlockReason({
-        status: docMeta.status,
-        analysisMode: docMeta.analysisMode,
-        ongoing: ongoingRef.current,
-      })
-      if (block) {
-        return { ok: false, reason: block }
-      }
-
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current)
-        saveTimerRef.current = null
-      }
-
-      const analysisIdToComplete = docMeta.id
-      const holder: { doc: AnalysisDocument | null } = { doc: null }
-
-      try {
-        await enqueueSave(async () => {
-          const existing = await repo.get(analysisIdToComplete)
-          const recheck = getCompleteOngoingAnalysisBlockReason({
-            status: existing?.status,
-            analysisMode: existing?.analysisMode,
-            ongoing: existing?.ongoing,
-          })
-          if (recheck) {
-            throw new Error(recheck)
-          }
-          holder.doc = await repo.completeOngoingAnalysis(analysisIdToComplete)
-        })
-      } catch (error) {
-        logError("complete ongoing analysis", error)
-        /* holder.doc stays null */
-      }
-
-      const completed = holder.doc
-      if (!completed) {
-        // Prefer a fresh precondition reason over a generic persistence failure.
-        const after = await repo.get(analysisIdToComplete).catch(() => null)
-        const stillBlocked = getCompleteOngoingAnalysisBlockReason({
-          status: after?.status ?? docMeta.status,
-          analysisMode: after?.analysisMode ?? docMeta.analysisMode,
-          ongoing: after?.ongoing ?? ongoingRef.current,
-        })
-        if (stillBlocked) {
-          return { ok: false, reason: stillBlocked }
-        }
-        return { ok: false, reason: "persistence_failed" }
-      }
-
-      // Only update UI after durable persistence of completed + archived.
-      skipNextSaveRef.current = true
-      setDocMeta({
-        id: completed.id,
-        name: completed.name,
-        status: completed.status,
-        folderId: completed.folderId,
-        analysisMode: completed.analysisMode ?? docMeta.analysisMode,
-        previousVersionId: completed.previousVersionId,
-      })
-      setOngoing(completed.ongoing ?? null)
-      ongoingRef.current = completed.ongoing ?? null
-      setDraftResultSeed(null)
-      draftResultSeedRef.current = null
-      const tip =
-        completed.ongoing != null
-          ? (getActiveCheckpoint(completed.ongoing) ?? getLatestCheckpoint(completed.ongoing))
-          : null
-      if (tip?.archivedSnapshot) {
-        setArchivedSnapshot(tip.archivedSnapshot)
-        if (isOngoingCheckpointResultSnapshot(tip.archivedSnapshot)) {
-          args.applyOngoingCompactResult(tip.archivedSnapshot)
-        } else {
-          args.applyArchivedResults({ archivedSnapshot: tip.archivedSnapshot })
-        }
-        args.setProjects(ensureSingleProjectWorkspace(tip.workspace).projects)
-        args.setActiveProjectId(ensureSingleProjectWorkspace(tip.workspace).activeProjectId)
-      } else if (completed.archivedSnapshot) {
-        setArchivedSnapshot(completed.archivedSnapshot)
-        args.applyArchivedResults(completed)
-      }
-      return { ok: true, doc: completed }
-    }, [args, docMeta, enqueueSave, repo])
-
-  const createNextCheckpointSession = useCallback(
-    async (name: string): Promise<CreateNextCheckpointSessionResult> => {
-      if (!docMeta || docMeta.status !== "draft") {
-        return { ok: false, reason: "empty" }
-      }
-      if (docMeta.analysisMode !== "ongoing") {
-        return { ok: false, reason: "empty" }
-      }
-      try {
-        await flushPendingSave()
-      } catch (error) {
-        logError("flush pending save before creating the next checkpoint", error)
-        /* still attempt from live session state */
-      }
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current)
-        saveTimerRef.current = null
-      }
-      const existing = await repo.get(docMeta.id)
-      if (!existing || existing.status !== "draft") {
-        return { ok: false, reason: "empty" }
-      }
-      const baseOngoing = ongoingRef.current ?? existing.ongoing
-      if (!baseOngoing) {
-        return { ok: false, reason: "empty" }
-      }
-      const created = createNextCheckpoint(baseOngoing, {
-        name,
-        createdAt: nowIso(),
-        analysisName: existing.name,
-        analysisId: existing.id,
-      })
-      if (!created.ok) return created
-
-      const inheritedResult = {
-        ...created.inheritedResult,
-        projectsAtRun:
-          created.inheritedResult.projectsAtRun && created.inheritedResult.projectsAtRun.length > 0
-            ? created.inheritedResult.projectsAtRun
-            : (structuredClone(created.newCheckpoint.workspace.projects) as Project[]),
-      }
-
-      const nextWorkspace = ensureSingleProjectWorkspace(created.newCheckpoint.workspace)
-      const saveDocId = docMeta.id
-      skipNextSaveRef.current = true
-      setSaveStatusSafe("saving")
-      try {
-        await enqueueSave(async () => {
-          const latest = await repo.get(saveDocId)
-          if (!latest || latest.status !== "draft" || latest.deletedAt) {
-            throw new Error("create_next_save_failed")
-          }
-          // Persist the candidate CP2 document explicitly — do not commit
-          // runtime/UI until this write succeeds.
-          let createNextDoc: AnalysisDocument = {
-            ...latest,
-            ongoing: created.ongoing,
-            workspace: nextWorkspace,
-            ...replaceDraftResultField("ongoingDraftResult", inheritedResult),
-          }
-          if (createNextDoc.draftResultSeed) {
-            createNextDoc = omitDraftResultFields(createNextDoc, "draftResultSeed")
-          }
-          await repo.saveDraft(createNextDoc)
-
-          // Commit session refs inside the same serialized save op so any
-          // later chain reader sees CP2 (never a pre-createNext CP1 overwrite).
-          ongoingRef.current = created.ongoing
-          draftResultSeedRef.current = null
-          ongoingDraftResultRef.current = inheritedResult
-          liveArchiveStateRef.current = {
-            ...liveArchiveStateRef.current,
-            projects: nextWorkspace.projects,
-            activeProjectId: nextWorkspace.activeProjectId,
-          }
-        })
-      } catch (error) {
-        if (loadedIdRef.current === saveDocId) {
-          setSaveStatusSafe(librarySaveStatusFromError(error))
-        }
-        return { ok: false, reason: "persistence_failed" }
-      }
-
-      skipNextSaveRef.current = true
-      setOngoing(created.ongoing)
-      setDraftResultSeed(null)
-      setOngoingDraftResult(inheritedResult)
-      setArchivedSnapshot(null)
-      args.setProjects(nextWorkspace.projects)
-      args.setActiveProjectId(nextWorkspace.activeProjectId)
-      args.applyOngoingCompactResult(inheritedResult)
-      if (loadedIdRef.current === saveDocId) {
-        setSaveStatusSafe("saved")
-      }
-      return {
-        ok: true,
-        ongoing: created.ongoing,
-        newCheckpoint: created.newCheckpoint,
-      }
-    },
-    [args, docMeta, enqueueSave, flushPendingSave, repo, setSaveStatusSafe],
-  )
-
-  /**
-   * Durable-first removal of the tip draft checkpoint only.
-   * Uses saveDraft — never moveToTrash / deletedAt / analysis delete.
-   */
-  const deleteActiveDraftCheckpointSession =
-    useCallback(async (): Promise<DeleteActiveDraftCheckpointSessionResult> => {
-      if (!docMeta || docMeta.status !== "draft") {
-        return { ok: false, reason: "empty" }
-      }
-      if (docMeta.analysisMode !== "ongoing") {
-        return { ok: false, reason: "empty" }
-      }
-      try {
-        await flushPendingSave()
-      } catch (error) {
-        logError("flush pending save before deleting the draft checkpoint", error)
-        /* still attempt from live session state */
-      }
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current)
-        saveTimerRef.current = null
-      }
-
-      const existing = await repo.get(docMeta.id)
-      if (!existing || existing.status !== "draft" || existing.deletedAt) {
-        return { ok: false, reason: "empty" }
-      }
-      const baseOngoing = ongoingRef.current ?? existing.ongoing
-      if (!baseOngoing) {
-        return { ok: false, reason: "empty" }
-      }
-      const deleted = deleteActiveDraftCheckpoint(baseOngoing)
-      if (!deleted.ok) return deleted
-
-      const restored = deleted.restoredCheckpoint
-      const nextWorkspace = ensureSingleProjectWorkspace(restored.workspace)
-      const saveDocId = docMeta.id
-      skipNextSaveRef.current = true
-      setSaveStatusSafe("saving")
-      try {
-        await enqueueSave(async () => {
-          const latest = await repo.get(saveDocId)
-          if (!latest || latest.status !== "draft" || latest.deletedAt) {
-            throw new Error("delete_checkpoint_save_failed")
-          }
-          // Persist candidate Ongoing without tip draft. Document identity,
-          // folder, name, and deletedAt are unchanged — never trash.
-          await repo.saveDraft({
-            ...latest,
-            deletedAt: latest.deletedAt ?? null,
-            ongoing: deleted.ongoing,
-            workspace: nextWorkspace,
-            draftResultSeed: undefined,
-            ongoingDraftResult: undefined,
-          })
-
-          // Commit refs only after durable write, inside the same chain op.
-          ongoingRef.current = deleted.ongoing
-          draftResultSeedRef.current = null
-          ongoingDraftResultRef.current = null
-          liveArchiveStateRef.current = {
-            ...liveArchiveStateRef.current,
-            projects: nextWorkspace.projects,
-            activeProjectId: nextWorkspace.activeProjectId,
-          }
-        })
-      } catch (error) {
-        logError("delete active draft checkpoint", error)
-        if (loadedIdRef.current === saveDocId) {
-          setSaveStatusSafe("error")
-        }
-        return { ok: false, reason: "persistence_failed" }
-      }
-
-      // Verify document was not trashed by this operation.
-      const after = await repo.get(saveDocId)
-      if (!after || after.deletedAt != null) {
-        if (loadedIdRef.current === saveDocId) {
-          setSaveStatusSafe("error")
-        }
-        return { ok: false, reason: "persistence_failed" }
-      }
-
-      skipNextSaveRef.current = true
-      setOngoing(deleted.ongoing)
-      setDraftResultSeed(null)
-      setOngoingDraftResult(null)
-      setArchivedSnapshot(restored.archivedSnapshot ?? null)
-      args.setProjects(nextWorkspace.projects)
-      args.setActiveProjectId(nextWorkspace.activeProjectId)
-      applyCheckpointView(restored, "draft")
-      if (loadedIdRef.current === saveDocId) {
-        setSaveStatusSafe("saved")
-      }
-      return {
-        ok: true,
-        ongoing: deleted.ongoing,
-        restoredCheckpoint: restored,
-        deletedCheckpointId: deleted.deletedCheckpointId,
-      }
-    }, [applyCheckpointView, args, docMeta, enqueueSave, flushPendingSave, repo, setSaveStatusSafe])
-
-  const selectCheckpoint = useCallback(
-    async (checkpointId: string) => {
-      if (!docMeta || docMeta.analysisMode !== "ongoing") return
-      if (!ongoing || ongoing.activeCheckpointId === checkpointId) return
-      if (!ongoing.checkpoints.some((c) => c.id === checkpointId)) return
-
-      try {
-        await flushPendingSave()
-      } catch (error) {
-        logError("flush pending save before switching checkpoint", error)
-        /* still switch — last save may have failed */
-      }
-
-      const existing = await repo.get(docMeta.id)
-      if (!existing?.ongoing || existing.status !== "draft") {
-        // Document-level archived: allow inspection switch within frozen ongoing.
-        if (!existing?.ongoing) return
-      }
-      const sourceOngoing = ongoingRef.current ?? existing!.ongoing!
-      const nextOngoing = selectCheckpointInState(sourceOngoing, checkpointId)
-      if (!nextOngoing) return
-      const nextActive = getActiveCheckpoint(nextOngoing)
-      if (!nextActive) return
-
-      // Authoritative selection FIRST so overlapping autosaves cannot rewrite
-      // activeCheckpointId / workspace from a stale pre-select ref.
-      const nextWorkspace = ensureSingleProjectWorkspace(nextActive.workspace)
-      ongoingRef.current = nextOngoing
-      setOngoing(nextOngoing)
-      liveArchiveStateRef.current = {
-        ...liveArchiveStateRef.current,
-        projects: nextWorkspace.projects,
-        activeProjectId: nextWorkspace.activeProjectId,
-      }
-      applyCheckpointView(nextActive, existing!.status)
-
-      if (existing!.status !== "draft") {
-        return
-      }
-
-      skipNextSaveRef.current = true
-      const saveDocId = docMeta.id
-      setSaveStatusSafe("saving")
-      try {
-        await enqueueSave(async () => {
-          const latest = await repo.get(saveDocId)
-          if (!latest || latest.status !== "draft" || latest.deletedAt) {
-            throw new Error("select_checkpoint_save_failed")
-          }
-          const ongoingNow = ongoingRef.current
-          if (!ongoingNow) {
-            throw new Error("select_checkpoint_save_failed")
-          }
-          const active = getActiveCheckpoint(ongoingNow)
-          if (!active) {
-            throw new Error("select_checkpoint_save_failed")
-          }
-          await repo.saveDraft({
-            ...latest,
-            ongoing: ongoingNow,
-            // Persist the selected checkpoint workspace; repository does not sync.
-            workspace: ensureSingleProjectWorkspace(active.workspace),
-            ...replaceDraftResultField(
-              "ongoingDraftResult",
-              pickAuthoritativeOngoingDraftResult(
-                ongoingDraftResultRef.current,
-                latest.ongoingDraftResult,
-              ),
-            ),
-          })
-        })
-        if (loadedIdRef.current === saveDocId) {
-          setSaveStatusSafe("saved")
-        }
-      } catch (error) {
-        if (loadedIdRef.current === saveDocId) {
-          setSaveStatusSafe(librarySaveStatusFromError(error))
-        }
-      }
-    },
-    [applyCheckpointView, docMeta, enqueueSave, flushPendingSave, ongoing, repo, setSaveStatusSafe],
-  )
+  const {
+    archiveActiveCheckpoint,
+    completeOngoingAnalysisSession,
+    createNextCheckpointSession,
+    deleteActiveDraftCheckpointSession,
+    selectCheckpoint,
+  } = useOngoingCheckpointCommands({ ...sessionContext, flushPendingSave })
 
   const moveCurrentToTrash = useCallback(async () => {
     if (!docMeta) return

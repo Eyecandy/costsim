@@ -29,6 +29,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function heavyCheckpointSnapshot(
   snapshot: AnalysisCheckpoint["archivedSnapshot"],
@@ -426,10 +427,7 @@ describe("start ongoing UI wiring", () => {
       join(root, "src/features/analysis-library/StartOngoingFromArchiveDialog.tsx"),
       "utf8",
     )
-    const session = readFileSync(
-      join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     const messages = readMessagesSource()
 
     expect(menu).toContain("startOngoingLabel")

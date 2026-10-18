@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
-
 import { beforeEach, describe, expect, it } from "vitest"
 
 import {
@@ -22,12 +19,9 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { OngoingAnalysisState } from "@/domain/analysis/analysisCheckpoint"
 import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
-const sessionSource = readFileSync(
-  join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-  "utf8",
-)
+const sessionSource = readLibrarySessionSource()
 
 function valuesAround(center: number): number[] {
   return Array.from({ length: 20_000 }, (_, i) => center + (i - 10_000) * 0.01)

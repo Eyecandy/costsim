@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { getAnalysisLibraryRepository } from "@/persistence/analysisLibraryRepository"
 import {
@@ -12,7 +10,7 @@ import { buildArchivedAnalysisSnapshot } from "@/domain/analysis/buildArchivedAn
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function makeResults(
   projectId: string,
@@ -172,10 +170,7 @@ describe("archive persistence", () => {
   })
 
   it("session archiveCurrent serializes behind save chain and skips next autosave", () => {
-    const session = readFileSync(
-      join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     const archiveFnStart = session.indexOf("const archiveCurrent = useCallback")
     expect(archiveFnStart).toBeGreaterThanOrEqual(0)
     const archiveFn = session.slice(archiveFnStart, archiveFnStart + 2800)

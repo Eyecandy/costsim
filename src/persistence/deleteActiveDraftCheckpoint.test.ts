@@ -32,11 +32,9 @@ import type { Project } from "@/domain/analysis/project"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
-const sessionSource = readFileSync(
-  join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-  "utf8",
-)
+const sessionSource = readLibrarySessionSource()
 const appSource = readAppSource()
 const menuSource = readFileSync(
   join(repoRoot, "src/features/analysis-library/AnalysisActionsMenu.tsx"),

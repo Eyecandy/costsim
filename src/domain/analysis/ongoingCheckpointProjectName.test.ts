@@ -14,6 +14,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function snapshotFor(projects: Project[], activeProjectId: string) {
   const fakeResults: ProjectResult[] = projects.map((p) => ({
@@ -155,10 +156,7 @@ describe("ongoing checkpoint Project.name from analysis name", () => {
     expect(b.name).toBe("Alternativ B")
     expect(a.name).not.toBe(b.name)
 
-    const session = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     expect(session).toContain("analysisName: existing.name")
     const checkpoint = readFileSync(
       join(repoRoot, "src/domain/analysis/analysisCheckpoint.ts"),

@@ -26,6 +26,7 @@ import { buildSimulationInputSignature } from "@/domain/simulation/simulationInp
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function fixture() {
   const blank = createBlankWorkspaceRuntimeState()
@@ -100,12 +101,7 @@ describe("Ongoing compact result persistence A–K", () => {
     expect(readFileSync(join(repoRoot, "src/features/results/ResultsPanel.tsx"), "utf8")).toContain(
       "onContributionReady",
     )
-    expect(
-      readFileSync(
-        join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-        "utf8",
-      ),
-    ).toContain("attachOngoingDraftContribution")
+    expect(readLibrarySessionSource()).toContain("attachOngoingDraftContribution")
   })
 
   it("E: compares compact checkpoint Key Figures", () => {
@@ -160,19 +156,13 @@ describe("Ongoing compact result persistence A–K", () => {
   })
 
   it("H: rejects wrong checkpoint ownership during session hydration", () => {
-    const source = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const source = readLibrarySessionSource()
     expect(source).toContain("doc.ongoingDraftResult.checkpointId === checkpoint.id")
     expect(source).toContain("doc.ongoingDraftResult.analysisId === doc.id")
   })
 
   it("I: leave paths remain non-blocking after save failure", () => {
-    const source = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const source = readLibrarySessionSource()
     expect(source).toContain("/* still switch — last save may have failed */")
     expect(source).toContain("/* still move to trash */")
   })

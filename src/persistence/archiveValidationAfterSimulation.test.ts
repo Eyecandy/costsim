@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import type { createInitialOngoingState } from "@/domain/analysis/analysisCheckpoint"
 import {
@@ -19,8 +17,8 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { buildSimulationInputSignature } from "@/domain/simulation/simulationInputSignature"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function resultsFor(projectId: string): ProjectResult[] {
   return [
@@ -261,10 +259,7 @@ describe("archive validation after simulation", () => {
   })
 
   it("session archive path heals save chain and reads live eligibility refs", () => {
-    const session = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     expect(session).toContain("enqueueSave")
     expect(session).toContain("liveArchiveStateRef")
     expect(session).toContain("readLiveArchiveBlockReason")

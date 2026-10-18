@@ -9,6 +9,7 @@ import {
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { readAppSource } from "@/test-utils/appSource"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 describe("checkpoint recovery persistence contract", () => {
   it("has no production API for persisting live draft Monte Carlo totals", () => {
@@ -21,7 +22,11 @@ describe("checkpoint recovery persistence contract", () => {
     ]
     const source = productionFiles
       .map((path) =>
-        path === "src/app/App.tsx" ? readAppSource() : readFileSync(join(repoRoot, path), "utf8"),
+        path === "src/app/App.tsx"
+          ? readAppSource()
+          : path.endsWith("useLibraryAnalysisSession.ts")
+            ? readLibrarySessionSource()
+            : readFileSync(join(repoRoot, path), "utf8"),
       )
       .join("\n")
 

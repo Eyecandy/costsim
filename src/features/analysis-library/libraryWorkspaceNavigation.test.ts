@@ -9,6 +9,7 @@ import {
 } from "@/persistence/libraryNavigation"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 describe("Library direct destinations (URL-authoritative)", () => {
   it("buildLibraryPath encodes Home / All / Deleted / folder canonically", () => {
@@ -86,10 +87,7 @@ describe("Library direct destinations (URL-authoritative)", () => {
   })
 
   it("autosave race guard remains ID-bound", () => {
-    const session = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     expect(session).toContain("if (loadedIdRef.current !== saveDocId) return")
     expect(session).toContain("shouldAutosaveLibraryDraft")
   })

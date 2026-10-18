@@ -22,6 +22,7 @@ import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 describe("Analysis Library repository", () => {
   beforeEach(() => {
@@ -414,10 +415,7 @@ describe("Analysis Library repository", () => {
     expect(nav).toContain('data-checkpoint-nav="timeline"')
     expect(nav).not.toContain("border-b-[1.5px] border-[#1d868c]")
     expect(nav).not.toContain("rounded-t-lg")
-    const session = readFileSync(
-      join(repoRoot, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
     expect(session).toContain("checkpointReadOnly")
     expect(session).toContain("selectCheckpoint")
     expect(session).toContain("createNextCheckpoint")

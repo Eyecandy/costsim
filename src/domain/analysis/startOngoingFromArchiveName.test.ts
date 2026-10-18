@@ -27,6 +27,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
+import { readLibrarySessionSource } from "@/test-utils/librarySessionSource"
 
 function makeSnapshot(
   projects: AnalysisDocument["workspace"]["projects"],
@@ -363,10 +364,7 @@ describe("start ongoing name UX wiring", () => {
     )
     const app = readAppSource()
     const messages = readMessagesSource()
-    const session = readFileSync(
-      join(root, "src/features/analysis-library/useLibraryAnalysisSession.ts"),
-      "utf8",
-    )
+    const session = readLibrarySessionSource()
 
     expect(dialog).toContain("startOngoingNameLabel")
     expect(dialog).toContain("startOngoingCreate")
