@@ -36,6 +36,10 @@ body {
 .ui-bar { margin-top: 16px; background: var(--ui-card); border: 1px solid var(--ui-line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 12px; }
 .ui-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; min-width: 0; }
 .ui-label { flex: 0 0 5.5em; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ui-muted); }
+.fam-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.fam { flex: 0 0 5.8em; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-muted); }
+#pal-seg { display: grid; gap: 8px; }
+.ui-row.top { align-items: flex-start; }
 .ui-seg { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
 .ui-bar button {
   font: inherit; font-size: 13px; color: var(--ui-text); background: var(--ui-card);
@@ -52,11 +56,13 @@ body {
 .ui-link { display: flex; flex: 1 1 18rem; gap: 8px; min-width: 0; }
 .ui-link input { flex: 1; min-width: 0; font: 12px/1.2 ui-monospace, Consolas, monospace; padding: 8px 10px; border: 1px solid var(--ui-line); border-radius: 6px; background: #f7f8f9; color: var(--ui-text); }
 [data-when] { display: none; }
+[hidden] { display: none !important; }
 body[data-view="single"] [data-when~="single"], body[data-view^="compare"] [data-when~="compare"] { display: flex; }
 
 body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .ui-strip { margin-top: 12px; background: var(--ui-card); border: 1px solid var(--ui-line); border-radius: 8px; padding: 14px 16px; }
 .ui-strip h2 { margin: 0; font-size: 15px; }
+.ui-strip h2 small { font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-muted); margin-left: 8px; }
 .ui-strip p { margin: 2px 0 12px; color: var(--ui-muted); }
 .chips { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
 .chip6 { border-radius: 6px; padding: 28px 10px 8px; min-height: 84px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -65,12 +71,21 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .chip6 em { font-style: normal; font-size: 13px; }
 .chip6.small { min-height: 64px; padding-top: 14px; }
 .status-row { margin-top: 8px; align-items: center; }
-.status-row .status-note { grid-column: span 4; margin: 0; font-size: 12.5px; color: var(--ui-muted); }
+.status-row .status-note { grid-column: 1 / -1; margin: 0; font-size: 12.5px; color: var(--ui-muted); }
 @media (max-width: 760px) { .status-row .status-note { grid-column: 1 / -1; } }
 @media (max-width: 760px) { .chips { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ui-label { flex-basis: 100%; } }
 
 #stage { margin-top: 16px; }
 .single-frame { margin: 0 auto; width: 100%; max-width: var(--frame-w, 1320px); border: 1px solid var(--ui-line); border-radius: 8px; overflow: hidden; background: var(--ui-card); }
+.grid.g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.g5 .cap { font-size: 12px; gap: 2px 6px; }
+.g5 .cap a { display: none; }
+.g5 .capn { color: var(--ui-muted); font-size: 11.5px; flex: 1 1 100%; }
+.g5 .sws i { width: 7px; height: 12px; }
+@media (max-width: 1100px) { .grid.g5 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid.g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.frame .cover { position: absolute; inset: 0; z-index: 2; display: block; }
+.frame .cover:focus-visible { outline: 3px solid #1d5fd1; outline-offset: -3px; }
 .grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .cell { min-width: 0; display: grid; gap: 8px; break-inside: avoid; }
 .cap { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 13px; }
@@ -78,49 +93,104 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .cap a { color: #124fb3; margin-left: auto; font-weight: 600; }
 .frame { position: relative; overflow: hidden; border: 1px solid var(--ui-line); border-radius: 8px; background: var(--ui-card); }
 .frame .app { width: 1200px; transform-origin: 0 0; pointer-events: none; user-select: none; }
-@media (max-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .grid:not(.g5) { grid-template-columns: minmax(0, 1fr); } }
 .print-cap { display: none; }
 .ui-foot { margin-top: 18px; color: var(--ui-muted); font-size: 12.5px; max-width: 90ch; }
 
-/* ================= Palettes (generated from palettes.json; edit there or here) =================
-   p1-p3 primary, s1-s3 secondary (analogous to the primary), err/warn status colours outside the six.
-   Neutrals: bg (page), surface (cards), tint, line, text, text2, muted. accent = filled buttons,
-   accent-text = text and links. d-* tokens are used by the Dark style. */
-[data-palette="teal"] {
-  --p1: #1d868c; --p2: #156a70; --p3: #e4f2f3; --s1: #0b4838; --s2: #5d98b5; --s3: #3f585a;
-  --err: #b03a3a; --warn: #946600;
-  --bg: #f8fafc; --surface: #ffffff; --tint: #e4f2f3; --line: #cbd5e1; --text: #0f172a; --text2: #334155; --muted: #64748b;
+/* ================= Palettes (generated from palettes.json) =================
+   p1 Teal (true brand teal), p2 Teal Mist (tint), p3 off-white (page tone), s1-s3 secondaries.
+   deep = ink text colour (also the Bold header band). accent = filled buttons, accent-text = links and teal text
+   (the Teal Action colour when the true teal is below 4.5:1 with white). err/warn = status colours.
+   d-* tokens are derived for the Dark style. */
+[data-palette="t1"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #faf9f4; --s1: #0b4838; --s2: #5792ae; --s3: #3f585a;
+  --deep: #0f2c30; --err: #b03a3a; --warn: #946600;
+  --bg: #faf9f4; --surface: #ffffff; --tint: #e4f2f3; --line: #d5dddd; --text: #0f2c30; --text2: #2f4244; --muted: #5b6c6e;
   --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #0b1a1c; --d-surface: #12272a; --d-tint: #19343a; --d-line: #2b4a50; --d-text: #e6f2f3; --d-muted: #9db8bb;
-  --d-accent: #4fb3ba; --d-on-accent: #052326; --d-accent-text: #6cc6cc;
-  --d-s1: #8fd3bd; --d-s2: #7fb5d1; --d-s3: #6f9195; --d-err: #f19a9a; --d-warn: #e0b24a;
+  --d-bg: #0f181a; --d-surface: #172527; --d-tint: #203437; --d-line: #335357; --d-text: #e7edee; --d-muted: #a9b9bc;
+  --d-accent: #57c1c7; --d-on-accent: #0a2124; --d-accent-text: #85d2d6;
+  --d-s1: #8de2cc; --d-s2: #7caac0; --d-s3: #6f979a; --d-err: #dc9494; --d-warn: #dfb049;
 }
-[data-palette="blue"] {
-  --p1: #4076b9; --p2: #132e50; --p3: #e5f0fc; --s1: #363678; --s2: #4a97b7; --s3: #4b5d6e;
-  --err: #b3394a; --warn: #8f6a00;
-  --bg: #f5f8fc; --surface: #ffffff; --tint: #e5f0fc; --line: #cbd5e3; --text: #0e1a2b; --text2: #2a3a52; --muted: #5b6b80;
-  --accent: #4076b9; --on-accent: #ffffff; --accent-text: #4076b9;
-  --d-bg: #0c1523; --d-surface: #13213a; --d-tint: #1b2d4d; --d-line: #2d4467; --d-text: #e8eefa; --d-muted: #9fb0cc;
-  --d-accent: #6f9fe0; --d-on-accent: #07162e; --d-accent-text: #8db4ea;
-  --d-s1: #9a9be0; --d-s2: #6fb6d6; --d-s3: #7388a0; --d-err: #f08fa0; --d-warn: #e3bb55;
+[data-palette="t2"] {
+  --p1: #187b81; --p2: #e3f0f4; --p3: #f7f8f5; --s1: #153f55; --s2: #618fb0; --s3: #485b67;
+  --deep: #0f2733; --err: #b03a3a; --warn: #946600;
+  --bg: #f7f8f5; --surface: #ffffff; --tint: #e3f0f4; --line: #d5dddd; --text: #0f2733; --text2: #2f4244; --muted: #5b6c6e;
+  --accent: #187b81; --on-accent: #ffffff; --accent-text: #14666c;
+  --d-bg: #0f161a; --d-surface: #162127; --d-tint: #202f37; --d-line: #324b58; --d-text: #e7ecee; --d-muted: #a9b6bc;
+  --d-accent: #57c0c7; --d-on-accent: #0a1b24; --d-accent-text: #85d2d6;
+  --d-s1: #8dc5e2; --d-s2: #7ea3be; --d-s3: #6f899a; --d-err: #dc9494; --d-warn: #dfb049;
 }
-[data-palette="terra"] {
-  --p1: #b0472b; --p2: #6a2d20; --p3: #f6e9df; --s1: #5a2530; --s2: #bf7f43; --s3: #5f4739;
-  --err: #9b2335; --warn: #8a6d00;
-  --bg: #faf6f1; --surface: #ffffff; --tint: #f6e9df; --line: #ddd3ca; --text: #2b2623; --text2: #4a423d; --muted: #78706a;
-  --accent: #b0472b; --on-accent: #ffffff; --accent-text: #b0472b;
-  --d-bg: #1d1512; --d-surface: #2a1e19; --d-tint: #36261f; --d-line: #4d3a31; --d-text: #f6ebe2; --d-muted: #bda99b;
-  --d-accent: #e0825f; --d-on-accent: #2a0f06; --d-accent-text: #eb9a7c;
-  --d-s1: #d9909c; --d-s2: #e0a26a; --d-s3: #a88672; --d-err: #f0929f; --d-warn: #d4bd4c;
+[data-palette="t3"] {
+  --p1: #1d868c; --p2: #e3f2ef; --p3: #f7f9f4; --s1: #164832; --s2: #306f4e; --s3: #479b83;
+  --deep: #10291f; --err: #b03a3a; --warn: #946600;
+  --bg: #f7f9f4; --surface: #ffffff; --tint: #e3f2ef; --line: #d5dddd; --text: #10291f; --text2: #2f4244; --muted: #5b6c6e;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #101915; --d-surface: #182520; --d-tint: #22352d; --d-line: #365448; --d-text: #e7eeeb; --d-muted: #a9bcb4;
+  --d-accent: #57c1c7; --d-on-accent: #0a2419; --d-accent-text: #85d2d6;
+  --d-s1: #92debc; --d-s2: #78c49c; --d-s3: #57b298; --d-err: #dc9494; --d-warn: #dfb049;
 }
-[data-palette="green"] {
-  --p1: #428252; --p2: #1c472a; --p3: #e6f3e8; --s1: #0b4a3e; --s2: #849a49; --s3: #576450;
-  --err: #a8433a; --warn: #8f6a00;
-  --bg: #f5f8f5; --surface: #ffffff; --tint: #e6f3e8; --line: #d0dcd2; --text: #16231a; --text2: #34463a; --muted: #66786b;
-  --accent: #428252; --on-accent: #ffffff; --accent-text: #428252;
-  --d-bg: #0e1a12; --d-surface: #162a1c; --d-tint: #1d3625; --d-line: #2f4b38; --d-text: #e8f3ea; --d-muted: #a2b8a8;
-  --d-accent: #78b98a; --d-on-accent: #0a2113; --d-accent-text: #8fcb9f;
-  --d-s1: #6fc4ae; --d-s2: #b2c872; --d-s3: #7f9585; --d-err: #f0978d; --d-warn: #e3bb55;
+[data-palette="t4"] {
+  --p1: #1d868c; --p2: #e3f0f2; --p3: #f9f9f6; --s1: #1a3b51; --s2: #419b89; --s3: #4b5f64;
+  --deep: #10283a; --err: #b03a3a; --warn: #946600;
+  --bg: #f9f9f6; --surface: #ffffff; --tint: #e3f0f2; --line: #d5dddd; --text: #10283a; --text2: #2f4244; --muted: #5b6c6e;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #0f151a; --d-surface: #162027; --d-tint: #1f2d38; --d-line: #314858; --d-text: #e7ebee; --d-muted: #a9b4bc;
+  --d-accent: #57c1c7; --d-on-accent: #0a1924; --d-accent-text: #85d2d6;
+  --d-s1: #93bfdc; --d-s2: #76c6b6; --d-s3: #738f96; --d-err: #dc9494; --d-warn: #dfb049;
+}
+[data-palette="t5"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #fbf9f3; --s1: #374619; --s2: #a48a53; --s3: #5f5a54;
+  --deep: #1f2a1c; --err: #9f3338; --warn: #8a6a00;
+  --bg: #fbf9f3; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #1f2a1c; --text2: #3b352f; --muted: #6b655d;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #131612; --d-surface: #1d221c; --d-tint: #293027; --d-line: #414c3e; --d-text: #e9eee7; --d-muted: #adbca9;
+  --d-accent: #57c1c7; --d-on-accent: #10240a; --d-accent-text: #85d2d6;
+  --d-s1: #c3d996; --d-s2: #bea97e; --d-s3: #8c857d; --d-err: #dc9396; --d-warn: #dfbc49;
+}
+[data-palette="t6"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #faf8f3; --s1: #955542; --s2: #4f3228; --s3: #7c9072;
+  --deep: #2a211c; --err: #9f3338; --warn: #8a6a00;
+  --bg: #faf8f3; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #2a211c; --text2: #3b352f; --muted: #6b655d;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #161412; --d-surface: #221e1c; --d-tint: #302a27; --d-line: #4c433e; --d-text: #eeeae7; --d-muted: #bcb0a9;
+  --d-accent: #57c1c7; --d-on-accent: #24130a; --d-accent-text: #85d2d6;
+  --d-s1: #d3a99c; --d-s2: #be8f7e; --d-s3: #809376; --d-err: #dc9396; --d-warn: #dfbc49;
+}
+[data-palette="t7"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #f7f6f2; --s1: #4f654a; --s2: #908b84; --s3: #6e3524;
+  --deep: #232a26; --err: #9f3338; --warn: #8a6a00;
+  --bg: #f7f6f2; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #232a26; --text2: #3b352f; --muted: #6b655d;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #121614; --d-surface: #1c221e; --d-tint: #27302b; --d-line: #3e4c44; --d-text: #e7eeea; --d-muted: #a9bcb1;
+  --d-accent: #57c1c7; --d-on-accent: #0a2415; --d-accent-text: #85d2d6;
+  --d-s1: #b1c3ad; --d-s2: #a39f99; --d-s3: #c36347; --d-err: #dc9396; --d-warn: #dfbc49;
+}
+[data-palette="t8"] {
+  --p1: #187b81; --p2: #e4f2f3; --p3: #f9f8f1; --s1: #595c22; --s2: #a9823c; --s3: #4d3020;
+  --deep: #2a2418; --err: #9f3338; --warn: #8a6a00;
+  --bg: #f9f8f1; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #2a2418; --text2: #3b352f; --muted: #6b655d;
+  --accent: #187b81; --on-accent: #ffffff; --accent-text: #14666c;
+  --d-bg: #171512; --d-surface: #23201a; --d-tint: #312d25; --d-line: #4e483b; --d-text: #eeece7; --d-muted: #bcb6a9;
+  --d-accent: #57c0c7; --d-on-accent: #241b0a; --d-accent-text: #85d2d6;
+  --d-s1: #d5d897; --d-s2: #ccab70; --d-s3: #b77652; --d-err: #dc9396; --d-warn: #dfbc49;
+}
+[data-palette="t9"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #fafaf6; --s1: #0b4838; --s2: #5792ae; --s3: #955640;
+  --deep: #112b2c; --err: #9f3338; --warn: #8a6a00;
+  --bg: #fafaf6; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #112b2c; --text2: #3b352f; --muted: #6b655d;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #101919; --d-surface: #182525; --d-tint: #223435; --d-line: #365354; --d-text: #e7eeee; --d-muted: #a9bbbc;
+  --d-accent: #57c1c7; --d-on-accent: #0a2324; --d-accent-text: #85d2d6;
+  --d-s1: #8de2cc; --d-s2: #7caac0; --d-s3: #b56d54; --d-err: #dc9396; --d-warn: #dfbc49;
+}
+[data-palette="t10"] {
+  --p1: #1d868c; --p2: #e4f2f3; --p3: #f8f7f2; --s1: #124054; --s2: #1a5d48; --s3: #a7833b;
+  --deep: #0f2b33; --err: #9f3338; --warn: #8a6a00;
+  --bg: #f8f7f2; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #0f2b33; --text2: #3b352f; --muted: #6b655d;
+  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
+  --d-bg: #0f171a; --d-surface: #162327; --d-tint: #203237; --d-line: #324f58; --d-text: #e7edee; --d-muted: #a9b8bc;
+  --d-accent: #57c1c7; --d-on-accent: #0a1e24; --d-accent-text: #85d2d6;
+  --d-s1: #8dc8e2; --d-s2: #68d5b2; --d-s3: #bf984a; --d-err: #dc9396; --d-warn: #dfbc49;
 }
 
 
@@ -131,7 +201,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   /* semantic colors, light mapping */
   --c-card: var(--surface); --c-tint: var(--tint); --c-line: var(--line); --c-text: var(--text); --c-muted: var(--muted);
   --c-accent: var(--accent); --c-on: var(--on-accent); --c-atext: var(--accent-text);
-  --k1: var(--s1); --k2: var(--s2); --k3: var(--s3); --kp: var(--p1); --tot: var(--p2);
+  --k1: var(--s1); --k2: var(--s2); --k3: var(--s3); --kp: var(--p1); --tot: var(--p1);
   --c-err: var(--err); --c-warn: var(--warn); --c-text2: var(--text2);
   /* shape and feel, defaults = Clean */
   --fs: 13px; --fw-body: 400;
@@ -146,7 +216,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --hdr-bg: var(--c-page); --hdr-fg: var(--c-text); --hdr-border: 1px solid var(--c-line); --hdr-margin: 0; --hdr-r: 0px;
   --hdr-shadow: none; --hdr-pad: 12px 28px; --hdr-brand: var(--c-atext); --seg-bg: var(--c-text); --seg-fg: var(--c-card);
   --hl-bg: var(--c-tint);
-  --c-page: var(--surface);
+  --c-page: var(--bg);
   background: var(--c-page);
   color: var(--c-text);
   font: var(--fw-body) var(--fs) / 1.45 var(--font);
@@ -156,26 +226,26 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app *, .app *::before, .app *::after { box-sizing: border-box; }
 .app[data-style="soft"] {
   --fs: 13.5px; --r: 16px; --r-sm: 10px; --chip-r: 999px; --th-r: 10px; --bar-r: 6px;
-  --shadow: 0 1px 2px color-mix(in srgb, var(--p2) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--p2) 24%, transparent);
+  --shadow: 0 1px 2px color-mix(in srgb, var(--deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--deep) 24%, transparent);
   --card-border: 0 solid transparent; --pad: 24px; --gap: 24px; --main-pad: 8px 20px 36px;
   --title-size: 15px; --title-fw: 650; --title-tr: none; --title-ls: 0; --card-h-fg: var(--c-text);
   --th-bg: var(--c-tint); --th-fg: var(--c-text2); --th-line: 0 solid transparent; --row-line: color-mix(in srgb, var(--c-line) 55%, transparent);
   --field-bg: var(--c-tint); --field-border: 1px solid transparent;
   --btn-h: 42px; --btn-r: 999px; --btn-tr: none; --btn-shadow: 0 8px 18px -8px color-mix(in srgb, var(--c-accent) 75%, transparent);
   --hdr-bg: var(--c-card); --hdr-margin: 14px 20px 8px; --hdr-r: 16px; --hdr-border: 0 solid transparent;
-  --hdr-shadow: 0 1px 2px color-mix(in srgb, var(--p2) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--p2) 24%, transparent);
+  --hdr-shadow: 0 1px 2px color-mix(in srgb, var(--deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--deep) 24%, transparent);
   --hdr-pad: 10px 20px; --c-page: var(--bg);
 }
 .app[data-style="bold"] {
   --fs: 14px; --fw-body: 500; --r: 2px; --r-sm: 2px; --chip-r: 2px; --bar-r: 0px;
-  --shadow: 4px 4px 0 var(--p2); --card-border: 2px solid var(--p2); --gap: 26px; --main-pad: 28px 32px 40px;
+  --shadow: 4px 4px 0 var(--deep); --card-border: 2px solid var(--deep); --gap: 26px; --main-pad: 28px 32px 40px;
   --title-size: 12.5px; --title-fw: 800; --title-ls: 0.1em;
-  --card-h-pad: 10px var(--pad); --card-h-bg: var(--p2); --card-h-fg: #ffffff; --card-h-hint: var(--p3);
-  --th-bg: var(--c-tint); --th-fg: var(--c-text); --th-line: 2px solid var(--p2); --row-line: var(--c-line);
+  --card-h-pad: 10px var(--pad); --card-h-bg: var(--deep); --card-h-fg: #ffffff; --card-h-hint: var(--p3);
+  --th-bg: var(--c-tint); --th-fg: var(--c-text); --th-line: 2px solid var(--deep); --row-line: var(--c-line);
   --field-border: 1px solid var(--c-muted);
-  --btn-h: 46px; --btn-r: 2px; --btn-fw: 800; --btn-border: 2px solid var(--p2); --btn-shadow: 3px 3px 0 var(--p2);
-  --hdr-bg: var(--p2); --hdr-fg: #ffffff; --hdr-border: 0 solid transparent; --hdr-pad: 14px 32px; --hdr-brand: #ffffff;
-  --seg-bg: #ffffff; --seg-fg: var(--p2); --hl-bg: var(--p3); --c-page: var(--bg);
+  --btn-h: 46px; --btn-r: 2px; --btn-fw: 800; --btn-border: 2px solid var(--deep); --btn-shadow: 3px 3px 0 var(--deep);
+  --hdr-bg: var(--deep); --hdr-fg: #ffffff; --hdr-border: 0 solid transparent; --hdr-pad: 14px 32px; --hdr-brand: #ffffff;
+  --seg-bg: #ffffff; --seg-fg: var(--deep); --hl-bg: var(--tint); --c-page: var(--bg);
 }
 .app[data-style="dark"] {
   --c-page: var(--d-bg); --c-card: var(--d-surface); --c-tint: var(--d-tint); --c-line: var(--d-line); --c-text: var(--d-text);
@@ -296,6 +366,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app .chart .dot { stroke: var(--c-card); stroke-width: 2; }
 .app .chart .dot.m2 { fill: var(--kp); } .app .chart .dot.m3 { fill: var(--k3); }
 .app .chart .bar { rx: var(--bar-r); }
+.app .chart .bar.lo { opacity: 0.72; }
 .app .chart .bar.lo, .app .chart .bar.inc { fill: var(--k2); } .app .chart .bar.hi { fill: var(--k1); } .app .chart .bar.dec { fill: var(--k3); }
 .app .chart .bar.tot { fill: var(--tot); } .app .chart .bar.res { fill: var(--k1); stroke: var(--c-card); stroke-width: 1.5; }
 .app .chart .conn { stroke: var(--c-muted); stroke-width: 1; stroke-dasharray: 2 2; }
@@ -327,9 +398,9 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <div class="ui">
   <div class="no-print">
     <h1>U·SKOP style preview</h1>
-    <p class="ui-lead">The main calculator page in four colour palettes and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
+    <p class="ui-lead">The main calculator page in ten teal-based colour palettes and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
     <div class="ui-bar" id="controls">
-      <div class="ui-row"><span class="ui-label">Palette</span><div class="ui-seg" id="pal-seg"></div></div>
+      <div class="ui-row top"><span class="ui-label">Palette</span><div class="ui-seg" id="pal-seg"></div></div>
       <div class="ui-row"><span class="ui-label">Style</span><div class="ui-seg" id="sty-seg"></div></div>
       <div class="ui-row"><span class="ui-label">View</span><div class="ui-seg" id="view-seg"></div>
         <div class="ui-seg" data-when="compare" id="vary-seg" style="margin-left:8px"></div>
@@ -342,7 +413,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 
   <main id="stage">
     <div class="single-frame">
-<div class="app" data-palette="teal" data-style="clean">
+<div class="app" data-palette="t1" data-style="clean">
   <header class="hdr"><div class="hdr-in">
     <span class="brand">U·SKOP</span>
     <span class="doc">Ullern renovation, phase 2 <small>Saved</small></span>
@@ -437,24 +508,31 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     </div>
   </main>
 
-  <p class="ui-foot no-print">The real app uses the Geist typeface. This preview uses the system font stack, so letter shapes differ slightly. Variants can be linked directly, for example <code>#palette=blue&amp;style=soft</code> or <code>#blue-soft</code>.</p>
+  <p class="ui-foot no-print">The real app uses the Geist typeface. This preview uses the system font stack, so letter shapes differ slightly. Variants can be linked directly, for example <code>#palette=t6&amp;style=soft</code> or <code>#t6-soft</code>.</p>
 </div>
 
 <script>
 (function () {
   var PAL = [
-    { id: "teal", name: "A Teal (current, tidied)", names: ["Teal","Teal Deep","Teal Mist","Sea Pine","Harbour Blue","Slate Teal"], status: ["Muted Brick","Dusty Amber"], note: "Calm, cohesive and trustworthy. Everything stays inside one teal family, from dark sea green to harbour blue, so it reads quiet and a little clinical, with no loud accents." },
-    { id: "blue", name: "B Blue", names: ["Cobalt","Ink Blue","Pale Blue","Twilight","Sky","Blue Slate"], status: ["Crimson Dust","Old Gold"], note: "Cool, orderly and authoritative. Blues from ink navy to sky read as bank-grade trust and stability: very safe, a touch generic, the most conventional of the four." },
-    { id: "terra", name: "C Terracotta", names: ["Terracotta","Umber","Sand","Rosewood","Amber Clay","Taupe"], status: ["Wine","Olive Gold"], note: "Warm, earthy and human. One terracotta family from rosewood to amber clay feels like a well-made printed report: friendly and less corporate. The brand sits close to error red, so status colors need an icon." },
-    { id: "green", name: "D Green", names: ["Forest","Deep Fern","Leaf Mist","Spruce","Olive","Moss Grey"], status: ["Clay Red","Old Gold"], note: "Fresh, balanced and natural. Greens from spruce to olive suggest growth and steadiness: calm and approachable, a little less financial. Green already means success, so good-news messages need another cue." },
+    { id: "t1", label: "T1", name: "Sea Pine + Harbour", family: "Analogous", names: ["Teal","Teal Mist","Eggwhite","Sea Pine","Harbour Blue","Slate Teal"], status: ["Muted Brick","Dusty Amber"], ink: "Teal Ink", action: "Teal Action", trueTealOk: false, note: "Calm, cohesive and trustworthy; a quiet teal family from dark sea green to harbour blue." },
+    { id: "t2", label: "T2", name: "Petrol + Glacier", family: "Analogous", names: ["Teal (AA)","Teal Mist","Pearl","Petrol","Glacier","Blue Slate"], status: ["Muted Brick","Dusty Amber"], ink: "Petrol Ink", action: "Teal Hover", trueTealOk: true, note: "Cooler and more corporate; teal with petrol and glacier blues, the most bank-like of the teal set." },
+    { id: "t3", label: "T3", name: "Pine + Jade + Seafoam", family: "Analogous", names: ["Teal","Teal Mist","Sea Salt","Pine","Jade","Seafoam"], status: ["Muted Brick","Dusty Amber"], ink: "Pine Ink", action: "Teal Action", trueTealOk: false, note: "Fresh and natural while staying calm; teal leaning to green, like deep water over a forest floor." },
+    { id: "t4", label: "T4", name: "Deep Navy + Mint + Stone Teal", family: "Analogous", names: ["Teal","Teal Mist","Chalk","Deep Navy","Mint Teal","Stone Teal"], status: ["Muted Brick","Dusty Amber"], ink: "Navy Ink", action: "Teal Action", trueTealOk: false, note: "Modern and tonal; teal between a deep navy and a mint, with a grey teal to settle it." },
+    { id: "t5", label: "T5", name: "Moss + Dune", family: "Earthy", names: ["Teal","Teal Mist","Oat White","Moss","Dune","Stone"], status: ["Garnet","Old Gold"], ink: "Moss Ink", action: "Teal Action", trueTealOk: false, note: "Grounded and outdoorsy; teal with dark moss, dune sand and warm stone. Calm, a little rustic." },
+    { id: "t6", label: "T6", name: "Clay + Umber + Sage", family: "Earthy", names: ["Teal","Teal Mist","Linen White","Clay","Umber","Sage"], status: ["Garnet","Old Gold"], ink: "Umber Ink", action: "Teal Action", trueTealOk: false, note: "Warm and human against a cool teal; clay and umber add earth, sage softens it. Reads like a printed report." },
+    { id: "t7", label: "T7", name: "Sage + Pebble + Terracotta", family: "Earthy", names: ["Teal","Teal Mist","Stone White","Sage","Pebble","Terracotta"], status: ["Garnet","Old Gold"], ink: "Stone Ink", action: "Teal Action", trueTealOk: false, note: "Quiet and soft; desaturated sage and pebble grey with one muted terracotta. The calmest earthy option." },
+    { id: "t8", label: "T8", name: "Olive + Ochre + Umber", family: "Earthy", names: ["Teal (AA)","Teal Mist","Bone White","Olive","Ochre","Umber"], status: ["Garnet","Old Gold"], ink: "Umber Ink", action: "Teal Hover", trueTealOk: true, note: "Rich and heritage-like; olive, ochre and umber with teal. Warmer and more characterful, still serious." },
+    { id: "t9", label: "T9", name: "Pine + Harbour + Clay", family: "Mixed", names: ["Teal","Teal Mist","Milk","Sea Pine","Harbour Blue","Clay"], status: ["Garnet","Old Gold"], ink: "Teal Ink", action: "Teal Action", trueTealOk: false, note: "Calm teal family with one warm earthy accent; the clay makes the fourth series easy to find." },
+    { id: "t10", label: "T10", name: "Petrol + Sea Green + Ochre", family: "Mixed", names: ["Teal","Teal Mist","Pale Bone","Petrol","Sea Green","Ochre"], status: ["Garnet","Old Gold"], ink: "Petrol Ink", action: "Teal Action", trueTealOk: false, note: "Cool teal family with a gold note; petrol and sea green stay calm, ochre gives one warm highlight." },
   ];
+  var FAMS = ["Analogous", "Earthy", "Mixed"];
   var STY = [
     { id: "clean", name: "Clean" }, { id: "soft", name: "Soft" }, { id: "bold", name: "Bold" }, { id: "dark", name: "Dark" }
   ];
-  var ROLES = ["Primary", "Primary dark", "Primary tint", "Secondary 1 (dark)", "Secondary 2 (light)", "Secondary 3 (grey)"];
+  var ROLES = ["Primary (brand)", "Primary tint", "Primary off-white", "Secondary 1", "Secondary 2", "Secondary 3"];
   var VARS = ["--p1", "--p2", "--p3", "--s1", "--s2", "--s3"];
   var WIDTHS = [["full", "Full width", ""], ["tablet", "Tablet 768", "768px"], ["phone", "Phone 390", "390px"]];
-  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"]];
+  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"], ["all10", "Compare all 10"]];
   var VARY = [["palette", "Vary palette"], ["style", "Vary style"]];
   var stage = document.getElementById("stage");
   var proto = stage.querySelector(".app").cloneNode(true);
@@ -462,41 +540,54 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 
   function idx(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
   function parse() {
-    var o = { palette: "teal", style: "clean", view: "single", vary: "palette", w: "full" };
+    var o = { palette: "t1", style: "clean", view: "single", vary: "palette", w: "full" };
     var h = location.hash.replace(/^#/, "");
     try {
       if (h.indexOf("=") >= 0) { new URLSearchParams(h).forEach(function (v, k) { o[k] = v; }); }
       else if (h) { var p = h.split("-"); if (p[0]) o.palette = p[0]; if (p[1]) o.style = p[1]; if (p[2]) o.view = p[2]; if (p[3]) o.vary = p[3]; }
     } catch (e) { /* keep defaults */ }
-    if (idx(PAL, o.palette) < 0) o.palette = "teal";
+    o.palette = String(o.palette).toLowerCase();
+    if (idx(PAL, o.palette) < 0) o.palette = "t1";
     if (idx(STY, o.style) < 0) o.style = "clean";
-    if (["single", "compare2", "compare4"].indexOf(o.view) < 0) o.view = "single";
+    if (["single", "compare2", "compare4", "all10"].indexOf(o.view) < 0) o.view = "single";
     if (o.vary !== "style") o.vary = "palette";
     if (!WIDTHS.some(function (w) { return w[0] === o.w; })) o.w = "full";
     return o;
   }
   function ser() {
     var s = "palette=" + st.palette + "&style=" + st.style;
-    if (st.view !== "single") s += "&view=" + st.view + "&vary=" + st.vary;
+    if (st.view === "compare2" || st.view === "compare4") s += "&view=" + st.view + "&vary=" + st.vary;
+    else if (st.view === "all10") s += "&view=all10";
     else if (st.w !== "full") s += "&w=" + st.w;
     return s;
   }
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function btn(label, pressed, on, pre) {
     var b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", pressed ? "true" : "false");
-    if (pre) b.appendChild(pre); b.appendChild(document.createTextNode(label)); b.addEventListener("click", on); return b;
+    if (pre) b.appendChild(pre); b.appendChild(typeof label === "string" ? document.createTextNode(label) : label); b.addEventListener("click", on); return b;
   }
   function sws(id) { var s = el("span", "sws", "<i></i><i></i><i></i><i></i><i></i><i></i>"); s.setAttribute("data-palette", id); s.setAttribute("aria-hidden", "true"); return s; }
-  function set(k, v) { st[k] = v; try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } render(); }
+  function sync() { try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } }
+  function set(k, v) { st[k] = v; sync(); render(); }
+  function open(pid, sid) { st.palette = pid; st.style = sid; st.view = "single"; sync(); render(); window.scrollTo(0, 0); }
+  function plabel(p) { return p.label + " " + p.name; }
 
   function controls() {
     var a = document.getElementById("pal-seg"); a.replaceChildren();
-    PAL.forEach(function (p) { a.appendChild(btn(p.name, p.id === st.palette, function () { set("palette", p.id); }, sws(p.id))); });
+    FAMS.forEach(function (f) {
+      var g = el("div", "fam-group"); g.appendChild(el("span", "fam", f));
+      PAL.forEach(function (p) {
+        if (p.family !== f) return;
+        var lab = el("span", null, "<b>" + p.label + "</b> " + p.name);
+        g.appendChild(btn(lab, p.id === st.palette, function () { set("palette", p.id); }, sws(p.id)));
+      });
+      a.appendChild(g);
+    });
     var b = document.getElementById("sty-seg"); b.replaceChildren();
     STY.forEach(function (s) { b.appendChild(btn(s.name, s.id === st.style, function () { set("style", s.id); })); });
     var v = document.getElementById("view-seg"); v.replaceChildren();
     VIEWS.forEach(function (x) { v.appendChild(btn(x[1], x[0] === st.view, function () { set("view", x[0]); })); });
-    var y = document.getElementById("vary-seg"); y.replaceChildren();
+    var y = document.getElementById("vary-seg"); y.replaceChildren(); y.hidden = st.view === "all10";
     VARY.forEach(function (x) { y.appendChild(btn(x[1], x[0] === st.vary, function () { set("vary", x[0]); })); });
     var w = document.getElementById("w-seg"); w.replaceChildren();
     WIDTHS.forEach(function (x) { w.appendChild(btn(x[1], x[0] === st.w, function () { set("w", x[0]); })); });
@@ -506,28 +597,31 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     var c = [1, 3, 5].map(function (i) { var v = parseInt(hex.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
   }
+  function chip(cs, v, role, name, cls) {
+    var hex = cs ? cs.getPropertyValue(v).trim() : "#ffffff";
+    var c = el("div", "chip6 " + (cls || ""), "<b>" + role + "</b><em>" + name + "</em><span>" + hex.toUpperCase() + "</span>");
+    c.style.background = hex; c.style.color = lum(hex) > 0.35 ? "#111111" : "#ffffff";
+    return c;
+  }
   function strip() {
     var host = document.getElementById("strip"); var p = PAL[idx(PAL, st.palette)];
     var probe = stage.querySelector(".app"); var cs = probe ? getComputedStyle(probe) : null;
-    host.replaceChildren(el("h2", null, p.name), el("p", null, p.note));
+    host.replaceChildren(el("h2", null, plabel(p) + " <small>" + p.family + "</small>"), el("p", null, p.note));
     var row = el("div", "chips");
-    VARS.forEach(function (v, i) {
-      var hex = cs ? cs.getPropertyValue(v).trim() : "#ffffff";
-      var fg = lum(hex) > 0.35 ? "#111111" : "#ffffff";
-      var c = el("div", "chip6", "<b>" + ROLES[i] + "</b><em>" + p.names[i] + "</em><span>" + hex.toUpperCase() + "</span>");
-      c.style.background = hex; c.style.color = fg; row.appendChild(c);
-    });
+    VARS.forEach(function (v, i) { row.appendChild(chip(cs, v, ROLES[i], p.names[i])); });
     host.appendChild(row);
     var srow = el("div", "chips status-row");
-    [["--err", "Error", p.status[0]], ["--warn", "Warning", p.status[1]]].forEach(function (s) {
-      var hex = cs ? cs.getPropertyValue(s[0]).trim() : "#ffffff";
-      var c = el("div", "chip6 small", "<b>" + s[1] + " (status)</b><em>" + s[2] + "</em><span>" + hex.toUpperCase() + "</span>");
-      c.style.background = hex; c.style.color = lum(hex) > 0.35 ? "#111111" : "#ffffff"; srow.appendChild(c);
-    });
-    srow.appendChild(el("p", "status-note", "Status colours sit outside the six. They are used only for errors and warnings, always with an icon or text."));
+    srow.appendChild(chip(cs, "--err", "Error (status)", p.status[0], "small"));
+    srow.appendChild(chip(cs, "--warn", "Warning (status)", p.status[1], "small"));
+    srow.appendChild(chip(cs, "--text", "Text ink", p.ink, "small"));
+    srow.appendChild(chip(cs, "--accent-text", "Buttons and links", p.action, "small"));
+    var note = "Status colours sit outside the six and are used only for errors and warnings, always with an icon or text. ";
+    note += p.trueTealOk ? "Buttons use the palette's teal." : "The true teal is slightly below 4.5:1 with white text, so buttons and links use " + p.action + ".";
+    srow.appendChild(el("p", "status-note", note));
     host.appendChild(srow);
   }
   function cells() {
+    if (st.view === "all10") return PAL.map(function (p) { return [p.id, st.style]; });
     var n = st.view === "compare4" ? 4 : 2, out = [];
     var base = st.vary === "palette" ? idx(PAL, st.palette) : idx(STY, st.style);
     var len = st.vary === "palette" ? PAL.length : STY.length;
@@ -537,10 +631,11 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     }
     return out;
   }
-  function name(list, id) { return list[idx(list, id)].name; }
+  function pname(id) { return plabel(PAL[idx(PAL, id)]); }
+  function sname(id) { return STY[idx(STY, id)].name; }
   function render() {
     controls();
-    document.getElementById("print-cap").textContent = "U·SKOP style preview. Palette: " + name(PAL, st.palette) + ". Style: " + name(STY, st.style) + ".";
+    document.getElementById("print-cap").textContent = "U·SKOP style preview. Palette: " + pname(st.palette) + ". Style: " + sname(st.style) + ".";
     document.getElementById("link").value = location.href.split("#")[0] + "#" + ser();
     stage.replaceChildren();
     if (st.view === "single") {
@@ -549,15 +644,21 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
       var a = proto.cloneNode(true); a.setAttribute("data-palette", st.palette); a.setAttribute("data-style", st.style);
       f.appendChild(a); stage.appendChild(f); strip();
     } else {
-      var g = el("div", "grid");
+      var all = st.view === "all10";
+      var g = el("div", all ? "grid g5" : "grid");
       cells().forEach(function (c) {
+        var p = PAL[idx(PAL, c[0])];
         var cell = el("div", "cell"); var cap = el("div", "cap");
         cap.appendChild(sws(c[0]));
-        cap.appendChild(el("b", null, name(PAL, c[0]) + " / " + name(STY, c[1])));
-        var link = el("a", "no-print", "Open full size"); link.href = "#palette=" + c[0] + "&style=" + c[1]; link.addEventListener("click", function (ev) { ev.preventDefault(); st.palette = c[0]; st.style = c[1]; st.view = "single"; try { history.replaceState(null, "", "#" + ser()); } catch (e) { /* hash not writable here */ } render(); window.scrollTo(0, 0); }); cap.appendChild(link);
-        var fr = el("div", "frame"); fr.setAttribute("aria-hidden", "true");
-        var a2 = proto.cloneNode(true); a2.setAttribute("data-palette", c[0]); a2.setAttribute("data-style", c[1]);
-        fr.appendChild(a2); cell.appendChild(cap); cell.appendChild(fr); g.appendChild(cell);
+        cap.appendChild(el("b", null, all ? p.label : plabel(p) + " / " + sname(c[1])));
+        if (all) cap.appendChild(el("span", "capn", p.name));
+        var link = el("a", "no-print", "Open full size"); link.href = "#palette=" + c[0] + "&style=" + c[1];
+        link.addEventListener("click", function (ev) { ev.preventDefault(); open(c[0], c[1]); }); cap.appendChild(link);
+        var fr = el("div", "frame");
+        var a2 = proto.cloneNode(true); a2.setAttribute("data-palette", c[0]); a2.setAttribute("data-style", c[1]); a2.setAttribute("aria-hidden", "true");
+        var cov = el("a", "cover"); cov.href = link.href; cov.setAttribute("aria-label", "Open " + pname(c[0]) + ", " + sname(c[1]) + ", full size");
+        cov.addEventListener("click", function (ev) { ev.preventDefault(); open(c[0], c[1]); });
+        fr.appendChild(a2); fr.appendChild(cov); cell.appendChild(cap); cell.appendChild(fr); g.appendChild(cell);
       });
       stage.appendChild(g); fit();
     }

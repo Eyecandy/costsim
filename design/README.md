@@ -6,25 +6,33 @@
 
 Double-click `style-preview.html` (no server, no build, no external requests). Use the switchers at the top:
 
-- **Palette**: A Teal (current, tidied), B Blue, C Terracotta, D Green. Each has three primary colours (brand, dark, tint) and three secondary colours from the same colour family, plus two status colours (error, warning) that sit outside the six.
+- **Palette**: ten teal-based palettes T1 to T10, grouped by family. Analogous: T1 Sea Pine + Harbour, T2 Petrol + Glacier, T3 Pine + Jade + Seafoam, T4 Deep Navy + Mint + Stone Teal. Earthy: T5 Moss + Dune, T6 Clay + Umber + Sage, T7 Sage + Pebble + Terracotta, T8 Olive + Ochre + Umber. Mixed: T9 Pine + Harbour + Clay, T10 Petrol + Sea Green + Ochre.
+  Each has the primary trio (Teal, Teal Mist, an off-white), three secondaries, an ink colour for text, and error and warning status colours.
 - **Style**: Clean, Soft, Bold, Dark. Every palette works with every style.
-- **View**: Single, Compare 2, Compare 4 (scaled-down copies side by side; vary palette or style). In Single you can also check Tablet and Phone widths.
+- **View**: Single, Compare 2, Compare 4 (scaled-down copies side by side; vary palette or style) and Compare all 10 (compact overview in the chosen style). Click a preview to open it full size. In Single you can also check Tablet and Phone widths.
 
-Each variant has a link, for example `style-preview.html#palette=blue&style=soft` (short form `#blue-soft`; compare: `#palette=blue&style=clean&view=compare4&vary=palette`). Palette ids: `teal`, `blue`, `terra`, `green`. Use the link as a screenshot target. The page prints cleanly (switchers are hidden, a caption names the variant).
+Each variant has a link, for example `style-preview.html#t6-soft` (long form `#palette=t6&style=soft`; compare: `#palette=t6&style=clean&view=compare4&vary=palette`; overview: `#palette=t1&style=soft&view=all10`). Use it as a screenshot target. The page prints cleanly (switchers are hidden, a caption names the variant).
 
-Because the secondary colours are close in hue, the charts do not rely on colour alone: the S-curve uses a diamond marker with long dashes for P50 and a square marker with dots for P85; the tornado has direct "P10 lower" and "P90 higher" labels; every bar has a printed value.
+How the colours are used: the off-white is the page tone, cards are white, Teal Mist is for tints, table headers, selected and key rows, Teal is the brand (swatch, P50 marker, totals), and the ink colour is the text colour and the Bold header band. Where the true Teal is below 4.5:1 with white text, buttons and links use the Teal Action colour (T1, T3 to T7, T9, T10); T2 and T8 use their own AA teal. The swatch strip always shows the true Teal.
+
+Because the secondary colours are close in hue, the charts do not rely on colour alone: the S-curve uses a diamond marker with long dashes for P50 and a square marker with dots for P85; the tornado has direct "P10 lower" and "P90 higher" labels and the lower bars are drawn lighter; every bar has a printed value. T10 is the thinnest palette for charts because its three secondaries are all dark.
 
 ## Add or change a palette
 
-1. In the `<style>` block, copy one `[data-palette="..."]` rule and give it a new id. Set the six colours `--p1`..`--p3` (primary: brand, dark, tint) and `--s1`..`--s3` (secondary, used by the charts: dark, light, grey), the status colours `--err` and `--warn`, the neutrals (`--bg` page, `--surface` cards, `--tint`, `--line`, `--text`, `--text2`, `--muted`), the button pair (`--accent`, `--on-accent`), the link and heading colour `--accent-text`, and the `--d-*` set used by the Dark style (including lighter chart colours `--d-s1`..`--d-s3`).
-2. Add `{ id, name, names, status, note }` to the `PAL` array in the script at the bottom (`names` are the six colour names, `status` the two status names).
-3. Check contrast: text 4.5:1 (including `--muted`, `--text2`, `--accent-text`, `--on-accent` on `--accent`, and `--err` as text), chart colours and `--warn` 3:1 against `--surface`. The palettes in the file passed 429 checks across all palette and style combinations.
+The palettes are plain CSS rules. In the `<style>` block, copy one `[data-palette="..."]` rule and give it a new id (`t11`):
+
+1. Set `--p1` (true brand teal), `--p2` (mist tint), `--p3` (off-white page tone), `--s1`..`--s3` (secondaries: dark, light, grey), `--deep` (ink, also the Bold header band), `--err` and `--warn` (status).
+2. Set the neutrals: `--bg` (page, the off-white), `--surface` (cards), `--tint` (the mist), `--line`, `--text` (ink), `--text2`, `--muted`.
+3. Set `--accent` (filled buttons, white text on it), `--accent-text` (links and teal text) and `--on-accent`.
+4. Set the `--d-*` tokens for the Dark style, including lighter chart colours `--d-s1`..`--d-s3` and lighter status colours.
+5. Add `{ id, label, name, family, names, status, ink, action, trueTealOk, note }` to the `PAL` array in the script at the bottom.
+6. Check contrast: text 4.5:1 (including `--muted`, `--text2`, `--accent-text`, `--on-accent` on `--accent`, and `--err` as text), chart colours and `--warn` 3:1 against `--surface`. The ten palettes passed 1085 checks across all palette and style combinations.
 
 Styles are the `.app[data-style="..."]` rules (radius, borders, shadows, header, buttons, type weight), driven by CSS variables.
 
 ## Notes
 
 - The app uses the Geist typeface. The preview uses the system font stack, so letter shapes differ slightly.
-- In palette A the brand teal `#1d868c` stays as the primary swatch, but buttons and teal text use Teal Deep `#156a70`: white on `#1d868c` is 4.34:1, just below the 4.5:1 AA threshold.
+- The Dark style neutrals, accent and chart colours are derived from each palette's ink and teal, since the palettes define only the light set.
 - Status colours show up as the "Input has changed" warning notice and the invalid cell (with an icon and a message, never colour alone).
 - The NO/EN toggle and links in the mock are decorative.
