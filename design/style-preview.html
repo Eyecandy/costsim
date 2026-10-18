@@ -51,8 +51,8 @@ body {
 .ui-bar button:focus-visible, .ui a:focus-visible, .ui input:focus-visible { outline: 3px solid #1d5fd1; outline-offset: 2px; }
 .sws { display: inline-flex; gap: 0; border-radius: 3px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25); }
 .sws i { width: 10px; height: 16px; display: block; }
-.sws i:nth-child(1) { background: var(--p1); } .sws i:nth-child(2) { background: var(--p2); } .sws i:nth-child(3) { background: var(--p3); }
-.sws i:nth-child(4) { background: var(--s1); } .sws i:nth-child(5) { background: var(--s2); } .sws i:nth-child(6) { background: var(--s3); }
+.sws i:nth-child(1) { background: var(--color-primary-100); } .sws i:nth-child(2) { background: var(--color-primary-400); } .sws i:nth-child(3) { background: var(--color-primary-600); }
+.sws i:nth-child(4) { background: var(--color-primary-800); } .sws i:nth-child(5) { background: var(--color-accent-300); } .sws i:nth-child(6) { background: var(--color-accent-500); }
 .ui-link { display: flex; flex: 1 1 18rem; gap: 8px; min-width: 0; }
 .ui-link input { flex: 1; min-width: 0; font: 12px/1.2 ui-monospace, Consolas, monospace; padding: 8px 10px; border: 1px solid var(--ui-line); border-radius: 6px; background: #f7f8f9; color: var(--ui-text); }
 [data-when] { display: none; }
@@ -71,6 +71,24 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .chip6 em { font-style: normal; font-size: 13px; }
 .chip6.small { min-height: 64px; padding-top: 14px; }
 .status-row { margin-top: 8px; align-items: center; }
+.ui-strip h3 { margin: 14px 0 8px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.ui-strip h3.sub { margin-top: 18px; color: var(--ui-muted); font-size: 11px; }
+.ui-strip .ui-small { margin: 8px 0 0; font-size: 12.5px; color: var(--ui-muted); }
+.scale { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+.sc { min-height: 92px; padding: 30px 8px 8px; border-radius: 6px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); min-width: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.sc.wide { grid-column: span 2; }
+.sc b { font-size: 12px; } .sc b i { font-style: normal; font-weight: 600; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; margin-left: 4px; }
+.sc em { font-style: normal; font-size: 11.5px; overflow-wrap: anywhere; line-height: 1.25; }
+.sc span { font: 11.5px ui-monospace, Consolas, monospace; }
+.sup { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px 24px; }
+.sg h4 { margin: 0 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-muted); }
+.minis { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+.mc { display: grid; justify-items: start; gap: 1px; font-size: 10.5px; min-width: 54px; }
+.mc i { display: block; width: 54px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); position: relative; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.mc i u { position: absolute; left: 0; right: 0; bottom: 0; height: 7px; border-radius: 0 0 4px 4px; }
+.mc span { color: var(--ui-text); font-weight: 600; }
+.mc code { font: 10.5px ui-monospace, Consolas, monospace; color: var(--ui-muted); }
+@media (max-width: 760px) { .scale { grid-template-columns: repeat(5, minmax(0, 1fr)); } .sc.wide { grid-column: span 1; } }
 .status-row .status-note { grid-column: 1 / -1; margin: 0; font-size: 12.5px; color: var(--ui-muted); }
 @media (max-width: 760px) { .status-row .status-note { grid-column: 1 / -1; } }
 @media (max-width: 760px) { .chips { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ui-label { flex-basis: 100%; } }
@@ -98,99 +116,343 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .ui-foot { margin-top: 18px; color: var(--ui-muted); font-size: 12.5px; max-width: 90ch; }
 
 /* ================= Palettes (generated from palettes.json) =================
-   p1 Teal (true brand teal), p2 Teal Mist (tint), p3 off-white (page tone), s1-s3 secondaries.
-   deep = ink text colour (also the Bold header band). accent = filled buttons, accent-text = links and teal text
-   (the Teal Action colour when the true teal is below 4.5:1 with white). err/warn = status colours.
-   d-* tokens are derived for the Dark style. */
+   Design-system tokens: --color-primary-50..900 (teal, 500 = brand, 600 = action), --color-accent-100..900,
+   --color-neutral-50..900, --color-surface, --color-<status>-text/-tint, --color-series-1..6.
+   d-* tokens are derived for the Dark style from the primary scale. */
 [data-palette="t1"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #faf9f4; --s1: #0b4838; --s2: #5792ae; --s3: #3f585a;
-  --deep: #0f2c30; --err: #b03a3a; --warn: #946600;
-  --bg: #faf9f4; --surface: #ffffff; --tint: #e4f2f3; --line: #d5dddd; --text: #0f2c30; --text2: #2f4244; --muted: #5b6c6e;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #0f181a; --d-surface: #172527; --d-tint: #203437; --d-line: #335357; --d-text: #e7edee; --d-muted: #a9b9bc;
-  --d-accent: #57c1c7; --d-on-accent: #0a2124; --d-accent-text: #85d2d6;
-  --d-s1: #8de2cc; --d-s2: #7caac0; --d-s3: #6f979a; --d-err: #dc9494; --d-warn: #dfb049;
-}
-[data-palette="t2"] {
-  --p1: #187b81; --p2: #e3f0f4; --p3: #f7f8f5; --s1: #153f55; --s2: #618fb0; --s3: #485b67;
-  --deep: #0f2733; --err: #b03a3a; --warn: #946600;
-  --bg: #f7f8f5; --surface: #ffffff; --tint: #e3f0f4; --line: #d5dddd; --text: #0f2733; --text2: #2f4244; --muted: #5b6c6e;
-  --accent: #187b81; --on-accent: #ffffff; --accent-text: #14666c;
-  --d-bg: #0f161a; --d-surface: #162127; --d-tint: #202f37; --d-line: #324b58; --d-text: #e7ecee; --d-muted: #a9b6bc;
-  --d-accent: #57c0c7; --d-on-accent: #0a1b24; --d-accent-text: #85d2d6;
-  --d-s1: #8dc5e2; --d-s2: #7ea3be; --d-s3: #6f899a; --d-err: #dc9494; --d-warn: #dfb049;
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #dceefa;
+  --color-accent-300: #91c6e4;
+  --color-accent-500: #4a86a6;
+  --color-accent-700: #275c77;
+  --color-accent-900: #092a3a;
+  --color-neutral-50: #faf9f4;
+  --color-neutral-100: #eeede7;
+  --color-neutral-200: #e3e1da;
+  --color-neutral-300: #d3d1c8;
+  --color-neutral-500: #878e89;
+  --color-neutral-600: #5a6667;
+  --color-neutral-800: #2f3a3c;
+  --color-neutral-900: #0f2c30;
+  --color-surface: #ffffff;
+  --color-success-text: #3d7a48;
+  --color-success-tint: #e3f6e5;
+  --color-warning-text: #906606;
+  --color-warning-tint: #ffeed3;
+  --color-error-text: #b74441;
+  --color-error-tint: #ffe9e6;
+  --color-info-text: #436fa6;
+  --color-info-tint: #e3f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #005256;
+  --color-series-3: #5e9bbb;
+  --color-series-4: #275c77;
+  --color-series-5: #47a0a6;
+  --color-series-6: #056a6f;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #faf9f4;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #49d2d8;
+  --d-k3: #c4dae6;
+  --d-k4: #7fb8d5;
+  --d-pill-bg: #185058;
+  --d-pill-fg: #b8d2e0;
+  --d-pill-bd: #3d7280;
+  --d-a500: #79a9c3;
+  --d-ok: #add6b5;
+  --d-ok-b: #1c5350;
+  --d-warn: #edd397;
+  --d-warn-b: #26524b;
+  --d-err: #dfa6a5;
+  --d-err-b: #244b4e;
+  --d-info: #a8bfdc;
+  --d-info-b: #1b4f56;
 }
 [data-palette="t3"] {
-  --p1: #1d868c; --p2: #e3f2ef; --p3: #f7f9f4; --s1: #164832; --s2: #306f4e; --s3: #479b83;
-  --deep: #10291f; --err: #b03a3a; --warn: #946600;
-  --bg: #f7f9f4; --surface: #ffffff; --tint: #e3f2ef; --line: #d5dddd; --text: #10291f; --text2: #2f4244; --muted: #5b6c6e;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #101915; --d-surface: #182520; --d-tint: #22352d; --d-line: #365448; --d-text: #e7eeeb; --d-muted: #a9bcb4;
-  --d-accent: #57c1c7; --d-on-accent: #0a2419; --d-accent-text: #85d2d6;
-  --d-s1: #92debc; --d-s2: #78c49c; --d-s3: #57b298; --d-err: #dc9494; --d-warn: #dfb049;
-}
-[data-palette="t4"] {
-  --p1: #1d868c; --p2: #e3f0f2; --p3: #f9f9f6; --s1: #1a3b51; --s2: #419b89; --s3: #4b5f64;
-  --deep: #10283a; --err: #b03a3a; --warn: #946600;
-  --bg: #f9f9f6; --surface: #ffffff; --tint: #e3f0f2; --line: #d5dddd; --text: #10283a; --text2: #2f4244; --muted: #5b6c6e;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #0f151a; --d-surface: #162027; --d-tint: #1f2d38; --d-line: #314858; --d-text: #e7ebee; --d-muted: #a9b4bc;
-  --d-accent: #57c1c7; --d-on-accent: #0a1924; --d-accent-text: #85d2d6;
-  --d-s1: #93bfdc; --d-s2: #76c6b6; --d-s3: #738f96; --d-err: #dc9494; --d-warn: #dfb049;
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e3f2ef;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #ddf1e6;
+  --color-accent-300: #96ccaf;
+  --color-accent-500: #2f7a58;
+  --color-accent-700: #055034;
+  --color-accent-900: #052f1d;
+  --color-neutral-50: #f7f9f4;
+  --color-neutral-100: #ebeee8;
+  --color-neutral-200: #e0e2db;
+  --color-neutral-300: #cfd2ca;
+  --color-neutral-500: #888e88;
+  --color-neutral-600: #5c6661;
+  --color-neutral-800: #303b36;
+  --color-neutral-900: #10291f;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #906606;
+  --color-warning-tint: #ffeed3;
+  --color-error-text: #b74441;
+  --color-error-tint: #ffe9e6;
+  --color-info-text: #436fa6;
+  --color-info-tint: #e3f2ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #055034;
+  --color-series-3: #4f9875;
+  --color-series-4: #005256;
+  --color-series-5: #2f7a58;
+  --color-series-6: #47a0a6;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f7f9f4;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #49d8a3;
+  --d-k3: #b1d6c4;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #175751;
+  --d-pill-fg: #b5e3ce;
+  --d-pill-bd: #3a8270;
+  --d-a500: #73c9a2;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #edd397;
+  --d-warn-b: #26524b;
+  --d-err: #dfa6a5;
+  --d-err-b: #244b4e;
+  --d-info: #a8bfdc;
+  --d-info-b: #1b4f56;
 }
 [data-palette="t5"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #fbf9f3; --s1: #374619; --s2: #a48a53; --s3: #5f5a54;
-  --deep: #1f2a1c; --err: #9f3338; --warn: #8a6a00;
-  --bg: #fbf9f3; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #1f2a1c; --text2: #3b352f; --muted: #6b655d;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #131612; --d-surface: #1d221c; --d-tint: #293027; --d-line: #414c3e; --d-text: #e9eee7; --d-muted: #adbca9;
-  --d-accent: #57c1c7; --d-on-accent: #10240a; --d-accent-text: #85d2d6;
-  --d-s1: #c3d996; --d-s2: #bea97e; --d-s3: #8c857d; --d-err: #dc9396; --d-warn: #dfbc49;
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #e8eedc;
+  --color-accent-300: #b7c593;
+  --color-accent-500: #5b6a2c;
+  --color-accent-700: #364208;
+  --color-accent-900: #232a09;
+  --color-neutral-50: #fbf9f3;
+  --color-neutral-100: #efede7;
+  --color-neutral-200: #e4e1da;
+  --color-neutral-300: #d4d1c8;
+  --color-neutral-500: #8c8d85;
+  --color-neutral-600: #5f655e;
+  --color-neutral-800: #343a32;
+  --color-neutral-900: #1f2a1c;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #886800;
+  --color-warning-tint: #fbefd2;
+  --color-error-text: #b7434a;
+  --color-error-tint: #ffe9e8;
+  --color-info-text: #3971a4;
+  --color-info-tint: #e1f3ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #364208;
+  --color-series-3: #778849;
+  --color-series-4: #005256;
+  --color-series-5: #5b6a2c;
+  --color-series-6: #47a0a6;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #fbf9f3;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #b8d742;
+  --d-k3: #c5d0a8;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #245648;
+  --d-pill-fg: #d7e1b7;
+  --d-pill-bd: #5a805a;
+  --d-a500: #b3c676;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #edd897;
+  --d-warn-b: #26534b;
+  --d-err: #dea5a9;
+  --d-err-b: #244b4e;
+  --d-info: #a4c3df;
+  --d-info-b: #1a5057;
 }
 [data-palette="t6"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #faf8f3; --s1: #955542; --s2: #4f3228; --s3: #7c9072;
-  --deep: #2a211c; --err: #9f3338; --warn: #8a6a00;
-  --bg: #faf8f3; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #2a211c; --text2: #3b352f; --muted: #6b655d;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #161412; --d-surface: #221e1c; --d-tint: #302a27; --d-line: #4c433e; --d-text: #eeeae7; --d-muted: #bcb0a9;
-  --d-accent: #57c1c7; --d-on-accent: #24130a; --d-accent-text: #85d2d6;
-  --d-s1: #d3a99c; --d-s2: #be8f7e; --d-s3: #809376; --d-err: #dc9396; --d-warn: #dfbc49;
-}
-[data-palette="t7"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #f7f6f2; --s1: #4f654a; --s2: #908b84; --s3: #6e3524;
-  --deep: #232a26; --err: #9f3338; --warn: #8a6a00;
-  --bg: #f7f6f2; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #232a26; --text2: #3b352f; --muted: #6b655d;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #121614; --d-surface: #1c221e; --d-tint: #27302b; --d-line: #3e4c44; --d-text: #e7eeea; --d-muted: #a9bcb1;
-  --d-accent: #57c1c7; --d-on-accent: #0a2415; --d-accent-text: #85d2d6;
-  --d-s1: #b1c3ad; --d-s2: #a39f99; --d-s3: #c36347; --d-err: #dc9396; --d-warn: #dfbc49;
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #fbe6df;
+  --color-accent-300: #e7af9e;
+  --color-accent-500: #955542;
+  --color-accent-700: #663121;
+  --color-accent-900: #3d1c12;
+  --color-neutral-50: #faf8f3;
+  --color-neutral-100: #efede7;
+  --color-neutral-200: #e4e1da;
+  --color-neutral-300: #d4d1c8;
+  --color-neutral-500: #918b84;
+  --color-neutral-600: #6a615c;
+  --color-neutral-800: #3f3631;
+  --color-neutral-900: #2a211c;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #886800;
+  --color-warning-tint: #fbefd2;
+  --color-error-text: #b9444f;
+  --color-error-tint: #ffe9e9;
+  --color-info-text: #3971a4;
+  --color-info-tint: #e1f3ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #663121;
+  --color-series-3: #b5725e;
+  --color-series-4: #005256;
+  --color-series-5: #955542;
+  --color-series-6: #47a0a6;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #faf8f3;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #d28972;
+  --d-k3: #e3cac3;
+  --d-k4: #49d2d8;
+  --d-pill-bg: #274a49;
+  --d-pill-fg: #e0c1b8;
+  --d-pill-bd: #62625b;
+  --d-a500: #c48a79;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #edd897;
+  --d-warn-b: #26534b;
+  --d-err: #dea5ab;
+  --d-err-b: #244b4f;
+  --d-info: #a4c3df;
+  --d-info-b: #1a5057;
 }
 [data-palette="t8"] {
-  --p1: #187b81; --p2: #e4f2f3; --p3: #f9f8f1; --s1: #595c22; --s2: #a9823c; --s3: #4d3020;
-  --deep: #2a2418; --err: #9f3338; --warn: #8a6a00;
-  --bg: #f9f8f1; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #2a2418; --text2: #3b352f; --muted: #6b655d;
-  --accent: #187b81; --on-accent: #ffffff; --accent-text: #14666c;
-  --d-bg: #171512; --d-surface: #23201a; --d-tint: #312d25; --d-line: #4e483b; --d-text: #eeece7; --d-muted: #bcb6a9;
-  --d-accent: #57c0c7; --d-on-accent: #241b0a; --d-accent-text: #85d2d6;
-  --d-s1: #d5d897; --d-s2: #ccab70; --d-s3: #b77652; --d-err: #dc9396; --d-warn: #dfbc49;
-}
-[data-palette="t9"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #fafaf6; --s1: #0b4838; --s2: #5792ae; --s3: #955640;
-  --deep: #112b2c; --err: #9f3338; --warn: #8a6a00;
-  --bg: #fafaf6; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #112b2c; --text2: #3b352f; --muted: #6b655d;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #101919; --d-surface: #182525; --d-tint: #223435; --d-line: #365354; --d-text: #e7eeee; --d-muted: #a9bbbc;
-  --d-accent: #57c1c7; --d-on-accent: #0a2324; --d-accent-text: #85d2d6;
-  --d-s1: #8de2cc; --d-s2: #7caac0; --d-s3: #b56d54; --d-err: #dc9396; --d-warn: #dfbc49;
-}
-[data-palette="t10"] {
-  --p1: #1d868c; --p2: #e4f2f3; --p3: #f8f7f2; --s1: #124054; --s2: #1a5d48; --s3: #a7833b;
-  --deep: #0f2b33; --err: #9f3338; --warn: #8a6a00;
-  --bg: #f8f7f2; --surface: #ffffff; --tint: #e4f2f3; --line: #ddd8cf; --text: #0f2b33; --text2: #3b352f; --muted: #6b655d;
-  --accent: #156a70; --on-accent: #ffffff; --accent-text: #156a70;
-  --d-bg: #0f171a; --d-surface: #162327; --d-tint: #203237; --d-line: #324f58; --d-text: #e7edee; --d-muted: #a9b8bc;
-  --d-accent: #57c1c7; --d-on-accent: #0a1e24; --d-accent-text: #85d2d6;
-  --d-s1: #8dc8e2; --d-s2: #68d5b2; --d-s3: #bf984a; --d-err: #dc9396; --d-warn: #dfbc49;
+  --color-primary-50: #f2f8f9;
+  --color-primary-100: #e4f2f3;
+  --color-primary-200: #c8e4e6;
+  --color-primary-300: #97cccf;
+  --color-primary-400: #47a0a6;
+  --color-primary-500: #1d868c;
+  --color-primary-600: #056a6f;
+  --color-primary-700: #005256;
+  --color-primary-800: #003a3d;
+  --color-primary-900: #022629;
+  --color-accent-100: #f4ead9;
+  --color-accent-300: #d6b98a;
+  --color-accent-500: #a9823c;
+  --color-accent-700: #7b5a19;
+  --color-accent-900: #362200;
+  --color-neutral-50: #f9f8f1;
+  --color-neutral-100: #eeede7;
+  --color-neutral-200: #e3e1da;
+  --color-neutral-300: #d3d1c8;
+  --color-neutral-500: #8f8c84;
+  --color-neutral-600: #67635a;
+  --color-neutral-800: #3c372f;
+  --color-neutral-900: #2a2418;
+  --color-surface: #ffffff;
+  --color-success-text: #49783f;
+  --color-success-tint: #e6f6e3;
+  --color-warning-text: #846a00;
+  --color-warning-tint: #faf0d2;
+  --color-error-text: #b9444f;
+  --color-error-tint: #ffe9e9;
+  --color-info-text: #3971a4;
+  --color-info-tint: #e1f3ff;
+  --color-series-1: #1d868c;
+  --color-series-2: #7b5a19;
+  --color-series-3: #005256;
+  --color-series-4: #b28b45;
+  --color-series-5: #47a0a6;
+  --color-series-6: #056a6f;
+  --d-bg: #022629;
+  --d-surface: #003a3d;
+  --d-tint: #004548;
+  --d-line: #005256;
+  --d-line2: #15696e;
+  --d-text: #f9f8f1;
+  --d-text2: #c8e4e6;
+  --d-muted: #97cccf;
+  --d-accent: #47a0a6;
+  --d-on-accent: #022629;
+  --d-atext: #97cccf;
+  --d-k1: #79dde3;
+  --d-k2: #e0b96d;
+  --d-k3: #49d2d8;
+  --d-k4: #e1d0b1;
+  --d-pill-bg: #295147;
+  --d-pill-fg: #e4d3b4;
+  --d-pill-bd: #667357;
+  --d-a500: #ccab70;
+  --d-ok: #b5d5af;
+  --d-ok-b: #1d534f;
+  --d-warn: #eddc97;
+  --d-warn-b: #26544b;
+  --d-err: #dea5ab;
+  --d-err-b: #244b4f;
+  --d-info: #a4c3df;
+  --d-info-b: #1a5057;
 }
 
 
@@ -199,10 +461,15 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   container: app / inline-size;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   /* semantic colors, light mapping */
-  --c-card: var(--surface); --c-tint: var(--tint); --c-line: var(--line); --c-text: var(--text); --c-muted: var(--muted);
-  --c-accent: var(--accent); --c-on: var(--on-accent); --c-atext: var(--accent-text);
-  --k1: var(--s1); --k2: var(--s2); --k3: var(--s3); --kp: var(--p1); --tot: var(--p1);
-  --c-err: var(--err); --c-warn: var(--warn); --c-text2: var(--text2);
+  --c-page: var(--color-neutral-50); --c-card: var(--color-surface); --c-tint: var(--color-primary-100); --c-panel: var(--color-neutral-100);
+  --c-line: var(--color-neutral-200); --c-line2: var(--color-neutral-300);
+  --c-text: var(--color-neutral-900); --c-text2: var(--color-neutral-800); --c-muted: var(--color-neutral-600);
+  --c-accent: var(--color-primary-600); --c-on: #ffffff; --c-atext: var(--color-primary-600); --c-brand: var(--color-primary-500);
+  --c-deep: var(--color-primary-800);
+  --c-ok: var(--color-success-text); --c-ok-b: var(--color-success-tint); --c-warn: var(--color-warning-text); --c-warn-b: var(--color-warning-tint);
+  --c-err: var(--color-error-text); --c-err-b: var(--color-error-tint); --c-info: var(--color-info-text); --c-info-b: var(--color-info-tint);
+  --c-pill-bg: var(--color-accent-100); --c-pill-fg: var(--color-accent-700); --c-pill-bd: var(--color-accent-300); --c-a500: var(--color-accent-500);
+  --k1: var(--color-series-1); --k2: var(--color-series-2); --k3: var(--color-series-3); --k4: var(--color-series-4); --tot: var(--color-series-2);
   /* shape and feel, defaults = Clean */
   --fs: 13px; --fw-body: 400;
   --r: 4px; --r-sm: 3px; --chip-r: 3px; --th-r: 0px; --bar-r: 2px;
@@ -211,12 +478,11 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   --title-size: 11px; --title-fw: 600; --title-tr: uppercase; --title-ls: 0.09em;
   --card-h-pad: var(--pad) var(--pad) 0; --card-h-bg: transparent; --card-h-fg: var(--c-muted); --card-h-hint: var(--c-muted);
   --th-bg: transparent; --th-fg: var(--c-muted); --th-line: 1px solid var(--c-line); --row-line: var(--c-line);
-  --field-bg: var(--c-card); --field-border: 1px solid var(--c-line);
+  --field-bg: var(--c-card); --field-border: 1px solid var(--c-line2);
   --btn-h: 36px; --btn-r: 4px; --btn-fw: 600; --btn-tr: uppercase; --btn-shadow: none; --btn-border: 1px solid transparent;
   --hdr-bg: var(--c-page); --hdr-fg: var(--c-text); --hdr-border: 1px solid var(--c-line); --hdr-margin: 0; --hdr-r: 0px;
-  --hdr-shadow: none; --hdr-pad: 12px 28px; --hdr-brand: var(--c-atext); --seg-bg: var(--c-text); --seg-fg: var(--c-card);
+  --hdr-shadow: none; --hdr-pad: 12px 28px; --hdr-brand: var(--c-brand); --hdr-saved: var(--c-ok); --seg-bg: var(--c-text); --seg-fg: var(--c-card);
   --hl-bg: var(--c-tint);
-  --c-page: var(--bg);
   background: var(--c-page);
   color: var(--c-text);
   font: var(--fw-body) var(--fs) / 1.45 var(--font);
@@ -226,32 +492,35 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app *, .app *::before, .app *::after { box-sizing: border-box; }
 .app[data-style="soft"] {
   --fs: 13.5px; --r: 16px; --r-sm: 10px; --chip-r: 999px; --th-r: 10px; --bar-r: 6px;
-  --shadow: 0 1px 2px color-mix(in srgb, var(--deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--deep) 24%, transparent);
+  --shadow: 0 1px 2px color-mix(in srgb, var(--c-deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--c-deep) 24%, transparent);
   --card-border: 0 solid transparent; --pad: 24px; --gap: 24px; --main-pad: 8px 20px 36px;
   --title-size: 15px; --title-fw: 650; --title-tr: none; --title-ls: 0; --card-h-fg: var(--c-text);
-  --th-bg: var(--c-tint); --th-fg: var(--c-text2); --th-line: 0 solid transparent; --row-line: color-mix(in srgb, var(--c-line) 55%, transparent);
-  --field-bg: var(--c-tint); --field-border: 1px solid transparent;
+  --th-bg: var(--c-panel); --th-fg: var(--c-text2); --th-line: 0 solid transparent; --row-line: color-mix(in srgb, var(--c-line) 55%, transparent);
+  --field-bg: var(--c-panel); --field-border: 1px solid transparent;
   --btn-h: 42px; --btn-r: 999px; --btn-tr: none; --btn-shadow: 0 8px 18px -8px color-mix(in srgb, var(--c-accent) 75%, transparent);
   --hdr-bg: var(--c-card); --hdr-margin: 14px 20px 8px; --hdr-r: 16px; --hdr-border: 0 solid transparent;
-  --hdr-shadow: 0 1px 2px color-mix(in srgb, var(--deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--deep) 24%, transparent);
-  --hdr-pad: 10px 20px; --c-page: var(--bg);
+  --hdr-shadow: 0 1px 2px color-mix(in srgb, var(--c-deep) 8%, transparent), 0 12px 28px -12px color-mix(in srgb, var(--c-deep) 24%, transparent);
+  --hdr-pad: 10px 20px;
 }
 .app[data-style="bold"] {
   --fs: 14px; --fw-body: 500; --r: 2px; --r-sm: 2px; --chip-r: 2px; --bar-r: 0px;
-  --shadow: 4px 4px 0 var(--deep); --card-border: 2px solid var(--deep); --gap: 26px; --main-pad: 28px 32px 40px;
+  --shadow: 4px 4px 0 var(--c-deep); --card-border: 2px solid var(--c-deep); --gap: 26px; --main-pad: 28px 32px 40px;
   --title-size: 12.5px; --title-fw: 800; --title-ls: 0.1em;
-  --card-h-pad: 10px var(--pad); --card-h-bg: var(--deep); --card-h-fg: #ffffff; --card-h-hint: var(--p3);
-  --th-bg: var(--c-tint); --th-fg: var(--c-text); --th-line: 2px solid var(--deep); --row-line: var(--c-line);
+  --card-h-pad: 10px var(--pad); --card-h-bg: var(--c-deep); --card-h-fg: #ffffff; --card-h-hint: var(--color-neutral-50);
+  --th-bg: var(--c-panel); --th-fg: var(--c-text); --th-line: 2px solid var(--c-deep); --row-line: var(--c-line);
   --field-border: 1px solid var(--c-muted);
-  --btn-h: 46px; --btn-r: 2px; --btn-fw: 800; --btn-border: 2px solid var(--deep); --btn-shadow: 3px 3px 0 var(--deep);
-  --hdr-bg: var(--deep); --hdr-fg: #ffffff; --hdr-border: 0 solid transparent; --hdr-pad: 14px 32px; --hdr-brand: #ffffff;
-  --seg-bg: #ffffff; --seg-fg: var(--deep); --hl-bg: var(--tint); --c-page: var(--bg);
+  --btn-h: 46px; --btn-r: 2px; --btn-fw: 800; --btn-border: 2px solid var(--c-deep); --btn-shadow: 3px 3px 0 var(--c-deep);
+  --hdr-bg: var(--c-deep); --hdr-fg: #ffffff; --hdr-border: 0 solid transparent; --hdr-pad: 14px 32px; --hdr-brand: #ffffff; --hdr-saved: #ffffff;
+  --seg-bg: #ffffff; --seg-fg: var(--c-deep); --hl-bg: var(--c-tint);
 }
 .app[data-style="dark"] {
-  --c-page: var(--d-bg); --c-card: var(--d-surface); --c-tint: var(--d-tint); --c-line: var(--d-line); --c-text: var(--d-text);
-  --c-muted: var(--d-muted); --c-accent: var(--d-accent); --c-on: var(--d-on-accent); --c-atext: var(--d-accent-text);
-  --k1: var(--d-s1); --k2: var(--d-s2); --k3: var(--d-s3); --kp: var(--d-accent); --tot: var(--d-muted);
-  --c-err: var(--d-err); --c-warn: var(--d-warn); --c-text2: var(--d-muted);
+  --c-page: var(--d-bg); --c-card: var(--d-surface); --c-tint: var(--d-tint); --c-panel: var(--d-tint); --c-line: var(--d-line); --c-line2: var(--d-line2);
+  --c-text: var(--d-text); --c-text2: var(--d-text2); --c-muted: var(--d-muted);
+  --c-accent: var(--d-accent); --c-on: var(--d-on-accent); --c-atext: var(--d-atext); --c-brand: var(--d-atext); --c-deep: var(--d-surface);
+  --c-ok: var(--d-ok); --c-ok-b: var(--d-ok-b); --c-warn: var(--d-warn); --c-warn-b: var(--d-warn-b);
+  --c-err: var(--d-err); --c-err-b: var(--d-err-b); --c-info: var(--d-info); --c-info-b: var(--d-info-b);
+  --c-pill-bg: var(--d-pill-bg); --c-pill-fg: var(--d-pill-fg); --c-pill-bd: var(--d-pill-bd); --c-a500: var(--d-a500);
+  --k1: var(--d-k1); --k2: var(--d-k2); --k3: var(--d-k3); --k4: var(--d-k4); --tot: var(--d-k2);
   --r: 10px; --r-sm: 6px; --chip-r: 999px; --bar-r: 3px; --pad: 20px; --gap: 22px;
   --th-bg: var(--c-tint); --hdr-bg: var(--c-card); --hdr-brand: var(--c-atext);
   --seg-bg: var(--c-accent); --seg-fg: var(--c-on); --hl-bg: var(--c-tint);
@@ -266,7 +535,8 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app .brand { font-size: 1.45em; font-weight: 700; letter-spacing: 0.07em; color: var(--hdr-brand); line-height: 1.2; }
 .app[data-style="bold"] .brand { font-weight: 800; }
 .app .doc { flex: 1 1 12em; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
-.app .doc small { color: inherit; opacity: 0.8; margin-left: 8px; font-weight: 400; }
+.app .doc small { color: var(--hdr-saved); margin-left: 8px; font-weight: 500; }
+.app .doc small svg { width: 12px; height: 12px; vertical-align: -1px; margin-right: 3px; }
 .app .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; }
 .app .nav a { color: var(--hdr-fg); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 0.22em; }
 .app .lang { display: inline-flex; border: 1px solid color-mix(in srgb, currentColor 35%, transparent); border-radius: var(--btn-r); overflow: hidden; font-size: 0.85em; font-weight: 600; }
@@ -296,8 +566,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app .prof { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin: 0; }
 .app .prof dt { font-size: 0.85em; color: var(--c-muted); margin-bottom: 3px; }
 .app .prof dd { margin: 0; }
-.app .pill { display: inline-block; padding: 3px 11px; border-radius: var(--chip-r); background: var(--c-tint); border: var(--field-border); font-weight: 500; }
-.app[data-style="clean"] .pill { background: transparent; }
+.app .pill { display: inline-block; padding: 3px 11px; border-radius: var(--chip-r); background: var(--c-pill-bg); color: var(--c-pill-fg); border: 1px solid var(--c-pill-bd); font-weight: 600; }
 
 /* tables */
 .app .scroll { overflow-x: auto; }
@@ -319,19 +588,23 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 
 /* incurred */
 .app .inc { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
-.app .meter { height: 8px; margin-top: 12px; border-radius: 999px; background: var(--c-tint); overflow: hidden; border: 1px solid var(--c-line); }
-.app .meter span { display: block; height: 100%; width: 14.7%; background: var(--c-atext); border-radius: 999px; }
+.app .meter { height: 8px; margin-top: 12px; border-radius: 999px; background: var(--c-panel); overflow: hidden; border: 1px solid var(--c-line); }
+.app .meter span { display: block; height: 100%; width: 14.7%; background: var(--c-a500); border-radius: 999px; }
 .app[data-style="bold"] .meter, .app[data-style="bold"] .meter span { border-radius: 0; }
 
 /* run strip */
 .app .strip { display: flex; flex-direction: column; gap: 8px; }
 .app .btn { width: 100%; height: var(--btn-h); font: var(--btn-fw) 0.92em var(--font); letter-spacing: 0.08em; text-transform: var(--btn-tr); background: var(--c-accent); color: var(--c-on); border: var(--btn-border); border-radius: var(--btn-r); box-shadow: var(--btn-shadow); cursor: default; }
-.app .notice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--c-warn); border-radius: var(--r-sm); background: color-mix(in srgb, var(--c-warn) 9%, var(--c-card)); color: var(--c-text); }
+.app .notice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--c-warn); border-radius: var(--r-sm); background: var(--c-warn-b); color: var(--c-text); }
+.app .notice.info { border-color: var(--c-info); background: var(--c-info-b); margin-top: 12px; }
+.app .notice.info svg { color: var(--c-info); }
+.app .notice.info p { margin: 0; }
+.app .notice b { color: var(--c-warn); }
 .app .notice svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--c-warn); }
-.app .notice p { margin: 2px 0 0; font-size: 0.92em; color: var(--c-text2); }
+.app .notice p { margin: 2px 0 0; font-size: 0.92em; color: var(--c-text); }
 .app .notice b { font-weight: 700; }
-.app .fld.bad { border: 1.5px solid var(--c-err); background: color-mix(in srgb, var(--c-err) 10%, var(--c-card)); }
-.app .fld.chg { border-color: var(--c-atext); background: color-mix(in srgb, var(--c-atext) 14%, var(--c-card)); }
+.app .fld.bad { border: 1.5px solid var(--c-err); background: var(--c-err-b); }
+.app .fld.chg { border: 1.5px solid var(--c-brand); background: var(--c-tint); }
 .app .note.err { display: flex; gap: 6px; align-items: flex-start; color: var(--c-err); font-weight: 500; }
 .app .note.err svg { flex: none; width: 15px; height: 15px; margin-top: 2px; }
 
@@ -362,19 +635,18 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 .app .chart .area { fill: var(--k1); opacity: 0.1; }
 .app .chart .ref { stroke: var(--c-muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
 .app .chart .mk { stroke-width: 1.6; stroke-dasharray: 5 4; }
-.app .chart .mk.m2 { stroke: var(--kp); stroke-dasharray: 7 4; } .app .chart .mk.m3 { stroke: var(--k3); stroke-dasharray: 2 3.5; }
+.app .chart .mk.m2 { stroke: var(--k2); stroke-dasharray: 7 4; } .app .chart .mk.m3 { stroke: var(--k3); stroke-dasharray: 2 3.5; }
 .app .chart .dot { stroke: var(--c-card); stroke-width: 2; }
-.app .chart .dot.m2 { fill: var(--kp); } .app .chart .dot.m3 { fill: var(--k3); }
+.app .chart .dot.m2 { fill: var(--k2); } .app .chart .dot.m3 { fill: var(--k3); }
 .app .chart .bar { rx: var(--bar-r); }
-.app .chart .bar.lo { opacity: 0.72; }
-.app .chart .bar.lo, .app .chart .bar.inc { fill: var(--k2); } .app .chart .bar.hi { fill: var(--k1); } .app .chart .bar.dec { fill: var(--k3); }
-.app .chart .bar.tot { fill: var(--tot); } .app .chart .bar.res { fill: var(--k1); stroke: var(--c-card); stroke-width: 1.5; }
+.app .chart .bar.lo, .app .chart .bar.dec { fill: var(--k3); } .app .chart .bar.hi, .app .chart .bar.inc { fill: var(--k1); }
+.app .chart .bar.tot { fill: var(--k2); } .app .chart .bar.res { fill: var(--k4); stroke: var(--c-card); stroke-width: 2; stroke-dasharray: 4 3; }
 .app .chart .conn { stroke: var(--c-muted); stroke-width: 1; stroke-dasharray: 2 2; }
 .app .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 0.9em; color: var(--c-muted); }
 .app .legend li { display: inline-flex; align-items: center; gap: 6px; }
 .app .legend .sw { width: 14px; height: 8px; border-radius: var(--bar-r); background: var(--k1); }
-.app .legend .sw.k2 { background: var(--k2); } .app .legend .sw.k3 { background: var(--k3); } .app .legend .sw.kt { background: var(--tot); }
-.app .legend .sw.dia { width: 9px; height: 9px; background: var(--kp); transform: rotate(45deg); border-radius: 1px; margin: 0 2px; }
+.app .legend .sw.k2 { background: var(--k2); } .app .legend .sw.k3 { background: var(--k3); } .app .legend .sw.k4 { background: var(--k4); } .app .legend .sw.kt { background: var(--k2); }
+.app .legend .sw.dia { width: 9px; height: 9px; background: var(--k2); transform: rotate(45deg); border-radius: 1px; margin: 0 2px; }
 .app .legend .sw.sq { width: 9px; height: 9px; background: var(--k3); border-radius: 0; margin: 0 2px; }
 .app .legend .ln { width: 16px; height: 0; border-top: 3px solid var(--k1); border-radius: 2px; }
 .app .legend em { font-style: italic; }
@@ -398,7 +670,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <div class="ui">
   <div class="no-print">
     <h1>U·SKOP style preview</h1>
-    <p class="ui-lead">The main calculator page in ten teal-based colour palettes and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
+    <p class="ui-lead">The main calculator page in five teal-based colour systems and four visual styles. Every palette works with every style. Pick one, or compare several side by side. All numbers are sample data.</p>
     <div class="ui-bar" id="controls">
       <div class="ui-row top"><span class="ui-label">Palette</span><div class="ui-seg" id="pal-seg"></div></div>
       <div class="ui-row"><span class="ui-label">Style</span><div class="ui-seg" id="sty-seg"></div></div>
@@ -416,7 +688,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <div class="app" data-palette="t1" data-style="clean">
   <header class="hdr"><div class="hdr-in">
     <span class="brand">U·SKOP</span>
-    <span class="doc">Ullern renovation, phase 2 <small>Saved</small></span>
+    <span class="doc">Ullern renovation, phase 2 <small><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.6 2.6L10 3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Saved</small></span>
     <nav class="nav" aria-label="Shortcuts and language">
       <a href="#guide" tabindex="-1">Method Guide</a><a href="#about" tabindex="-1">About the model</a>
       <span class="lang" aria-label="Language"><span>NO</span><span class="on">EN</span></span>
@@ -462,7 +734,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
       <section class="card"><div class="card-h"><h2>Incurred costs</h2></div><div class="card-b">
         <div class="inc"><span>Incurred to date</span><span class="fld">250 000</span><span class="applies">14.7 % of base cost</span></div>
         <div class="meter" role="img" aria-label="14.7 percent of base cost incurred"><span></span></div>
-        <p class="note">Incurred costs are known and are left out of the uncertainty range. Remaining uncertain part: 1 450 000.</p>
+        <div class="notice info"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9v5M10 6v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><p>Incurred costs are known and are left out of the uncertainty range. Remaining uncertain part: 1 450 000.</p></div>
       </div></section>
     </div>
 
@@ -494,12 +766,12 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 
       <section class="card"><div class="card-h"><h2>Tornado</h2><span class="hint">Effect on P50, NOK thousand</span></div><div class="card-b">
         <div class="cw"><svg class="chart" viewBox="0 0 520 284" role="img" aria-label="Tornado chart: effect on P50 in thousand NOK when each factor moves from P10 to P90. Ground conditions has the largest spread."><line class="grid" x1="185" x2="185" y1="24" y2="258"/><text class="ax" x="185" y="274" text-anchor="middle">−40</text><line class="grid" x1="236.8" x2="236.8" y1="24" y2="258"/><text class="ax" x="236.8" y="274" text-anchor="middle">−20</text><line class="grid" x1="288.6" x2="288.6" y1="24" y2="258"/><text class="ax" x="288.6" y="274" text-anchor="middle">P50</text><line class="grid" x1="340.5" x2="340.5" y1="24" y2="258"/><text class="ax" x="340.5" y="274" text-anchor="middle">+20</text><line class="grid" x1="392.3" x2="392.3" y1="24" y2="258"/><text class="ax" x="392.3" y="274" text-anchor="middle">+40</text><line class="grid" x1="444.2" x2="444.2" y1="24" y2="258"/><text class="ax" x="444.2" y="274" text-anchor="middle">+60</text><text class="lbl" x="280.6" y="14" text-anchor="end">◂ P10 lower</text><text class="lbl" x="296.6" y="14" text-anchor="start">P90 higher ▸</text><text class="ax" x="502" y="274" text-anchor="start">k</text><text class="rowl drv" x="160" y="48" text-anchor="end">Ground conditions</text><rect class="bar lo" x="208.3" y="36" width="80.4" height="16"><title>P10: −31 000 NOK</title></rect><rect class="bar hi" x="288.6" y="36" width="191.8" height="16"><title>P90: +74 000 NOK</title></rect><text class="val" x="203.3" y="48" text-anchor="end">−31</text><text class="val" x="485.4" y="48" text-anchor="start">+74</text><text class="rowl drv" x="160" y="76" text-anchor="end">Material prices</text><rect class="bar lo" x="226.4" y="64" width="62.2" height="16"><title>P10: −24 000 NOK</title></rect><rect class="bar hi" x="288.6" y="64" width="150.3" height="16"><title>P90: +58 000 NOK</title></rect><text class="val" x="221.4" y="76" text-anchor="end">−24</text><text class="val" x="444" y="76" text-anchor="start">+58</text><text class="rowl" x="160" y="104" text-anchor="end">Groundwork &amp; drainage</text><rect class="bar lo" x="244.6" y="92" width="44.1" height="16"><title>P10: −17 000 NOK</title></rect><rect class="bar hi" x="288.6" y="92" width="119.2" height="16"><title>P90: +46 000 NOK</title></rect><text class="val" x="239.6" y="104" text-anchor="end">−17</text><text class="val" x="412.9" y="104" text-anchor="start">+46</text><text class="rowl" x="160" y="132" text-anchor="end">Structural work</text><rect class="bar lo" x="242" y="120" width="46.7" height="16"><title>P10: −18 000 NOK</title></rect><rect class="bar hi" x="288.6" y="120" width="85.5" height="16"><title>P90: +33 000 NOK</title></rect><text class="val" x="237" y="132" text-anchor="end">−18</text><text class="val" x="379.2" y="132" text-anchor="start">+33</text><text class="rowl" x="160" y="160" text-anchor="end">Electrical &amp; plumbing</text><rect class="bar lo" x="252.4" y="148" width="36.3" height="16"><title>P10: −14 000 NOK</title></rect><rect class="bar hi" x="288.6" y="148" width="88.1" height="16"><title>P90: +34 000 NOK</title></rect><text class="val" x="247.4" y="160" text-anchor="end">−14</text><text class="val" x="381.8" y="160" text-anchor="start">+34</text><text class="rowl drv" x="160" y="188" text-anchor="end">Contractor capacity</text><rect class="bar lo" x="283.5" y="176" width="5.2" height="16"><title>P10: −2 000 NOK</title></rect><rect class="bar hi" x="288.6" y="176" width="106.3" height="16"><title>P90: +41 000 NOK</title></rect><text class="val" x="278.5" y="188" text-anchor="end">−2</text><text class="val" x="399.9" y="188" text-anchor="start">+41</text><text class="rowl" x="160" y="216" text-anchor="end">Roofing &amp; facade</text><rect class="bar lo" x="257.5" y="204" width="31.1" height="16"><title>P10: −12 000 NOK</title></rect><rect class="bar hi" x="288.6" y="204" width="70" height="16"><title>P90: +27 000 NOK</title></rect><text class="val" x="252.5" y="216" text-anchor="end">−12</text><text class="val" x="363.6" y="216" text-anchor="start">+27</text><text class="rowl" x="160" y="244" text-anchor="end">Interior finishes</text><rect class="bar lo" x="267.9" y="232" width="20.7" height="16"><title>P10: −8 000 NOK</title></rect><rect class="bar hi" x="288.6" y="232" width="44.1" height="16"><title>P90: +17 000 NOK</title></rect><text class="val" x="262.9" y="244" text-anchor="end">−8</text><text class="val" x="337.7" y="244" text-anchor="start">+17</text><line class="axis0" x1="288.6" x2="288.6" y1="24" y2="258"/></svg></div>
-        <ul class="legend"><li><span class="sw k2"></span>P10, optimistic</li><li><span class="sw"></span>P90, pessimistic</li><li><em>Italic</em> = cost driver</li></ul>
+        <ul class="legend"><li><span class="sw k3"></span>P10, optimistic</li><li><span class="sw"></span>P90, pessimistic</li><li><em>Italic</em> = cost driver</li></ul>
       </div></section>
 
       <section class="card"><div class="card-h"><h2>Contributions</h2><span class="hint">Expected addition and reserve</span></div><div class="card-b">
         <div class="cw"><svg class="chart" viewBox="0 0 520 334" role="img" aria-label="Waterfall: contributions that build the expected addition from base cost 1.70 million to P50 1.88 million, then the uncertainty reserve to P85 2.04 million NOK."><line class="grid" x1="172" x2="172" y1="8" y2="300"/><text class="ax" x="172" y="314" text-anchor="middle">1.6</text><line class="grid" x1="234.7" x2="234.7" y1="8" y2="300"/><text class="ax" x="234.7" y="314" text-anchor="middle">1.7</text><line class="grid" x1="297.4" x2="297.4" y1="8" y2="300"/><text class="ax" x="297.4" y="314" text-anchor="middle">1.8</text><line class="grid" x1="360.1" x2="360.1" y1="8" y2="300"/><text class="ax" x="360.1" y="314" text-anchor="middle">1.9</text><line class="grid" x1="422.8" x2="422.8" y1="8" y2="300"/><text class="ax" x="422.8" y="314" text-anchor="middle">2.0</text><line class="grid" x1="485.5" x2="485.5" y1="8" y2="300"/><text class="ax" x="485.5" y="314" text-anchor="middle">2.1</text><text class="ax" x="335" y="330" text-anchor="middle">Total cost, NOK million (axis starts at 1.6)</text><text class="rowl strong" x="160" y="24" text-anchor="end">Base cost</text><rect class="bar tot" x="172" y="13" width="62.7" height="14"/><text class="val strong" x="239.7" y="24">1 700 000</text><text class="rowl drv" x="160" y="48" text-anchor="end">Ground conditions</text><rect class="bar inc" x="234.7" y="37" width="22.6" height="14"/><text class="val" x="262.3" y="48">+36 000</text><text class="rowl drv" x="160" y="72" text-anchor="end">Material prices</text><rect class="bar inc" x="257.3" y="61" width="21.3" height="14"/><text class="val" x="283.6" y="72">+34 000</text><text class="rowl drv" x="160" y="96" text-anchor="end">Contractor capacity</text><rect class="bar inc" x="278.6" y="85" width="15" height="14"/><text class="val" x="298.6" y="96">+24 000</text><text class="rowl" x="160" y="120" text-anchor="end">Groundwork &amp; drainage</text><rect class="bar inc" x="293.6" y="109" width="13.8" height="14"/><text class="val" x="312.4" y="120">+22 000</text><text class="rowl" x="160" y="144" text-anchor="end">Structural work</text><rect class="bar inc" x="307.4" y="133" width="11.3" height="14"/><text class="val" x="323.7" y="144">+18 000</text><text class="rowl" x="160" y="168" text-anchor="end">Electrical &amp; plumbing</text><rect class="bar inc" x="318.7" y="157" width="10" height="14"/><text class="val" x="333.7" y="168">+16 000</text><text class="rowl" x="160" y="192" text-anchor="end">Other items</text><rect class="bar inc" x="328.7" y="181" width="21.3" height="14"/><text class="val" x="355" y="192">+34 000</text><text class="rowl" x="160" y="216" text-anchor="end">Project management</text><rect class="bar dec" x="347.5" y="205" width="2.5" height="14"/><text class="val" x="355" y="216">−4 000</text><text class="rowl strong" x="160" y="240" text-anchor="end">P50</text><rect class="bar tot" x="172" y="229" width="175.5" height="14"/><text class="val strong" x="352.5" y="240">1 880 000</text><text class="rowl" x="160" y="264" text-anchor="end">Uncertainty reserve</text><rect class="bar res" x="347.5" y="253" width="100.3" height="14"/><text class="val" x="452.8" y="264">+160 000</text><text class="rowl strong" x="160" y="288" text-anchor="end">P85</text><rect class="bar tot" x="172" y="277" width="275.8" height="14"/><text class="val strong" x="452.8" y="288">2 040 000</text><line class="conn" x1="257.3" x2="257.3" y1="51" y2="61"/><line class="conn" x1="278.6" x2="278.6" y1="75" y2="85"/><line class="conn" x1="293.6" x2="293.6" y1="99" y2="109"/><line class="conn" x1="307.4" x2="307.4" y1="123" y2="133"/><line class="conn" x1="318.7" x2="318.7" y1="147" y2="157"/><line class="conn" x1="328.7" x2="328.7" y1="171" y2="181"/><line class="conn" x1="350" x2="350" y1="195" y2="205"/><line class="conn" x1="347.5" x2="347.5" y1="219" y2="229"/></svg></div>
-        <ul class="legend"><li><span class="sw k2"></span>Increases cost</li><li><span class="sw k3"></span>Reduces cost</li><li><span class="sw"></span>Uncertainty reserve</li><li><span class="sw kt"></span>Totals</li></ul>
+        <ul class="legend"><li><span class="sw"></span>Increases cost</li><li><span class="sw k3"></span>Reduces cost</li><li><span class="sw k4"></span>Uncertainty reserve (dashed edge)</li><li><span class="sw kt"></span>Totals</li></ul>
       </div></section>
     </div>
   </div></div>
@@ -514,25 +786,24 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
 <script>
 (function () {
   var PAL = [
-    { id: "t1", label: "T1", name: "Sea Pine + Harbour", family: "Analogous", names: ["Teal","Teal Mist","Eggwhite","Sea Pine","Harbour Blue","Slate Teal"], status: ["Muted Brick","Dusty Amber"], ink: "Teal Ink", action: "Teal Action", trueTealOk: false, note: "Calm, cohesive and trustworthy; a quiet teal family from dark sea green to harbour blue." },
-    { id: "t2", label: "T2", name: "Petrol + Glacier", family: "Analogous", names: ["Teal (AA)","Teal Mist","Pearl","Petrol","Glacier","Blue Slate"], status: ["Muted Brick","Dusty Amber"], ink: "Petrol Ink", action: "Teal Hover", trueTealOk: true, note: "Cooler and more corporate; teal with petrol and glacier blues, the most bank-like of the teal set." },
-    { id: "t3", label: "T3", name: "Pine + Jade + Seafoam", family: "Analogous", names: ["Teal","Teal Mist","Sea Salt","Pine","Jade","Seafoam"], status: ["Muted Brick","Dusty Amber"], ink: "Pine Ink", action: "Teal Action", trueTealOk: false, note: "Fresh and natural while staying calm; teal leaning to green, like deep water over a forest floor." },
-    { id: "t4", label: "T4", name: "Deep Navy + Mint + Stone Teal", family: "Analogous", names: ["Teal","Teal Mist","Chalk","Deep Navy","Mint Teal","Stone Teal"], status: ["Muted Brick","Dusty Amber"], ink: "Navy Ink", action: "Teal Action", trueTealOk: false, note: "Modern and tonal; teal between a deep navy and a mint, with a grey teal to settle it." },
-    { id: "t5", label: "T5", name: "Moss + Dune", family: "Earthy", names: ["Teal","Teal Mist","Oat White","Moss","Dune","Stone"], status: ["Garnet","Old Gold"], ink: "Moss Ink", action: "Teal Action", trueTealOk: false, note: "Grounded and outdoorsy; teal with dark moss, dune sand and warm stone. Calm, a little rustic." },
-    { id: "t6", label: "T6", name: "Clay + Umber + Sage", family: "Earthy", names: ["Teal","Teal Mist","Linen White","Clay","Umber","Sage"], status: ["Garnet","Old Gold"], ink: "Umber Ink", action: "Teal Action", trueTealOk: false, note: "Warm and human against a cool teal; clay and umber add earth, sage softens it. Reads like a printed report." },
-    { id: "t7", label: "T7", name: "Sage + Pebble + Terracotta", family: "Earthy", names: ["Teal","Teal Mist","Stone White","Sage","Pebble","Terracotta"], status: ["Garnet","Old Gold"], ink: "Stone Ink", action: "Teal Action", trueTealOk: false, note: "Quiet and soft; desaturated sage and pebble grey with one muted terracotta. The calmest earthy option." },
-    { id: "t8", label: "T8", name: "Olive + Ochre + Umber", family: "Earthy", names: ["Teal (AA)","Teal Mist","Bone White","Olive","Ochre","Umber"], status: ["Garnet","Old Gold"], ink: "Umber Ink", action: "Teal Hover", trueTealOk: true, note: "Rich and heritage-like; olive, ochre and umber with teal. Warmer and more characterful, still serious." },
-    { id: "t9", label: "T9", name: "Pine + Harbour + Clay", family: "Mixed", names: ["Teal","Teal Mist","Milk","Sea Pine","Harbour Blue","Clay"], status: ["Garnet","Old Gold"], ink: "Teal Ink", action: "Teal Action", trueTealOk: false, note: "Calm teal family with one warm earthy accent; the clay makes the fourth series easy to find." },
-    { id: "t10", label: "T10", name: "Petrol + Sea Green + Ochre", family: "Mixed", names: ["Teal","Teal Mist","Pale Bone","Petrol","Sea Green","Ochre"], status: ["Garnet","Old Gold"], ink: "Petrol Ink", action: "Teal Action", trueTealOk: false, note: "Cool teal family with a gold note; petrol and sea green stay calm, ochre gives one warm highlight." },
+    { id: "t1", label: "T1", name: "Harbour Blue", family: "Analogous", vibe: "Calm, cohesive and trustworthy. Teal with a harbour-blue accent and a barely warm off-white; quiet, a little clinical.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Harbour Blue 100"],[300,"Harbour Blue 300"],[500,"Harbour Blue 500"],[700,"Harbour Blue 700"],[900,"Harbour Blue 900"]], neu: [[50,"Eggwhite"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Teal Ink"]], ser: [[1,"Primary 500"],[2,"Primary 700"],[3,"Accent 400 (lighter)"],[4,"Accent 700"],[5,"Primary 400"],[6,"Primary 600"]] },
+    { id: "t3", label: "T3", name: "Jade", family: "Analogous", vibe: "Fresh and natural while staying calm. Teal leaning toward green, like deep water over a forest floor.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Jade 100"],[300,"Jade 300"],[500,"Jade 500"],[700,"Jade 700"],[900,"Jade 900"]], neu: [[50,"Sea Salt"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Pine Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
+    { id: "t5", label: "T5", name: "Moss", family: "Earthy", vibe: "Grounded and outdoorsy. Teal with a deep moss accent on an oat-white page; calm, a little rustic.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Moss 100"],[300,"Moss 300"],[500,"Moss 500"],[700,"Moss 700"],[900,"Moss 900"]], neu: [[50,"Oat White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Moss Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
+    { id: "t6", label: "T6", name: "Clay", family: "Earthy", vibe: "Warm and human against a cool teal. Clay adds earth, linen white softens the page. Reads like a printed report.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Clay 100"],[300,"Clay 300"],[500,"Clay 500"],[700,"Clay 700"],[900,"Clay 900"]], neu: [[50,"Linen White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Umber Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Accent 400 (lighter)"],[4,"Primary 700"],[5,"Accent 500"],[6,"Primary 400"]] },
+    { id: "t8", label: "T8", name: "Ochre", family: "Earthy", vibe: "Rich and heritage-like. Teal with an ochre gold accent on bone white; warmer and more characterful, still serious.",
+      prim: [[50,"Wash"],[100,"Teal Mist"],[200,"Soft"],[300,"Light"],[400,"Data light"],[500,"Brand"],[600,"Action"],[700,"Teal Deep"],[800,"Dark"],[900,"Darkest"]], acc: [[100,"Ochre 100"],[300,"Ochre 300"],[500,"Ochre 500"],[700,"Ochre 700"],[900,"Ochre 900"]], neu: [[50,"Bone White"],[100,"Panel"],[200,"Hairline"],[300,"Border"],[500,"Icon"],[600,"Muted text"],[800,"Body text"],[900,"Umber Ink"]], ser: [[1,"Primary 500"],[2,"Accent 700"],[3,"Primary 700"],[4,"Accent 400 (lighter)"],[5,"Primary 400"],[6,"Primary 600"]] },
   ];
-  var FAMS = ["Analogous", "Earthy", "Mixed"];
+  var FAMS = ["Analogous", "Earthy"];
   var STY = [
     { id: "clean", name: "Clean" }, { id: "soft", name: "Soft" }, { id: "bold", name: "Bold" }, { id: "dark", name: "Dark" }
   ];
-  var ROLES = ["Primary (brand)", "Primary tint", "Primary off-white", "Secondary 1", "Secondary 2", "Secondary 3"];
-  var VARS = ["--p1", "--p2", "--p3", "--s1", "--s2", "--s3"];
+  var SEM = [["success", "Success"], ["warning", "Warning"], ["error", "Error"], ["info", "Info"]];
   var WIDTHS = [["full", "Full width", ""], ["tablet", "Tablet 768", "768px"], ["phone", "Phone 390", "390px"]];
-  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"], ["all10", "Compare all 10"]];
+  var VIEWS = [["single", "Single"], ["compare2", "Compare 2"], ["compare4", "Compare 4"], ["all5", "Compare all 5"]];
   var VARY = [["palette", "Vary palette"], ["style", "Vary style"]];
   var stage = document.getElementById("stage");
   var proto = stage.querySelector(".app").cloneNode(true);
@@ -549,7 +820,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     o.palette = String(o.palette).toLowerCase();
     if (idx(PAL, o.palette) < 0) o.palette = "t1";
     if (idx(STY, o.style) < 0) o.style = "clean";
-    if (["single", "compare2", "compare4", "all10"].indexOf(o.view) < 0) o.view = "single";
+    if (["single", "compare2", "compare4", "all5"].indexOf(o.view) < 0) o.view = "single";
     if (o.vary !== "style") o.vary = "palette";
     if (!WIDTHS.some(function (w) { return w[0] === o.w; })) o.w = "full";
     return o;
@@ -557,7 +828,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
   function ser() {
     var s = "palette=" + st.palette + "&style=" + st.style;
     if (st.view === "compare2" || st.view === "compare4") s += "&view=" + st.view + "&vary=" + st.vary;
-    else if (st.view === "all10") s += "&view=all10";
+    else if (st.view === "all5") s += "&view=all5";
     else if (st.w !== "full") s += "&w=" + st.w;
     return s;
   }
@@ -587,7 +858,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     STY.forEach(function (s) { b.appendChild(btn(s.name, s.id === st.style, function () { set("style", s.id); })); });
     var v = document.getElementById("view-seg"); v.replaceChildren();
     VIEWS.forEach(function (x) { v.appendChild(btn(x[1], x[0] === st.view, function () { set("view", x[0]); })); });
-    var y = document.getElementById("vary-seg"); y.replaceChildren(); y.hidden = st.view === "all10";
+    var y = document.getElementById("vary-seg"); y.replaceChildren(); y.hidden = st.view === "all5";
     VARY.forEach(function (x) { y.appendChild(btn(x[1], x[0] === st.vary, function () { set("vary", x[0]); })); });
     var w = document.getElementById("w-seg"); w.replaceChildren();
     WIDTHS.forEach(function (x) { w.appendChild(btn(x[1], x[0] === st.w, function () { set("w", x[0]); })); });
@@ -597,31 +868,50 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
     var c = [1, 3, 5].map(function (i) { var v = parseInt(hex.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
   }
-  function chip(cs, v, role, name, cls) {
-    var hex = cs ? cs.getPropertyValue(v).trim() : "#ffffff";
-    var c = el("div", "chip6 " + (cls || ""), "<b>" + role + "</b><em>" + name + "</em><span>" + hex.toUpperCase() + "</span>");
-    c.style.background = hex; c.style.color = lum(hex) > 0.35 ? "#111111" : "#ffffff";
-    return c;
+  function hexOf(cs, v) { return cs ? cs.getPropertyValue(v).trim() : "#ffffff"; }
+  function fgFor(hex) { return lum(hex) > 0.3 ? "#111111" : "#ffffff"; }
+  function scaleChip(cs, cls, varName, step, name, tag) {
+    var hex = hexOf(cs, varName);
+    var c = el("div", "sc " + cls, "<b>" + step + (tag ? " <i>" + tag + "</i>" : "") + "</b><em>" + name + "</em><span>" + hex.toUpperCase() + "</span>");
+    c.style.background = hex; c.style.color = fgFor(hex); return c;
   }
+  function miniChip(cs, varName, label) {
+    var hex = hexOf(cs, varName);
+    var c = el("div", "mc", "<i></i><span>" + label + "</span><code>" + hex.toUpperCase() + "</code>");
+    c.firstChild.style.background = hex; return c;
+  }
+  function group(title, node) { var g = el("div", "sg"); g.appendChild(el("h4", null, title)); g.appendChild(node); return g; }
   function strip() {
     var host = document.getElementById("strip"); var p = PAL[idx(PAL, st.palette)];
     var probe = stage.querySelector(".app"); var cs = probe ? getComputedStyle(probe) : null;
-    host.replaceChildren(el("h2", null, plabel(p) + " <small>" + p.family + "</small>"), el("p", null, p.note));
-    var row = el("div", "chips");
-    VARS.forEach(function (v, i) { row.appendChild(chip(cs, v, ROLES[i], p.names[i])); });
-    host.appendChild(row);
-    var srow = el("div", "chips status-row");
-    srow.appendChild(chip(cs, "--err", "Error (status)", p.status[0], "small"));
-    srow.appendChild(chip(cs, "--warn", "Warning (status)", p.status[1], "small"));
-    srow.appendChild(chip(cs, "--text", "Text ink", p.ink, "small"));
-    srow.appendChild(chip(cs, "--accent-text", "Buttons and links", p.action, "small"));
-    var note = "Status colours sit outside the six and are used only for errors and warnings, always with an icon or text. ";
-    note += p.trueTealOk ? "Buttons use the palette's teal." : "The true teal is slightly below 4.5:1 with white text, so buttons and links use " + p.action + ".";
-    srow.appendChild(el("p", "status-note", note));
-    host.appendChild(srow);
+    host.replaceChildren(el("h2", null, plabel(p) + " <small>" + p.family + "</small>"), el("p", null, p.vibe));
+    host.appendChild(el("h3", null, "Brand colours"));
+    var prim = el("div", "scale prim");
+    p.prim.forEach(function (s) { prim.appendChild(scaleChip(cs, "", "--color-primary-" + s[0], s[0], s[1], s[0] === 500 ? "brand" : s[0] === 600 ? "action" : "")); });
+    host.appendChild(prim);
+    var acc = el("div", "scale acc");
+    p.acc.forEach(function (s) { acc.appendChild(scaleChip(cs, "wide", "--color-accent-" + s[0], s[0], s[1], s[0] === 500 ? "accent" : "")); });
+    host.appendChild(acc);
+    host.appendChild(el("p", "ui-small", "Teal 500 is the brand. Teal 600 is used for filled buttons and links because white on 500 is 4.34:1, just under AA."));
+    host.appendChild(el("h3", "sub", "Supporting colours"));
+    var sup = el("div", "sup");
+    var neu = el("div", "minis"); p.neu.forEach(function (s) { neu.appendChild(miniChip(cs, "--color-neutral-" + s[0], s[0])); });
+    neu.appendChild(miniChip(cs, "--color-surface", "white"));
+    sup.appendChild(group("Neutrals", neu));
+    var sem = el("div", "minis");
+    SEM.forEach(function (s) {
+      var t1 = hexOf(cs, "--color-" + s[0] + "-text"), t2 = hexOf(cs, "--color-" + s[0] + "-tint");
+      var c = el("div", "mc two", "<i><u></u></i><span>" + s[1] + "</span><code>" + t1.toUpperCase() + "</code>");
+      c.firstChild.style.background = t2; c.firstChild.firstChild.style.background = t1; sem.appendChild(c);
+    });
+    sup.appendChild(group("Status (text and tint)", sem));
+    var ser = el("div", "minis"); p.ser.forEach(function (s) { ser.appendChild(miniChip(cs, "--color-series-" + s[0], s[0])); });
+    sup.appendChild(group("Chart series", ser));
+    host.appendChild(sup);
+    host.appendChild(el("p", "ui-small", "Series 1 to 3 read apart without extra cues. From series 4 on, the charts add dashes, markers or direct labels, and so should any chart you add."));
   }
   function cells() {
-    if (st.view === "all10") return PAL.map(function (p) { return [p.id, st.style]; });
+    if (st.view === "all5") return PAL.map(function (p) { return [p.id, st.style]; });
     var n = st.view === "compare4" ? 4 : 2, out = [];
     var base = st.vary === "palette" ? idx(PAL, st.palette) : idx(STY, st.style);
     var len = st.vary === "palette" ? PAL.length : STY.length;
@@ -644,7 +934,7 @@ body[data-view="single"] .ui-strip[data-when~="single"] { display: block; }
       var a = proto.cloneNode(true); a.setAttribute("data-palette", st.palette); a.setAttribute("data-style", st.style);
       f.appendChild(a); stage.appendChild(f); strip();
     } else {
-      var all = st.view === "all10";
+      var all = st.view === "all5";
       var g = el("div", all ? "grid g5" : "grid");
       cells().forEach(function (c) {
         var p = PAL[idx(PAL, c[0])];
