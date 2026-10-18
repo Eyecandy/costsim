@@ -1,4 +1,5 @@
 import { LabCheckpointTimeline } from "@/design-lab/parts/LabCheckpointTimeline"
+import { LabDocumentActions } from "@/design-lab/parts/LabDocumentActions"
 import { LabHeader } from "@/design-lab/parts/LabHeader"
 import { LabCheckpoint, LabInputHeading, LabProfileRow } from "@/design-lab/parts/LabInputTop"
 import { LabFullscreenResult, LabResults } from "@/design-lab/parts/LabResults"
@@ -100,7 +101,14 @@ export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?:
 
   const inputTop = (
     <div className="space-y-4">
-      <LabInputHeading mode={options.inputHeading} />
+      {options.documentActions === "inputRow" ? (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <LabInputHeading mode={options.inputHeading} />
+          <LabDocumentActions />
+        </div>
+      ) : (
+        <LabInputHeading mode={options.inputHeading} />
+      )}
       {timeline ? null : <LabCheckpoint mode={options.checkpoint} />}
       <LabProfileRow cues={options.cues} />
     </div>
@@ -113,7 +121,10 @@ export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?:
       data-lab-variant={variant.id}
     >
       {bare ? null : <Banner variant={variant} />}
-      <LabHeader options={options.header} />
+      <LabHeader
+        options={options.header}
+        actions={options.documentActions === "headerBar" ? <LabDocumentActions /> : undefined}
+      />
       <div className="flex flex-1">
         <LabSidebar mode={options.sidebar} />
         <main className="min-w-0 flex-1">

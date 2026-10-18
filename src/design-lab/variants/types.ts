@@ -22,6 +22,8 @@ export type LabOptions = {
   checkpoint: "duplicate" | "once"
   /** Where the checkpoints live: as tabs above the tables ("tabs") or as a vertical timeline on the left ("timeline"). */
   checkpointNav: "tabs" | "timeline"
+  /** Visible Save and Checkpoint buttons: none (only in the "..." menu, as today), beside the file name, or in the header bar. */
+  documentActions: "none" | "inputRow" | "headerBar"
   /** Note 4: the small INPUT label ("label") or the analysis name ("fileName"). */
   inputHeading: "label" | "fileName"
   /** Note 5: icon-only toolbar ("icons") or icon plus text ("labelled"). */

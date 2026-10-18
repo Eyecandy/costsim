@@ -123,6 +123,23 @@ describe("what the numbered notes change", () => {
     expect(screen.queryByRole("tablist")).toBeNull()
   })
 
+  it("save and checkpoint buttons: absent today, beside the file name in 14, in the header bar in 15", () => {
+    const { unmount } = renderVariant("09")
+    expect(screen.queryByRole("button", { name: "Lagre" })).toBeNull()
+    unmount()
+    const second = renderVariant("14")
+    expect(screen.getByRole("button", { name: "Lagre" })).toBeInTheDocument()
+    expect(within(screen.getByRole("banner")).queryByRole("button", { name: "Lagre" })).toBeNull()
+    second.unmount()
+    renderVariant("15")
+    expect(
+      within(screen.getByRole("banner")).getByRole("button", { name: "Lagre" }),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByRole("banner")).getByRole("button", { name: "Neste checkpoint" }),
+    ).toBeInTheDocument()
+  })
+
   it("the layout ideas: side by side puts both input cards in one grid, full screen adds the mock-up", () => {
     const { unmount } = renderVariant("05")
     expect(screen.queryByLabelText("Fullskjerm resultatvisning")).toBeNull()

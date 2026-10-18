@@ -7,6 +7,7 @@ export const BASE_OPTIONS: LabOptions = {
   sidebar: "rail",
   checkpoint: "duplicate",
   checkpointNav: "tabs",
+  documentActions: "none",
   inputHeading: "label",
   toolbar: "icons",
   rowActions: "modes",

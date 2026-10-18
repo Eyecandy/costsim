@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react"
+import type { ReactNode } from "react"
 
 import { FILE_NAME, USER } from "@/design-lab/sampleData"
 import type { LabOptions } from "@/design-lab/variants/types"
@@ -7,7 +8,14 @@ import { BrandWordmark } from "@/shared/BrandWordmark"
 import { cn } from "@/shared/utils"
 
 /** Notes 1, 7 and 9: where the file name goes, where the links go, and how much the bar stands out. */
-export function LabHeader({ options }: { options: LabOptions["header"] }) {
+export function LabHeader({
+  options,
+  actions,
+}: {
+  options: LabOptions["header"]
+  /** Optional buttons shown in the bar, between the file name and the links. */
+  actions?: ReactNode
+}) {
   const { t, language, setLanguage } = useI18n()
   const distinct = options.bar === "distinct"
   const farRight = options.nav === "farRight"
@@ -39,6 +47,7 @@ export function LabHeader({ options }: { options: LabOptions["header"] }) {
             </>
           ) : null}
         </div>
+        {actions}
         <nav
           aria-label={t("header.navLabel")}
           className="flex items-center gap-3 text-[11px] text-muted-foreground"
