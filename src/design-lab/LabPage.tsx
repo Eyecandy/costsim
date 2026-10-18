@@ -8,7 +8,6 @@ import { LabTable } from "@/design-lab/parts/LabTable"
 import { LabToolbar } from "@/design-lab/parts/LabToolbar"
 import { COST_ROWS, DRIVER_ROWS } from "@/design-lab/sampleData"
 import { themeStyle } from "@/design-lab/themes"
-import { VARIANTS } from "@/design-lab/variants"
 import type { LabOptions, LabVariant } from "@/design-lab/variants/types"
 import { useI18n } from "@/i18n/useI18n"
 import { brandPrimaryButtonClass } from "@/shared/brand"
@@ -71,28 +70,8 @@ function OutputLabel() {
   )
 }
 
-function Banner({ variant }: { variant: LabVariant }) {
-  const index = VARIANTS.findIndex((v) => v.id === variant.id)
-  const previous = index > 0 ? VARIANTS[index - 1] : undefined
-  const next = index >= 0 ? VARIANTS[index + 1] : undefined
-  return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 bg-foreground px-4 py-1.5 text-[11px] text-background">
-      <span className="font-semibold">Designlab</span>
-      <span>
-        {variant.id} · {variant.title}
-      </span>
-      <span className="opacity-70">Uten funksjon, kun for visning</span>
-      <span className="ml-auto flex items-center gap-3">
-        {previous ? <a href={`/design/${previous.id}`}>← {previous.id}</a> : null}
-        <a href="/design">Alle varianter</a>
-        {next ? <a href={`/design/${next.id}`}>{next.id} →</a> : null}
-      </span>
-    </div>
-  )
-}
-
 /** One mock page. Everything it shows is decided by `variant.options`. */
-export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?: boolean }) {
+export function LabPage({ variant }: { variant: LabVariant }) {
   const { options } = variant
   const sideBySide = options.inputs === "sideBySide"
   const bottomBar = options.simulation !== "side"
@@ -120,7 +99,6 @@ export function LabPage({ variant, bare = false }: { variant: LabVariant; bare?:
       className="flex min-h-screen flex-col bg-background font-sans text-foreground"
       data-lab-variant={variant.id}
     >
-      {bare ? null : <Banner variant={variant} />}
       <LabHeader
         options={options.header}
         actions={options.documentActions === "headerBar" ? <LabDocumentActions /> : undefined}

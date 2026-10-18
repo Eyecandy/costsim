@@ -3,8 +3,11 @@ import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it } from "vitest"
 
+import { B_VARIANTS } from "@/design-lab/families/b"
+import { BPage } from "@/design-lab/families/b/BPage"
 import { LabGallery } from "@/design-lab/Gallery"
 import { LabPage } from "@/design-lab/LabPage"
+import { ENTRIES, entryByKey, entryLabel, entryPath, FAMILIES } from "@/design-lab/registry"
 import { THEMES } from "@/design-lab/themes"
 import { getVariant, VARIANTS } from "@/design-lab/variants"
 import { I18nProvider } from "@/i18n/I18nProvider"
@@ -14,7 +17,7 @@ function renderVariant(id: string) {
   if (!variant) throw new Error(`no variant ${id}`)
   return render(
     <I18nProvider>
-      <LabPage variant={variant} bare />
+      <LabPage variant={variant} />
     </I18nProvider>,
   )
 }
@@ -150,6 +153,43 @@ describe("what the numbered notes change", () => {
   })
 })
 
+describe("design families", () => {
+  it("every family has looks, keys are unique, and labels are family letter plus id", () => {
+    for (const family of FAMILIES) {
+      expect(ENTRIES.filter((entry) => entry.family === family.id).length).toBeGreaterThan(0)
+    }
+    const keys = ENTRIES.map((entry) => entry.key)
+    expect(new Set(keys).size).toBe(keys.length)
+    const first = ENTRIES.find((entry) => entry.key === "b01")
+    expect(first && entryLabel(first)).toBe("B01")
+  })
+
+  it("old links without a family letter still mean family A", () => {
+    expect(entryByKey("00")?.key).toBe("a00")
+    expect(entryByKey("a04")?.key).toBe("a04")
+    expect(entryByKey("b02")?.key).toBe("b02")
+    expect(entryByKey("zz")).toBeUndefined()
+  })
+
+  for (const variant of B_VARIANTS) {
+    it(`B${variant.id} ${variant.title} renders its own layout`, async () => {
+      const user = userEvent.setup()
+      render(
+        <I18nProvider>
+          <BPage variant={variant} />
+        </I18nProvider>,
+      )
+      expect(screen.getByRole("banner")).toBeInTheDocument()
+      // checkpoint steps, the three input tabs and the key figures
+      expect(screen.getByRole("list", { name: "Analysepunkter" })).toBeInTheDocument()
+      expect(screen.getAllByRole("tab")).toHaveLength(3)
+      expect(screen.getByText("9 970 000", { selector: "p" })).toBeInTheDocument()
+      await user.click(screen.getByRole("tab", { name: /Drivere/ }))
+      expect(screen.getByRole("tab", { name: /Drivere/ })).toHaveAttribute("aria-selected", "true")
+    })
+  }
+})
+
 describe("gallery", () => {
   function renderGallery() {
     return render(
@@ -159,14 +199,23 @@ describe("gallery", () => {
     )
   }
 
-  it("links to every variant", () => {
+  it("has a section per family and links to every look by family and id", () => {
     renderGallery()
-    for (const variant of VARIANTS) {
-      expect(screen.getByRole("link", { name: `Åpne ${variant.title}` })).toHaveAttribute(
+    for (const family of FAMILIES) {
+      expect(
+        screen.getByRole("heading", { name: new RegExp(`Familie ${family.id.toUpperCase()}`) }),
+      ).toBeInTheDocument()
+    }
+    for (const entry of ENTRIES) {
+      expect(screen.getByRole("link", { name: `Åpne ${entry.title}` })).toHaveAttribute(
         "href",
-        `/design/${variant.id}`,
+        entryPath(entry),
       )
     }
+    expect(screen.getByRole("link", { name: "Åpne Current" })).toHaveAttribute(
+      "href",
+      "/design/a/00",
+    )
   })
 
   it("loads a preview only when asked, one card at a time", async () => {

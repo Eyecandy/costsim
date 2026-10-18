@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 
-export type ThemeId = "current" | "harbour" | "clay"
+export type ThemeId = "current" | "harbour" | "clay" | "midnight"
 
 type Theme = {
   label: string
@@ -18,6 +18,10 @@ const CURRENT_LAB_VARS = {
   "--lab-bar-bg": "#eef5f6",
   "--lab-bar-border": "#c9dfe1",
   "--lab-field-border": "#c9d2d4",
+  // Family B (workbench) surfaces: rail, page canvas and cards.
+  "--b-rail": "#0e4c51",
+  "--b-canvas": "#f2f6f6",
+  "--b-card": "#ffffff",
 }
 
 /** Add a theme here (and to ThemeId) to make it available to variants. Tokens come from the colour systems in design/. */
@@ -39,6 +43,9 @@ export const THEMES: Record<ThemeId, Theme> = {
       "--lab-bar-bg": "#e4f2f3",
       "--lab-bar-border": "#b9d8da",
       "--lab-field-border": "#d3d1c8",
+      "--b-rail": "#0b4a4f",
+      "--b-canvas": "#f6f5ef",
+      "--b-card": "#fffffe",
     },
   },
   clay: {
@@ -57,6 +64,30 @@ export const THEMES: Record<ThemeId, Theme> = {
       "--lab-bar-bg": "#f1e7df",
       "--lab-bar-border": "#dcc7ba",
       "--lab-field-border": "#d4d1c8",
+      "--b-rail": "#3a2a24",
+      "--b-canvas": "#f4efe7",
+      "--b-card": "#fffdf9",
+    },
+  },
+  midnight: {
+    label: "Midnight",
+    vars: {
+      "--background": "#0f1b1e",
+      "--foreground": "#e8f1f1",
+      "--muted": "#172a2e",
+      "--muted-foreground": "#9db3b6",
+      "--border": "#274146",
+      "--lab-brand": "#3bb3ba",
+      "--lab-action": "#1d868c",
+      "--lab-tint": "rgba(59, 179, 186, 0.12)",
+      "--lab-tint-strong": "rgba(59, 179, 186, 0.22)",
+      "--lab-accent": "#7fb2d4",
+      "--lab-bar-bg": "#132428",
+      "--lab-bar-border": "#274146",
+      "--lab-field-border": "#36585e",
+      "--b-rail": "#091416",
+      "--b-canvas": "#0b1517",
+      "--b-card": "#14262a",
     },
   },
 }
