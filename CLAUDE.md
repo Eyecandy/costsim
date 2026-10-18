@@ -12,6 +12,7 @@ Runtime is **React 18** with `@types/react` 18. React 19 is blocked by `@glideap
 - `npm run dev`: dev server. `npm run build`: typecheck + production build.
 - `npm run check`: typecheck, lint (max-warnings ratchet), tests, layer rules, build. Run before every commit. CI (`.github/workflows/ci.yml`) runs the same steps.
 - `npm run typecheck`, `npm run lint` (`lint:fix`), `npm test` (`test:watch`), `npm run check:deps`.
+- `npm run test:e2e`: Playwright smoke test (`e2e/`, 3 flows: run + results, Focus mode, library create). Uses the installed Chrome locally; CI installs Chromium in its own job. Run it after UI refactors in addition to the side-by-side browser check.
 - `npm run test:bench`: slow Shapley benchmarks (`*.bench.test.ts`, about 2 minutes), excluded from `npm test` because a single test over 60 s trips Vitest's worker heartbeat.
 
 ## Layers (enforced by `npm run check:deps`, config in `.dependency-cruiser.cjs`)

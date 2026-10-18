@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage --testTimeout=120000",
     "test:bench": "vitest run --config vitest.bench.config.ts",
+    "test:e2e": "playwright test",
     "check:deps": "depcruise src --config .dependency-cruiser.cjs",
     "check": "npm run typecheck && npm run lint && npm run test && npm run check:deps && npm run build",
     "prepare": "husky"
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
