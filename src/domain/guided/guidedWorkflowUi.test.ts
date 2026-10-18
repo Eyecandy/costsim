@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import {
@@ -11,11 +9,11 @@ import { deriveSavedCorrelationSummaries } from "@/domain/simulation/costCorrela
 import { createProject, type Project } from "@/domain/analysis/project"
 import { buildPdfImpactOverrides } from "@/pdf/buildPdfReportModel"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
-import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function dialogSource() {
-  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function appSource() {

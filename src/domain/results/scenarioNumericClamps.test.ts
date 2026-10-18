@@ -11,6 +11,7 @@ import {
 import { normalizeGuidedNumericField } from "@/domain/guided/guidedInput"
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function costRow(partial: Partial<CostElementRow> = {}): CostElementRow {
   return {
@@ -123,10 +124,7 @@ describe("range sign fold reaches table + Focus + paste paths", () => {
   })
 
   it("C: Focus still routes numeric commits through normalizeGuidedNumericField", () => {
-    const guided = readFileSync(
-      join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
-      "utf8",
-    )
+    const guided = readGuidedInputSource()
     expect(guided).toContain("normalizeGuidedNumericField")
     expect(guided).toContain('commitMode="enter"')
     expect(guided).toContain("GuidedRangeSlider")

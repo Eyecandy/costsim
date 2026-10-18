@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -45,7 +46,7 @@ describe("Focus session shared toolbar", () => {
   })
 
   it("Guided Input does not render its own Fullscreen/X when embedded in the shell", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("data-guided-embedded-in-focus-host")
     const embedBlock = guided.slice(
       guided.indexOf("Embedded Focus path"),

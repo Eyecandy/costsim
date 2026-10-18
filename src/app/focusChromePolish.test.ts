@@ -13,6 +13,7 @@ import { focusResultHelpCopyKeys } from "@/domain/guided/focusResultSteps"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -20,7 +21,7 @@ function readSrc(rel: string) {
 
 describe("Focus chrome visual polish", () => {
   it("A: Focus Simulation uses App primary Button + brandPrimaryButtonClass", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     expect(guided).toContain("brandPrimaryButtonClass")
     expect(guided).toContain("<Button")
@@ -63,7 +64,7 @@ describe("Focus chrome visual polish", () => {
   })
 
   it("E/F: Input and Results share lightweight footer nav positioning/style", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
     expect(FOCUS_SESSION_FOOTER_CLASS).toContain("px-5 py-3 sm:px-8")

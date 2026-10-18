@@ -6,9 +6,10 @@ import { messages } from "@/i18n/messages"
 import { FOCUS_SESSION_FOOTER_CLASS } from "@/domain/guided/focusSessionFrame"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function dialogSource() {
-  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function infoSource() {

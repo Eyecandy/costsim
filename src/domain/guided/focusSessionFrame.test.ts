@@ -13,6 +13,7 @@ import {
   FOCUS_SESSION_HEADER_TITLE_CLASS,
 } from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -26,7 +27,7 @@ describe("focusSessionFrame", () => {
 
   it("B/G: Shell and Guided both import the shared contract — no Results-only size", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(shell).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(shell).toContain("FOCUS_SESSION_CARD_FULLSCREEN_CLASS")
     expect(guided).toContain("FOCUS_SESSION_CARD_CLASS")

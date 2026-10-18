@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -13,7 +14,7 @@ function readSrc(rel: string) {
 describe("Focus presentation refinements", () => {
   it("A/B: Input and Results Focus share dimmed-app backdrop (not opaque white)", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(shell).toContain("data-focus-backdrop={")
     expect(shell).toContain('"dimmed"')
     expect(shell).toContain("bg-black/40 p-3 sm:p-6")
@@ -24,7 +25,7 @@ describe("Focus presentation refinements", () => {
   })
 
   it("C/D: Focus Simulation reuses SpotlightLoadingText / normal run presentation", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     expect(guided).toContain("SpotlightLoadingText")
     expect(guided).toContain('data-simulation-loading=""')
@@ -36,7 +37,7 @@ describe("Focus presentation refinements", () => {
   })
 
   it("Simulation step centers its compact action block only", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const simStart = guided.indexOf('case "simulation"')
     const simEnd = guided.indexOf("const renderFooter", simStart)
     const sim = guided.slice(simStart, simEnd)

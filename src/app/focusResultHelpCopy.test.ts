@@ -7,6 +7,7 @@ import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readMessagesSource } from "@/test-utils/messagesSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -15,7 +16,7 @@ function readSrc(rel: string) {
 describe("Focus / Results concise guidance copy", () => {
   it("Results Focus does not render question-mark help; Input Focus still does", () => {
     const app = readAppSource()
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const phaseInfo = readSrc("src/features/guided-input/GuidedPhaseInfo.tsx")
     expect(app).not.toContain("focusResultHelpCopyKeys")
     // Input Focus help is shell-owned via Guided chrome meta (not Results help).

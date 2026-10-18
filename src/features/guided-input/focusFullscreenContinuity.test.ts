@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { brandPrimaryButtonClass, brandPrimaryTextClass } from "@/shared/brand"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -12,7 +13,7 @@ function readSrc(rel: string) {
 
 describe("Focus presentation / fullscreen continuity", () => {
   it("A: Focus Simulation run uses shared brand primary button token", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     const brand = readSrc("src/shared/brand.ts")
     expect(brand).toContain("brandPrimaryButtonClass")
@@ -26,7 +27,7 @@ describe("Focus presentation / fullscreen continuity", () => {
   })
 
   it("B/C: Guided fullscreen icon follows browserFullscreen, not focusMode", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const toggleStart = guided.lastIndexOf("ref={focusToggleRef}")
     const toggle = guided.slice(toggleStart, guided.indexOf("data-guided-input-close", toggleStart))
     expect(toggle).toContain("browserFullscreen")

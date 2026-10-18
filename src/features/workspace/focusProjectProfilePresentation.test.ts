@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { messages } from "@/i18n/messages"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -94,7 +95,7 @@ describe("Focus Project Profile presentation", () => {
   })
 
   it("Focus step still reuses ProjectProfileSection + shared patch path", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     const renderBodyStart = guided.indexOf("const renderBody = () =>")
     const phaseSwitchStart = guided.indexOf("switch (step.phase)", renderBodyStart)

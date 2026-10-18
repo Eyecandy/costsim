@@ -11,6 +11,7 @@ import {
 } from "@/domain/guided/focusSessionFrame"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -34,7 +35,7 @@ describe("Focus shared session chrome ownership", () => {
   })
 
   it("C: embedded Guided omits its own header/footer/FS chrome", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("data-guided-embedded-in-focus-host")
     expect(guided).toContain("if (focusPortalTarget) return null")
     // Embedded path portals body only — no dialogSurface wrapper with header.
@@ -50,7 +51,7 @@ describe("Focus shared session chrome ownership", () => {
   })
 
   it("D: standalone Guided retains its own chrome", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain('data-guided-dialog-header=""')
     expect(guided).toContain('data-guided-dialog-footer=""')
     expect(guided).toContain('data-guided-focus-toggle=""')
@@ -61,7 +62,7 @@ describe("Focus shared session chrome ownership", () => {
   })
 
   it("keeps Guided mounted (soft-suspend) across Input → Results → Input", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     expect(guided).toContain('data-guided-soft-suspend={suspend ? "true" : undefined}')
     expect(guided).toContain("inert: true")
@@ -97,7 +98,7 @@ describe("Focus shared session chrome ownership", () => {
   })
 
   it("Guided publishes chrome metadata; App does not redefine Guided steps", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     const meta = readSrc("src/domain/guided/guidedFocusChrome.ts")
     expect(meta).toContain("GuidedFocusChromeMeta")

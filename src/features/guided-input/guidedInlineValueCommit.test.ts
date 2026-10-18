@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function guidedDialogSource() {
-  return readFileSync(join(root, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function arrowNavSource() {
@@ -50,7 +51,7 @@ describe("Focus uncertainty range Enter-only numeric commit", () => {
     const src = guidedDialogSource()
     const costRange = src.slice(
       src.indexOf('data-guided-cost-range=""'),
-      src.indexOf("const renderDriverPhase"),
+      src.indexOf("function GuidedDriverPhase"),
     )
     expect(costRange).toContain('commitMode="enter"')
     expect((costRange.match(/commitMode="enter"/g) ?? []).length).toBe(3)

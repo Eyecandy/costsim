@@ -1,15 +1,9 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import { FOCUS_SESSION_FOOTER_NAV_BUTTON_CLASS } from "@/domain/guided/focusSessionFrame"
 import { brandPrimaryButtonClass } from "@/shared/brand"
-import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
-
-function readSrc(rel: string) {
-  return readFileSync(join(root, rel), "utf8")
-}
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 describe("Focus Input footer style from first open", () => {
   it("openGuidedInput enters Focus Input immediately (no standalone heavy footer first)", () => {
@@ -45,7 +39,7 @@ describe("Focus Input footer style from first open", () => {
   })
 
   it("Guided does not render its own footer when embedded (shell owns style for whole session)", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     const footer = guided.slice(
       guided.indexOf("const renderFooter = () => {"),
@@ -57,7 +51,7 @@ describe("Focus Input footer style from first open", () => {
   })
 
   it("Simulation primary run button remains brand primary (unchanged)", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("brandPrimaryButtonClass")
     expect(guided).toContain('data-guided-simulation-run=""')
     expect(brandPrimaryButtonClass).toContain("bg-[#1d868c]")

@@ -9,6 +9,7 @@ import {
 } from "@/domain/guided/focusSessionNavigation"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -100,7 +101,7 @@ describe("unified Focus session ownership", () => {
     expect(shell).toContain("onNavigatePrevious")
     // No longer gated on variant === \"results\".
     expect(shell).not.toMatch(/if \(!open \|\| variant !== "results"\) return/)
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("if (!open || suspend || focusMode || ensureFocusMode) return")
     expect(guided).toContain("GuidedInputDialogHandle")
   })
@@ -132,7 +133,7 @@ describe("unified Focus session ownership", () => {
   })
 
   it("C: After Results → Input, Guided does not own competing window arrows", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("if (!open || suspend || focusMode || ensureFocusMode) return")
     // Results suspend must not clear focusMode (keeps session sizing + arrow owner).
     expect(guided).toContain("if (suspend) return")
@@ -141,7 +142,7 @@ describe("unified Focus session ownership", () => {
 
   it("G: Shared Focus frame contract is phase-invariant", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     expect(shell).toContain('data-focus-frame-contract={dormant ? undefined : "session"}')
     expect(frame).toContain("h-[min(92vh,48rem)] w-[min(96vw,60rem)]")
@@ -190,7 +191,7 @@ describe("unified Focus session ownership", () => {
     )
     expect(cont?.[1] ?? "").toContain("if (!hasViewableResults) return")
     expect(cont?.[1] ?? "").toContain('setFocusView("results")')
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("onContinueToResults")
     expect(guided).toContain('simulationResultStatus === "valid"')
     expect(guided).toContain('simulationResultStatus === "stale"')

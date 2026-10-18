@@ -19,6 +19,7 @@ import {
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -269,7 +270,7 @@ describe("Focus phase navigation wiring", () => {
   })
 
   it("Guided publishes workflowPhase; goToFocusUserPhase uses shared helper", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("workflowPhase: phase ?? null")
     expect(guided).toContain("goToFocusUserPhase")
     expect(guided).toContain("findGuidedStepIndexForFocusPhase")

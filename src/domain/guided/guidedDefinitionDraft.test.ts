@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 import {
   applyGuidedDefinitionDraftChange,
@@ -17,11 +15,11 @@ import {
   COST_DESCRIPTION_MAX_LENGTH,
   DRIVER_DESCRIPTION_MAX_LENGTH,
 } from "@/domain/results/rowDefinitions"
-import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function dialogSource() {
-  return readFileSync(join(root, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function appSource() {
@@ -124,7 +122,7 @@ describe("Focus definition draft lifecycle", () => {
     const src = dialogSource()
     const enterHandler = src.slice(
       src.indexOf("const onDialogKeyDown"),
-      src.indexOf("const renderCostPhase"),
+      src.indexOf("const renderBody"),
     )
     expect(enterHandler).toContain('event.key !== "Enter"')
     expect(enterHandler).toContain("HTMLTextAreaElement")
@@ -201,8 +199,8 @@ describe("Focus definition draft lifecycle", () => {
   it("10: cost and driver share GuidedDefinitionTextarea lifecycle", () => {
     const src = dialogSource()
     const costPhase = src.slice(
-      src.indexOf("const renderCostPhase"),
-      src.indexOf("const renderDriverPhase"),
+      src.indexOf("function GuidedCostPhase"),
+      src.indexOf("function GuidedDriverPhase"),
     )
     const driverDef = src.slice(
       src.indexOf('data-guided-phase="driver"'),

@@ -25,6 +25,7 @@ import type { DriverRow } from "@/domain/results/tableRows"
 import { DEFAULT_RESULT_PREFERENCES } from "@/domain/results/resultPreferences"
 import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceReset"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(relativePath: string): string {
   return readFileSync(join(repoRoot, relativePath), "utf8")
@@ -95,7 +96,7 @@ describe("driver uncertainty notes", () => {
   })
 
   it("B: Guide uses Assumptions-style card notes with add/confirm/remove", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const editor = readSrc("src/features/scenario-tables/DriverUncertaintyNotesEditor.tsx")
     expect(guided).toContain("DriverUncertaintyNotesEditor")
     expect(guided).toContain("data-guided-driver-uncertainty-notes")
@@ -153,11 +154,11 @@ describe("driver uncertainty notes", () => {
   })
 
   it("C: cost items have no structured note UI", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const define = readSrc("src/features/scenario-tables/DefineRowEditor.tsx")
     // Driver notes editor only referenced from driver phase, not cost.
     const costPhaseIdx = guided.indexOf('data-guided-phase="cost"')
-    const driverPhaseIdx = guided.indexOf('data-guided-phase="driver"')
+    const driverPhaseIdx = guided.indexOf("// ---- parts/GuidedDriverPhase.tsx")
     expect(driverPhaseIdx).toBeGreaterThan(-1)
     expect(guided.slice(costPhaseIdx, driverPhaseIdx)).not.toContain("DriverUncertaintyNotesEditor")
     // Cost Define path has no notes editor; driver Define reuses the shared one.
@@ -299,9 +300,7 @@ describe("driver uncertainty notes", () => {
     expect(readSrc("src/features/scenario-tables/DefineRowEditor.tsx")).not.toContain(
       "uncertaintyAssessment",
     )
-    expect(readSrc("src/features/guided-input/GuidedInputDialog.tsx")).not.toContain(
-      "uncertaintyAssessment",
-    )
+    expect(readGuidedInputSource()).not.toContain("uncertaintyAssessment")
     expect(readSrc("src/domain/results/tableRows.ts")).not.toContain("uncertaintyAssessment")
     expect(readSrc("src/domain/results/rowDefinitions.ts")).not.toContain("uncertaintyAssessment")
     expect(DRIVER_UNCERTAINTY_NOTE_MAX_LENGTH).toBeGreaterThan(0)
@@ -309,7 +308,7 @@ describe("driver uncertainty notes", () => {
   })
 
   it("Guide modal default size was increased for the two-column notes", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("FOCUS_SESSION_CARD_CLASS")
     expect(guided).not.toContain("h-[min(92vh,42rem)] w-[min(96vw,52rem)]")
   })

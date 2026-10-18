@@ -9,6 +9,7 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -70,7 +71,7 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("C: Simulation is the final Guided input stage", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain('data-guided-phase="simulation"')
     expect(guided).toContain("data-guided-simulation-run")
     expect(guided).not.toContain('data-guided-focus-run=""')
@@ -96,21 +97,21 @@ describe("Focus Results stepwise workflow", () => {
   })
 
   it("E: no result — cannot advance into Results from Simulation", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("canContinueFromSimulation")
     expect(guided).toContain("disabled={!canContinueFromSimulation}")
     expect(guided).toContain("guidedSimulationBodyNoResults")
   })
 
   it("F: valid existing result can continue without rerun", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain('simulationResultStatus === "valid"')
     expect(guided).toContain("onContinueToResults")
     expect(guided).toContain("guidedSimulationBodyValid")
   })
 
   it("G: stale existing result allows rerun OR continue", () => {
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain('simulationResultStatus === "stale"')
     expect(guided).toContain('t("projects.staleInputsTitle")')
     expect(guided).toContain('t("projects.staleInputsNotice")')
@@ -165,7 +166,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("L: Focus Results share Guided Focus frame dimensions", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const frame = readSrc("src/domain/guided/focusSessionFrame.ts")
     expect(frame).toMatch(
       /FOCUS_SESSION_CARD_CLASS =\s*"h-\[min\(92vh,48rem\)\] w-\[min\(96vw,60rem\)\]"/,
@@ -192,7 +193,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("P: Show changes exits Focus to normal Input with green highlighting", () => {
     const app = readAppSource()
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(app).toContain("onShowStaleChanges={handleFocusShowChanges}")
     expect(app).toMatch(
       /const handleFocusShowChanges = useCallback\(\(\) => \{\s*setShowStaleInputChanges\(true\)\s*focusShellRef\.current\?\.exitFullscreen\(\)\s*clearStoredFocusSessionResume\(\)\s*setFocusView\(null\)/,
@@ -239,7 +240,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("Focus Results close uses same X affordance as Focus Input", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(shell).toContain('data-focus-mode-close=""')
     expect(shell).toContain("<X ")
     expect(guided).toContain('data-guided-input-close=""')
@@ -256,7 +257,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("Focus Results fullscreen reuses Guided fullscreen helpers", () => {
     const shell = readSrc("src/features/focus-mode/FocusModeShell.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     expect(shell).toContain("enterFullscreenQuietly")
     expect(shell).toContain("exitFullscreenIfNeeded")
@@ -277,7 +278,7 @@ describe("Focus Results stepwise workflow", () => {
 
   it("Fullscreen Input → Results keeps shared host mounted", () => {
     const app = readAppSource()
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(app).toContain('suspend={focusView === "results"}')
     expect(guided).toContain("Does not exit browser fullscreen — the shared Focus host owns it")
     expect(guided).toContain("data-guided-soft-suspend")

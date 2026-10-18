@@ -23,6 +23,7 @@ import { shapleyInputSignature } from "@/domain/simulation/shapleyInputSignature
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function appSource() {
   return readAppSource()
@@ -40,7 +41,7 @@ function defineEditorSource() {
 }
 
 function guidedSource() {
-  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function costRow(partial: Partial<CostElementRow> & { id: string }): CostElementRow {

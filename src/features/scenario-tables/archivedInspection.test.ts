@@ -11,6 +11,7 @@ import { createBlankWorkspaceRuntimeState } from "@/domain/analysis/workspaceRes
 import type { ProjectResult } from "@/domain/simulation/simulationTypes"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(repoRoot, rel), "utf8")
@@ -50,7 +51,7 @@ describe("archived analysis inspection (read-only)", () => {
     expect(editor).toContain('kind: "driver"')
     // Textareas stay readable (readOnly), not disabled/faint.
     expect(editor).not.toContain("disabled={readOnly}")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("DriverUncertaintyNotesEditor")
   })
 

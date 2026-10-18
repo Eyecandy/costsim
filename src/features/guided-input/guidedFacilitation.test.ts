@@ -4,9 +4,10 @@ import { join } from "node:path"
 
 import { messages } from "@/i18n/messages"
 import { repoRoot } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function dialogSource() {
-  return readFileSync(join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"), "utf8")
+  return readGuidedInputSource()
 }
 
 function infoSource() {
@@ -40,8 +41,8 @@ describe("Guided Input facilitation layer", () => {
   it("Cost Item numeric control area remains the same interaction surface", () => {
     const src = dialogSource()
     const costPhase = src.slice(
-      src.indexOf("const renderCostPhase"),
-      src.indexOf("const renderDriverPhase"),
+      src.indexOf("function GuidedCostPhase"),
+      src.indexOf("function GuidedDriverPhase"),
     )
     expect(costPhase).toContain('data-guided-cost-range=""')
     expect(costPhase).toContain('data-guided-side="p10"')
@@ -57,8 +58,8 @@ describe("Guided Input facilitation layer", () => {
   it("Cost Item facilitator prompts updated", () => {
     const src = dialogSource()
     const costPhase = src.slice(
-      src.indexOf("const renderCostPhase"),
-      src.indexOf("const renderDriverPhase"),
+      src.indexOf("function GuidedCostPhase"),
+      src.indexOf("function GuidedDriverPhase"),
     )
     expect(costPhase).not.toContain("guidedCostDefinitionPrompt")
     expect(costPhase).toContain("defineCostDescriptionPlaceholder")
@@ -83,7 +84,7 @@ describe("Guided Input facilitation layer", () => {
   it("Driver phase shows short reminder; full concept on Drivers intro", () => {
     const src = dialogSource()
     const driverPhase = src.slice(
-      src.indexOf("const renderDriverPhase"),
+      src.indexOf("function GuidedDriverPhase"),
       src.indexOf("const renderBody"),
     )
     expect(driverPhase).not.toContain("guidedDriverDefinitionPrompt")

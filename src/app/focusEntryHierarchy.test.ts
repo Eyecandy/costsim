@@ -16,6 +16,7 @@ import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot as root } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
 import { readResultsPanelSource } from "@/test-utils/resultsPanelSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function readSrc(rel: string) {
   return readFileSync(join(root, rel), "utf8")
@@ -90,7 +91,7 @@ describe("Focus mode entry hierarchy", () => {
     expect(app).toContain('openGuidedInput("cost", 0, { startPhase: "focusIntro" })')
     expect(app).toContain("startPhase={guidedStartPhase}")
     expect(app).toContain('useState<"focusIntro" | null>(')
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     expect(guided).toContain("canGoPrevious: safeIndex > 0")
     expect(guided).toContain('t("inputs.guidedPhaseFocusIntro")')
     expect(guided).toContain('t("inputs.guidedPhaseProjectProfile")')
@@ -183,7 +184,7 @@ describe("Focus mode entry hierarchy", () => {
 
   it("H: guided profile phase embeds ProjectProfileSection through App's patch path", () => {
     const profile = readSrc("src/features/workspace/ProjectProfileSection.tsx")
-    const guided = readSrc("src/features/guided-input/GuidedInputDialog.tsx")
+    const guided = readGuidedInputSource()
     const app = readAppSource()
     expect(profile).toContain("embedded?: boolean")
     expect(profile).toContain('"data-project-profile-embedded": ""')

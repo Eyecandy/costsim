@@ -17,6 +17,7 @@ import {
 import type { CostElementRow, DriverRow } from "@/domain/results/tableRows"
 import { repoRoot } from "@/test-utils/repoRoot"
 import { readAppSource } from "@/test-utils/appSource"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 function cost(partial: Partial<CostElementRow> & { id: string }): CostElementRow {
   return {
@@ -81,10 +82,7 @@ describe("guided incurred costs step", () => {
   })
 
   it("D/E: displays project incurred value and patch updates authoritative state", () => {
-    const dialog = readFileSync(
-      join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-      "utf8",
-    )
+    const dialog = readGuidedInputSource()
     expect(dialog).toContain("project.incurredCosts")
     expect(dialog).toContain("onIncurredCostsChange")
     expect(dialog).toContain("normalizeIncurredCosts")
@@ -105,10 +103,7 @@ describe("guided incurred costs step", () => {
   })
 
   it("G: incurred step is non-blocking (no next guard)", () => {
-    const dialog = readFileSync(
-      join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-      "utf8",
-    )
+    const dialog = readGuidedInputSource()
     const incurred = dialog.slice(
       dialog.indexOf("function GuidedIncurredPhase"),
       dialog.indexOf("function phaseTitle"),
@@ -149,10 +144,7 @@ describe("guided incurred costs step", () => {
   })
 
   it("J: incurred is not modelled as an uncertainty factor in guided UI", () => {
-    const dialog = readFileSync(
-      join(repoRoot, "src/features/guided-input/GuidedInputDialog.tsx"),
-      "utf8",
-    )
+    const dialog = readGuidedInputSource()
     const incurred = dialog.slice(
       dialog.indexOf("function GuidedIncurredPhase"),
       dialog.indexOf("function phaseTitle"),

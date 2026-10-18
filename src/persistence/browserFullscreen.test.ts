@@ -10,6 +10,7 @@ import {
   isElementFullscreen,
 } from "@/persistence/browserFullscreen"
 import { repoRoot as root } from "@/test-utils/repoRoot"
+import { readGuidedInputSource } from "@/test-utils/guidedInputSource"
 
 describe("browserFullscreen helpers", () => {
   it("exports safe no-document fallbacks", () => {
@@ -20,10 +21,7 @@ describe("browserFullscreen helpers", () => {
   })
 
   it("Guided Focus mode requests fullscreen from the user gesture", () => {
-    const dialog = readFileSync(
-      join(root, "src/features/guided-input/GuidedInputDialog.tsx"),
-      "utf8",
-    )
+    const dialog = readGuidedInputSource()
     expect(dialog).toContain("enterFullscreenQuietly")
     expect(dialog).toContain("exitFullscreenIfNeeded")
     expect(dialog).toContain("subscribeFullscreenChange")
