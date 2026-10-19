@@ -48,7 +48,10 @@ export function LoginPage() {
       </header>
       <main className="flex flex-1 items-center justify-center p-4">
         <LoginCard
-          onSuccess={() => navigate(readPostLoginPath())}
+          onSuccess={() => {
+            // The effect above has usually navigated already; the redirect param is gone by then.
+            if (window.location.pathname === "/login") navigate(readPostLoginPath())
+          }}
           onDismiss={goToLanding}
           passwordInputId="login-page-password"
         />

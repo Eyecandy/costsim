@@ -26,7 +26,14 @@ export function captureCurrentAppUrl(): string {
   if (pathname === LIBRARY_PATH || pathname.startsWith(`${LIBRARY_PATH}/`)) {
     return pathname
   }
+  if (isDesignPathname(pathname)) {
+    return `${pathname}${search}`
+  }
   return LIBRARY_PATH
+}
+
+function isDesignPathname(pathname: string) {
+  return pathname === "/design" || pathname.startsWith("/design/")
 }
 
 function sanitizePostLoginPath(raw: string | null): string {
@@ -36,6 +43,9 @@ function sanitizePostLoginPath(raw: string | null): string {
     if (url.origin !== window.location.origin) return LIBRARY_PATH
     if (url.pathname === LIBRARY_PATH || url.pathname.startsWith(`${LIBRARY_PATH}/`)) {
       return LIBRARY_PATH
+    }
+    if (isDesignPathname(url.pathname)) {
+      return `${url.pathname}${url.search}`
     }
     if (url.pathname !== "/app" && !url.pathname.startsWith("/app/")) {
       return LIBRARY_PATH
