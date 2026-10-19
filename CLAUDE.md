@@ -51,7 +51,7 @@ Nothing imports `app/`. No circular imports. Imports always use the `@/` alias (
 - Tests run with `VITE_APP_VARIANT=pilot` (set in `vitest.config.ts`), i.e. all features on. Line endings are LF (`.gitattributes`); several tests depend on it.
 
 ## Design lab (`src/design-lab/`)
-- Throwaway, functionless mock-ups for trying alternative looks without touching the real components; served at `/design`, gallery with live previews, `/design/compare?a=00&b=03`. Not behind the login; sample data only.
+- Throwaway, functionless mock-ups for trying alternative looks without touching the real components; served at `/design`, gallery with live previews, `/design/compare?a=00&b=03`. Behind the same login gate as the app (needs `VITE_APP_VARIANT=pilot`); sample data only.
 - Looks are grouped in **families** (A = today's page step by step, B = a separate workbench design); a look is called by family letter + id (A04, B02), URLs `/design/a/04`. A design that is not a step on an existing one becomes a new family (see the README).
 - A look in family A is one small file: `npm run lab:new -- my-look` copies the latest variant into `src/design-lab/variants/`; edit its `options` (typed in `variants/types.ts`). New kind of change = a new option plus a part in `parts/`. See `src/design-lab/README.md`.
 - Layer rules: the lab may use `shared/`, `i18n/`, `config/`, `domain/` only; only `app/Router.tsx` loads it. Delete the folder and the `/design` branch in the router to remove it.

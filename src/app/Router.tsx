@@ -19,7 +19,7 @@ const AnalysisLibraryPage = lazy(() =>
   })),
 )
 
-// Throwaway design mock-ups (src/design-lab). Open to anyone with the link, sample data only.
+// Throwaway design mock-ups (src/design-lab). Behind the same login gate as the app (pilot variant), sample data only.
 const DesignLabRoute = lazy(() =>
   import("@/design-lab/DesignLabRoute").then((m) => ({ default: m.DesignLabRoute })),
 )
@@ -64,9 +64,11 @@ export function Router() {
 
   if (isDesignPath(pathname)) {
     return (
-      <Suspense fallback={null}>
-        <DesignLabRoute />
-      </Suspense>
+      <AuthedGate>
+        <Suspense fallback={null}>
+          <DesignLabRoute />
+        </Suspense>
+      </AuthedGate>
     )
   }
 
