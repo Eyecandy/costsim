@@ -459,4 +459,23 @@ describe("gallery", () => {
     )
     expect(container.querySelectorAll("iframe")).toHaveLength(1)
   })
+
+  it("opens a large preview that Escape closes", async () => {
+    const user = userEvent.setup()
+    renderGallery()
+    await user.click(screen.getByRole("button", { name: "Stor forhåndsvisning av Current" }))
+    const dialog = screen.getByRole("dialog", { name: "Stor forhåndsvisning Current" })
+    expect(dialog.querySelector("iframe")).toHaveAttribute("src", "/design/a/00?bare=1")
+    await user.keyboard("{Escape}")
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+  })
+
+  it("minimizes a card, and 'Liten' brings it back with its preview loaded", async () => {
+    const user = userEvent.setup()
+    const { container } = renderGallery()
+    await user.click(screen.getByRole("button", { name: "Minimer Current" }))
+    expect(container.querySelectorAll("iframe")).toHaveLength(0)
+    await user.click(screen.getByRole("button", { name: "Vis liten forhåndsvisning av Current" }))
+    expect(container.querySelectorAll("iframe")).toHaveLength(1)
+  })
 })
